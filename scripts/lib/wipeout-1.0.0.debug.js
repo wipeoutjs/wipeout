@@ -162,7 +162,7 @@ Class("wipeout.utils.obj", function () {
     var getObject = function(constructorString, context) {
         ///<summary>Get an object from string</summary>
         ///<param name="constructorString" type="String">A pointer to the object to create</param>
-        ///<param name="context" type="String">The root context</param>
+        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
         ///<returns type="Any">The object</returns>
         if(!context) context = window;
         
@@ -179,7 +179,7 @@ Class("wipeout.utils.obj", function () {
     var createObject = function(constructorString, context) {
         ///<summary>Create an object from string</summary>
         ///<param name="constructorString" type="String">A pointer to the object to create</param>
-        ///<param name="context" type="String">The root context</param>
+        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
         ///<returns type="Any">The created object</returns>
         
         var constructor = getObject(constructorString, context);
@@ -1543,7 +1543,7 @@ Class("wipeout.base.if", function () {
 });
 
 
-Class("wipeout.base.itemsControl", function itemsControl() {
+Class("wipeout.base.itemsControl", function () {
     
     var deafaultTemplateId;
     var staticConstructor = function() {
@@ -2905,18 +2905,20 @@ Class("wipeout.template.engine", function () {
     
     var $find = /\$find/;
     var $call = /\$call/;
+    var $findAndCall = /\$findAndCall/;
     engine.createJavaScriptEvaluatorFunction = function(script) {
         ///<summary>Modify a block of script so that it's running context is bindingContext.$data first and biningContext second</summary>
         ///<param name="script" type="String">The script to modify</param>
         ///<returns type="Function">The compiled script</returns>
         
-        var f = $find.test(script);
-        var find = f ? "\n\tvar $find = wipeout.utils.find.create(bindingContext);" : "";
+        var find = $find.test(script) ? "\n\tvar $find = wipeout.utils.find.create(bindingContext);" : "";
         
-        // reuse existing $find if possible
-        var call = $call.test(script) ? "\n\tvar $call = wipeout.utils.call.create(" + (f ? "$find" : "wipeout.utils.find.create(bindingContext)") + ");" : "";
+        // reuse existing $find
+        var findAndCall = $findAndCall.test(script) ? "\n\tvar $findAndCall = wipeout.utils.findAndCall.create($find);" : "";
         
-        return new Function("bindingContext", "with(bindingContext) {" + find + call + "\n\twith($data) {\n\t\treturn " + script + ";\n\t}\n}");
+        var call = $call.test(script) ? "\n\tvar $call = wipeout.utils.call.create();" : "";
+        
+        return new Function("bindingContext", "with(bindingContext) {" + find + findAndCall + call + "\n\twith($data) {\n\t\treturn " + script + ";\n\t}\n}");
     }
     
     engine.createJavaScriptEvaluatorBlock = function(script) {
@@ -3242,31 +3244,25 @@ Class("wipeout.utils.bindingDomManipulationWorker", function () {
 
 Class("wipeout.utils.call", function () {
     
-    var call = wipeout.base.object.extend(function call(find) {
-        ///<summary>Extends find functionality to call functions with the correct context and custom arguments</summary>
+    var call = wipeout.base.object.extend(function call() {
+        ///<summary>Calls a function with the correct scope</summary>
         ///<param name="find" type="wo.find" optional="false">The find functionality</param>
         
         this._super();
-
-        ///<Summary type="wo.find">The worker used to find the root object</Summary>
-        this.find = find;
     });
     
-    call.prototype.call = function(searchTermOrFilters, filters) {
-        ///<summary>Find an item given a search term and filters. Call a method with it's dot(...) method and pass in custom argument with it's arg(...) method</summary>
-        ///<param name="searchTermOrFilters" type="Any" optional="false">Search term or filters to be passed to find</param>
-        ///<param name="filters" type="Object" optional="true">Filters to be passed to find</param>
+    call.prototype.call = function(rootObject) {
+        ///<summary>Call a method with on the root object with dot(...) method and pass in custom argument with it's arg(...) method</summary>
+        ///<param name="rootObject" type="Any" optional="false">The object to begin the find from</param>
         ///<returns type="Object">An item to create a function with the correct context and custom arguments</returns>
-        
-        var obj = this.find(searchTermOrFilters, filters);
 
-        if(!obj)
+        if(!rootObject)
             throw "Could not find an object to call function on.";
         
         var dots = [];
         var args = null;
         var output = function() {
-            var current = obj;
+            var current = rootObject;
             var currentFunction = null;
             
             if(dots.length > 0) {            
@@ -3283,10 +3279,10 @@ Class("wipeout.utils.call", function () {
                 
                 currentFunction = current[dots[i]];
             } else {
-                if(obj.constructor !== Function)
-                    throw "Cannot call an object like a functino";
+                if(rootObject.constructor !== Function)
+                    throw "Cannot call an object like a function";
                     
-                currentFunction = obj;
+                currentFunction = rootObject;
             }
             
             if(args) {
@@ -3311,15 +3307,14 @@ Class("wipeout.utils.call", function () {
         return output;
     };
     
-    call.create = function(find) {
+    call.create = function() {
         ///<summary>Get a function wich points directly to (new wo.call(..)).call(...)</summary>
-        ///<param name="find" type="wo.find" optional="false">The find functionality</param>
         ///<returns type="Function">The call function</returns>        
         
-        var f = new wipeout.utils.call(find);
+        var f = new wipeout.utils.call();
 
-        return function(searchTerm, filters) {
-            return f.call(searchTerm, filters);
+        return function(rootObject) {
+            return f.call(rootObject);
         };
     };
     
@@ -3608,7 +3603,7 @@ Class("wipeout.utils.find", function () {
             if (i[0] === "$") {
                 if(!wipeout.utils.find[i](item, filters[i], index))
                     return false;
-            } else if (filters[i] !== item[i]) {
+            } else if (ko.utils.unwrapObservable(filters[i]) !== ko.utils.unwrapObservable(item[i])) {
                 return false;
             }
         }
@@ -3617,6 +3612,41 @@ Class("wipeout.utils.find", function () {
     };
     
     return find;
+});
+
+Class("wipeout.utils.findAndCall", function () {
+    
+    var findAndCall = wipeout.utils.call.extend(function call(find) {
+        ///<summary>Extends find functionality to call functions with the correct context and custom arguments</summary>
+        ///<param name="find" type="wo.find" optional="false">The find functionality</param>
+        this._super();
+        
+        ///<Summary type="wo.find">The find helper</Summary>
+        this.find = find;
+    });
+    
+    findAndCall.prototype.call = function(searchTermOrFilters, filters) {
+        ///<summary>Find an item given a search term and filters. Call a method with it's dot(...) method and pass in custom argument with it's arg(...) method</summary>
+        ///<param name="searchTermOrFilters" type="Any" optional="false">Search term or filters to be passed to find</param>
+        ///<param name="filters" type="Object" optional="true">Filters to be passed to find</param>
+        ///<returns type="Object">An item to create a function with the correct context and custom arguments</returns>
+        
+        return this._super(this.find(searchTermOrFilters, filters));
+    };
+    
+    findAndCall.create = function(find) {
+        ///<summary>Get a function wich points directly to (new wo.call(..)).call(...)</summary>
+        ///<param name="find" type="wo.find" optional="false">The find functionality</param>
+        ///<returns type="Function">The call function</returns>
+                
+        var f = new wipeout.utils.findAndCall(find);
+
+        return function(searchTermOrFilters, filters) {
+            return f.call(searchTermOrFilters, filters);
+        };
+    };
+    
+    return findAndCall;
 });
 
 
@@ -4103,7 +4133,7 @@ Class("wipeout.utils.ko", function () {
     
     // copied from knockout
     _ko.isVirtual = function(node) {
-        ///<summary>Whether a html node is a knockout virtual element or not</summary>
+        ///<summary>Determines whether a html node is a knockout virtual element or not</summary>
         ///<param name="node" type="HTMLNode">The node to test</param>
         ///<returns type="Boolean"></returns>
         return node && (node.nodeType == 8) && (commentNodesHaveTextProperty ? node.text : node.nodeValue).match(startCommentRegex);
@@ -4111,7 +4141,7 @@ Class("wipeout.utils.ko", function () {
     
     // copied from knockout
     _ko.isVirtualClosing = function(node) {
-        ///<summary>Whether a html node is a knockout virtual element closing tag</summary>
+        ///<summary>Determines whether a html node is a knockout virtual element closing tag</summary>
         ///<param name="node" type="HTMLNode">The node to test</param>
         ///<returns type="Boolean"></returns>
         return node && (node.nodeType == 8) && (commentNodesHaveTextProperty ? node.text : node.nodeValue).match(endCommentRegex);

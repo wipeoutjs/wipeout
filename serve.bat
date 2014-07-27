@@ -1,1 +1,1 @@
-jekyll serve --watch --baseurl '/wipeout-0'
+jekyll serve --watch --baseurl '/wipeout-1'
