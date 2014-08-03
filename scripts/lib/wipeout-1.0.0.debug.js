@@ -790,7 +790,7 @@ Class("wipeout.base.view", function () {
     view.setObservable = function(obj, property, value) {
         ///<summary>Set an observable or non observable property</summary>
         ///<param name="obj" type="Any" optional="false">The object to set the property on</param>
-        ///<param name="property" type="String" optional="false">The name of the property/param>
+        ///<param name="property" type="String" optional="false">The name of the property</param>
         ///<param name="value" type="String" optional="false">The value to set the property to</param>
         
         if(ko.isObservable(obj[property])) {
@@ -1699,7 +1699,7 @@ Class("wipeout.base.itemsControl", function () {
 
     itemsControl.prototype._modelsAndViewModelsAreSynched = function() {
         ///<summary>Returns whether all models have a corresponding view model at the correct index</summary>
-        ///<returns type="Boolean"></summary>
+        ///<returns type="Boolean"></returns>
         var model = this.itemSource() || [];
         var viewModel = this.items() || [];
         
@@ -3428,7 +3428,7 @@ Class("wipeout.utils.find", function () {
     
     find.prototype.find = function(searchTermOrFilters, filters) {
         ///<summary>Find an ancestor item based on the search term and filters</summary>
-        ///<param name="searchTermOrFilters" type="Any" optional="false">If an object, will be used as extra filters. If a function, will be used as an $instanceof filter. If a String will be used as an &ancestory filter</param>
+        ///<param name="searchTermOrFilters" type="Any" optional="false">If an object, will be used as extra filters. If a function, will be used as an $instanceof filter. If a String will be used as an $ancestory filter</param>
         ///<param name="filters" type="Object" optional="false">Items to filter the output by</param>
         ///<returns type="Any">The search result</returns>
         

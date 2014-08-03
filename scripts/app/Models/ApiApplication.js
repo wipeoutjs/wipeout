@@ -2,8 +2,6 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
-                        
-        //wipeout.profile.profile();
         
         wipeoutApi = new Wipeout.Docs.Models.Components.ApiBuilder(wipeout, "wipeout")
             .build({
