@@ -131,6 +131,9 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
             header: new articleLink("Reserved Tags", "reserved-tags"),
             items: []
         }, {        
+            header: new articleLink("Profiling", "profiling"),
+            items: []
+        }, {        
             header: new articleLink("Wipeout namespaces", "wipeout-namespaces"),
             items: []
         }, {        
