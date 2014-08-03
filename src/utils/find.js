@@ -11,7 +11,7 @@ Class("wipeout.utils.find", function () {
     
     find.prototype.find = function(searchTermOrFilters, filters) {
         ///<summary>Find an ancestor item based on the search term and filters</summary>
-        ///<param name="searchTermOrFilters" type="Any" optional="false">If an object, will be used as extra filters. If a function, will be used as an $instanceof filter. If a String will be used as an &ancestory filter</param>
+        ///<param name="searchTermOrFilters" type="Any" optional="false">If an object, will be used as extra filters. If a function, will be used as an $instanceof filter. If a String will be used as an $ancestory filter</param>
         ///<param name="filters" type="Object" optional="false">Items to filter the output by</param>
         ///<returns type="Any">The search result</returns>
         

@@ -155,7 +155,7 @@ Class("wipeout.base.itemsControl", function () {
 
     itemsControl.prototype._modelsAndViewModelsAreSynched = function() {
         ///<summary>Returns whether all models have a corresponding view model at the correct index</summary>
-        ///<returns type="Boolean"></summary>
+        ///<returns type="Boolean"></returns>
         var model = this.itemSource() || [];
         var viewModel = this.items() || [];
         
