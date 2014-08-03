@@ -19,7 +19,10 @@ layout: default
     window.bootstrapApplication = function() {
                // wipeout.profile.profile();
         window.model = new Wipeout.Docs.Models.HowDoIApplication();
+        
+        wipeout.profile.profile();        
         ko.applyBindings(window.model, document.getElementById("PageRoot"));
+        wipeout.profile.profile(false);
 
         crossroads.parse(location.pathname + location.search);
         window.onpopstate = function() {

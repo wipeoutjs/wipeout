@@ -8,7 +8,6 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
     };
     
     var buildHref = function(parameters) {
-        
         if(parameters.article && !wo.contentControl.templateExists("Articles." + parameters.article))
             throw "No template for " + parameters.article;
         
@@ -16,7 +15,7 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
         for(var i in parameters)
             output.push(i + "=" + parameters[i]);
         
-        return location.origin + location.pathname + "?" + output.join("&");
+        return location.protocol + "//" + location.host + location.pathname + "?" + output.join("&");
     };
     
     function HowDoIApplication() {
@@ -129,6 +128,9 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
             items: []
         }, {        
             header: new articleLink("Reserved Tags", "reserved-tags"),
+            items: []
+        }, {        
+            header: new articleLink("Profiling", "profiling"),
             items: []
         }, {        
             header: new articleLink("Wipeout namespaces", "wipeout-namespaces"),
