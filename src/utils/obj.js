@@ -50,31 +50,6 @@ var enumerate = function(enumerate, action, context) {
             action.call(context, enumerate[i], i);
 };
 
-var enumerateDesc = function(enumerate, action, context) {
-    ///<summary>Enumerate through an array or object in a decending order</summary>
-    ///<param name="enumerate" type="Any">An item to enumerate over</param>
-    ///<param name="action" type="Function">The callback to apply to each item</param>
-    ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
-    context = context || window;
-    
-    if(enumerate == null) return;
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = enumerate.length - 1; i >= 0; i--)
-            action.call(context, enumerate[i], i);
-    else {
-        var props = [];
-        for(var i in enumerate)
-            props.push(i);
-        
-        for(var i = props.length - 1; i >= 0; i--)
-            action.call(context, enumerate[props[i]], props[i]);
-    }
-};
-
 var Binding = function(bindingName, allowVirtual, accessorFunction) {
     ///<summary>Create a knockout binding</summary>
     ///<param name="bindingName" type="String">The name of the binding</param>
@@ -230,7 +205,6 @@ Class("wipeout.utils.obj", function () {
     obj.trimToLower = trimToLower;
     obj.trim = trim;
     obj.enumerate = enumerate;
-    obj.enumerateDesc = enumerateDesc;
     obj.getObject = getObject;
     obj.createObject = createObject;
     obj.copyArray = copyArray;
