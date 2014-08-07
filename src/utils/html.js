@@ -280,7 +280,7 @@ Class("wipeout.utils.html", function () {
         
         // check if children have to be disposed
         var controlChildren = false;
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             controlChildren |= binding.bindingMeta.controlsDescendantBindings;
         });
 
@@ -294,7 +294,7 @@ Class("wipeout.utils.html", function () {
         }
         
         // dispose of all wo bindings
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             binding.dispose();
         });
 

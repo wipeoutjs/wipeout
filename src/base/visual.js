@@ -64,8 +64,8 @@ Class("wipeout.base.visual", function () {
         displayFunction = displayFunction || function() { return typeof arguments[0]; };
 
         var output = [];
-        wipeout.utils.obj.enumerate(wipeout.utils.html.getAllChildren(rootElement), function (child) {
-            wipeout.utils.obj.enumerate(visual.visualGraph(child), output.push, output);
+        wipeout.utils.obj.enumerateArr(wipeout.utils.html.getAllChildren(rootElement), function (child) {
+            wipeout.utils.obj.enumerateArr(visual.visualGraph(child), output.push, output);
         });
 
         var vm = wipeout.utils.domData.get(rootElement, wipeout.bindings.wipeout.utils.wipeoutKey);        
@@ -164,7 +164,7 @@ Class("wipeout.base.visual", function () {
                 this[i].dispose();
 
         // dispose of routed event subscriptions
-        enumerate(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
+        enumerateArr(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
             event.dispose();
         });
 
@@ -293,7 +293,7 @@ Class("wipeout.base.visual", function () {
     var reservedTags = ["a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"];
     
     visual.reservedTags = {};
-    enumerate(reservedTags, function(tag) {
+    enumerateArr(reservedTags, function(tag) {
         visual.reservedTags[tag] = true;
     });
     

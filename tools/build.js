@@ -1,9 +1,9 @@
 window.wipeout = wipeout;
 window.wo = {};
-enumerate(wipeout.base, function(item, i) {
+enumerateObj(wipeout.base, function(item, i) {
     window.wo[i] = item;
 });
 
-enumerate(wipeout.utils, function(item, i) {
+enumerateObj(wipeout.utils, function(item, i) {
     window.wo[i] = item;
 });

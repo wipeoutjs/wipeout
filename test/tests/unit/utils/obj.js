@@ -7,7 +7,7 @@ module("wipeout.utils.obj", {
 
 var obj = wipeout.utils.obj;
 
-testUtils.testWithUtils("enumerate", "array", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("enumerateArr", null, true, function(methods, classes, subject, invoker) {
     // arrange
     var subject = [];
     
@@ -26,8 +26,7 @@ testUtils.testWithUtils("enumerate", "array", true, function(methods, classes, s
     strictEqual(subject[3].val, 4);
 });
 
-
-testUtils.testWithUtils("enumerate", "dictionary", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("enumerateObj", null, true, function(methods, classes, subject, invoker) {
     // arrange
     var subject = [];
     

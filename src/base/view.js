@@ -181,7 +181,7 @@ Class("wipeout.base.view", function () {
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerate(propertiesXml.attributes, function(attr) {
+        enumerateArr(propertiesXml.attributes, function(attr) {
             // reserved
             if(view.reservedPropertyNames.indexOf(attr.nodeName) !== -1) return;
             
@@ -202,7 +202,7 @@ Class("wipeout.base.view", function () {
             }
         }, this);
         
-        enumerate(propertiesXml.childNodes, function(child, i) {
+        enumerateArr(propertiesXml.childNodes, function(child, i) {
             
             if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(child.nodeName) !== -1) return;
             

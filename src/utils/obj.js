@@ -28,26 +28,34 @@ var ajax = function (options) {
     return xmlhttp;
 };
     
-var enumerate = function(enumerate, action, context) {
+var enumerateArr = function(enumerate, action, context) {
     ///<summary>Enumerate through an array or object</summary>
     ///<param name="enumerate" type="Any">An item to enumerate over</param>
     ///<param name="action" type="Function">The callback to apply to each item</param>
     ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
     
+    if (!enumerate) return;
+    
+    context = context || window;
+    
+    for(var i = 0, ii = enumerate.length; i < ii; i++)
+        action.call(context, enumerate[i], i);
+};
+    
+var enumerateObj = function(enumerate, action, context) {
+    ///<summary>Enumerate through an array or object</summary>
+    ///<param name="enumerate" type="Any">An item to enumerate over</param>
+    ///<param name="action" type="Function">The callback to apply to each item</param>
+    ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
+    
+    if (!enumerate) return;
+    
     context = context || window;
         
     if(enumerate == null) return;
-    
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = 0, ii = enumerate.length; i < ii; i++)
-            action.call(context, enumerate[i], i);
-    else
-        for(var i in enumerate)
-            action.call(context, enumerate[i], i);
+
+    for(var i in enumerate)
+        action.call(context, enumerate[i], i);
 };
 
 var Binding = function(bindingName, allowVirtual, accessorFunction) {
@@ -93,12 +101,12 @@ var Extend = function(namespace, extendWith) {
     namespace.splice(0, 1);
     
     var current = wipeout;
-    enumerate(namespace, function(nsPart) {
+    enumerateArr(namespace, function(nsPart) {
         current = current[nsPart] || (current[nsPart] = {});
     });
     
     if(extendWith && extendWith instanceof Function) extendWith = extendWith();
-    enumerate(extendWith, function(item, i) {
+    enumerateObj(extendWith, function(item, i) {
         current[i] = item;
     });
 };
@@ -204,7 +212,8 @@ Class("wipeout.utils.obj", function () {
     obj.parseBool = parseBool;
     obj.trimToLower = trimToLower;
     obj.trim = trim;
-    obj.enumerate = enumerate;
+    obj.enumerateArr = enumerateArr;
+    obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
     obj.createObject = createObject;
     obj.copyArray = copyArray;

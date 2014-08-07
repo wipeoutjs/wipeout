@@ -8,11 +8,11 @@ module("wipeout.tests.integration.build", {
 
 test("Test there is no overlap in wipeout.base and wipeout.utils", function() {
     
-    wipeout.utils.obj.enumerate(wipeout.base, function(item, i) {
+    wipeout.utils.obj.enumerateObj(wipeout.base, function(item, i) {
         strictEqual(window.wo[i], item);
     });
 
-    wipeout.utils.obj.enumerate(wipeout.utils, function(item, i) {
+    wipeout.utils.obj.enumerateObj(wipeout.utils, function(item, i) {
         strictEqual(window.wo[i], item);
     });
 });

@@ -174,7 +174,7 @@ Class("wipeout.base.itemsControl", function () {
         ///<summary>Runs onItemDeleted and onItemRendered on deleted and created items respectively</summary>
         ///<param name="changes" type="Array" generic0="wo.view" optional="false">A knockout diff of changes to the items</param>
         
-        enumerate(changes, function(change) {
+        enumerateArr(changes, function(change) {
             if(change.status === wipeout.utils.ko.array.diff.deleted && change.moved == null)
                 this.onItemDeleted(change.value);
             else if(change.status === wipeout.utils.ko.array.diff.added && change.moved == null)
@@ -230,7 +230,7 @@ Class("wipeout.base.itemsControl", function () {
     
     itemsControl.prototype.dispose = function () {
         ///<summary>Dispose of the items control and its items</summary>
-        enumerate(this.items(), function(i) {
+        enumerateArr(this.items(), function(i) {
             i.dispose();
         });
         

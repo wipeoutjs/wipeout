@@ -82,7 +82,7 @@ testUtils.testWithUtils("unRender", null, false, function(methods, classes, subj
             rootHtmlElement: element
         },
         disposeOf: methods.customMethod(function() {
-            wo.obj.enumerate(events, function(item, i) {
+            wo.obj.enumerateObj(events, function(item, i) {
                 var _ok = false;
                 if(events[i] === item) {
                     delete events[i];
@@ -108,7 +108,7 @@ testUtils.testWithUtils("unRender", null, false, function(methods, classes, subj
     ok(!subject.onDisposeEventSubscription);
     ok(!subject.value);
     ok(!subject.templateChangedSubscription);
-    wo.obj.enumerate(events, function(item, i) {
+    wo.obj.enumerateObj(events, function(item, i) {
         ok(false, i + " was not disposed");
     });
 });
@@ -208,7 +208,7 @@ testUtils.testWithUtils("unTemplate", null, false, function(methods, classes, su
     ok(el2.__cleaned);
     strictEqual(subject.value.__woBag.nodes.length, 0);
     
-    wo.obj.enumerate(subject.value.templateItems, function(item, i) {
+    wo.obj.enumerateObj(subject.value.templateItems, function(item, i) {
         ok(false, i + " still exists");
     });
 });

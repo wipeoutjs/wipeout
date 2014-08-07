@@ -406,29 +406,25 @@ test("basic knockout binding, non observable", function() {
 });
 
 test("un render", function() {
-    // arrange    
-    application.hello = new wo.contentControl();
-    application.hello.helloAgain = new wo.contentControl();
+    // arrange
+    
+    var vms = [application, new wo.contentControl(), new wo.contentControl()];
+    
+    application.hello = vms[1];
+    application.hello.helloAgain = vms[2];
     application.hello.helloAgain.template(
-"<wo.contentControl id=\"asdasdd\">\
+"<wo.contentControl id=\"cc1\">\
 </wo.contentControl>\
 <div>Hi</div>\
-<wo.contentControl>\
+<wo.contentControl id=\"cc2\">\
 </wo.contentControl>");
     application.hello.template("<!-- ko render: helloAgain--><!-- /ko -->");
     
     application.template("<!-- ko render: hello--><!-- /ko -->");
-    var ctrls = [];
-    var getAllChildren = function(forItem) {
-        ctrls.push(forItem);
-        wo.obj.enumerate(forItem.rendernedChildren, function(item) {
-            getAllChildren(item);
-        });
-    };
-    
-    getAllChildren(application);
+    vms.push(application.hello.helloAgain.templateItems.cc1);
+    vms.push(application.hello.helloAgain.templateItems.cc2);
         
-    wo.obj.enumerate(ctrls, function(item) {
+    wo.obj.enumerateArr(vms, function(item) {
         ok(item.__woBag.rootHtmlElement);
     });
     
@@ -436,7 +432,7 @@ test("un render", function() {
     wo.domData.get($application[0], wipeout.bindings.bindingBase.dataKey)[0].unRender();
     
     // assert
-    wo.obj.enumerate(ctrls, function(item) {
+    wo.obj.enumerateArr(vms, function(item) {
         ok(!item.__woBag.rootHtmlElement);
     });
 });
