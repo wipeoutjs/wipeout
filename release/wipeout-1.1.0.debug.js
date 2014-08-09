@@ -1,4 +1,4 @@
-// WipeoutJs v1.0.0
+// WipeoutJs v1.1.0
 // (c) Shane Connon 2014
 // http://www.opensource.org/licenses/mit-license.php
 (function () { 
