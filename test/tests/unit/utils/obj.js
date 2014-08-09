@@ -63,6 +63,15 @@ testUtils.testWithUtils("trimToLower", "", true, function(methods, classes, subj
     strictEqual(invoker("   \n\r\t" + string + "   \n\r\t"), string.toLowerCase());
 });
 
+testUtils.testWithUtils("camelCase", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act    
+    // assert
+    strictEqual(invoker("hello-one"), "helloOne");
+    strictEqual(invoker("-hello-one"), "HelloOne");
+    strictEqual(invoker("hello-one-"), "helloOne");
+});
+
 testUtils.testWithUtils("parseBool", "", true, function(methods, classes, subject, invoker) {
     // arrange    
     // act    

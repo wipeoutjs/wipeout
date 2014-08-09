@@ -140,6 +140,23 @@ var parseBool = function(input) {
     return !!(input && input !== "false" && input !== "0");
 };
 
+var camelCase = function(input) {
+    ///<summary>Converts a string from "first-second" to "firstSecond"</summary>
+    ///<param name="constructorString" type="String">The string to convert</param>
+    ///<returns type="String">The camel cased string</returns>
+    
+    var minus = /\-/, i;
+    while ((i = input.search(minus)) !== -1) {
+        if (i === input.length - 1) {
+            return input.substr(0, i);
+        } else {
+            input = input.substr(0, i) + input[i + 1].toUpperCase() + input.substr(i + 2);
+        }
+    }
+    
+    return input;
+};
+
 Class("wipeout.utils.obj", function () {
         
     var getObject = function(constructorString, context) {
@@ -208,6 +225,7 @@ Class("wipeout.utils.obj", function () {
     };
     
     var obj = function obj() { };
+    obj.camelCase = camelCase;
     obj.ajax = ajax;
     obj.parseBool = parseBool;
     obj.trimToLower = trimToLower;
