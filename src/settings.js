@@ -1,10 +1,10 @@
 Class("wipeout.settings", function() {
     function settings (settings) {
-        enumerate(wipeout.settings, function(a,i) {
+        enumerateObj(wipeout.settings, function(a,i) {
             delete wipeout.settings[i];
         });
         
-        enumerate(settings, function(setting, i) {
+        enumerateObj(settings, function(setting, i) {
             wipeout.settings[i] = setting;
         });        
     }

@@ -4,19 +4,6 @@ document async templates
 bug, put &lt; in anonymous template
 bug, handle null template id better
 
-changes:    woInvisible -> shareParentScope
-            renderedChildren -> null
-            initialize -> _initialize
-            _initialized -> __woBag.initialized
-            nodes -> .__woBag.nodes
-            getParent/getParents -> changed the way they work with shareParentScope
-            find/call
-            move
-            event priority
-            registerDisposable -> registerDisposeCallback
+changes:    __woBag.type
 
-Now:
-Last article
-TODOs
 search ranking
-Licence

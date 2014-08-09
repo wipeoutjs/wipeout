@@ -76,7 +76,7 @@ Binding("render", true, function () {
         if(!this.value) return;
 
         // delete all template items
-        enumerate(this.value.templateItems, function(item, i) {            
+        enumerateObj(this.value.templateItems, function(item, i) {
             delete this.value.templateItems[i];
         }, this);
 
@@ -206,12 +206,12 @@ Binding("render", true, function () {
                 name: value.templateId.peek(),
                 afterRender: function(nodes, context) {
                     var old = [];
-                    enumerate(value.__woBag.nodes, function(node) {
+                    enumerateArr(value.__woBag.nodes, function(node) {
                         old.push(node);
                     });
 
                     value.__woBag.nodes.length = 0;
-                    enumerate(nodes || [], function(node) {
+                    enumerateArr(nodes || [], function(node) {
                         value.__woBag.nodes.push(node);
                     });                            
 

@@ -28,51 +28,34 @@ var ajax = function (options) {
     return xmlhttp;
 };
     
-var enumerate = function(enumerate, action, context) {
+var enumerateArr = function(enumerate, action, context) {
     ///<summary>Enumerate through an array or object</summary>
     ///<param name="enumerate" type="Any">An item to enumerate over</param>
     ///<param name="action" type="Function">The callback to apply to each item</param>
     ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
     
-    context = context || window;
-        
-    if(enumerate == null) return;
+    if (!enumerate) return;
     
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = 0, ii = enumerate.length; i < ii; i++)
-            action.call(context, enumerate[i], i);
-    else
-        for(var i in enumerate)
-            action.call(context, enumerate[i], i);
+    context = context || window;
+    
+    for(var i = 0, ii = enumerate.length; i < ii; i++)
+        action.call(context, enumerate[i], i);
 };
-
-var enumerateDesc = function(enumerate, action, context) {
-    ///<summary>Enumerate through an array or object in a decending order</summary>
+    
+var enumerateObj = function(enumerate, action, context) {
+    ///<summary>Enumerate through an array or object</summary>
     ///<param name="enumerate" type="Any">An item to enumerate over</param>
     ///<param name="action" type="Function">The callback to apply to each item</param>
     ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
-    context = context || window;
     
-    if(enumerate == null) return;
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = enumerate.length - 1; i >= 0; i--)
-            action.call(context, enumerate[i], i);
-    else {
-        var props = [];
-        for(var i in enumerate)
-            props.push(i);
+    if (!enumerate) return;
+    
+    context = context || window;
         
-        for(var i = props.length - 1; i >= 0; i--)
-            action.call(context, enumerate[props[i]], props[i]);
-    }
+    if(enumerate == null) return;
+
+    for(var i in enumerate)
+        action.call(context, enumerate[i], i);
 };
 
 var Binding = function(bindingName, allowVirtual, accessorFunction) {
@@ -118,12 +101,12 @@ var Extend = function(namespace, extendWith) {
     namespace.splice(0, 1);
     
     var current = wipeout;
-    enumerate(namespace, function(nsPart) {
+    enumerateArr(namespace, function(nsPart) {
         current = current[nsPart] || (current[nsPart] = {});
     });
     
     if(extendWith && extendWith instanceof Function) extendWith = extendWith();
-    enumerate(extendWith, function(item, i) {
+    enumerateObj(extendWith, function(item, i) {
         current[i] = item;
     });
 };
@@ -155,6 +138,25 @@ var parseBool = function(input) {
     input = trimToLower(input);
     
     return !!(input && input !== "false" && input !== "0");
+};
+
+var camelCase = function(input) {
+    ///<summary>Converts a string from "first-second" to "firstSecond"</summary>
+    ///<param name="constructorString" type="String">The string to convert</param>
+    ///<returns type="String">The camel cased string</returns>
+    
+    if(!input) return input;
+    
+    var minus = /\-/, i;
+    while ((i = input.search(minus)) !== -1) {
+        if (i === input.length - 1) {
+            return input.substr(0, i);
+        } else {
+            input = input.substr(0, i) + input[i + 1].toUpperCase() + input.substr(i + 2);
+        }
+    }
+    
+    return input;
 };
 
 Class("wipeout.utils.obj", function () {
@@ -225,12 +227,13 @@ Class("wipeout.utils.obj", function () {
     };
     
     var obj = function obj() { };
+    obj.camelCase = camelCase;
     obj.ajax = ajax;
     obj.parseBool = parseBool;
     obj.trimToLower = trimToLower;
     obj.trim = trim;
-    obj.enumerate = enumerate;
-    obj.enumerateDesc = enumerateDesc;
+    obj.enumerateArr = enumerateArr;
+    obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
     obj.createObject = createObject;
     obj.copyArray = copyArray;

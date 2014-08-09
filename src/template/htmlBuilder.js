@@ -26,7 +26,7 @@ Class("wipeout.template.htmlBuilder", function () {
         }
         
         var html = wipeout.utils.html.createElements(returnVal.join(""));
-        enumerate(htmlBuilder.getTemplateIds({childNodes: html}), function(item, id) {
+        enumerateObj(htmlBuilder.getTemplateIds({childNodes: html}), function(item, id) {
             bindingContext.$data.templateItems[id] = item;
         });
             
@@ -75,7 +75,7 @@ Class("wipeout.template.htmlBuilder", function () {
         ///<returns type="Object">A dictionary of elements and ids</returns>
         
         var ids = {};
-        enumerate(element.childNodes, function(node) {
+        enumerateArr(element.childNodes, function(node) {
             if(node.nodeType === 1) {
                 for(var j = 0, jj = node.attributes.length; j < jj; j++) {
                     if(node.attributes[j].nodeName === "id") {
@@ -85,7 +85,7 @@ Class("wipeout.template.htmlBuilder", function () {
                 }
                 
                 // look at child elements
-                enumerate(htmlBuilder.getTemplateIds(node), function(element, id) {
+                enumerateObj(htmlBuilder.getTemplateIds(node), function(element, id) {
                     ids[id] = element;
                 });
             }                
@@ -102,7 +102,7 @@ Class("wipeout.template.htmlBuilder", function () {
         var result = [];
         var ser = new XMLSerializer();
         
-        enumerate(xmlTemplate.childNodes, function(child) {            
+        enumerateArr(xmlTemplate.childNodes, function(child) {            
             if(child.nodeType == 1) {
                 
                 // create copy with no child nodes

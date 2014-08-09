@@ -13,7 +13,7 @@ Class("wipeout.debug", function () {
                 if(node) {
                     switch(node.nodeType) {
                         case 1:
-                            enumerate(node.childNodes, recursive);
+                            enumerateArr(node.childNodes, recursive);
                         case 8:
                             if((vm = wipeout.utils.html.getViewModel(node)) &&
                                values.indexOf(vm) === -1 &&

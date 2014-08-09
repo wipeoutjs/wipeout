@@ -154,7 +154,7 @@ Class("wipeout.base.view", function () {
     };
     
     // properties which will not be copied onto the view if defined in the template
-    view.reservedPropertyNames = ["constructor", "constructor-tw", "id","id-tw"];
+    view.reservedPropertyNames = ["constructor", "id"];
     
     view.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
@@ -166,13 +166,11 @@ Class("wipeout.base.view", function () {
         if(!propertiesXml)
             return;
         
-        this.__woBag.type = propertiesXml.nodeName;
-        
         var prop = propertiesXml.getAttribute("id");
         if(prop)
             this.id = prop;
         
-        prop = propertiesXml.getAttribute("shareParentScope");
+        prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
         if(prop)
             this.shareParentScope = parseBool(prop);
                 
@@ -181,17 +179,22 @@ Class("wipeout.base.view", function () {
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerate(propertiesXml.attributes, function(attr) {
-            // reserved
-            if(view.reservedPropertyNames.indexOf(attr.nodeName) !== -1) return;
+        enumerateArr(propertiesXml.attributes, function(attr) {
             
             var name = attr.nodeName, setter = "";
-            if(attr.nodeName.length > 3 && name.indexOf("-tw") === attr.nodeName.length - 3) {
+            
+            // find and removr "-tw" if necessary
+            if(attr.nodeName.length > 3 && name.substr(name.length - 3) === "-tw") {
                 name = name.substr(0, name.length - 3);
                 setter = 
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
             }
             
+            name = camelCase(name);
+            
+            // reserved
+            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
+                        
             try {
                 bindingContext.__$woCurrent = this;
                 wipeout.template.engine.createJavaScriptEvaluatorFunction(
@@ -202,15 +205,16 @@ Class("wipeout.base.view", function () {
             }
         }, this);
         
-        enumerate(propertiesXml.childNodes, function(child, i) {
+        enumerateArr(propertiesXml.childNodes, function(child, i) {
             
-            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(child.nodeName) !== -1) return;
+            var nodeName = camelCase(child.nodeName);
+            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
             
             // default
             var type = "string";
             for(var j = 0, jj = child.attributes.length; j < jj; j++) {
                 if(child.attributes[j].nodeName === "constructor" && child.attributes[j].nodeValue) {
-                    type = child.attributes[j].nodeValue;
+                    type = camelCase(child.attributes[j].nodeValue);
                     break;
                 }
             }
@@ -226,7 +230,7 @@ Class("wipeout.base.view", function () {
                 }
             
                 var val = view.objectParser[trimToLower(type)](innerHTML.join(""));
-                view.setObservable(this, child.nodeName, val);
+                view.setObservable(this, nodeName, val);
             } else {
                 var val = wipeout.utils.obj.createObject(type);
                 if(val instanceof wipeout.base.view) {
@@ -234,7 +238,7 @@ Class("wipeout.base.view", function () {
                     val._initialize(child, bindingContext);
                 }
                 
-                view.setObservable(this, child.nodeName, val);
+                view.setObservable(this, nodeName, val);
             }
         }, this);
     };
