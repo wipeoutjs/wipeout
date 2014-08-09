@@ -184,7 +184,7 @@ Class("wipeout.base.view", function () {
             if(view.reservedPropertyNames.indexOf(attr.nodeName) !== -1) return;
             
             var name = attr.nodeName, setter = "";
-            if(attr.nodeName.length > 3 && name.indexOf("-tw") === attr.nodeName.length - 3) {
+            if(attr.nodeName.length > 3 && name.substr(name.length - 3) === "-tw") {
                 name = name.substr(0, name.length - 3);
                 setter = 
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
