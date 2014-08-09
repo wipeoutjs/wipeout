@@ -21,7 +21,7 @@ test("outerHTML", function() {
     // arrange    
     // act    
     //assert
-    wo.obj.enumerate(wo.visual.reservedTags, function(tag) {
+    wo.obj.enumerateObj(wo.visual.reservedTags, function(tag) {
         if(tag === "html")
             throws(function() { wo.html.outerHTML(document.createElement(tag)); }, tag);
         else
@@ -33,7 +33,7 @@ test("createElement", function() {
     // arrange    
     // act    
     //assert
-    wo.obj.enumerate(wo.visual.reservedTags, function(val, tag) {
+    wo.obj.enumerateObj(wo.visual.reservedTags, function(val, tag) {
         if(wo.html.cannotCreateTags[tag])
             throws(function() { wo.html.createElement("<" + createElement + "></" + createElement + ">"); }, tag);
         else {

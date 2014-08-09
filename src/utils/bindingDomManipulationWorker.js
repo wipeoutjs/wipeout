@@ -9,7 +9,7 @@ Class("wipeout.utils.bindingDomManipulationWorker", function () {
     bindingDomManipulationWorker.prototype.finish = function() {
         ///<summary>Cleanup any moved or removed nodes</summary>
         
-        enumerate(wipeout.bindings.bindingBase.registered, function(binding) {
+        enumerateObj(wipeout.bindings.bindingBase.registered, function(binding) {
             if(binding.checkHasMoved() && this._mutations.indexOf(binding.element) === -1)
                 this._mutations.push(binding.element);
         }, this);

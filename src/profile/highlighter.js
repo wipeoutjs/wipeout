@@ -14,7 +14,7 @@ Class("wipeout.profile.highlightVM", function () {
         ///<Summary type="Array" generic0="Node">The nodes belonging to the view model</Summary>
         this.nodes = vm.entireViewModelHtml();
         
-        wipeout.utils.obj.enumerate(this.nodes, function(node) {
+        wipeout.utils.obj.enumerateArr(this.nodes, function(node) {
             if (node.classList)
                 node.classList.add(this.cssClass)
         }, this);
@@ -23,7 +23,7 @@ Class("wipeout.profile.highlightVM", function () {
     highlightVM.prototype.dispose = function() {
         ///<summary>Dispose of this instance.</summary>
         
-        wipeout.utils.obj.enumerate(this.nodes, function(node) {
+        wipeout.utils.obj.enumerateArr(this.nodes, function(node) {
             if (node.classList)
                 node.classList.remove(this.cssClass)
         }, this);

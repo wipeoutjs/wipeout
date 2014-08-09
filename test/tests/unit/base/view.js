@@ -218,7 +218,6 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     subject._initialize(element, bindingContext);
     
     // assert
-    strictEqual(subject.__woBag.type, "root");
     strictEqual(subject.shareParentScope, false);
     strictEqual(subject.model(), bindingContext.$data.model());
     strictEqual(subject.twProp(), bindingContext.$data.twProperty());

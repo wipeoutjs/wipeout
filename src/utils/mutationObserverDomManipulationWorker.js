@@ -18,8 +18,8 @@ Class("wipeout.utils.mutationObserverDomManipulationWorker", function () {
         ///<summary>Add all removed nodes in the mutations paramater to the list of mutations</summary>
         ///<param name="mutations" type="Array" generic0="Object" optional="false">Mutations from a mutation observer</param>
         
-        enumerate(mutations, function(mutation) {
-            enumerate(mutation.removedNodes, function(node) {
+        enumerateArr(mutations, function(mutation) {
+            enumerateArr(mutation.removedNodes, function(node) {
                 if(this._mutations.indexOf(node) === -1)
                     this._mutations.push(node);
             }, this);

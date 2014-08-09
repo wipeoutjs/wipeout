@@ -20,8 +20,8 @@ Class("wipeout.utils.domManipulationWorkerBase", function () {
             }
         }
         
-        enumerate(this._mutations, function(mutation) {
-            enumerate(wipeout.bindings.bindingBase.getBindings(mutation, wipeout.bindings.render), function(binding) {
+        enumerateArr(this._mutations, function(mutation) {
+            enumerateArr(wipeout.bindings.bindingBase.getBindings(mutation, wipeout.bindings.render), function(binding) {
                 binding.hasMoved();
             });
         });

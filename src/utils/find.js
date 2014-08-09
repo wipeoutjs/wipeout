@@ -23,7 +23,7 @@ Class("wipeout.utils.find", function () {
         }
 
         // destroy object ref
-        filters = temp;            
+        filters = temp;
         if(!filters.$number) {
             filters.$number = 0;
         }

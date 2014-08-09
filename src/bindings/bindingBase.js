@@ -25,7 +25,7 @@ Class("wipeout.bindings.bindingBase", function () {
         if(!bindings)
             bindings = wipeout.utils.domData.set(this.element, wipeout.bindings.bindingBase.dataKey, []);
 
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             if(binding.bindingMeta.controlsDescendantBindings)
                 throw "There is already a binding on this element which controls children.";
         });
@@ -120,7 +120,7 @@ Class("wipeout.bindings.bindingBase", function () {
 
         var stop = false;
         var bindings = [];
-        enumerate(wipeout.utils.domData.get(node, wipeout.bindings.bindingBase.dataKey), function(binding) {
+        enumerateArr(wipeout.utils.domData.get(node, wipeout.bindings.bindingBase.dataKey), function(binding) {
             if(!bindingType || binding instanceof bindingType) {
                 bindings.push(binding);
                 stop |= binding.bindingMeta.controlsDescendantBindings;
@@ -129,7 +129,7 @@ Class("wipeout.bindings.bindingBase", function () {
 
         if(!stop) {
             wipeout.utils.ko.enumerateOverChildren(node, function(child) {
-                enumerate(wipeout.bindings.bindingBase.getBindings(child, bindingType), function(binding) {
+                enumerateArr(wipeout.bindings.bindingBase.getBindings(child, bindingType), function(binding) {
                     bindings.push(binding);
                 });
             });

@@ -43,7 +43,7 @@ Class("wipeout.utils.call", function () {
             
             if(args) {
                 var ar = wipeout.utils.obj.copyArray(args);
-                enumerate(arguments, function(arg) { ar.push(arg); });
+                enumerateArr(arguments, function(arg) { ar.push(arg); });
                 return currentFunction.apply(current, ar);
             } else {
                 return currentFunction.apply(current, arguments);

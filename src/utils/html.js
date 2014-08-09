@@ -170,6 +170,18 @@ Class("wipeout.utils.html", function () {
         var sibling = getFirstTagName(htmlString) || "div";
         var parent = specialTags[getTagName("<" + sibling + "/>")] || "div";
         
+        // the innerHTML for some tags is readonly in IE
+        if(ko.utils.ieVersion && ieReadonlyElements[parent]) {
+            var div = createElement("<" + parent + ">" + htmlString + "</" + parent + ">");
+            var output = [];
+            while(div.firstChild) {
+                output.push(div.firstChild);
+                div.removeChild(div.firstChild);
+            }
+            
+            return output;
+        }
+        
         // add wrapping elements so that text element won't be trimmed
         htmlString = "<" + sibling + "></" + sibling + ">" + htmlString + "<" + sibling + "></" + sibling + ">";
         
@@ -280,7 +292,7 @@ Class("wipeout.utils.html", function () {
         
         // check if children have to be disposed
         var controlChildren = false;
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             controlChildren |= binding.bindingMeta.controlsDescendantBindings;
         });
 
@@ -294,7 +306,7 @@ Class("wipeout.utils.html", function () {
         }
         
         // dispose of all wo bindings
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             binding.dispose();
         });
 

@@ -7,7 +7,7 @@ module("wipeout.utils.obj", {
 
 var obj = wipeout.utils.obj;
 
-testUtils.testWithUtils("enumerate", "array", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("enumerateArr", null, true, function(methods, classes, subject, invoker) {
     // arrange
     var subject = [];
     
@@ -26,8 +26,7 @@ testUtils.testWithUtils("enumerate", "array", true, function(methods, classes, s
     strictEqual(subject[3].val, 4);
 });
 
-
-testUtils.testWithUtils("enumerate", "dictionary", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("enumerateObj", null, true, function(methods, classes, subject, invoker) {
     // arrange
     var subject = [];
     
@@ -46,45 +45,6 @@ testUtils.testWithUtils("enumerate", "dictionary", true, function(methods, class
     strictEqual(subject[3].val, 4);
 });
 
-testUtils.testWithUtils("enumerateDesc", "array", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var subject = [];
-    
-    // act    
-    invoker([1,2,3,4], function(i, j){this.push({val:i, name:j});}, subject);
-    
-    // assert    
-    strictEqual(subject.length, 4);
-    strictEqual(subject[3].name, 0);
-    strictEqual(subject[3].val, 1);
-    strictEqual(subject[2].name, 1);
-    strictEqual(subject[2].val, 2);
-    strictEqual(subject[1].name, 2);
-    strictEqual(subject[1].val, 3);
-    strictEqual(subject[0].name, 3);
-    strictEqual(subject[0].val, 4);
-});
-
-
-testUtils.testWithUtils("enumerateDesc", "dictionary", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var subject = [];
-    
-    // act    
-    invoker({"a":1,"b": 2,"c": 3,"d": 4}, function(i, j){this.push({val:i, name:j});}, subject);
-    
-    // assert    
-    strictEqual(subject.length, 4);
-    strictEqual(subject[3].name, "a");
-    strictEqual(subject[3].val, 1);
-    strictEqual(subject[2].name, "b");
-    strictEqual(subject[2].val, 2);
-    strictEqual(subject[1].name, "c");
-    strictEqual(subject[1].val, 3);
-    strictEqual(subject[0].name, "d");
-    strictEqual(subject[0].val, 4);
-});
-
 testUtils.testWithUtils("trim", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var string = "JKHVJKHVJKHVH";
@@ -101,6 +61,16 @@ testUtils.testWithUtils("trimToLower", "", true, function(methods, classes, subj
     // act    
     // assert
     strictEqual(invoker("   \n\r\t" + string + "   \n\r\t"), string.toLowerCase());
+});
+
+testUtils.testWithUtils("camelCase", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act    
+    // assert
+    strictEqual(invoker("hello-one"), "helloOne");
+    strictEqual(invoker("-hello-one"), "HelloOne");
+    strictEqual(invoker("hello-one-"), "helloOne");
+    strictEqual(invoker(null), null);
 });
 
 testUtils.testWithUtils("parseBool", "", true, function(methods, classes, subject, invoker) {

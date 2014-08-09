@@ -86,7 +86,7 @@ Class("wipeout.template.engine", function () {
             var id = engine.getId(xmlElement);
             if(id)
                 id = "'" + id + "'";
-            tags += " wo: { type: " + xmlElement.nodeName + ", id: " + id + ", name: '" + xmlElement.nodeName + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
+            tags += " wo: { type: " + camelCase(xmlElement.nodeName) + ", id: " + id + ", name: '" + xmlElement.nodeName + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
             
             var nodes = wipeout.utils.html.parseXml("<root>" + rewriterCallback(tags) + "</root>");
             while (nodes.childNodes.length) {
