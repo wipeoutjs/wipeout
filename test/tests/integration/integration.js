@@ -25,6 +25,27 @@ module("wipeout.tests.integration.integration", {
     }
 });
 
+test("camel casing and reserved property behavior", function() {
+    
+    // arrange
+    // act
+    application.template('<wo.contentControl aProperty1="true" constructor="true" id="i1" >\
+        <aProperty2>true</aProperty2>\
+    </wo.contentControl>\
+    <wo.content-control a-property-1="true" constructor="true" id="i2" >\
+        <a-property-2>true</a-property-2>\
+    </wo.content-control>');
+    
+    // assert
+    ok(application.templateItems.i1.aProperty1);
+    ok(application.templateItems.i1.aProperty2);
+    strictEqual(application.templateItems.i1.constructor, wo.contentControl);
+    
+    ok(application.templateItems.i2.aProperty1);
+    ok(application.templateItems.i2.aProperty2);
+    strictEqual(application.templateItems.i2.constructor, wo.contentControl);
+});
+
 test("parent child views", function() {
     
     // arrange
