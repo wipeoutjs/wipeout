@@ -1,4 +1,4 @@
-// WipeoutJs v1.1.0
+// WipeoutJs v1.0.0
 // (c) Shane Connon 2014
 // http://www.opensource.org/licenses/mit-license.php
 (function () { 
@@ -3856,6 +3856,18 @@ Class("wipeout.utils.html", function () {
         
         var sibling = getFirstTagName(htmlString) || "div";
         var parent = specialTags[getTagName("<" + sibling + "/>")] || "div";
+        
+        // the innerHTML for some tags is readonly in IE
+        if(ko.utils.ieVersion && ieReadonlyElements[parent]) {
+            var div = createElement("<" + parent + ">" + htmlString + "</" + parent + ">");
+            var output = [];
+            while(div.firstChild) {
+                output.push(div.firstChild);
+                div.removeChild(div.firstChild);
+            }
+            
+            return output;
+        }
         
         // add wrapping elements so that text element won't be trimmed
         htmlString = "<" + sibling + "></" + sibling + ">" + htmlString + "<" + sibling + "></" + sibling + ">";
