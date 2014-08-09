@@ -6,8 +6,4 @@ bug, handle null template id better
 
 changes:    __woBag.type
 
-Now:
-Last article
-TODOs
 search ranking
-Licence
