@@ -82,6 +82,7 @@ compiler.registerClass("Wipeout.Docs.ViewModels.HowDoIApplication", "Wipeout.Doc
             $(articleElement).addClass("list-group-item-info");
         
         var _do = function() {        
+           // debugger;
             $(this.templateItems.leftNav).animate({
                 scrollTop: $(articleElement).offset().top + this.templateItems.leftNav.scrollTop - 80
             }, 500);
