@@ -34,20 +34,20 @@ test("parent child views", function() {
     
     
     // act
-    application.template('<wo.contentControl shareParentScope="true" id="' + parent1 + '">\
+    application.template('<wo.content-control share-parent-scope="true" id="' + parent1 + '">\
         <template>\
-            <wo.view shareParentScope="true" id="' + child1 + '" />\
+            <wo.view share-parent-scope="true" id="' + child1 + '" />\
             <wo.view id="' + child2 + '" />\
         </template>\
-    </wo.contentControl>\
-    <wo.contentControl id="' + parent2 + '">\
+    </wo.content-control>\
+    <wo.content-control id="' + parent2 + '">\
         <template>\
-            <wo.view shareParentScope="true" id="' + child3 + '" />\
+            <wo.view share-parent-scope="true" id="' + child3 + '" />\
             <wo.view id="' + child4 + '" />\
         </template>\
-    </wo.contentControl>\
-    <wo.itemsControl itemSource="[{},{}]" id="' + parent3 + '">\
-    </wo.itemsControl>');
+    </wo.content-control>\
+    <wo.items-control item-source="[{},{}]" id="' + parent3 + '">\
+    </wo.items-control>');
     
     ok(parent1 = application.templateItems[parent1]);
     ok(child1 = application.templateItems[child1]);
@@ -87,12 +87,12 @@ test("call", function() {
         })
     });
     
-    application.template('<wo.contentControl id="content">\
+    application.template('<wo.content-control id="content">\
     <template>\
         <button id="myButton" data-bind="click: $call($parents[0]).dot(\'myVal\').dot(\'myFunction\').args(\'aaa\')">\
         </button>\
     </template>\
-</wo.contentControl>');    
+</wo.content-control>');    
     
     // act
     document.getElementById('myButton').click();
@@ -115,12 +115,12 @@ test("call with args", function() {
         ok(arguments[3]);
     });
     
-    application.template('<wo.contentControl id="content">\
+    application.template('<wo.content-control id="content">\
     <template>\
         <button id="myButton" data-bind="click: $call($parents[0]).dot(\'myFunction\').args(' + arg1 + ', ' + arg2 + ')">\
         </button>\
     </template>\
-</wo.contentControl>');    
+</wo.content-control>');    
     
     // act
     document.getElementById('myButton').click();
@@ -144,12 +144,12 @@ test("findAndCall", function() {
         })
     });
     
-    application.template('<wo.contentControl id="content">\
+    application.template('<wo.content-control id="content">\
     <template>\
         <button id="myButton" data-bind="click: $findAndCall({ id: \'' + application.id + '\' }).dot(\'myVal\').dot(\'myFunction\').args(\'aaa\')">\
         </button>\
     </template>\
-</wo.contentControl>');    
+</wo.content-control>');    
     
     // act
     document.getElementById('myButton').click();
@@ -172,12 +172,12 @@ test("findAndCall with args", function() {
         ok(arguments[3]);
     });
     
-    application.template('<wo.contentControl id="content">\
+    application.template('<wo.content-control id="content">\
     <template>\
         <button id="myButton" data-bind="click: $findAndCall({ id: \'' + application.id + '\' }).dot(\'myFunction\').args(' + arg1 + ', ' + arg2 + ')">\
         </button>\
     </template>\
-</wo.contentControl>');    
+</wo.content-control>');    
     
     // act
     document.getElementById('myButton').click();
@@ -191,7 +191,7 @@ test("removeItem routed event", function() {
     // arrange    
     var item = {};
     application.items = ko.observableArray([{}, item]);
-    application.template('<wo.itemsControl id="cc" itemSource-tw="$parent.items"></wo.itemsControl>');
+    application.template('<wo.items-control id="cc" item-source-tw="$parent.items"></wo.items-control>');
     
     // act
     application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
@@ -206,15 +206,15 @@ test("shareParentScope", function() {
     var container = "LKHLHKLH", val = "LKJGB*(PYGUBOPY", child = "LKGKJHFF";
     
     // act
-    application.template('<wo.contentControl id="' + container + '" anItem="\'' + val + '\'" depth="1">\
+    application.template('<wo.content-control id="' + container + '" anItem="\'' + val + '\'" depth="1">\
     <template>\
-        <wo.contentControl shareParentScope="true" depth="2">\
+        <wo.content-control share-parent-scope="true" depth="2">\
             <template>\
                 <wo.view id="' + child + '" anItem="$parent.anItem" depth="3"></wo.view>\
             </template>\
-        </wo.contentControl>\
+        </wo.content-control>\
     </template>\
-</wo.contentControl>');
+</wo.content-control>');
     
     var subject = application.templateItems[container];
     ok(subject);
@@ -227,7 +227,7 @@ test("shareParentScope", function() {
 test("wipeout.base.if", function() {
     // arrange
     application.hello = ko.observable({hello: "xxx"});
-    application.template('<wo.if shareParentScope="false" condition="$parent.hello">\
+    application.template('<wo.if share-parent-scope="false" condition="$parent.hello">\
     <template>\
         <div id="myDiv" data-bind="html: $parent.hello().hello"></div>\
     </template>\
@@ -244,20 +244,20 @@ test("wipeout.base.if", function() {
 
 test("wipeout.utils.find", function() {
     // arrange
-    application.template('<wo.contentControl id="me1">\
+    application.template('<wo.content-control id="me1">\
     <template>\
-        <wo.contentControl id="me2">\
+        <wo.content-control id="me2">\
             <template>\
-                <wo.contentControl id="me3"\
+                <wo.content-control id="me3"\
                     parent="$find(\'parent\')" grandParent="$find({$a:\'grandParent\'})" greatGrandParent="$find({$a:\'greatGrandParent\'})"\
                     cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
                     v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
                     f0="$find({id: \'me1\'})" fY="$find({id: \'me1\'}, {$n:1})" fX="$find({id: \'me3\'})">\
-                </wo.contentControl>\
+                </wo.content-control>\
             </template>\
-        </wo.contentControl>\
+        </wo.content-control>\
     </template>\
-</wo.contentControl>');
+</wo.content-control>');
     
     var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
     ok(me);
@@ -313,7 +313,7 @@ test("templateItems", function() {
 test("routed event", function() {
     // arrange
     var aRoutedEvent = new wo.routedEvent();
-    var open = "<wo.contentControl id='item'><template>", close = "</template></wo.contentControl>";
+    var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
     application.template(open + open + open + "<div>hi</div>" + close + close + close);
     application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
     application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application.templateItems.item);
@@ -329,7 +329,7 @@ test("routed event", function() {
 test("routed event, handled", function() {
     // arrange
     var aRoutedEvent = new wo.routedEvent();
-    var open = "<wo.contentControl id='item'><template>", close = "</template></wo.contentControl>";
+    var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
     application.template(open + open + open + "<div>hi</div>" + close + close + close);
     application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
     application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { 
@@ -350,7 +350,7 @@ test("routed event, from model", function() {
     var eventArgs = {}, triggered1 = false, triggered2 = false;
     var aRoutedEvent = new wo.routedEvent();
     application.model({child:{child:{child:new wo.routedEventModel()}}})
-    var open = "<wo.contentControl id='item' model='$parent.model().child'><template>", close = "</template></wo.contentControl>";
+    var open = "<wo.content-control id='item' model='$parent.model().child'><template>", close = "</template></wo.content-control>";
     application.template(open + open + open + "<div>hi</div>" + close + close + close);
     var secondDeepest = application.templateItems.item.templateItems.item;
     var deepest = secondDeepest.templateItems.item;
@@ -378,7 +378,7 @@ test("routed event, to model", function() {
     // arrange
     var model = new wo.routedEventModel();
     var aRoutedEvent = new wo.routedEvent();
-    var open = "<wo.contentControl id='item'><template>", close = "</template></wo.contentControl>";
+    var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
     application.template(open + open + open + "<div>hi</div>" + close + close + close);
     application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
     model.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, model);
@@ -413,11 +413,11 @@ test("un render", function() {
     application.hello = vms[1];
     application.hello.helloAgain = vms[2];
     application.hello.helloAgain.template(
-"<wo.contentControl id=\"cc1\">\
-</wo.contentControl>\
+"<wo.content-control id=\"cc1\">\
+</wo.content-control>\
 <div>Hi</div>\
-<wo.contentControl id=\"cc2\">\
-</wo.contentControl>");
+<wo.content-control id=\"cc2\">\
+</wo.content-control>");
     application.hello.template("<!-- ko render: helloAgain--><!-- /ko -->");
     
     application.template("<!-- ko render: hello--><!-- /ko -->");
@@ -492,11 +492,11 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     
     // act
     application.template(
-"<wo.itemsControl itemSource='model().items' id='" + id1 + "'>\
+"<wo.items-control item-source='model().items' id='" + id1 + "'>\
     <itemTemplate>\
         <div class='" + id2 + "' data-bind='html: model()'></div>\
     </itemTemplate>\
-</wo.itemsControl>");
+</wo.items-control>");
     
     // assert
     assert(item1, item2, item3);
@@ -612,21 +612,21 @@ test("items control, $index, shareParentScope", function() {
 
 /*test("move view model", function() {
     // arrange
-    application.template('<wo.contentControl id="toMove">\
+    application.template('<wo.content-control id="toMove">\
     <template>\
         <span></span>\
     </template>\
-</wo.contentControl>\
-<wo.contentControl id="moveToParent1" shareParentScope="true">\
+</wo.content-control>\
+<wo.content-control id="moveToParent1" share-parent-scope="true">\
     <template>\
         <div id="moveToPosition1"></div>\
     </template>\
-</wo.contentControl>\
-<wo.contentControl id="moveToParent2">\
+</wo.content-control>\
+<wo.content-control id="moveToParent2">\
     <template>\
         <div id="moveToPosition2"></div>\
     </template>\
-</wo.contentControl>');
+</wo.content-control>');
     
     var toMove = application.templateItems.toMove;
     var moveToParent2 = application.templateItems.moveToParent2;
@@ -661,7 +661,7 @@ function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
     application.template('<wo.view id="i0" />\
 <div id="a">\
-    <wo.contentControl id="i1">\
+    <wo.content-control id="i1">\
         <template>\
             <div id="b">\
                 <div id="c">\
@@ -669,16 +669,16 @@ function disposeTest (act) {
                 </div>\
             </div>\
         </template>\
-    </wo.contentControl>\
+    </wo.content-control>\
     <div id="d">\
         <div id="e">\
-            <wo.itemsControl id="i3" itemSource="[{},{}]">\
+            <wo.items-control id="i3" item-source="[{},{}]">\
                 <template>\
                     <div id="f">\
                         <!-- ko itemsControl: null --><!-- /ko -->\
                     </div>\
                 </template>\
-            </wo.itemsControl>\
+            </wo.items-control>\
         </div\>\
     </div\>\
 </div>');
@@ -733,7 +733,7 @@ test("multi-dimentional binding", function() {
     var val = "KJBIUPJKKJGVLHJVMGJ";
     var model = { inner: ko.observable({ inner: ko.observable({ inner: ko.observable({ val: ko.observable("") }) }) }) };
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
-    var open = "<wo.contentControl id='" + id1 + "' model='$parent.model().inner'><template>", close = "</template></wo.contentControl>";
+    var open = "<wo.content-control id='" + id1 + "' model='$parent.model().inner'><template>", close = "</template></wo.content-control>";
     application.model(model);
     application.template(open + open + open + "<div id='" + id2 + "' data-bind='html: model().val'></div>" + close + close + close);
     

@@ -114,7 +114,7 @@ Class("wipeout.base.itemsControl", function () {
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
     
         if(propertiesXml) {        
-            var prop = propertiesXml.getAttribute("shareParentScope");
+            var prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
             if(prop && parseBool(prop))
                 throw "A wo.itemsControl cannot share it's parents scope.";
         }
