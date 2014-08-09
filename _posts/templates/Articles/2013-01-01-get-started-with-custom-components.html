@@ -86,7 +86,7 @@
     &lt;div>
         Hello &lt;span data-bind="text: model().name">&lt;/span>!
         &lt;br />
-        &lt;helloWipeout.collapsible 
+        &lt;hello-wipeout.collapsible 
             model="$parent.model().collapsibleContent" />
     &lt;/div>
 &lt;/script></code>       
@@ -125,6 +125,10 @@
                         The <a href="http://knockoutjs.com/documentation/binding-context.html" target="_blank">$parent</a> definiton
                         comes from knockout and allows you to refer to ancestors of the view model
                     </li>
+                    <li>
+                        Note that the namespace <code>helloWipeout</code> has changed to <code>hello-wipeout</code> when used in a template. Html editors do not like upper case 
+                        lstters, so a <code>-</code> symbol can be used to denote that the next letter is upper case
+                    </li>
                 </ul>
             </p>            
         </div>
@@ -140,7 +144,7 @@
 
         
         <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
-            <code>&lt;wo.contentControl templateId="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.contentControl></code>
+            <code>&lt;wo.content-control templateId="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content-control></code>
         </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
 <br/>
 <br/>

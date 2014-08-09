@@ -1,5 +1,16 @@
 <h1>Binding or setting properties</h1>
 
+<p>Binding properties is the process of binding the value of a property on one model or view model to that of another model or view model.
+    If the "from" property is a <code>ko.observable</code> then all changes to it will reflect in the "to" property. If the "to" property 
+    is a <code>ko.observable</code> and the binding is a <Wipeout.Rl text="'two way binding'" href="'/wipeout-1/how-do-i.html?article=bind-two-way'" />, then then all changes to it will reflect in the "from" property.
+</p>
+
+<h3>camelCasing</h3>
+<p>Html editors do not like upper case letters, and although wipeout templates are xml (not html) you will most likely be uing a html editor to create them. So, within wipeout,
+property names contaianing "<code>-</code>" will convert the property name to camel case on the view model. So, <code>my-property="true"</code> in the template will set <code>myProperty = true</code> on the view model.</p>
+
+
+<h3>Binding</h3>
 There are lots of ways to bind items and set properties within a template:
 
 <ul>

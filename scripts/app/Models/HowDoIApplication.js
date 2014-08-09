@@ -164,7 +164,7 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
     
     HowDoIApplication.prototype._search = function(searchTerm) {
         if(!searchTerm) {
-            wo.obj.enumerate(this.flatList, function(item) {
+            wo.obj.enumerateArr(this.flatList, function(item) {
                 if(!item.visible())item.visible(true);
             }, this);
             
@@ -173,7 +173,7 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
         
         searchTerm = searchTerm.toLowerCase().split(/\s+/);        
         
-        wo.obj.enumerate(this.flatList, function(item) {
+        wo.obj.enumerateArr(this.flatList, function(item) {
             
             var visible = true;
             var title = item.text.toLowerCase();
@@ -186,16 +186,16 @@ compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", fun
     
     HowDoIApplication.prototype.index = function() {
         this.flatList.length = 0;
-        wo.obj.enumerate(this.leftHandNav, function(group) {
+        wo.obj.enumerateArr(this.leftHandNav, function(group) {
             if(group.header)
                 this.flatList.push(group.header);
             
-            wo.obj.enumerate(group.items, function(item) {
+            wo.obj.enumerateArr(group.items, function(item) {
                 this.flatList.push(item);
             }, this);
         }, this);
         
-        wo.obj.enumerate(this.flatList, function(item) {
+        wo.obj.enumerateArr(this.flatList, function(item) {
             item.body = document.getElementById("Articles." + item.href.substr(item.href.indexOf("article=") + 8)).text.toLowerCase();
         }, this);        
     };

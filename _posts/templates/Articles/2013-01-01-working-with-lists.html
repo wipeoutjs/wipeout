@@ -5,14 +5,14 @@
 </p>
     
 <Wipeout.Docs.ViewModels.Components.CodeBlock>
-    <code>&lt;wo.itemsControl itemSource="['Hello wipeout 1', 'Hello wipeout 2']">
-    &lt;itemTemplate>
+    <code>&lt;wo.items-control itemSource="['Hello wipeout 1', 'Hello wipeout 2']">
+    &lt;item-template>
         &lt;div>
             &lt;span data-bind="text: model">&lt;/span>
             Index: &lt;span data-bind="text: $index">&lt;/span>
         &lt;/div>
-    &lt;/itemTemplate>
-&lt;/wo.itemsControl></code>
+    &lt;/item-template>
+&lt;/wo.items-control></code>
 </Wipeout.Docs.ViewModels.Components.CodeBlock>
 
 <p>In the itemTemplate, you access an object from the itemSource using the model property. You can also access the object's index using $index.

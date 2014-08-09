@@ -11,11 +11,11 @@
 <Wipeout.Docs.ViewModels.Components.CodeBlock>
     <code>&lt;myViewModel model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.contentControl myViewModelAncestor="$find(myViewModel)">
+        &lt;wo.content-control my-view-model-ancestor="$find(myViewModel)">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
-        &lt;/wo.contentControl>
+        &lt;/wo.content-control>
     &lt;/template>
 &lt;/myViewModel></code>
 </Wipeout.Docs.ViewModels.Components.CodeBlock>
@@ -26,15 +26,15 @@
 	The string must be of the form 'parent', 'grandparent', 'greatgrandparent', 'greatgreatgrandparent', etc...</p>
 
 <Wipeout.Docs.ViewModels.Components.CodeBlock>
-    <code>&lt;myViewModel model="'Hello wipeout!'">
+    <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.contentControl myViewModelAncestor="$find('parent')">
+        &lt;wo.content-control my-view-model-ancestor="$find('parent')">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
-        &lt;/wo.contentControl>
+        &lt;/wo.content-control>
     &lt;/template>
-&lt;/myViewModel></code>
+&lt;/my-view-model></code>
 </Wipeout.Docs.ViewModels.Components.CodeBlock>
 
 <h2>Using more complex filters</h2>
@@ -42,15 +42,15 @@
 <p>You can pass a filters object into <code>$call</code> for a targeted search. </p>
 
 <Wipeout.Docs.ViewModels.Components.CodeBlock>
-    <code>&lt;myViewModel model="'Hello wipeout!'">
+    <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.contentControl myViewModelAncestor="$find({$instanceof: myViewModel})">
+        &lt;wo.content-control my-view-model-ancestor="$find({$instanceof: myViewModel})">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
-        &lt;/wo.contentControl>
+        &lt;/wo.content-control>
     &lt;/template>
-&lt;/myViewModel></code>
+&lt;/my-view-model></code>
 </Wipeout.Docs.ViewModels.Components.CodeBlock>
 
 <table class="table table-striped">
@@ -96,19 +96,3 @@
 		</tr>
 	</tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

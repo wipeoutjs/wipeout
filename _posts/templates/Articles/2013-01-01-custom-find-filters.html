@@ -21,15 +21,15 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <p>And then using the filter</p>
     
 <Wipeout.Docs.ViewModels.Components.CodeBlock>
-    <code>&lt;myNamespace.myViewModel model="'Hello wipeout!'">
+    <code>&lt;my-namespace.my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.contentControl myViewModelAncestor="$find({$namespace: myNamespace})">
+        &lt;wo.content-control my-view-model-ancestor="$find({$namespace: myNamespace})">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
-        &lt;/wo.contentControl>
+        &lt;/wo.content-control>
     &lt;/template>
-&lt;/myNamespace.myViewModel></code>
+&lt;/my-namespace.my-view-model></code>
 </Wipeout.Docs.ViewModels.Components.CodeBlock>
 
 <p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
