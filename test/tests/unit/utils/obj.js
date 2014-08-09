@@ -70,6 +70,7 @@ testUtils.testWithUtils("camelCase", "", true, function(methods, classes, subjec
     strictEqual(invoker("hello-one"), "helloOne");
     strictEqual(invoker("-hello-one"), "HelloOne");
     strictEqual(invoker("hello-one-"), "helloOne");
+    strictEqual(invoker(null), null);
 });
 
 testUtils.testWithUtils("parseBool", "", true, function(methods, classes, subject, invoker) {

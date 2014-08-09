@@ -190,11 +190,11 @@ Class("wipeout.base.view", function () {
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
             }
             
-            // reserved
-            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
-            
             name = camelCase(name);
             
+            // reserved
+            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
+                        
             try {
                 bindingContext.__$woCurrent = this;
                 wipeout.template.engine.createJavaScriptEvaluatorFunction(
@@ -207,7 +207,7 @@ Class("wipeout.base.view", function () {
         
         enumerateArr(propertiesXml.childNodes, function(child, i) {
             
-            var nodeName = child.nodeName;
+            var nodeName = camelCase(child.nodeName);
             if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
             
             // default

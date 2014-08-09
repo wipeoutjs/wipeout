@@ -145,6 +145,8 @@ var camelCase = function(input) {
     ///<param name="constructorString" type="String">The string to convert</param>
     ///<returns type="String">The camel cased string</returns>
     
+    if(!input) return input;
+    
     var minus = /\-/, i;
     while ((i = input.search(minus)) !== -1) {
         if (i === input.length - 1) {
