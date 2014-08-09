@@ -166,8 +166,6 @@ Class("wipeout.base.view", function () {
         if(!propertiesXml)
             return;
         
-        this.__woBag.type = propertiesXml.nodeName;
-        
         var prop = propertiesXml.getAttribute("id");
         if(prop)
             this.id = prop;
