@@ -1,3 +1,6 @@
+// WipeoutJs v1.1.0
+// (c) Shane Connon 2014
+// http://www.opensource.org/licenses/mit-license.php
 (function () { 
 //"use strict"; - cannot use strict right now. any functions defined in strict mode are not accesable via arguments.callee.caller, which is used by _super
 var wipeout = {};
@@ -28,51 +31,34 @@ var ajax = function (options) {
     return xmlhttp;
 };
     
-var enumerate = function(enumerate, action, context) {
+var enumerateArr = function(enumerate, action, context) {
     ///<summary>Enumerate through an array or object</summary>
     ///<param name="enumerate" type="Any">An item to enumerate over</param>
     ///<param name="action" type="Function">The callback to apply to each item</param>
     ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
     
-    context = context || window;
-        
-    if(enumerate == null) return;
+    if (!enumerate) return;
     
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = 0, ii = enumerate.length; i < ii; i++)
-            action.call(context, enumerate[i], i);
-    else
-        for(var i in enumerate)
-            action.call(context, enumerate[i], i);
+    context = context || window;
+    
+    for(var i = 0, ii = enumerate.length; i < ii; i++)
+        action.call(context, enumerate[i], i);
 };
-
-var enumerateDesc = function(enumerate, action, context) {
-    ///<summary>Enumerate through an array or object in a decending order</summary>
+    
+var enumerateObj = function(enumerate, action, context) {
+    ///<summary>Enumerate through an array or object</summary>
     ///<param name="enumerate" type="Any">An item to enumerate over</param>
     ///<param name="action" type="Function">The callback to apply to each item</param>
     ///<param name="context" type="Any" optional="true">The context to apply to the callback</param>
-    context = context || window;
     
-    if(enumerate == null) return;
-    if(enumerate instanceof Array || 
-       enumerate instanceof HTMLCollection || 
-       enumerate instanceof NodeList || 
-       (window.NamedNodeMap && enumerate instanceof NamedNodeMap) || 
-       (window.MozNamedAttrMap && enumerate instanceof MozNamedAttrMap))
-        for(var i = enumerate.length - 1; i >= 0; i--)
-            action.call(context, enumerate[i], i);
-    else {
-        var props = [];
-        for(var i in enumerate)
-            props.push(i);
+    if (!enumerate) return;
+    
+    context = context || window;
         
-        for(var i = props.length - 1; i >= 0; i--)
-            action.call(context, enumerate[props[i]], props[i]);
-    }
+    if(enumerate == null) return;
+
+    for(var i in enumerate)
+        action.call(context, enumerate[i], i);
 };
 
 var Binding = function(bindingName, allowVirtual, accessorFunction) {
@@ -118,12 +104,12 @@ var Extend = function(namespace, extendWith) {
     namespace.splice(0, 1);
     
     var current = wipeout;
-    enumerate(namespace, function(nsPart) {
+    enumerateArr(namespace, function(nsPart) {
         current = current[nsPart] || (current[nsPart] = {});
     });
     
     if(extendWith && extendWith instanceof Function) extendWith = extendWith();
-    enumerate(extendWith, function(item, i) {
+    enumerateObj(extendWith, function(item, i) {
         current[i] = item;
     });
 };
@@ -155,6 +141,25 @@ var parseBool = function(input) {
     input = trimToLower(input);
     
     return !!(input && input !== "false" && input !== "0");
+};
+
+var camelCase = function(input) {
+    ///<summary>Converts a string from "first-second" to "firstSecond"</summary>
+    ///<param name="constructorString" type="String">The string to convert</param>
+    ///<returns type="String">The camel cased string</returns>
+    
+    if(!input) return input;
+    
+    var minus = /\-/, i;
+    while ((i = input.search(minus)) !== -1) {
+        if (i === input.length - 1) {
+            return input.substr(0, i);
+        } else {
+            input = input.substr(0, i) + input[i + 1].toUpperCase() + input.substr(i + 2);
+        }
+    }
+    
+    return input;
 };
 
 Class("wipeout.utils.obj", function () {
@@ -225,12 +230,13 @@ Class("wipeout.utils.obj", function () {
     };
     
     var obj = function obj() { };
+    obj.camelCase = camelCase;
     obj.ajax = ajax;
     obj.parseBool = parseBool;
     obj.trimToLower = trimToLower;
     obj.trim = trim;
-    obj.enumerate = enumerate;
-    obj.enumerateDesc = enumerateDesc;
+    obj.enumerateArr = enumerateArr;
+    obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
     obj.createObject = createObject;
     obj.copyArray = copyArray;
@@ -418,8 +424,8 @@ Class("wipeout.utils.domManipulationWorkerBase", function () {
             }
         }
         
-        enumerate(this._mutations, function(mutation) {
-            enumerate(wipeout.bindings.bindingBase.getBindings(mutation, wipeout.bindings.render), function(binding) {
+        enumerateArr(this._mutations, function(mutation) {
+            enumerateArr(wipeout.bindings.bindingBase.getBindings(mutation, wipeout.bindings.render), function(binding) {
                 binding.hasMoved();
             });
         });
@@ -520,8 +526,8 @@ Class("wipeout.base.visual", function () {
         displayFunction = displayFunction || function() { return typeof arguments[0]; };
 
         var output = [];
-        wipeout.utils.obj.enumerate(wipeout.utils.html.getAllChildren(rootElement), function (child) {
-            wipeout.utils.obj.enumerate(visual.visualGraph(child), output.push, output);
+        wipeout.utils.obj.enumerateArr(wipeout.utils.html.getAllChildren(rootElement), function (child) {
+            wipeout.utils.obj.enumerateArr(visual.visualGraph(child), output.push, output);
         });
 
         var vm = wipeout.utils.domData.get(rootElement, wipeout.bindings.wipeout.utils.wipeoutKey);        
@@ -620,7 +626,7 @@ Class("wipeout.base.visual", function () {
                 this[i].dispose();
 
         // dispose of routed event subscriptions
-        enumerate(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
+        enumerateArr(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
             event.dispose();
         });
 
@@ -749,7 +755,7 @@ Class("wipeout.base.visual", function () {
     var reservedTags = ["a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"];
     
     visual.reservedTags = {};
-    enumerate(reservedTags, function(tag) {
+    enumerateArr(reservedTags, function(tag) {
         visual.reservedTags[tag] = true;
     });
     
@@ -912,7 +918,7 @@ Class("wipeout.base.view", function () {
     };
     
     // properties which will not be copied onto the view if defined in the template
-    view.reservedPropertyNames = ["constructor", "constructor-tw", "id","id-tw"];
+    view.reservedPropertyNames = ["constructor", "id"];
     
     view.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
@@ -924,13 +930,11 @@ Class("wipeout.base.view", function () {
         if(!propertiesXml)
             return;
         
-        this.__woBag.type = propertiesXml.nodeName;
-        
         var prop = propertiesXml.getAttribute("id");
         if(prop)
             this.id = prop;
         
-        prop = propertiesXml.getAttribute("shareParentScope");
+        prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
         if(prop)
             this.shareParentScope = parseBool(prop);
                 
@@ -939,17 +943,22 @@ Class("wipeout.base.view", function () {
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerate(propertiesXml.attributes, function(attr) {
-            // reserved
-            if(view.reservedPropertyNames.indexOf(attr.nodeName) !== -1) return;
+        enumerateArr(propertiesXml.attributes, function(attr) {
             
             var name = attr.nodeName, setter = "";
-            if(attr.nodeName.length > 3 && name.indexOf("-tw") === attr.nodeName.length - 3) {
+            
+            // find and removr "-tw" if necessary
+            if(attr.nodeName.length > 3 && name.substr(name.length - 3) === "-tw") {
                 name = name.substr(0, name.length - 3);
                 setter = 
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
             }
             
+            name = camelCase(name);
+            
+            // reserved
+            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
+                        
             try {
                 bindingContext.__$woCurrent = this;
                 wipeout.template.engine.createJavaScriptEvaluatorFunction(
@@ -960,15 +969,16 @@ Class("wipeout.base.view", function () {
             }
         }, this);
         
-        enumerate(propertiesXml.childNodes, function(child, i) {
+        enumerateArr(propertiesXml.childNodes, function(child, i) {
             
-            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(child.nodeName) !== -1) return;
+            var nodeName = camelCase(child.nodeName);
+            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
             
             // default
             var type = "string";
             for(var j = 0, jj = child.attributes.length; j < jj; j++) {
                 if(child.attributes[j].nodeName === "constructor" && child.attributes[j].nodeValue) {
-                    type = child.attributes[j].nodeValue;
+                    type = camelCase(child.attributes[j].nodeValue);
                     break;
                 }
             }
@@ -984,7 +994,7 @@ Class("wipeout.base.view", function () {
                 }
             
                 var val = view.objectParser[trimToLower(type)](innerHTML.join(""));
-                view.setObservable(this, child.nodeName, val);
+                view.setObservable(this, nodeName, val);
             } else {
                 var val = wipeout.utils.obj.createObject(type);
                 if(val instanceof wipeout.base.view) {
@@ -992,7 +1002,7 @@ Class("wipeout.base.view", function () {
                     val._initialize(child, bindingContext);
                 }
                 
-                view.setObservable(this, child.nodeName, val);
+                view.setObservable(this, nodeName, val);
             }
         }, this);
     };
@@ -1158,7 +1168,7 @@ Class("wipeout.debug", function () {
                 if(node) {
                     switch(node.nodeType) {
                         case 1:
-                            enumerate(node.childNodes, recursive);
+                            enumerateArr(node.childNodes, recursive);
                         case 8:
                             if((vm = wipeout.utils.html.getViewModel(node)) &&
                                values.indexOf(vm) === -1 &&
@@ -1177,11 +1187,11 @@ Class("wipeout.debug", function () {
 
 Class("wipeout.settings", function() {
     function settings (settings) {
-        enumerate(wipeout.settings, function(a,i) {
+        enumerateObj(wipeout.settings, function(a,i) {
             delete wipeout.settings[i];
         });
         
-        enumerate(settings, function(setting, i) {
+        enumerateObj(settings, function(setting, i) {
             wipeout.settings[i] = setting;
         });        
     }
@@ -1658,7 +1668,7 @@ Class("wipeout.base.itemsControl", function () {
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
     
         if(propertiesXml) {        
-            var prop = propertiesXml.getAttribute("shareParentScope");
+            var prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
             if(prop && parseBool(prop))
                 throw "A wo.itemsControl cannot share it's parents scope.";
         }
@@ -1718,7 +1728,7 @@ Class("wipeout.base.itemsControl", function () {
         ///<summary>Runs onItemDeleted and onItemRendered on deleted and created items respectively</summary>
         ///<param name="changes" type="Array" generic0="wo.view" optional="false">A knockout diff of changes to the items</param>
         
-        enumerate(changes, function(change) {
+        enumerateArr(changes, function(change) {
             if(change.status === wipeout.utils.ko.array.diff.deleted && change.moved == null)
                 this.onItemDeleted(change.value);
             else if(change.status === wipeout.utils.ko.array.diff.added && change.moved == null)
@@ -1774,7 +1784,7 @@ Class("wipeout.base.itemsControl", function () {
     
     itemsControl.prototype.dispose = function () {
         ///<summary>Dispose of the items control and its items</summary>
-        enumerate(this.items(), function(i) {
+        enumerateArr(this.items(), function(i) {
             i.dispose();
         });
         
@@ -1929,7 +1939,7 @@ Class("wipeout.bindings.bindingBase", function () {
         if(!bindings)
             bindings = wipeout.utils.domData.set(this.element, wipeout.bindings.bindingBase.dataKey, []);
 
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             if(binding.bindingMeta.controlsDescendantBindings)
                 throw "There is already a binding on this element which controls children.";
         });
@@ -2024,7 +2034,7 @@ Class("wipeout.bindings.bindingBase", function () {
 
         var stop = false;
         var bindings = [];
-        enumerate(wipeout.utils.domData.get(node, wipeout.bindings.bindingBase.dataKey), function(binding) {
+        enumerateArr(wipeout.utils.domData.get(node, wipeout.bindings.bindingBase.dataKey), function(binding) {
             if(!bindingType || binding instanceof bindingType) {
                 bindings.push(binding);
                 stop |= binding.bindingMeta.controlsDescendantBindings;
@@ -2033,7 +2043,7 @@ Class("wipeout.bindings.bindingBase", function () {
 
         if(!stop) {
             wipeout.utils.ko.enumerateOverChildren(node, function(child) {
-                enumerate(wipeout.bindings.bindingBase.getBindings(child, bindingType), function(binding) {
+                enumerateArr(wipeout.bindings.bindingBase.getBindings(child, bindingType), function(binding) {
                     bindings.push(binding);
                 });
             });
@@ -2200,7 +2210,7 @@ Binding("render", true, function () {
         if(!this.value) return;
 
         // delete all template items
-        enumerate(this.value.templateItems, function(item, i) {            
+        enumerateObj(this.value.templateItems, function(item, i) {
             delete this.value.templateItems[i];
         }, this);
 
@@ -2330,12 +2340,12 @@ Binding("render", true, function () {
                 name: value.templateId.peek(),
                 afterRender: function(nodes, context) {
                     var old = [];
-                    enumerate(value.__woBag.nodes, function(node) {
+                    enumerateArr(value.__woBag.nodes, function(node) {
                         old.push(node);
                     });
 
                     value.__woBag.nodes.length = 0;
-                    enumerate(nodes || [], function(node) {
+                    enumerateArr(nodes || [], function(node) {
                         value.__woBag.nodes.push(node);
                     });                            
 
@@ -2534,6 +2544,32 @@ Binding("wo", true, function () {
     return wo;
 });
 
+Class("wipeout.polyfills.Array", function () {
+    
+    var array = function() {
+        ///<summary>Polyfill placeholder for Array</summary>
+    };
+    
+    array.prototype.indexOf = function(obj) {
+        ///<summary>Polyfill for Array.prototype.indexOf</summary>
+        ///<param name="obj" type="Any" optional="false">The object to find</param>
+        ///<returns type="Number">It's index</returns>
+        
+        for(var i = 0, ii = this.length; i < ii; i++)
+            if(this[i] === obj)
+                return i;
+        
+        return -1;
+    };
+    
+    enumerateObj(array.prototype, function(item, i) {
+        if(!Array.prototype[i])
+            Array.prototype[i] = item;
+    });
+    
+    return array;    
+});
+
 Class("wipeout.profile.highlightVM", function () { 
     
     var highlightVM = wipeout.base.object.extend(function highlightVM(vm, cssClass) {
@@ -2550,7 +2586,7 @@ Class("wipeout.profile.highlightVM", function () {
         ///<Summary type="Array" generic0="Node">The nodes belonging to the view model</Summary>
         this.nodes = vm.entireViewModelHtml();
         
-        wipeout.utils.obj.enumerate(this.nodes, function(node) {
+        wipeout.utils.obj.enumerateArr(this.nodes, function(node) {
             if (node.classList)
                 node.classList.add(this.cssClass)
         }, this);
@@ -2559,7 +2595,7 @@ Class("wipeout.profile.highlightVM", function () {
     highlightVM.prototype.dispose = function() {
         ///<summary>Dispose of this instance.</summary>
         
-        wipeout.utils.obj.enumerate(this.nodes, function(node) {
+        wipeout.utils.obj.enumerateArr(this.nodes, function(node) {
             if (node.classList)
                 node.classList.remove(this.cssClass)
         }, this);
@@ -2983,7 +3019,7 @@ Class("wipeout.template.engine", function () {
             var id = engine.getId(xmlElement);
             if(id)
                 id = "'" + id + "'";
-            tags += " wo: { type: " + xmlElement.nodeName + ", id: " + id + ", name: '" + xmlElement.nodeName + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
+            tags += " wo: { type: " + camelCase(xmlElement.nodeName) + ", id: " + id + ", name: '" + xmlElement.nodeName + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
             
             var nodes = wipeout.utils.html.parseXml("<root>" + rewriterCallback(tags) + "</root>");
             while (nodes.childNodes.length) {
@@ -3119,7 +3155,7 @@ Class("wipeout.template.htmlBuilder", function () {
         }
         
         var html = wipeout.utils.html.createElements(returnVal.join(""));
-        enumerate(htmlBuilder.getTemplateIds({childNodes: html}), function(item, id) {
+        enumerateObj(htmlBuilder.getTemplateIds({childNodes: html}), function(item, id) {
             bindingContext.$data.templateItems[id] = item;
         });
             
@@ -3168,7 +3204,7 @@ Class("wipeout.template.htmlBuilder", function () {
         ///<returns type="Object">A dictionary of elements and ids</returns>
         
         var ids = {};
-        enumerate(element.childNodes, function(node) {
+        enumerateArr(element.childNodes, function(node) {
             if(node.nodeType === 1) {
                 for(var j = 0, jj = node.attributes.length; j < jj; j++) {
                     if(node.attributes[j].nodeName === "id") {
@@ -3178,7 +3214,7 @@ Class("wipeout.template.htmlBuilder", function () {
                 }
                 
                 // look at child elements
-                enumerate(htmlBuilder.getTemplateIds(node), function(element, id) {
+                enumerateObj(htmlBuilder.getTemplateIds(node), function(element, id) {
                     ids[id] = element;
                 });
             }                
@@ -3195,7 +3231,7 @@ Class("wipeout.template.htmlBuilder", function () {
         var result = [];
         var ser = new XMLSerializer();
         
-        enumerate(xmlTemplate.childNodes, function(child) {            
+        enumerateArr(xmlTemplate.childNodes, function(child) {            
             if(child.nodeType == 1) {
                 
                 // create copy with no child nodes
@@ -3231,7 +3267,7 @@ Class("wipeout.utils.bindingDomManipulationWorker", function () {
     bindingDomManipulationWorker.prototype.finish = function() {
         ///<summary>Cleanup any moved or removed nodes</summary>
         
-        enumerate(wipeout.bindings.bindingBase.registered, function(binding) {
+        enumerateObj(wipeout.bindings.bindingBase.registered, function(binding) {
             if(binding.checkHasMoved() && this._mutations.indexOf(binding.element) === -1)
                 this._mutations.push(binding.element);
         }, this);
@@ -3287,7 +3323,7 @@ Class("wipeout.utils.call", function () {
             
             if(args) {
                 var ar = wipeout.utils.obj.copyArray(args);
-                enumerate(arguments, function(arg) { ar.push(arg); });
+                enumerateArr(arguments, function(arg) { ar.push(arg); });
                 return currentFunction.apply(current, ar);
             } else {
                 return currentFunction.apply(current, arguments);
@@ -3440,7 +3476,7 @@ Class("wipeout.utils.find", function () {
         }
 
         // destroy object ref
-        filters = temp;            
+        filters = temp;
         if(!filters.$number) {
             filters.$number = 0;
         }
@@ -3821,6 +3857,18 @@ Class("wipeout.utils.html", function () {
         var sibling = getFirstTagName(htmlString) || "div";
         var parent = specialTags[getTagName("<" + sibling + "/>")] || "div";
         
+        // the innerHTML for some tags is readonly in IE
+        if(ko.utils.ieVersion && ieReadonlyElements[parent]) {
+            var div = createElement("<" + parent + ">" + htmlString + "</" + parent + ">");
+            var output = [];
+            while(div.firstChild) {
+                output.push(div.firstChild);
+                div.removeChild(div.firstChild);
+            }
+            
+            return output;
+        }
+        
         // add wrapping elements so that text element won't be trimmed
         htmlString = "<" + sibling + "></" + sibling + ">" + htmlString + "<" + sibling + "></" + sibling + ">";
         
@@ -3931,7 +3979,7 @@ Class("wipeout.utils.html", function () {
         
         // check if children have to be disposed
         var controlChildren = false;
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             controlChildren |= binding.bindingMeta.controlsDescendantBindings;
         });
 
@@ -3945,7 +3993,7 @@ Class("wipeout.utils.html", function () {
         }
         
         // dispose of all wo bindings
-        enumerate(bindings, function(binding) {
+        enumerateArr(bindings, function(binding) {
             binding.dispose();
         });
 
@@ -4205,8 +4253,8 @@ Class("wipeout.utils.mutationObserverDomManipulationWorker", function () {
         ///<summary>Add all removed nodes in the mutations paramater to the list of mutations</summary>
         ///<param name="mutations" type="Array" generic0="Object" optional="false">Mutations from a mutation observer</param>
         
-        enumerate(mutations, function(mutation) {
-            enumerate(mutation.removedNodes, function(node) {
+        enumerateArr(mutations, function(mutation) {
+            enumerateArr(mutation.removedNodes, function(node) {
                 if(this._mutations.indexOf(node) === -1)
                     this._mutations.push(node);
             }, this);
@@ -4227,11 +4275,11 @@ Class("wipeout.utils.mutationObserverDomManipulationWorker", function () {
 
 window.wipeout = wipeout;
 window.wo = {};
-enumerate(wipeout.base, function(item, i) {
+enumerateObj(wipeout.base, function(item, i) {
     window.wo[i] = item;
 });
 
-enumerate(wipeout.utils, function(item, i) {
+enumerateObj(wipeout.utils, function(item, i) {
     window.wo[i] = item;
 });
 

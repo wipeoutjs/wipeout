@@ -3,19 +3,19 @@
 <p>
 By default, all bindings are one way. This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified.
-    This can be remedied by using a two way binding. Two way bindings are suffixed with "-tw".
+    This can be remedied by using a two way binding. Two way bindings are suffixed with <code>-tw</code>.
 </p>
 
     <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'bind-two-way-script-1'">
-        <code>&lt;wo.contentControl model="{ value: ko.observable('Hello wipeout!') }">
+        <code>&lt;wo.content-control model="{ value: ko.observable('Hello wipeout!') }">
     &lt;template>
-        &lt;wo.contentControl model-tw="$parent.model().value">
+        &lt;wo.content-control model-tw="$parent.model().value">
             &lt;template>
                 Two way bindings: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>
-        &lt;/wo.contentControl>
+        &lt;/wo.content-control>
     &lt;/template>
-&lt;/wo.contentControl></code>
+&lt;/wo.content-control></code>
     </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
     
     <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
