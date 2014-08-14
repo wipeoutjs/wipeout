@@ -1,5 +1,5 @@
 
-Class("wipeout.base.routedEvent", function () {
+Class("wipeout.events.routedEvent", function () {
     
     var routedEvent = function routedEvent() {
         ///<summary>A routed event is triggerd on a visual and travels up to ancestor visuals all the way to the root of the application</summary>
@@ -14,7 +14,7 @@ Class("wipeout.base.routedEvent", function () {
         ///<param name="triggerOnVisual" type="wo.visual" optional="false">The visual where the routed event starts</param>
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
-        triggerOnVisual.triggerRoutedEvent(this, new wipeout.base.routedEventArgs(eventArgs, triggerOnVisual));
+        triggerOnVisual.triggerRoutedEvent(this, new wipeout.events.routedEventArgs(eventArgs, triggerOnVisual));
     };
     
     routedEvent.prototype.unRegister = function (callback, triggerOnVisual, context /* optional */) {
@@ -39,7 +39,7 @@ Class("wipeout.base.routedEvent", function () {
     return routedEvent;
 });
 
-Class("wipeout.base.routedEventArgs", function () {
+Class("wipeout.events.routedEventArgs", function () {
     
     var routedEventArgs = function routedEventArgs(eventArgs, originator) { 
         ///<summary>Arguments passed to routed event handlers. Set handled to true to stop routed event propogation</summary>
@@ -60,7 +60,7 @@ Class("wipeout.base.routedEventArgs", function () {
 });
     
 
-Class("wipeout.base.routedEventRegistration", function () {
+Class("wipeout.events.routedEventRegistration", function () {
     
     var routedEventRegistration = function routedEventRegistration(routedEvent) {  
         ///<summary>Holds routed event registration details</summary>
@@ -70,7 +70,7 @@ Class("wipeout.base.routedEventRegistration", function () {
         this.routedEvent = routedEvent;
         
         ///<Summary type="wo.event">An inner event to handler triggering callbacks</Summary>
-        this.event = new wipeout.base.event();        
+        this.event = new wipeout.events.event();        
     };
     
     routedEventRegistration.prototype.dispose = function() {

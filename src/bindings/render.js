@@ -126,7 +126,7 @@ Binding("render", true, function () {
         if(!(this.value = newVal))
             return;
 
-        if (!(this.value instanceof wipeout.base.visual))
+        if (!(this.value instanceof wipeout.viewModels.visual))
             throw "This binding can only be used to render a wo.visual within the context of a wo.visual";
 
         if (this.value.__woBag.rootHtmlElement)
@@ -196,9 +196,9 @@ Binding("render", true, function () {
             value = wipeout.utils.ko.peek(value);
 
             // use the knockout vanilla template engine to render nothing
-            if(!(value instanceof wipeout.base.visual))
+            if(!(value instanceof wipeout.viewModels.visual))
                  return {
-                     name: wipeout.base.visual.getBlankTemplateId()
+                     name: wipeout.viewModels.visual.getBlankTemplateId()
                  };
 
             var output = {

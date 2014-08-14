@@ -1,15 +1,15 @@
 
-Class("wipeout.base.if", function () {
+Class("wipeout.viewModels.if", function () {
  
     var sc = true;
     var staticConstructor = function () {
         if (!sc) return;
         sc = false;
         
-        _if.blankTemplateId = wipeout.base.contentControl.createAnonymousTemplate("", true);
+        _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
     };
     
-    var _if = wipeout.base.contentControl.extend(function _if(templateId, model) {
+    var _if = wipeout.viewModels.contentControl.extend(function _if(templateId, model) {
         ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
@@ -31,7 +31,7 @@ Class("wipeout.base.if", function () {
         this.registerDisposable(d1);
         
         ///<Summary type="ko.observable" generic0="String">Anonymous version of elseTemplateId</Summary>
-        this.elseTemplate = wipeout.base.contentControl.createTemplatePropertyFor(this.elseTemplateId, this);
+        this.elseTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.elseTemplateId, this);
         
         ///<Summary type="String">Stores the template id if the condition is false</Summary>
         this.__cachedTemplateId = this.templateId();

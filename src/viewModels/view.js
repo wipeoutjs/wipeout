@@ -1,9 +1,9 @@
 
-Class("wipeout.base.view", function () {    
+Class("wipeout.viewModels.view", function () {    
 
-    var modelRoutedEventKey = "wipeout.base.view.modelRoutedEvents";
+    var modelRoutedEventKey = "wipeout.viewModels.view.modelRoutedEvents";
     
-    var view = wipeout.base.visual.extend(function view (templateId, model /*optional*/) {        
+    var view = wipeout.viewModels.visual.extend(function view (templateId, model /*optional*/) {        
         ///<summary>Extends on the visual class to provide expected MVVM functionality, such as a model and bindings</summary>  
         ///<param name="templateId" type="String" optional="true">An initial template id</param>
         ///<param name="model" type="Any" optional="true">An initial model</param>
@@ -233,7 +233,7 @@ Class("wipeout.base.view", function () {
                 view.setObservable(this, nodeName, val);
             } else {
                 var val = wipeout.utils.obj.createObject(type);
-                if(val instanceof wipeout.base.view) {
+                if(val instanceof wipeout.viewModels.view) {
                     val.__woBag.createdByWipeout = true;
                     val._initialize(child, bindingContext);
                 }
@@ -277,7 +277,7 @@ Class("wipeout.base.view", function () {
             this.disposeOf(this.__woBag[modelRoutedEventKey]);
             delete this.__woBag[modelRoutedEventKey];
             
-            if(newValue instanceof wipeout.base.routedEventModel) {
+            if(newValue instanceof wipeout.events.routedEventModel) {
                 var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
                 this.__woBag[modelRoutedEventKey] = this.registerDisposable(d1);
             }
@@ -297,7 +297,7 @@ Class("wipeout.base.view", function () {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
         ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
         
-        if(!(eventArgs.routedEvent instanceof wipeout.base.routedEvent)) throw "Invaid routed event";
+        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };

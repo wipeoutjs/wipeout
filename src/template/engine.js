@@ -71,7 +71,7 @@ Class("wipeout.template.engine", function () {
         ///<summary>Recursively go through an xml element and replace all view models with render comments</summary>
         ///<param name="xmlElement" type="Element">The template</param>
         ///<param name="rewriterCallback" type="Function">A function which will do the re-writing (provided by knockout)</param>
-        if(wipeout.base.visual.reservedTags[xmlElement.nodeName]) {
+        if(wipeout.viewModels.visual.reservedTags[xmlElement.nodeName]) {
             for(var i = 0; i < xmlElement.childNodes.length; i++)
                 if(xmlElement.childNodes[i].nodeType === 1)
                     engine.wipeoutRewrite(xmlElement.childNodes[i], rewriterCallback);
@@ -140,7 +140,7 @@ Class("wipeout.template.engine", function () {
         ///<returns type="Array">An array of html nodes to insert</returns>
         
         // if data is not a view, cannot render.
-        if (!(bindingContext.$data instanceof wipeout.base.view))
+        if (!(bindingContext.$data instanceof wipeout.viewModels.view))
             return [];
         
         var cached = templateSource['data']('precompiled');

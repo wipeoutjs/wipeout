@@ -1,11 +1,11 @@
-module("wipeout.base.visual", {
+module("wipeout.viewModels.visual", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var visual = wipeout.base.visual;
+var visual = wipeout.viewModels.visual;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange

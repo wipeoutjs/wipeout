@@ -73,7 +73,7 @@ testUtils.testWithUtils("render", "onInitialized", false, function(methods, clas
     // arrange  
     subject.preRendered = [];
     var bindingContext = {
-        $data: new wipeout.base.view()
+        $data: new wipeout.viewModels.view()
     };
     
     bindingContext.$data.onInitialized = methods.method([]);

@@ -14,12 +14,12 @@ Binding("itemsControl", true, function () {
         tmp += " --><!-- /ko -->";
         
         if(itemsTemplate) return;
-        itemsTemplate = wipeout.base.contentControl.createAnonymousTemplate(tmp);
+        itemsTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate(tmp);
     };
     
     var test = function(viewModel) {
         var ic = wipeout.utils.ko.peek(viewModel);
-        if(ic && !(ic instanceof wipeout.base.itemsControl)) throw "This binding can only be used on an itemsControl";
+        if(ic && !(ic instanceof wipeout.viewModels.itemsControl)) throw "This binding can only be used on an itemsControl";
     }
     
     var init = function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {

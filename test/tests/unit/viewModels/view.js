@@ -1,11 +1,11 @@
-module("wipeout.base.view", {
+module("wipeout.viewModels.view", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var view = wipeout.base.view;
+var view = wipeout.viewModels.view;
 
 testUtils.testWithUtils("binding subscriptions one way", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -148,19 +148,19 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
     // arrange
     subject._super = methods.method();
     subject.__woBag = {
-        "wipeout.base.view.modelRoutedEvents": {},
+        "wipeout.viewModels.view.modelRoutedEvents": {},
         bindings: {
             blabla: {}
         }
     };
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.base.view.modelRoutedEvents"]]);
+    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
     subject.disposeOfBinding = methods.method(["blabla"]);
     
     // act
     invoker();
     
     // assert    
-    ok(!subject.__woBag["wipeout.base.view.modelRoutedEvents"]);
+    ok(!subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]);
 });
 
 testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
@@ -252,11 +252,11 @@ testUtils.testWithUtils("objectParser", "json", false, function(methods, classes
 testUtils.testWithUtils("_onModelChanged", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject.__woBag = {
-        "wipeout.base.view.modelRoutedEvents": {}
+        "wipeout.viewModels.view.modelRoutedEvents": {}
     };
     var disposable = {};
-    var newVal = new wipeout.base.routedEventModel();
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.base.view.modelRoutedEvents"]]);
+    var newVal = new wipeout.events.routedEventModel();
+    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
     subject.registerDisposable = methods.customMethod(function() {
         return disposable;
     });
@@ -267,13 +267,13 @@ testUtils.testWithUtils("_onModelChanged", "", false, function(methods, classes,
     invoker(null, newVal);
     
     // assert   
-    strictEqual(subject.__woBag["wipeout.base.view.modelRoutedEvents"], disposable);
+    strictEqual(subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"], disposable);
 });
 
 testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {
-        routedEvent: new wipeout.base.routedEvent(),
+        routedEvent: new wipeout.events.routedEvent(),
         eventArgs: {}
     };
     

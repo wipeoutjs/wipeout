@@ -245,7 +245,7 @@ test("shareParentScope", function() {
     strictEqual(subject.templateItems[child].anItem, val);
 });
 
-test("wipeout.base.if", function() {
+test("wipeout.viewModels.if", function() {
     // arrange
     application.hello = ko.observable({hello: "xxx"});
     application.template('<wo.if share-parent-scope="false" condition="$parent.hello">\
@@ -300,7 +300,7 @@ test("wipeout.utils.find", function() {
     strictEqual(me.fY, null);
 });
 
-test("wipeout.base.if, shareParentScope", function() {
+test("wipeout.viewModels.if, shareParentScope", function() {
     // arrange
     application.hello = ko.observable({hello: "xxx"});
     application.template('<wo.if condition="hello">\
@@ -615,7 +615,7 @@ test("items control, $index, shareParentScope", function() {
     itemsControl1.itemTemplateId(itemTemplateId);
     itemsControl1.itemSource(["a", "b", "c"]);
     itemsControl1.createItem = function (model) {
-        var view = new wipeout.base.view(this.itemTemplateId(), model);
+        var view = new wipeout.viewModels.view(this.itemTemplateId(), model);
         view.shareParentScope = true;
         return view;
     };

@@ -1,5 +1,5 @@
 
-Class("wipeout.base.visual", function () {
+Class("wipeout.viewModels.visual", function () {
     
     var visual = wipeout.base.object.extend(function visual (templateId) {
         ///<summary>Base class for anything with a visual element. Interacts with the wipeout template engine to render content</summary>
@@ -17,7 +17,7 @@ Class("wipeout.base.visual", function () {
 
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.__woBag = {
-            disposed: wipeout.base.event(),
+            disposed: wipeout.events.event(),
             disposables: {},
             createdByWipeout: false,
             rootHtmlElement: null,
@@ -32,7 +32,7 @@ Class("wipeout.base.visual", function () {
             ///<summary>Returns the Id for the default template</summary>   
             ///<returns type="String">The Id for an default template</returns>     
             if (!templateId) {
-                templateId = wipeout.base.contentControl.createAnonymousTemplate("<span>No template has been specified</span>");
+                templateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<span>No template has been specified</span>");
             }
 
             return templateId;
@@ -45,7 +45,7 @@ Class("wipeout.base.visual", function () {
             ///<summary>Returns the Id for an empty template</summary>    
             ///<returns type="String">The Id for an empty template</returns>    
             if (!templateId) {
-                templateId = wipeout.base.contentControl.createAnonymousTemplate("");
+                templateId = wipeout.viewModels.contentControl.createAnonymousTemplate("");
             }
 
             return templateId;
@@ -233,7 +233,7 @@ Class("wipeout.base.visual", function () {
         }
 
         if(!rev) {
-            rev = new wipeout.base.routedEventRegistration(routedEvent);
+            rev = new wipeout.events.routedEventRegistration(routedEvent);
             this.__woBag.routedEventSubscriptions.push(rev);
         }
 
@@ -246,8 +246,8 @@ Class("wipeout.base.visual", function () {
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
         // create routed event args if neccessary
-        if(!(eventArgs instanceof wipeout.base.routedEventArgs)) {
-            eventArgs = new wipeout.base.routedEventArgs(eventArgs, this);
+        if(!(eventArgs instanceof wipeout.events.routedEventArgs)) {
+            eventArgs = new wipeout.events.routedEventArgs(eventArgs, this);
         }
 
         // trigger event on this
@@ -260,7 +260,7 @@ Class("wipeout.base.visual", function () {
         
         // trigger event on model
         if(eventArgs.handled) return;
-        if(this.model() instanceof wipeout.base.routedEventModel) {
+        if(this.model() instanceof wipeout.events.routedEventModel) {
             this.model().routedEventTriggered(routedEvent, eventArgs);
         }
 

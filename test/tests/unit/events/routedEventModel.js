@@ -1,11 +1,11 @@
-module("wipeout.base.routedEventModel", {
+module("wipeout.events.routedEventModel", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var routedEventModel = wipeout.base.routedEventModel;
+var routedEventModel = wipeout.events.routedEventModel;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange    

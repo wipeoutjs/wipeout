@@ -189,7 +189,7 @@ Class("wipeout.utils.obj", function () {
         if(constructor instanceof Function) {
             
             var object = new constructor();
-            if(object instanceof wipeout.base.view && DEBUG)
+            if(object instanceof wipeout.viewModels.view && DEBUG)
                 object.__woBag.constructedViewType = constructorString;
             
             return object;

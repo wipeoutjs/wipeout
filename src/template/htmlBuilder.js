@@ -30,7 +30,7 @@ Class("wipeout.template.htmlBuilder", function () {
             bindingContext.$data.templateItems[id] = item;
         });
             
-        if (bindingContext.$data instanceof wipeout.base.view)
+        if (bindingContext.$data instanceof wipeout.viewModels.view)
             bindingContext.$data.onInitialized();
         
         return html;
