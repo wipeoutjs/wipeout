@@ -6,7 +6,8 @@ Class("wipeout.template.xmlParser", function () {
     
     var comment = {
         open: "<!--",
-        close: "-->"
+        close: "-->",
+        escaped: false
     }, sQuote = {
         open: "'",
         close: "'",
@@ -16,59 +17,57 @@ Class("wipeout.template.xmlParser", function () {
         close: "\"",
         escaped: true
     }, elementTag = {
-        open: "'",
-        close: "'",
-        escaped: true
+        open: "<",
+        close: ">",
+        escaped: false
+    }, closeElementTag = {
+        open: ">",
+        escaped: false
     }, attribute = {
     }, beginElement = {
     }, endElement = {
     }, incomplete = {
     };
     
-    xmlParser.blockTypes = {
-        comment: comment, 
-        sQuote: sQuote, 
-        dQuote: dQuote, 
-        attribute: attribute, 
-        beginElement: beginElement, 
-        endElement: endElement, 
-        incomplete: incomplete,
-        elementTag: beginElementTag
-    };
-    
     xmlParser._parseEscapedBlocks = function(xmlString) {
-        var character;
-        var parts = [];
-        var pos = 0;
-        var insideElement = false;
-        while ((character = xmlParser.firstEscapeChar(xmlString, pos, insideElement)) != null) {
+        
+        var parts = [], startingPosition = 0, character;
+        while ((character = xmlParser.firstEscapeChar(xmlString, startingPosition, [comment, elementTag])) != null) {
             
-            if (character.begin - pos > 0)
+            if (character.begin - startingPosition > 0)
                 parts.push({
-                    position: pos,
+                    position: startingPosition,
                     type: incomplete,
-                    value: xmlString.substr(pos, character.begin - pos)
+                    value: xmlString.substr(startingPosition, character.begin - startingPosition)
                 });
             
-            if (character.type === comment)
-                pos = xmlParser.closeComment(xmlString, character.begin, parts);
-            else if (character.type === sQuote)
-                pos = xmlParser.closeQuote(sQuote, xmlString, character.begin, parts);
-            else if (character.type === dQuote)
-                pos = xmlParser.closeQuote(dQuote, xmlString, character.begin, parts);
-            else if (character.type === beginElementTag)
-                insideElement = true;
-            else if (character.type === endElementTag)
-                insideElement = false;
-            else
-                throw "Internal error"; // firstEscapeChar(...) only searches for comment, sQuote and dQuote            
+            if (character.type === comment) {
+                startingPosition = xmlParser.closeItem(xmlString, comment, character.begin, parts);
+            } else if (character.type === elementTag) {
+                while ((character = xmlParser.firstEscapeChar(xmlString, startingPosition, [comment, closeElementTag, sQuote, dQuote])) != null) {
+                    
+                    if (character.type === comment ||character.type === sQuote ||character.type === dQuote)
+                        startingPosition = xmlParser.closeItem(xmlString, character.type, character.begin, parts);
+                    else if (character.type === closeElementTag) {
+                        parts.push({
+                            position: startingPosition,
+                            type: incomplete,
+                            value: xmlString.substr(startingPosition, character.begin - startingPosition)
+                        });
+                        startingPosition = character.begin + 1;
+                        break;
+                    } else
+                        throw "Internal error";
+                }
+            } else
+                throw "Internal error";
         }
         
-        if(xmlString.length - pos > 0)
+        if(xmlString.length - startingPosition > 0)
             parts.push({
-                position: pos,
+                position: startingPosition,
                 type: incomplete,
-                value: xmlString.substr(pos)
+                value: xmlString.substr(startingPosition)
             });
         
         return parts;
@@ -91,8 +90,66 @@ Class("wipeout.template.xmlParser", function () {
         }
     };
     
-    xmlParser.closeComment = function(input, startingPosition, parts) {
-        var i = input.indexOf("-->", startingPosition + 4);
+    xmlParser.closeItem = function(input, item, startingPosition, parts) {
+        var i = input.indexOf(item.close, startingPosition + 4);
+        
+        var sp = startingPosition + item.open.length;
+        while (true) {
+            sp = input.indexOf(item.close, sp);
+            if(sp === -1)
+                throw {
+                    error: "Cannot find closing tag to match comment at position: " + startingPosition,
+                    xml: input
+                };
+            
+            if (!item.escaped)
+                break;            
+            
+            var escaped = 0;
+            for(var i = sp -1; i >= 0; i--) {
+                if(input[i] === "\\")
+                    escaped ++;
+                else
+                    break;
+            }
+
+            if(escaped % 2 === 0)
+                break;
+            
+            sp++;
+        }      
+        
+        parts.push({
+            type: item,
+            value: input.substring(startingPosition + item.open.length, sp)
+        });
+
+        return sp + item.close.length;
+    };
+    
+    xmlParser.firstEscapeChar = function(input, startingPosition, chars) {
+        
+        var position, output;
+        wipeout.utils.obj.enumerate(chars, function(item) {
+            if ((position = input.indexOf(item.open)) !== -1 && (!output || output.begin > position))
+                output = {
+                    type: item,
+                    begin: position
+                };
+        });
+        
+        return output;
+    };
+    
+    xmlParser.serialize = function(pseudoXmlElement) {
+        
+        throw "Not implemented";        
+    };
+    
+    return xmlParser;
+    
+   /* xmlParser.closeComment = function(itemType, input, startingPosition, parts) {
+        var i = input.indexOf("-->", startingPosition + item.open.length);
         
         if (i === -1)
             throw {
@@ -141,47 +198,5 @@ Class("wipeout.template.xmlParser", function () {
             error: "Cannot find closing quote to match quote at position: " + startingPosition,
             xml: input
         };
-    };
-    
-    xmlParser.firstEscapeChar = function(input, startingPosition, includeQuotes) {
-        var output = null;
-        var position = input.indexOf("<!--", startingPosition);
-        if(position !== -1)
-            output = {
-                type: comment,
-                begin: position
-            };
-        
-        var position = input.indexOf("<", startingPosition);
-        if(position !== -1 && (!output || output.begin > position))
-            output = {
-                type: beginElementTag,
-                begin: position
-            };
-        
-        if(includeQuotes) {
-            position = input.indexOf("'", startingPosition);
-            if(position !== -1 && (!output || output.begin > position))
-                output = {
-                    type: sQuote,
-                    begin: position
-                };
-
-            position = input.indexOf("\"", startingPosition);
-            if(position !== -1 && (!output || output.begin > position))
-                output = {
-                    type: dQuote,
-                    begin: position
-                };
-        }
-        
-        return output;
-    };
-    
-    xmlParser.serialize = function(pseudoXmlElement) {
-        
-        throw "Not implemented";        
-    };
-    
-    return xmlParser;
+    };*/
 });
