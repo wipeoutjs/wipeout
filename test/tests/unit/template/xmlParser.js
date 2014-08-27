@@ -7,133 +7,26 @@ module("wipeout.template.xmlParser", {
 
 var xmlParser = wipeout.template.xmlParser;
 
-testUtils.testWithUtils("closeComment", "ok", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var start = "123", comment1 = "<!--", middle =  "lkajsfbdlksdjbf ;dsaonf;sdhfsdflksdjflkj ", comment2 = "-->", end = "546";
-    var input = start + comment1 + middle + comment2 + end;
-    var parts = [];
-    
-    // act
-    var output = invoker(input, start.length, parts);
-    
-    //assert
-    strictEqual(end, input.substr(output));
-    strictEqual(parts[0].value, middle);
-});
-
-testUtils.testWithUtils("closeComment", "bad", true, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act
-    throws(function() {
-        invoker("<!-- asdasdkjabdkjabdkjbadkjbakjbd", 0, [])
-    });
-});
-
-testUtils.testWithUtils("closeQuote", null, true, function(methods, classes, subject, invoker) {
-    // arrange
-    var start = "123", comment1 = "'", middle =  "lkajsfbdlk\\\\\\'sdjbf\\\\\\\\", comment2 = "'", end = "546";
-    var input = start + comment1 + middle + comment2 + end;
-    var parts = [];
-    
-    // act
-    var output = invoker(xmlParser.blockTypes.sQuote, input, start.length, parts);
-    
-    //assert
-    strictEqual(end, input.substr(output));
-    strictEqual(parts[0].value, middle);
-});
-
-testUtils.testWithUtils("closeQuote", "bad", true, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act
-    throws(function() {
-        invoker(xmlParser.blockTypes.sQuote, "'asdasdkjabdkjabdkjbadkjbakjbd", 0, [])
-    });
-});
-
-testUtils.testWithUtils("firstEscapeChar", "<!--", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var e1 = "<!--", e2 = "'", e3 = "\"", e4 = "<";
-    var start = "123", end = e2 + e3 + e4 + "546";
-    var input = start + e1 + end;
-    
-    // act
-    var output = invoker(input, 2, true);
-    
-    //assert
-    strictEqual(output.type, xmlParser.blockTypes.comment);
-    strictEqual(output.begin, start.length);
-});
-
-testUtils.testWithUtils("firstEscapeChar", "'", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var e1 = "'", e2 = "<!--", e3 = "\"", e4 = "<";
-    var start = "123", end = e2 + e3 + e4 + "546";
-    var input = start + e1 + end;
-    
-    // act
-    var output = invoker(input, 2, true);
-    
-    //assert
-    strictEqual(output.type, xmlParser.blockTypes.sQuote);
-    strictEqual(output.begin, start.length);
-});
-
-testUtils.testWithUtils("firstEscapeChar", "\"", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var e1 = "\"", e2 = "'", e3 = "<!--", e4 = "<";
-    var start = "123", end = e2 + e3 + e4 + "546";
-    var input = start + e1 + end;
-    
-    // act
-    var output = invoker(input, 2, true);
-    
-    //assert
-    strictEqual(output.type, xmlParser.blockTypes.dQuote);
-    strictEqual(output.begin, start.length);
-});
-
-testUtils.testWithUtils("firstEscapeChar", "<", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var e1 = "<", e2 = "'", e3 = "<!--", e4 = "\"";
-    var start = "123", end = e2 + e3 + e4 + "546";
-    var input = start + e1 + end;
-    
-    // act
-    var output = invoker(input, 2, true);
-    
-    //assert
-    strictEqual(output.type, xmlParser.blockTypes.beginElementTag);
-    strictEqual(output.begin, start.length);
-});
-
-testUtils.testWithUtils("firstEscapeChar", "none", true, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act
-    //assert
-    strictEqual(invoker("sdsapouihdoaishdashd;ashd;ashdlashd", 0, true), null);
-});
-
 testUtils.testWithUtils("_parseEscapedBlocks", null, true, function(methods, classes, subject, invoker) {
     // arrange   
     var test = [];
     
-    var tmp = "KJBKJBKJB>KJLHO*YGKJ>B:O*Y>KJG";
+    var tmp = "KJBKJBKJBKJLHO*YGKJB:O*YKJG";
     test.push({
         position: 0,
-        type: xmlParser.blockTypes.incomplete,
+        type: xmlParser.preCompileTags.incomplete,
         value: tmp
     });
     var input = tmp;
     
     tmp = ' dljflkjsdbfls"h\'lzhdisud;ab ';
     test.push({
-        type: xmlParser.blockTypes.comment,
+        type: xmlParser.preCompileTags.comment,
         value: tmp
     });
     input += "<!--" + tmp + "-->";
-    
-    tmp = "oashlashdashdlkshdlakhsd";
+    debugger;
+    /*tmp = "oashlashdashdlkshdlakhsd";
     test.push({
         position: input.length,
         type: xmlParser.blockTypes.incomplete,
@@ -141,27 +34,27 @@ testUtils.testWithUtils("_parseEscapedBlocks", null, true, function(methods, cla
     });
     input += tmp;
     
-    tmp = "djalskdjalskjdal\"asdasdasd\\'sadsada";
+    /*tmp = "djalskdjalskjdal\"asdasdasd\\'sadsada";
     test.push({
         type: xmlParser.blockTypes.sQuote,
         value: tmp
     });
     input += "'" + tmp + "'";
     
-    tmp = 'djalskdjalskjdal\'asdasdasd\\"sadsada';
+    /*tmp = 'djalskdjalskjdal\'asdasdasd\\"sadsada';
     test.push({
         type: xmlParser.blockTypes.sQuote,
         value: tmp
     });
     input += '"' + tmp + '"';
     
-    tmp = "ihas980oihasdp0987ahd";
+    /*tmp = "ihas980oihasdp0987ahd";
     test.push({
         position: input.length,
         type: xmlParser.blockTypes.incomplete,
         value: tmp
     });
-    input += tmp;
+    input += tmp;*/
     
     // act
     var output = invoker(input);
@@ -173,13 +66,94 @@ testUtils.testWithUtils("_parseEscapedBlocks", null, true, function(methods, cla
     }
 });
 
+testUtils.testWithUtils("closeItem", "unescaped", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var toConfuse = "asdasd", start = "asdasda" + toConfuse + "HOI:H:BJ", open = toConfuse + "!", middle = "G*OG" + toConfuse, close = toConfuse + "!", end = "BKHG";
+    var input = start + open + middle + close + end;
+    var parts = [];
+    
+    // act
+    var output = invoker(input, {close: close, open: open}, start.length, parts);
+    
+    //assert
+    strictEqual(end, input.substr(output));
+    strictEqual(parts[0].value, middle);
+});
+
+testUtils.testWithUtils("closeItem", "escaped, no '\\'", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var toConfuse = "asdasd", start = "asdasda" + toConfuse + "HOI:H:BJ", open = toConfuse + "!", middle = "G*OG" + toConfuse, close = toConfuse + "!", end = "BKHG";
+    var input = start + open + middle + close + end;
+    var parts = [];
+    
+    // act
+    var output = invoker(input, {close: close, open: open, escaped: true}, start.length, parts);
+    
+    //assert
+    strictEqual(end, input.substr(output));
+    strictEqual(parts[0].value, middle);
+});
+
+testUtils.testWithUtils("closeItem", "escaped, with '\\'", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var toConfuse = "asdasd", start = "asdasda" + toConfuse + "HOI:H:BJ", close = toConfuse + "!", open = toConfuse + "!", middle = "G*OG\\" + close + "sasa", end = "BKHG";
+    var input = start + open + middle + close + end;
+    var parts = [];
+    
+    // act
+    var output = invoker(input, {close: close, open: open, escaped: true}, start.length, parts);
+    
+    //assert
+    strictEqual(end, input.substr(output));
+    strictEqual(parts[0].value, middle);
+});
+
+testUtils.testWithUtils("closeItem", "bad", true, function(methods, classes, subject, invoker) {
+    // arrange
+    // act
+    //assert
+    throws(function() {
+        invoker("sadsadasdasdasd", {close: "!", open: "s"}, 0, []);
+    });
+});
+
+testUtils.testWithUtils("firstEscapeChar", "char 1", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var escapeChar = { open: "!" };
+    var part1 = "KJLBLKJBLKJB", part2 = "LHJBLIOG<H>JGBI";
+    var input = part1 + escapeChar.open + part2;
+    
+    // act
+    var output = invoker(input, 2, [escapeChar]);
+    
+    //assert
+    strictEqual(output.type, escapeChar);
+    strictEqual(output.begin, part1.length);
+});
+
+testUtils.testWithUtils("firstEscapeChar", "char 2", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var common = "LKJBLKJB";
+    var escapeChar = { open: common + "!" };
+    var part1 = "KJLBLKJBLKJB" + common, part2 = "LHJBLIOG<H>JGBI";
+    var input = part1 + escapeChar.open + part2;
+    
+    // act
+    var output = invoker(input, 2, [{open: "$"}, escapeChar]);
+    
+    //assert
+    strictEqual(output.type, escapeChar);
+    strictEqual(output.begin, part1.length);
+});
+
 testUtils.testWithUtils("_createAttributes", null, true, function(methods, classes, subject, invoker) {
     // arrange   
     var input = [{
         value: "<something blablabla = ",
-        type: xmlParser.blockTypes.incomplete
+        type: xmlParser.preCompileTags.incomplete
     }, {
-        type: xmlParser.blockTypes.sQuote
+        type: xmlParser.preCompileTags.sQuote
     }];
     
     // act
@@ -187,6 +161,6 @@ testUtils.testWithUtils("_createAttributes", null, true, function(methods, class
     
     //assert
     strictEqual(input[0].value, "<something");
-    strictEqual(input[1].type, xmlParser.blockTypes.attribute);
+    strictEqual(input[1].type, xmlParser.preCompileTags.attribute);
     strictEqual(input[1].key, "blablabla");
 });

@@ -29,6 +29,14 @@ Class("wipeout.template.xmlParser", function () {
     }, incomplete = {
     };
     
+    xmlParser.preCompileTags = {
+        comment: comment,
+        incomplete: incomplete,
+        attribute: attribute,
+        dQuote: dQuote,
+        sQuote: sQuote
+    };
+    
     xmlParser._parseEscapedBlocks = function(xmlString) {
         
         var parts = [], startingPosition = 0, character;
@@ -130,8 +138,8 @@ Class("wipeout.template.xmlParser", function () {
     xmlParser.firstEscapeChar = function(input, startingPosition, chars) {
         
         var position, output;
-        wipeout.utils.obj.enumerate(chars, function(item) {
-            if ((position = input.indexOf(item.open)) !== -1 && (!output || output.begin > position))
+        wipeout.utils.obj.enumerateArr(chars, function(item) {
+            if ((position = input.indexOf(item.open, startingPosition)) !== -1 && (!output || output.begin > position))
                 output = {
                     type: item,
                     begin: position
