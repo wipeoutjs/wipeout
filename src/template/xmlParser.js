@@ -3,7 +3,6 @@ Class("wipeout.template.xmlParser", function () {
     function xmlParser() {
     }
     
-    
     var comment = {
         open: "<!--",
         close: "-->",
@@ -30,6 +29,7 @@ Class("wipeout.template.xmlParser", function () {
     };
     
     xmlParser.preCompileTags = {
+        elementTag: elementTag,
         comment: comment,
         incomplete: incomplete,
         attribute: attribute,
@@ -52,6 +52,16 @@ Class("wipeout.template.xmlParser", function () {
             if (character.type === comment) {
                 startingPosition = xmlParser.closeItem(xmlString, comment, character.begin, parts);
             } else if (character.type === elementTag) {
+                                
+                if (character.begin - startingPosition > 0)
+                    parts.push({
+                        position: startingPosition,
+                        type: incomplete,
+                        value: xmlString.substr(startingPosition, character.begin - startingPosition)
+                    });
+                
+                startingPosition = character.begin + 1;
+                
                 while ((character = xmlParser.firstEscapeChar(xmlString, startingPosition, [comment, closeElementTag, sQuote, dQuote])) != null) {
                     
                     if (character.type === comment ||character.type === sQuote ||character.type === dQuote)
@@ -155,56 +165,4 @@ Class("wipeout.template.xmlParser", function () {
     };
     
     return xmlParser;
-    
-   /* xmlParser.closeComment = function(itemType, input, startingPosition, parts) {
-        var i = input.indexOf("-->", startingPosition + item.open.length);
-        
-        if (i === -1)
-            throw {
-                error: "Cannot find closing tag to match comment at position: " + startingPosition,
-                xml: input
-            };
-        
-        parts.push({
-            type: comment,
-            value: input.substring(startingPosition + 4, i)
-        });
-
-        return i + 3;
-    };
-    
-    xmlParser.closeQuote = function(quoteType, input, startingPosition, parts) {
-        if(quoteType === sQuote)
-            quoteType = "'";
-        else if(quoteType === dQuote)
-            quoteType = '"';
-        else
-            throw "Internal error"; // should only be used in this manner
-        
-        var sp = startingPosition;
-        while(sp >= 0) {
-            sp = input.indexOf(quoteType, sp + 1);
-            var escaped = 0;
-            for(var i = sp -1; i >= 0; i--) {
-                if(input[i] === "\\")
-                    escaped ++;
-                else
-                    break;
-            }
-            
-            if(sp !== -1 && escaped % 2 === 0) {                
-                parts.push({
-                    type: sQuote,
-                    value: input.substring(startingPosition + 1, sp)
-                });
-
-                return sp + 1;
-            }
-        }
-        
-        throw {
-            error: "Cannot find closing quote to match quote at position: " + startingPosition,
-            xml: input
-        };
-    };*/
 });

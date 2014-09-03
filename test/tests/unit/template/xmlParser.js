@@ -11,7 +11,8 @@ testUtils.testWithUtils("_parseEscapedBlocks", null, true, function(methods, cla
     // arrange   
     var test = [];
     
-    var tmp = "KJBKJBKJBKJLHO*YGKJB:O*YKJG";
+    // filler with both kinds of quotes
+    var tmp = "aaa\"aaa'aaa";
     test.push({
         position: 0,
         type: xmlParser.preCompileTags.incomplete,
@@ -19,44 +20,47 @@ testUtils.testWithUtils("_parseEscapedBlocks", null, true, function(methods, cla
     });
     var input = tmp;
     
-    tmp = ' dljflkjsdbfls"h\'lzhdisud;ab ';
+    // enclosed in comment
+    tmp = 'bbb"bbb\'bbb';
     test.push({
         type: xmlParser.preCompileTags.comment,
         value: tmp
     });
     input += "<!--" + tmp + "-->";
-    debugger;
-    /*tmp = "oashlashdashdlkshdlakhsd";
+    
+    // filler with both kinds of quotes
+    tmp = "ccc\"ccc'ccc";
     test.push({
         position: input.length,
-        type: xmlParser.blockTypes.incomplete,
+        type: xmlParser.preCompileTags.incomplete,
         value: tmp
     });
     input += tmp;
     
-    /*tmp = "djalskdjalskjdal\"asdasdasd\\'sadsada";
+    tmp = "<ddd>";
     test.push({
-        type: xmlParser.blockTypes.sQuote,
+        type: xmlParser.preCompileTags.sQuote,
         value: tmp
     });
-    input += "'" + tmp + "'";
+    input += tmp;
     
     /*tmp = 'djalskdjalskjdal\'asdasdasd\\"sadsada';
     test.push({
-        type: xmlParser.blockTypes.sQuote,
+        type: xmlParser.preCompileTags.sQuote,
         value: tmp
     });
     input += '"' + tmp + '"';
     
-    /*tmp = "ihas980oihasdp0987ahd";
+    /*tmp = "ihas980oihas>dp0987ahd";
     test.push({
         position: input.length,
-        type: xmlParser.blockTypes.incomplete,
+        type: xmlParser.preCompileTags.incomplete,
         value: tmp
     });
     input += tmp;*/
     
     // act
+    debugger;
     var output = invoker(input);
     
     //assert
