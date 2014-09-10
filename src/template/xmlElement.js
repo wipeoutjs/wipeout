@@ -7,6 +7,7 @@ Class("wipeout.template.xmlElementBase", function () {
     });
     
     xmlElementBase.extend = wipeout.base.object.extend;
+    xmlElementBase.prototype._super = wipeout.base.object.prototype._super;
     
     xmlElementBase.prototype.serializeChildren = function() {
         
