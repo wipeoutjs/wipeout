@@ -1,3 +1,5 @@
+
+
 Class("wipeout.template.xmlParser", function () {  
     
     function xmlParser(xmlString) {
@@ -14,27 +16,18 @@ Class("wipeout.template.xmlParser", function () {
         return root;
     };
     
-    function xmlPart(value, escaped) {
-        
-        this.value = value;        
-        this.escaped = escaped;
-        
-        this.nextChars = [];
-        this.illegal = [];
-    }
-    
     // for unit testing
     xmlParser.specialTags = {};
-    var openSQuote = xmlParser.specialTags.openSQuote = new xmlPart("'", false);
-    var closeSQuote = xmlParser.specialTags.closeSQuote = new xmlPart("'", "\\");
-    var openDQuote = xmlParser.specialTags.openDQuote = new xmlPart('"', false);
-    var closeDQuote = xmlParser.specialTags.closeDQuote = new xmlPart('"', "\\");
-    var openTag1 = xmlParser.specialTags.openTag1 = new xmlPart("<", false);
-    var openTag2 = xmlParser.specialTags.openTag2 = new xmlPart("</", false);
-    var closeTag1 = xmlParser.specialTags.closeTag1 = new xmlPart(">", false);
-    var closeTag2 = xmlParser.specialTags.closeTag2 = new xmlPart("/>", false);
-    var openComment = xmlParser.specialTags.openComment = new xmlPart("<!--", false);
-    var closeComment = xmlParser.specialTags.closeComment = new xmlPart("-->", false);
+    var openSQuote = xmlParser.specialTags.openSQuote = new wipeout.template.xmlPart("'", false);
+    var closeSQuote = xmlParser.specialTags.closeSQuote = new wipeout.template.xmlPart("'", "\\");
+    var openDQuote = xmlParser.specialTags.openDQuote = new wipeout.template.xmlPart('"', false);
+    var closeDQuote = xmlParser.specialTags.closeDQuote = new wipeout.template.xmlPart('"', "\\");
+    var openTag1 = xmlParser.specialTags.openTag1 = new wipeout.template.xmlPart("<", false);
+    var openTag2 = xmlParser.specialTags.openTag2 = new wipeout.template.xmlPart("</", false);
+    var closeTag1 = xmlParser.specialTags.closeTag1 = new wipeout.template.xmlPart(">", false);
+    var closeTag2 = xmlParser.specialTags.closeTag2 = new wipeout.template.xmlPart("/>", false);
+    var openComment = xmlParser.specialTags.openComment = new wipeout.template.xmlPart("<!--", false);
+    var closeComment = xmlParser.specialTags.closeComment = new wipeout.template.xmlPart("-->", false);
     
     // order is important
     var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2];
@@ -93,12 +86,12 @@ Class("wipeout.template.xmlParser", function () {
         
         var position, output, i, count;
         wipeout.utils.obj.enumerateArr(items, function(item) {
-            if ((position = input.indexOf(item.value, startingPosition)) !== -1 && (!output || output.begin > position)) {
+            if ((position = item.indexOf(input, startingPosition)) && (!output || output.begin > position.index)) {
                 
                 if(item.escaped) {
                     count = 0;
                     var l = item.escaped.length;
-                    for (i = position - l; i > startingPosition; i-=l) {
+                    for (i = position.index - l; i > startingPosition; i-=l) {
                         if (i >= 0 && input.substr(i, l) === item.escaped)
                             count++;
                         else
@@ -107,8 +100,8 @@ Class("wipeout.template.xmlParser", function () {
                     
                     // try find next
                     if(count % 2 != 0) {
-                        var o = xmlParser.findFirstInstance(input, position + 1, [item]);
-                        if (o && (!output || o.position < output.position))
+                        var o = xmlParser.findFirstInstance(input, position.index + 1, [item]);
+                        if (o && (!output || o.begin < output.begin))
                             output = o;
                         
                         return; // continue;
@@ -117,7 +110,7 @@ Class("wipeout.template.xmlParser", function () {
                 
                 output = {
                     type: item,
-                    begin: position
+                    begin: position.index
                 };
             }
         });

@@ -6,6 +6,7 @@ module("wipeout.template.xmlParser", {
 });
 
 var xmlParser = wipeout.template.xmlParser;
+var xmlPart = wipeout.template.xmlPart;
 
 testUtils.testWithUtils("distillElementName", null, true, function(methods, classes, subject, invoker) {
     
@@ -103,8 +104,8 @@ testUtils.testWithUtils("findFirstInstance", "char 1", true, function(methods, c
     var part1 = "LKJBLKJBLKJBLKJB", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + char1 + part2 + char2 + part3;
     
-    char1 = { value: char1 };
-    char2 = { value: char2 };    
+    char1 = new xmlPart(char1);
+    char2 = new xmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -120,8 +121,8 @@ testUtils.testWithUtils("findFirstInstance", "char 2", true, function(methods, c
     var part1 = "LKJBLKJBLKJBLKJB", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + char1 + part2 + char2 + part3;
     
-    char1 = { value: char1 };
-    char2 = { value: char2 };    
+    char1 = new xmlPart(char1);
+    char2 = new xmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char2, char1]);
@@ -138,8 +139,8 @@ testUtils.testWithUtils("findFirstInstance", "escaped char", true, function(meth
     var temp = part1 + escaped + char1 + part2;
     var input = temp + char2 + part3;
     
-    char1 = { value: char1, escaped: escaped };
-    char2 = { value: char2 };    
+    char1 = new xmlPart(char1, escaped);
+    char2 = new xmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -155,8 +156,8 @@ testUtils.testWithUtils("findFirstInstance", "double escaped char", true, functi
     var part1 = "LKJBLKJBLKJBLKJB", escape = "-%-", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + escape + escape + char1 + part2 + char2 + part3;
     
-    char1 = { value: char1, escape: escape };
-    char2 = { value: char2 };    
+    char1 = new xmlPart(char1, escape);
+    char2 = new xmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -169,14 +170,16 @@ testUtils.testWithUtils("findFirstInstance", "double escaped char", true, functi
 testUtils.testWithUtils("findFirstInstance", "escaped char then non escaped", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var part1 = "LKJBLKJBLKJBLKJB", escaped = "%--", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", part3 = "IUOYUIOYOIUYOUIYOUIY";
+    var part1 = "LKJBLKJBLKJBLKJB", escaped = "%--", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", charX = "-a-", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var temp = part1 + escaped + char1 + part2;
-    var input = temp + char1 + part3;
+    var input = temp + char1 + part3 + charX;
     
-    char1 = { value: char1, escaped: escaped };
+    char1 = new xmlPart(char1, escaped);
+    charX = new xmlPart(charX, escaped);
     
     // act
-    var output = invoker(input, 0, [char1]);
+    // want to find char 2 first then go through the char 1 escape rigamarole
+    var output = invoker(input, 0, [charX, char1]);
     
     //assert
     strictEqual(output.type, char1);
