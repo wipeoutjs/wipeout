@@ -86,7 +86,7 @@ Class("wipeout.template.xmlParser", function () {
         
         var position, output, i, count;
         wipeout.utils.obj.enumerateArr(items, function(item) {
-            if ((position = item.indexOf(input, startingPosition)) && (!output || output.begin > position.index)) {
+            if ((position = item.indexOf(input, startingPosition)) && (!output || output.index > position.index)) {
                 
                 if(item.escaped) {
                     count = 0;
@@ -101,7 +101,7 @@ Class("wipeout.template.xmlParser", function () {
                     // try find next
                     if(count % 2 != 0) {
                         var o = xmlParser.findFirstInstance(input, position.index + 1, [item]);
-                        if (o && (!output || o.begin < output.begin))
+                        if (o && (!output || o.index < output.index))
                             output = o;
                         
                         return; // continue;
@@ -110,7 +110,8 @@ Class("wipeout.template.xmlParser", function () {
                 
                 output = {
                     type: item,
-                    begin: position.index
+                    index: position.index,
+                    length: position.length
                 };
             }
         });
@@ -131,11 +132,11 @@ Class("wipeout.template.xmlParser", function () {
             if(input.length > startAtChar)
                 output.push(input.substr(startAtChar));
         } else {        
-            if(first.begin > startAtChar)
-                output.push(input.substring(startAtChar, first.begin));
+            if(first.index > startAtChar)
+                output.push(input.substring(startAtChar, first.index));
 
             output.push(first.type);
-            xmlParser.preParse(input, first.type, first.begin + first.type.value.length, output);
+            xmlParser.preParse(input, first.type, first.index + first.length, output);
         }
         
         return output;

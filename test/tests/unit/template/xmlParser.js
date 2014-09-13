@@ -112,7 +112,7 @@ testUtils.testWithUtils("findFirstInstance", "char 1", true, function(methods, c
     
     //assert
     strictEqual(output.type, char1);
-    strictEqual(output.begin, part1.length);
+    strictEqual(output.index, part1.length);
 });
 
 testUtils.testWithUtils("findFirstInstance", "char 2", true, function(methods, classes, subject, invoker) {
@@ -129,7 +129,7 @@ testUtils.testWithUtils("findFirstInstance", "char 2", true, function(methods, c
     
     //assert
     strictEqual(output.type, char1);
-    strictEqual(output.begin, part1.length);
+    strictEqual(output.index, part1.length);
 });
 
 testUtils.testWithUtils("findFirstInstance", "escaped char", true, function(methods, classes, subject, invoker) {
@@ -147,7 +147,7 @@ testUtils.testWithUtils("findFirstInstance", "escaped char", true, function(meth
     
     //assert
     strictEqual(output.type, char2);
-    strictEqual(output.begin, temp.length);
+    strictEqual(output.index, temp.length);
 });
 
 testUtils.testWithUtils("findFirstInstance", "double escaped char", true, function(methods, classes, subject, invoker) {
@@ -164,7 +164,7 @@ testUtils.testWithUtils("findFirstInstance", "double escaped char", true, functi
     
     //assert
     strictEqual(output.type, char1);
-    strictEqual(output.begin, part1.length + (escape.length * 2));
+    strictEqual(output.index, part1.length + (escape.length * 2));
 });
 
 testUtils.testWithUtils("findFirstInstance", "escaped char then non escaped", true, function(methods, classes, subject, invoker) {
@@ -183,7 +183,7 @@ testUtils.testWithUtils("findFirstInstance", "escaped char then non escaped", tr
     
     //assert
     strictEqual(output.type, char1);
-    strictEqual(output.begin, temp.length);
+    strictEqual(output.index, temp.length);
 });
 
 
