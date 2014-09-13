@@ -235,11 +235,12 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     test.push(xmlParser.specialTags.closeDQuote);
     input += '"' + tmp + '"';
     
-    // close xml tag
+    // close xml tag with space before >
     tmp = "ggg\"ggg'ggg";
+    test.push(xmlParser.specialTags.whiteSpace);
     test.push(xmlParser.specialTags.closeTag1);
     test.push(tmp);
-    input += '>' + tmp;
+    input += ' >' + tmp;
     
     // open close element
     tmp = "hhh\"hhh'hhh<!--hhh<hhh</hhh";
