@@ -18,6 +18,7 @@ Class("wipeout.template.xmlParser", function () {
     
     // for unit testing
     xmlParser.specialTags = {};
+    var whiteSpace = xmlParser.specialTags.whiteSpace = new wipeout.template.xmlPart(/\s+/, false); //NOTE: \s includes newlines
     var openSQuote = xmlParser.specialTags.openSQuote = new wipeout.template.xmlPart("'", false);
     var closeSQuote = xmlParser.specialTags.closeSQuote = new wipeout.template.xmlPart("'", "\\");
     var openDQuote = xmlParser.specialTags.openDQuote = new wipeout.template.xmlPart('"', false);
@@ -30,8 +31,12 @@ Class("wipeout.template.xmlParser", function () {
     var closeComment = xmlParser.specialTags.closeComment = new wipeout.template.xmlPart("-->", false);
     
     // order is important
-    var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2];
+    var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2, whiteSpace];
     var inTheEther = [openComment, openTag2, openTag1];
+    
+    enumerateArr(insideTag, function(item) { // \s
+        whiteSpace.nextChars.push(item);
+    });
     
     openSQuote.nextChars.push(closeSQuote); // open - '
     

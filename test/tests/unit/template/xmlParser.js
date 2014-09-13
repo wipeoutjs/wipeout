@@ -191,10 +191,12 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     // arrange   
     var test = [];
     
+    var input = "";
+    
     // filler with both kinds of quotes
     var tmp = "aaa\"aaa'aaa";
     test.push(tmp);
-    var input = tmp;
+    input += tmp;
     
     // enclosed in comment
     tmp = 'bbb"bbb\'bbb';
@@ -220,6 +222,11 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     test.push(tmp);
     test.push(xmlParser.specialTags.closeSQuote);
     input += "'" + tmp + "'";
+    
+    // space
+    tmp = " \t\r\n ";
+    test.push(xmlParser.specialTags.whiteSpace);
+    input += tmp;
     
     // d quote with ignorable and escaped chars
     tmp = 'fff<fff<!--fff\'fff\\"fff\\\\';
