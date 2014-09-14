@@ -1,5 +1,5 @@
 
-
+//http://www.w3.org/TR/html-markup/syntax.html
 Class("wipeout.template.xmlParser", function () {  
     
     function xmlParser(xmlString) {
@@ -69,23 +69,6 @@ Class("wipeout.template.xmlParser", function () {
     enumerateArr(inTheEther, function(item) { // close - -->
         closeComment.nextChars.push(item);
     }); 
-        
-    xmlParser.distillElementName = function(input) {
-        var name = input.search(/\s/);
-        name = name !== -1 ? input.substring(0, name) : input;
-        
-        return name.length && name.indexOf("=") === -1 ?
-            name :
-            null;
-    };
-    
-    var attr = /\s+.*=\s*$/, eq = /=/g, sp = /\s/g;    
-    xmlParser.distillAttributeName = function(input) {
-        var name = input.match(attr);
-        name = (name && name.length ? name[0] : "").replace(eq, "").replace(sp, "");
-        
-        return name.length ? name : null;
-    };
     
     xmlParser.findFirstInstance = function(input, startingPosition, items) {
         
@@ -146,66 +129,104 @@ Class("wipeout.template.xmlParser", function () {
         
         return output;
     };
+    
+    var validateAttrName = /^[a-zA-Z0-9\-]+=$/;
+    var equals = "=";
+    xmlParser.createAttribute = function(preParsed, startAt) {
+        var i = startAt;
+        if(typeof preParsed[i] !== "string")
+            //TODO
+            throw {
+                message: "Cannot create xml attribute"
+            };
         
-    xmlParser.parseInsideTag = function(preParsed, tag, startIndex) {
+        var name = preParsed[i];
+        i++;
+        if (preParsed[i] === whiteSpace) { 
+            i++;
+            if(preParsed[i] === equals) {
+                name += equals;
+                i++;
+                if (preParsed[i] === whiteSpace)
+                    i++;
+            }
+        }
+        
+        if(!validateAttrName.test(name))
+            //TODO
+            throw {
+                message: "Cannot create xml attribute"
+            };
+        
+        // do not need to check if opening quote matches closing. Preparser chceks this
+        if ((preParsed[i] === openDQuote || preParsed[i] === openSQuote) && 
+            typeof preParsed[i + 1] === "string" &&
+            (preParsed[i + 2] === closeDQuote || preParsed[i + 2] === closeSQuote)) {
+            return {
+                index: i + 3,
+                name: name.substr(0, name.length - 1),
+                value: new wipeout.template.xmlAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
+            };
+        }
+        
+        //TODO
+        throw {
+            message: "Cannot create xml attribute"
+        };
+    };
+        
+    var validateTagName = /^[a-zA-Z0-9\-]+$/;    
+    xmlParser.createHtmlElement = function(preParsed, startIndex, parentElement) {
+        
+        var i = startIndex;
+        if (preParsed[i] !== openTag1)
+            //TODO
+            throw {
+                message: "Cannot create xml element"
+            };
+        
+        i++;
+        
+        // skip whitespace
+        if (preParsed[i] === whiteSpace)
+            i++;
+        
+        // validate name
+        if(!validateTagName.test(preParsed[i]))
+            //TODO
+            throw {
+                message: "Cannot create xml element"
+            };
+        
+        // create element
+        var element = new wipeout.template.xmlElement(preParsed[i], parentElement);
+        parentElement.push(element);
+        i++;
+        
+        for(var ii = preParsed.length; i < ii; i++) {
+                        
+            if (preParsed[i] === closeTag1 || preParsed[i] === closeTag2 ||
+                (preParsed[i] === whiteSpace && (preParsed[i + 1] === closeTag1 || preParsed[i + 1] === closeTag2))) {
                 
-        for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
-            
-            if (preParsed[i] === closeTag1 || preParsed[i] === closeTag2) {
+                if(preParsed[i] === whiteSpace) i++;
                 
-                tag.inline = preParsed[i] === closeTag2;
+                element.inline = preParsed[i] === closeTag2;
                 i++;
                 
-                return tag.inline ? i : xmlParser.parseTheEther(preParsed, tag, i);
+                return element.inline ? i : xmlParser.parseTheEther(preParsed, element, i);
             }
             
-            if (typeof preParsed[i] !== "string")
-                throw "Invalid operation"; // this should have been caught earlier in the distillElementName phase
-            
-            i++; // skip text
-            if (preParsed[i] === openSQuote) {
-                
-                if ((typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeSQuote) || preParsed[i + 1] === closeSQuote) {                
-                    var name = xmlParser.distillAttributeName(preParsed[i + 1]);
-                    if(!name)
-                        //TODO
-                        throw {
-                            message: "Cannot find attribute name"
-                        };
-
-                    tag.attributes[name] = new wipeout.template.xmlAttribute(preParsed[i + 1], "'");
-                    i+=2 + (preParsed[i + 1] === closeSQuote ? 0 : 1);
-                } else {
-                    //TODO
-                    throw {
-                        message: "Invalid attribute"
-                    };
-                }
-            } else if (preParsed[i] === openDQuote) {
-                
-                if ((typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeDQuote) || preParsed[i + 1] === closeDQuote) {                
-                    var name = xmlParser.distillAttributeName(preParsed[i + 1]);
-                    if(!name)
-                        //TODO
-                        throw {
-                            message: "Cannot find attribute name"
-                        };
-
-                    tag.attributes[name] = new wipeout.template.xmlAttribute(preParsed[i + 1], '"');
-                    i+=2 + (preParsed[i + 1] === closeDQuote ? 0 : 1);
-                } else {
-                    //TODO
-                    throw {
-                        message: "Invalid attribute"
-                    };
-                }
-            } else {
+            if(preParsed[i] !== whiteSpace) {
                 //TODO
                 throw {
-                    message: "Invalid xml"
+                    message: "Cannot create xml element"
                 };
             }
-        }    
+            
+            var attr = xmlParser.createAttribute(preParsed, i + 1);
+            i = attr.index - 1; // -1 for loop++
+            element.attributes[attr.name] = attr.value;
+        }
         
         return i;
     };
@@ -232,28 +253,12 @@ Class("wipeout.template.xmlParser", function () {
                 }
             } else if (preParsed[i] === openTag1) {
                 
-                if (typeof preParsed[i + 1] === "string") {
-                    var name = xmlParser.distillElementName(preParsed[i + 1]);
-                    if(!name)
-                        //TODO
-                        throw {
-                            message: "Invalid opening tag"
-                        };
-                    
-                    //TODO: is inline? (third consrtuctor arg)
-                    var element = new wipeout.template.xmlElement(name, rootElement);
-                    i = xmlParser.parseInsideTag(preParsed, element, i + 1) - 1;
-                    rootElement.push(element);                    
-                } else {
-                    //TODO
-                    throw {
-                        message: "Invalid opening tag"
-                    };
-                }
+                i = xmlParser.createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
             } else if (preParsed[i] === openTag2) {
                 
-                if (wipeout.obj.trimToLower(rootElement.name) && typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeTag1) {
-                    if(wipeout.obj.trimToLower(rootElement.name) === wipeout.obj.trimToLower(preParsed[i + 1]))
+                // there won't be any whitespace special characters in a closing tag                
+                if (rootElement.name && typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeTag1) {
+                    if(rootElement.name === wipeout.utils.obj.trim(preParsed[i + 1]))
                         return i + 2;
                     
                     //TODO

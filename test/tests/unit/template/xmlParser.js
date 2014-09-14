@@ -8,96 +8,6 @@ module("wipeout.template.xmlParser", {
 var xmlParser = wipeout.template.xmlParser;
 var xmlPart = wipeout.template.xmlPart;
 
-testUtils.testWithUtils("distillElementName", null, true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "KJBKJB";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name), name);
-});
-
-testUtils.testWithUtils("distillElementName", null, true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "KJBKJB";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name + " "), name);
-});
-
-testUtils.testWithUtils("distillElementName", null, true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "KJBKJB";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name + " sadasd"), name);
-});
-
-testUtils.testWithUtils("distillElementName", "invalid name", true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "KJB=KJB";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name), null);
-});
-
-testUtils.testWithUtils("distillElementName", "no name", true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name), null);
-});
-
-testUtils.testWithUtils("distillAttributeName", null, true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "kajsdhajshd";
-    
-    // act    
-    //assert
-    strictEqual(invoker(" " + name + "="), name);
-});
-
-testUtils.testWithUtils("distillAttributeName", null, true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "kajsdhajshd";
-    
-    // act    
-    //assert
-    strictEqual(invoker("asdasdasd " + name + " = "), name);
-});
-
-testUtils.testWithUtils("distillAttributeName", "no equals", true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "kajsdhajshd";
-    
-    // act    
-    //assert
-    strictEqual(invoker(" " + name), null);
-});
-
-testUtils.testWithUtils("distillAttributeName", "no space before", true, function(methods, classes, subject, invoker) {
-    
-    // arrange    
-    var name = "kajsdhajshd";
-    
-    // act    
-    //assert
-    strictEqual(invoker(name + "="), null);
-});
-
 testUtils.testWithUtils("findFirstInstance", "char 1", true, function(methods, classes, subject, invoker) {
     
     // arrange
@@ -272,3 +182,96 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     //assert
     deepEqual(output, test);
 });
+
+testUtils.testWithUtils("createAttribute", "ne q v q", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
+    var input = [name + "=", xmlParser.specialTags.openSQuote, value, xmlParser.specialTags.closeSQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, "'");
+});
+
+testUtils.testWithUtils("createAttribute", "ne s q v q", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
+    var input = [name + "=", xmlParser.specialTags.whiteSpace, xmlParser.specialTags.openSQuote, value, xmlParser.specialTags.closeSQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, "'");
+});
+
+testUtils.testWithUtils("createAttribute", "n s e q v q", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
+    var input = [name, xmlParser.specialTags.whiteSpace, "=", xmlParser.specialTags.openDQuote, value, xmlParser.specialTags.closeDQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, '"');
+});
+
+testUtils.testWithUtils("createAttribute", "n s e s q v q", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
+    var input = [name, xmlParser.specialTags.whiteSpace, "=", xmlParser.specialTags.whiteSpace, xmlParser.specialTags.openDQuote, value, xmlParser.specialTags.closeDQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, '"');
+});
+
+testUtils.testWithUtils("constructor", "n s e s q v q", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var val = "<hello val='adasd'><bla /></ hello>";
+    
+    // act
+    var output = xmlParser(val);
+    debugger;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

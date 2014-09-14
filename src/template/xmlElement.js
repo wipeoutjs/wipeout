@@ -43,7 +43,9 @@ Class("wipeout.template.rootXmlElement", function () {
 Class("wipeout.template.xmlElement", function () {
     
     var xmlElement = wipeout.template.xmlElementBase.extend(function xmlElement(name, parentElement, inline /*optional*/) {
-        this._super(name);
+        this._super();
+        
+        this.name = name;
         
         this.attributes = {};
         if(parentElement instanceof wipeout.template.xmlElementBase)
