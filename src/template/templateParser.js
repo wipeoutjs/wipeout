@@ -1,28 +1,28 @@
 
 //http://www.w3.org/TR/html-markup/syntax.html
-Class("wipeout.template.xmlParser", function () {  
+Class("wipeout.template.templateParser", function () {  
     
-    function xmlParser(xmlString) {
+    function templateParser(templateString) {
         
-        var preParsed = xmlParser.preParse(xmlString);
-        var root = new wipeout.template.rootXmlElement();        
-        xmlParser._parseTheEther(preParsed, root, 0);
+        var preParsed = templateParser.preParse(templateString);
+        var root = new wipeout.template.rootTemplateElement();        
+        templateParser._parseTheEther(preParsed, root, 0);
         return root;
     }
     
     // for unit testing
-    xmlParser.specialTags = {};
-    var whiteSpace = xmlParser.specialTags.whiteSpace = new wipeout.template.xmlPart(/\s+/, false); //NOTE: \s includes newlines
-    var openSQuote = xmlParser.specialTags.openSQuote = new wipeout.template.xmlPart("'", false);
-    var closeSQuote = xmlParser.specialTags.closeSQuote = new wipeout.template.xmlPart("'", "\\");
-    var openDQuote = xmlParser.specialTags.openDQuote = new wipeout.template.xmlPart('"', false);
-    var closeDQuote = xmlParser.specialTags.closeDQuote = new wipeout.template.xmlPart('"', "\\");
-    var openTag1 = xmlParser.specialTags.openTag1 = new wipeout.template.xmlPart("<", false);
-    var openTag2 = xmlParser.specialTags.openTag2 = new wipeout.template.xmlPart("</", false);
-    var closeTag1 = xmlParser.specialTags.closeTag1 = new wipeout.template.xmlPart(">", false);
-    var closeTag2 = xmlParser.specialTags.closeTag2 = new wipeout.template.xmlPart("/>", false);
-    var openComment = xmlParser.specialTags.openComment = new wipeout.template.xmlPart("<!--", false);
-    var closeComment = xmlParser.specialTags.closeComment = new wipeout.template.xmlPart("-->", false);
+    templateParser.specialTags = {};
+    var whiteSpace = templateParser.specialTags.whiteSpace = new wipeout.template.templatePart(/\s+/, false); //NOTE: \s includes newlines
+    var openSQuote = templateParser.specialTags.openSQuote = new wipeout.template.templatePart("'", false);
+    var closeSQuote = templateParser.specialTags.closeSQuote = new wipeout.template.templatePart("'", "\\");
+    var openDQuote = templateParser.specialTags.openDQuote = new wipeout.template.templatePart('"', false);
+    var closeDQuote = templateParser.specialTags.closeDQuote = new wipeout.template.templatePart('"', "\\");
+    var openTag1 = templateParser.specialTags.openTag1 = new wipeout.template.templatePart("<", false);
+    var openTag2 = templateParser.specialTags.openTag2 = new wipeout.template.templatePart("</", false);
+    var closeTag1 = templateParser.specialTags.closeTag1 = new wipeout.template.templatePart(">", false);
+    var closeTag2 = templateParser.specialTags.closeTag2 = new wipeout.template.templatePart("/>", false);
+    var openComment = templateParser.specialTags.openComment = new wipeout.template.templatePart("<!--", false);
+    var closeComment = templateParser.specialTags.closeComment = new wipeout.template.templatePart("-->", false);
     
     // order is important
     var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2, whiteSpace];
@@ -64,7 +64,7 @@ Class("wipeout.template.xmlParser", function () {
         closeComment.nextChars.push(item);
     }); 
     
-    xmlParser.findFirstInstance = function(input, startingPosition, items) {
+    templateParser.findFirstInstance = function(input, startingPosition, items) {
         
         var position, output, i, count;
         wipeout.utils.obj.enumerateArr(items, function(item) {
@@ -82,7 +82,7 @@ Class("wipeout.template.xmlParser", function () {
                     
                     // try find next
                     if(count % 2 != 0) {
-                        var o = xmlParser.findFirstInstance(input, position.index + 1, [item]);
+                        var o = templateParser.findFirstInstance(input, position.index + 1, [item]);
                         if (o && (!output || o.index < output.index))
                             output = o;
                         
@@ -101,14 +101,14 @@ Class("wipeout.template.xmlParser", function () {
         return output;
     };
     
-    xmlParser.preParse = function(input, beginWith /* optional */, startAtChar /* optional */, output /* optional */) {
+    templateParser.preParse = function(input, beginWith /* optional */, startAtChar /* optional */, output /* optional */) {
         
         // begin in the ether
         beginWith = beginWith || {nextChars: inTheEther};
         startAtChar = startAtChar || 0;
         
         output = output || [];
-        var first = xmlParser.findFirstInstance(input, startAtChar, beginWith.nextChars);
+        var first = templateParser.findFirstInstance(input, startAtChar, beginWith.nextChars);
         
         if(!first) {
             if(input.length > startAtChar)
@@ -118,18 +118,18 @@ Class("wipeout.template.xmlParser", function () {
                 output.push(input.substring(startAtChar, first.index));
 
             output.push(first.type);
-            xmlParser.preParse(input, first.type, first.index + first.length, output);
+            templateParser.preParse(input, first.type, first.index + first.length, output);
         }
         
         return output;
     };
     
-    xmlParser.preParse = function(input) {
+    templateParser.preParse = function(input) {
         
         // begin in the ether
         var item = {type: {nextChars: inTheEther}}, i = 0, output = [];        
         while (true) {
-            item = xmlParser.findFirstInstance(input, i, item.type.nextChars);
+            item = templateParser.findFirstInstance(input, i, item.type.nextChars);
             
             if(!item) {
                 if(input.length > i)
@@ -151,12 +151,12 @@ Class("wipeout.template.xmlParser", function () {
     
     var validateAttrName = /^[a-zA-Z0-9\-]+=$/;
     var equals = "=";
-    xmlParser._createAttribute = function(preParsed, startAt) {
+    templateParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;
         if(typeof preParsed[i] !== "string")
             //TODO
             throw {
-                message: "Cannot create xml attribute"
+                message: "Cannot create template attribute"
             };
         
         var name = preParsed[i];
@@ -174,7 +174,7 @@ Class("wipeout.template.xmlParser", function () {
         if(!validateAttrName.test(name))
             //TODO
             throw {
-                message: "Cannot create xml attribute"
+                message: "Cannot create template attribute"
             };
         
         // do not need to check if opening quote matches closing. Preparser chceks this
@@ -184,24 +184,24 @@ Class("wipeout.template.xmlParser", function () {
             return {
                 index: i + 3,
                 name: name.substr(0, name.length - 1),
-                value: new wipeout.template.xmlAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
+                value: new wipeout.template.templateAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
             };
         }
         
         //TODO
         throw {
-            message: "Cannot create xml attribute"
+            message: "Cannot create template attribute"
         };
     };
         
     var validateTagName = /^[a-zA-Z0-9\-]+$/;    
-    xmlParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
+    templateParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
         
         var i = startIndex;
         if (preParsed[i] !== openTag1)
             //TODO
             throw {
-                message: "Cannot create xml element"
+                message: "Cannot create template element"
             };
         
         i++;
@@ -214,11 +214,11 @@ Class("wipeout.template.xmlParser", function () {
         if(!validateTagName.test(preParsed[i]))
             //TODO
             throw {
-                message: "Cannot create xml element"
+                message: "Cannot create template element"
             };
         
         // create element
-        var element = new wipeout.template.xmlElement(preParsed[i], parentElement);
+        var element = new wipeout.template.templateElement(preParsed[i], parentElement);
         parentElement.push(element);
         i++;
         
@@ -232,17 +232,17 @@ Class("wipeout.template.xmlParser", function () {
                 element.inline = preParsed[i] === closeTag2;
                 i++;
                 
-                return element.inline ? i : xmlParser._parseTheEther(preParsed, element, i);
+                return element.inline ? i : templateParser._parseTheEther(preParsed, element, i);
             }
             
             if(preParsed[i] !== whiteSpace) {
                 //TODO
                 throw {
-                    message: "Cannot create xml element"
+                    message: "Cannot create template element"
                 };
             }
             
-            var attr = xmlParser._createAttribute(preParsed, i + 1);
+            var attr = templateParser._createAttribute(preParsed, i + 1);
             i = attr.index - 1; // -1 for loop++
             element.attributes[attr.name] = attr.value;
         }
@@ -250,7 +250,7 @@ Class("wipeout.template.xmlParser", function () {
         return i;
     };
     
-    xmlParser._parseTheEther = function(preParsed, rootElement, startIndex) {
+    templateParser._parseTheEther = function(preParsed, rootElement, startIndex) {
         
         for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
             if (typeof preParsed[i] === "string") {
@@ -259,10 +259,10 @@ Class("wipeout.template.xmlParser", function () {
             } else if(preParsed[i] === openComment) {
                 
                 if (preParsed[i + 1] === closeComment) {
-                    rootElement.push(new wipeout.template.xmlComment(""));
+                    rootElement.push(new wipeout.template.templateComment(""));
                     i++;
                 } else if (typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeComment) {
-                    rootElement.push(new wipeout.template.xmlComment(preParsed[i + 1]));
+                    rootElement.push(new wipeout.template.templateComment(preParsed[i + 1]));
                     i+=2;
                 } else {
                     //TODO
@@ -272,7 +272,7 @@ Class("wipeout.template.xmlParser", function () {
                 }
             } else if (preParsed[i] === openTag1) {
                 
-                i = xmlParser._createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
+                i = templateParser._createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
             } else if (preParsed[i] === openTag2) {
                 
                 // there won't be any whitespace special characters in a closing tag                
@@ -293,7 +293,7 @@ Class("wipeout.template.xmlParser", function () {
             } else {
                 //TODO
                 throw {
-                    message: "Invalid xml"
+                    message: "Invalid template"
                 };
             }
         } 
@@ -301,5 +301,5 @@ Class("wipeout.template.xmlParser", function () {
         return i;
     };
     
-    return xmlParser;
+    return templateParser;
 });

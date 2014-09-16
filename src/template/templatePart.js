@@ -1,6 +1,6 @@
-Class("wipeout.template.xmlPart", function () {  
+Class("wipeout.template.templatePart", function () {  
         //TODO: move to seperate file
-    function xmlPart(value, escaped) {
+    function templatePart(value, escaped) {
         
         this.value = value;        
         this.escaped = escaped;
@@ -8,7 +8,7 @@ Class("wipeout.template.xmlPart", function () {
         this.nextChars = [];
     }
     
-    xmlPart.prototype.indexOf = function(string, startingPosition) {
+    templatePart.prototype.indexOf = function(string, startingPosition) {
         if (this.value instanceof RegExp) {
             //TODO: efficiencies
             if(startingPosition)
@@ -33,5 +33,5 @@ Class("wipeout.template.xmlPart", function () {
         }
     };
     
-    return xmlPart;
+    return templatePart;
 });

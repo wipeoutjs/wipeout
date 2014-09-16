@@ -1,11 +1,11 @@
-module("wipeout.template.xmlPart", {
+module("wipeout.template.templatePart", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var xmlParser = wipeout.template.xmlParser;
+var templateParser = wipeout.template.templateParser;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
@@ -19,7 +19,6 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.value, value);
     strictEqual(subject.escaped, escaped);
     strictEqual(subject.nextChars.constructor, Array);
-    strictEqual(subject.illegal.constructor, Array);
 });
 
 testUtils.testWithUtils("indexOf", "string, success", false, function(methods, classes, subject, invoker) {

@@ -1,26 +1,26 @@
 //TODO unit test
 
-Class("wipeout.template.xmlElementBase", function () {
+Class("wipeout.template.templateElementBase", function () {
     
-    var xmlElementBase = wipeout.base.object.extend.call(Array, function xmlElementBase() {
+    var templateElementBase = wipeout.base.object.extend.call(Array, function templateElementBase() {
         this._super();
     });
     
-    xmlElementBase.extend = wipeout.base.object.extend;
-    xmlElementBase.prototype._super = wipeout.base.object.prototype._super;
+    templateElementBase.extend = wipeout.base.object.extend;
+    templateElementBase.prototype._super = wipeout.base.object.prototype._super;
     
-    xmlElementBase.prototype.serializeChildren = function() {
+    templateElementBase.prototype.serializeChildren = function() {
         
         var output = [];
         
         for(var i = 0, ii = this.length; i < ii; i++) {
             if (typeof this[i] === "string")
                 output.push(this[i]);
-            else if (this[i] instanceof wipeout.template.xmlElement || this[i] instanceof wipeout.template.xmlComment)
+            else if (this[i] instanceof wipeout.template.templateElement || this[i] instanceof wipeout.template.templateComment)
                 output.push(this[i].serialize());
             else
                 throw {
-                    message: "Invalid xml element",
+                    message: "Invalid template element",
                     value: this[i]
                 };
         }
@@ -28,27 +28,27 @@ Class("wipeout.template.xmlElementBase", function () {
         return output.join("");
     }
     
-    return xmlElementBase;
+    return templateElementBase;
 });
 
-Class("wipeout.template.rootXmlElement", function () {
+Class("wipeout.template.rootTemplateElement", function () {
     
-    var rootXmlElement = wipeout.template.xmlElementBase.extend(function rootXmlElement() {
+    var rootTemplateElement = wipeout.template.templateElementBase.extend(function rootTemplateElement() {
         this._super();
     });
     
-    return rootXmlElement;
+    return rootTemplateElement;
 });
 
-Class("wipeout.template.xmlElement", function () {
+Class("wipeout.template.templateElement", function () {
     
-    var xmlElement = wipeout.template.xmlElementBase.extend(function xmlElement(name, parentElement, inline /*optional*/) {
+    var templateElement = wipeout.template.templateElementBase.extend(function templateElement(name, parentElement, inline /*optional*/) {
         this._super();
         
         this.name = name;
         
         this.attributes = {};
-        if(parentElement instanceof wipeout.template.xmlElementBase)
+        if(parentElement instanceof wipeout.template.templateElementBase)
             this.parentElement = parentElement;
         else
             throw "Invalid parent element";
@@ -56,7 +56,7 @@ Class("wipeout.template.xmlElement", function () {
         this.inline = !!inline;
     });
     
-    xmlElement.prototype.serialize = function() {
+    templateElement.prototype.serialize = function() {
         var output = [];
         
         output.splice(0, 0, "<", this.name);
@@ -78,26 +78,26 @@ Class("wipeout.template.xmlElement", function () {
         return output.join("");
     }
     
-    return xmlElement;
+    return templateElement;
 });
 
-Class("wipeout.template.xmlAttribute", function () {
+Class("wipeout.template.templateAttribute", function () {
     
-    return function xmlAttribute(value, surrounding) {
+    return function templateAttribute(value, surrounding) {
         this.value = value;
         this.surrounding = surrounding;
     };
 });
 
-Class("wipeout.template.xmlComment", function () {
+Class("wipeout.template.templateComment", function () {
     
-    var xmlComment = function xmlComment(commentText) {
+    var templateComment = function templateComment(commentText) {
         this.commentText = commentText;
     };
     
-    xmlComment.serialize = function() {
+    templateComment.serialize = function() {
         return "<!--" + this.commentText + "-->";
     }
     
-    return xmlComment;
+    return templateComment;
 });
