@@ -265,6 +265,8 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
         attrText = "a &a& a *%a*% a ***%a***% a <a> a <!-- a --> **",
         sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
         dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
+        emptyAttrName = "lknlk",
+        noValueAttrName = "ss4se",
         sAttrName = "lkjlhjv",
         sAttr = sAttrName + "='" + sAttrText + "'",
         dAttrName = "gfhgfhgfhfg",
@@ -275,9 +277,9 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     var val = "<" + tagName1 + ">\
     <!--" + commentText + "-->\
     b &b& b 'b' b opening quote: &\
-    < " + tagName2 + " " + sAttr + " " + dAttr + " >\
+    < " + tagName2 + " " + sAttr + " " + dAttr + " " + emptyAttrName + "='' >\
         Closing quote: &\
-        <" + tagName3 + "\t\n\r " + sAttr + " " + dAttr + ">" + text + "</" + tagName3 + ">\
+        <" + tagName3 + ">" + text + "</" + tagName3 + ">\
         <" + tagName4 + "/>\
         < " + tagName5 + "   />\
     </ " + tagName2 + " ></" + tagName1 + ">".replace(/\*/g, "\\").replace(/&/g, "\"");
@@ -305,18 +307,14 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     strictEqual(output[0][3].attributes[dAttrName].surrounding, '"');
     strictEqual(output[0][3].attributes[dAttrName].value, dAttrText);
     
+    strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[emptyAttrName].surrounding, "'");
+    strictEqual(output[0][3].attributes[emptyAttrName].value, "");
+    
     strictEqual(output[0][3][0].constructor, String);
     
     strictEqual(output[0][3][1].constructor, wipeout.template.templateElement);
     strictEqual(output[0][3][1].name, tagName3);
-    
-    strictEqual(output[0][3][1].attributes[sAttrName].constructor, wipeout.template.templateAttribute);
-    strictEqual(output[0][3][1].attributes[sAttrName].surrounding, "'");
-    strictEqual(output[0][3][1].attributes[sAttrName].value, sAttrText);
-    
-    strictEqual(output[0][3][1].attributes[dAttrName].constructor, wipeout.template.templateAttribute);
-    strictEqual(output[0][3][1].attributes[dAttrName].surrounding, '"');
-    strictEqual(output[0][3][1].attributes[dAttrName].value, dAttrText);
     
     strictEqual(output[0][3][1][0], text);
     

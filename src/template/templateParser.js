@@ -178,14 +178,21 @@ Class("wipeout.template.templateParser", function () {
             };
         
         // do not need to check if opening quote matches closing. Preparser chceks this
-        if ((preParsed[i] === openDQuote || preParsed[i] === openSQuote) && 
-            typeof preParsed[i + 1] === "string" &&
+        if ((preParsed[i] === openDQuote || preParsed[i] === openSQuote)) {
+            if (typeof preParsed[i + 1] === "string" &&
             (preParsed[i + 2] === closeDQuote || preParsed[i + 2] === closeSQuote)) {
-            return {
-                index: i + 3,
-                name: name.substr(0, name.length - 1),
-                value: new wipeout.template.templateAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
-            };
+                return {
+                    index: i + 3,
+                    name: name.substr(0, name.length - 1),
+                    value: new wipeout.template.templateAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
+                };
+            } else if (preParsed[i + 1] === closeDQuote || preParsed[i + 1] === closeSQuote) {
+                return {
+                    index: i + 2,
+                    name: name.substr(0, name.length - 1),
+                    value: new wipeout.template.templateAttribute("", preParsed[i] === openDQuote ? '"' : "'")
+                };
+            }
         }
         
         //TODO
