@@ -6,15 +6,9 @@ Class("wipeout.template.xmlParser", function () {
         
         var preParsed = xmlParser.preParse(xmlString);
         var root = new wipeout.template.rootXmlElement();        
-        xmlParser.parseTheEther(preParsed, root, 0);
+        xmlParser._parseTheEther(preParsed, root, 0);
         return root;
-    }    
-    xmlParser.parse2 = function(preParsed) {
-        
-        var root = new wipeout.template.rootXmlElement();        
-        xmlParser.parseTheEther(preParsed, root, 0);
-        return root;
-    };
+    }
     
     // for unit testing
     xmlParser.specialTags = {};
@@ -130,9 +124,34 @@ Class("wipeout.template.xmlParser", function () {
         return output;
     };
     
+    xmlParser.preParse = function(input) {
+        
+        // begin in the ether
+        var item = {type: {nextChars: inTheEther}}, i = 0, output = [];        
+        while (true) {
+            item = xmlParser.findFirstInstance(input, i, item.type.nextChars);
+            
+            if(!item) {
+                if(input.length > i)
+                    output.push(input.substr(i));
+                
+                break;
+            } else {
+                
+                if(item.index > i)
+                    output.push(input.substring(i, item.index));
+
+                output.push(item.type);
+                i = item.index + item.length;
+            }
+        }
+        
+        return output;
+    };
+    
     var validateAttrName = /^[a-zA-Z0-9\-]+=$/;
     var equals = "=";
-    xmlParser.createAttribute = function(preParsed, startAt) {
+    xmlParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;
         if(typeof preParsed[i] !== "string")
             //TODO
@@ -176,7 +195,7 @@ Class("wipeout.template.xmlParser", function () {
     };
         
     var validateTagName = /^[a-zA-Z0-9\-]+$/;    
-    xmlParser.createHtmlElement = function(preParsed, startIndex, parentElement) {
+    xmlParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
         
         var i = startIndex;
         if (preParsed[i] !== openTag1)
@@ -213,7 +232,7 @@ Class("wipeout.template.xmlParser", function () {
                 element.inline = preParsed[i] === closeTag2;
                 i++;
                 
-                return element.inline ? i : xmlParser.parseTheEther(preParsed, element, i);
+                return element.inline ? i : xmlParser._parseTheEther(preParsed, element, i);
             }
             
             if(preParsed[i] !== whiteSpace) {
@@ -223,7 +242,7 @@ Class("wipeout.template.xmlParser", function () {
                 };
             }
             
-            var attr = xmlParser.createAttribute(preParsed, i + 1);
+            var attr = xmlParser._createAttribute(preParsed, i + 1);
             i = attr.index - 1; // -1 for loop++
             element.attributes[attr.name] = attr.value;
         }
@@ -231,7 +250,7 @@ Class("wipeout.template.xmlParser", function () {
         return i;
     };
     
-    xmlParser.parseTheEther = function(preParsed, rootElement, startIndex) {
+    xmlParser._parseTheEther = function(preParsed, rootElement, startIndex) {
         
         for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
             if (typeof preParsed[i] === "string") {
@@ -253,13 +272,13 @@ Class("wipeout.template.xmlParser", function () {
                 }
             } else if (preParsed[i] === openTag1) {
                 
-                i = xmlParser.createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
+                i = xmlParser._createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
             } else if (preParsed[i] === openTag2) {
                 
                 // there won't be any whitespace special characters in a closing tag                
                 if (rootElement.name && typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeTag1) {
                     if(rootElement.name === wipeout.utils.obj.trim(preParsed[i + 1]))
-                        return i + 2;
+                        return i + 3; // skip <, "name" and >
                     
                     //TODO
                     throw {

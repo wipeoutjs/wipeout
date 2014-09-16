@@ -183,7 +183,18 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     deepEqual(output, test);
 });
 
-testUtils.testWithUtils("createAttribute", "ne q v q", true, function(methods, classes, subject, invoker) {
+/*
+    Key:
+    n: name
+    e: equals
+    s: white space
+    q: quotation mark
+    v: value
+    
+    createAttribute tests arbitrarily use " or '
+ */
+
+testUtils.testWithUtils("_createAttribute", "ne q v q", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
@@ -199,7 +210,7 @@ testUtils.testWithUtils("createAttribute", "ne q v q", true, function(methods, c
     strictEqual(output.value.surrounding, "'");
 });
 
-testUtils.testWithUtils("createAttribute", "ne s q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "ne s q v q", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
@@ -215,7 +226,7 @@ testUtils.testWithUtils("createAttribute", "ne s q v q", true, function(methods,
     strictEqual(output.value.surrounding, "'");
 });
 
-testUtils.testWithUtils("createAttribute", "n s e q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "n s e q v q", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
@@ -231,7 +242,7 @@ testUtils.testWithUtils("createAttribute", "n s e q v q", true, function(methods
     strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("createAttribute", "n s e s q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "n s e s q v q", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
@@ -247,14 +258,79 @@ testUtils.testWithUtils("createAttribute", "n s e s q v q", true, function(metho
     strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("constructor", "n s e s q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("constructor", "integration test", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var val = "<hello val='adasd'><bla /></ hello>";
+    var commentText = " hello <!-- &hello& 'hello' ",
+        attrText = "a &a& a *%a*% a ***%a***% a <a> a <!-- a --> **",
+        sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
+        dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
+        sAttrName = "lkjlhjv",
+        sAttr = sAttrName + "='" + sAttrText + "'",
+        dAttrName = "gfhgfhgfhfg",
+        dAttr = dAttrName + ' = "' + dAttrText + '"',
+        text = "d 'd' \"d\" > d "
+        tagName1 = "aa", tagName2 = "BB", tagName3 = "c-c", tagName4 = "dd1", tagName5 = "ee1";
+    
+    var val = "<" + tagName1 + ">\
+    <!--" + commentText + "-->\
+    b &b& b 'b' b opening quote: &\
+    < " + tagName2 + " " + sAttr + " " + dAttr + " >\
+        Closing quote: &\
+        <" + tagName3 + "\t\n\r " + sAttr + " " + dAttr + ">" + text + "</" + tagName3 + ">\
+        <" + tagName4 + "/>\
+        < " + tagName5 + "   />\
+    </ " + tagName2 + " ></" + tagName1 + ">".replace(/\*/g, "\\").replace(/&/g, "\"");
     
     // act
     var output = xmlParser(val);
-    debugger;
+    
+    strictEqual(output[0].name, tagName1);
+    
+    strictEqual(output[0][0].constructor, String);
+    
+    strictEqual(output[0][1].constructor, wipeout.template.xmlComment);
+    strictEqual(output[0][1].commentText, commentText);
+    
+    strictEqual(output[0][2].constructor, String);
+    
+    strictEqual(output[0][3].constructor, wipeout.template.xmlElement);
+    strictEqual(output[0][3].name, tagName2);
+    
+    strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.template.xmlAttribute);
+    strictEqual(output[0][3].attributes[sAttrName].surrounding, "'");
+    strictEqual(output[0][3].attributes[sAttrName].value, sAttrText);
+    
+    strictEqual(output[0][3].attributes[dAttrName].constructor, wipeout.template.xmlAttribute);
+    strictEqual(output[0][3].attributes[dAttrName].surrounding, '"');
+    strictEqual(output[0][3].attributes[dAttrName].value, dAttrText);
+    
+    strictEqual(output[0][3][0].constructor, String);
+    
+    strictEqual(output[0][3][1].constructor, wipeout.template.xmlElement);
+    strictEqual(output[0][3][1].name, tagName3);
+    
+    strictEqual(output[0][3][1].attributes[sAttrName].constructor, wipeout.template.xmlAttribute);
+    strictEqual(output[0][3][1].attributes[sAttrName].surrounding, "'");
+    strictEqual(output[0][3][1].attributes[sAttrName].value, sAttrText);
+    
+    strictEqual(output[0][3][1].attributes[dAttrName].constructor, wipeout.template.xmlAttribute);
+    strictEqual(output[0][3][1].attributes[dAttrName].surrounding, '"');
+    strictEqual(output[0][3][1].attributes[dAttrName].value, dAttrText);
+    
+    strictEqual(output[0][3][1][0], text);
+    
+    strictEqual(output[0][3][2].constructor, String);
+    
+    strictEqual(output[0][3][3].constructor, wipeout.template.xmlElement);
+    strictEqual(output[0][3][3].name, tagName4);
+    
+    strictEqual(output[0][3][4].constructor, String);
+    
+    strictEqual(output[0][3][5].constructor, wipeout.template.xmlElement);
+    strictEqual(output[0][3][5].name, tagName5);
+    
+    strictEqual(output[0][3][6].constructor, String);
 });
 
 
