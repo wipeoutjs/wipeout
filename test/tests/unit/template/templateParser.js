@@ -186,18 +186,7 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     deepEqual(output, test);
 });
 
-/*
-    Key:
-    n: name
-    e: equals
-    s: white space
-    q: quotation mark
-    v: value
-    
-    createAttribute tests arbitrarily use " or '
- */
-
-testUtils.testWithUtils("_createAttribute", "empty space next", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "no val, empty space next", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh";
@@ -213,7 +202,7 @@ testUtils.testWithUtils("_createAttribute", "empty space next", true, function(m
     strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("_createAttribute", "close tag 1 next", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "no val, close tag 1 next", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh";
@@ -229,7 +218,7 @@ testUtils.testWithUtils("_createAttribute", "close tag 1 next", true, function(m
     strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("_createAttribute", "close tag 2 next", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "no val, close tag 2 next", true, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "LKjhblkjhlkjh";
