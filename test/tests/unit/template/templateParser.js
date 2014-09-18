@@ -197,43 +197,59 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     createAttribute tests arbitrarily use " or '
  */
 
-testUtils.testWithUtils("_createAttribute", "ne q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "empty space next", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
-    var input = [name + "=", templateParser.specialTags.openSQuote, value, templateParser.specialTags.closeSQuote];
+    var name = "LKjhblkjhlkjh";
+    var input = [name, templateParser.specialTags.whiteSpace];
     
     // act
     var output = invoker(input, 0);
     
     //assert
     strictEqual(output.name, name);
-    strictEqual(output.index, input.length);
-    strictEqual(output.value.value, value);
-    strictEqual(output.value.surrounding, "'");
+    strictEqual(output.index, input.length - 1);
+    strictEqual(output.value.value, "");
+    strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("_createAttribute", "ne s q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "close tag 1 next", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
-    var input = [name + "=", templateParser.specialTags.whiteSpace, templateParser.specialTags.openSQuote, value, templateParser.specialTags.closeSQuote];
+    var name = "LKjhblkjhlkjh";
+    var input = [name, templateParser.specialTags.closeTag1];
     
     // act
     var output = invoker(input, 0);
     
     //assert
     strictEqual(output.name, name);
-    strictEqual(output.index, input.length);
-    strictEqual(output.value.value, value);
-    strictEqual(output.value.surrounding, "'");
+    strictEqual(output.index, input.length - 1);
+    strictEqual(output.value.value, "");
+    strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("_createAttribute", "n s e q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "close tag 2 next", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
-    var input = [name, templateParser.specialTags.whiteSpace, "=", templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
+    var name = "LKjhblkjhlkjh";
+    var input = [name, templateParser.specialTags.closeTag2];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length - 1);
+    strictEqual(output.value.value, "");
+    strictEqual(output.value.surrounding, '"');
+});
+
+testUtils.testWithUtils("_createAttribute", "no quotes", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "asdsdgsd";
+    var input = [name, templateParser.specialTags.equals, value];
     
     // act
     var output = invoker(input, 0);
@@ -245,11 +261,43 @@ testUtils.testWithUtils("_createAttribute", "n s e q v q", true, function(method
     strictEqual(output.value.surrounding, '"');
 });
 
-testUtils.testWithUtils("_createAttribute", "n s e s q v q", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_createAttribute", "single quotes", true, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "LKjhblkjhlkjh", value = "uiglghjkgkhjgk";
-    var input = [name, templateParser.specialTags.whiteSpace, "=", templateParser.specialTags.whiteSpace, templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
+    var name = "LKjhblkjhlkjh", value = "asdsdgsd";
+    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openSQuote, value, templateParser.specialTags.closeSQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, "'");
+});
+
+testUtils.testWithUtils("_createAttribute", "double quotes", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "asdsdgsd";
+    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
+    
+    // act
+    var output = invoker(input, 0);
+    
+    //assert
+    strictEqual(output.name, name);
+    strictEqual(output.index, input.length);
+    strictEqual(output.value.value, value);
+    strictEqual(output.value.surrounding, '"');
+});
+
+testUtils.testWithUtils("_createAttribute", "double empty", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "LKjhblkjhlkjh", value = "";
+    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
     
     // act
     var output = invoker(input, 0);
@@ -268,9 +316,10 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
         attrText = "a &a& a *%a*% a ***%a***% a <a> a <!-- a --> **",
         sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
         dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
+        quotelessValAttrText = "sadadrthgj",
         emptyAttrName = "lknlk",
-        noEqualsAttrName = "sersser",
-        noValueAttrName = "ss4se",
+        noEqualsAttrName = "34azx3",
+        quotelessValAttrName = "34a3",
         sAttrName = "lkjlhjv",
         sAttr = sAttrName + "='" + sAttrText + "'",
         dAttrName = "gfhgfhgfhfg",
@@ -281,7 +330,7 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     var val = "<" + tagName1 + ">\
     <!--" + commentText + "-->\
     b &b& b 'b' b opening quote: &\
-    < " + tagName2 + " " + sAttr + " " + dAttr + " " + emptyAttrName + "='' >\
+    < " + tagName2 + " " + sAttr + " " + dAttr + " " + emptyAttrName + "='' " + noEqualsAttrName + " " + quotelessValAttrName + "=" + quotelessValAttrText + " >\
         Closing quote: &\
         <" + tagName3 + ">" + text + "</" + tagName3 + ">\
         <" + tagName4 + "/>\
@@ -314,6 +363,14 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.template.templateAttribute);
     strictEqual(output[0][3].attributes[emptyAttrName].surrounding, "'");
     strictEqual(output[0][3].attributes[emptyAttrName].value, "");
+    
+    strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[noEqualsAttrName].surrounding, '"');
+    strictEqual(output[0][3].attributes[noEqualsAttrName].value, "");
+    
+    strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, '"');
+    strictEqual(output[0][3].attributes[quotelessValAttrName].value, quotelessValAttrText);
     
     strictEqual(output[0][3][0].constructor, String);
     

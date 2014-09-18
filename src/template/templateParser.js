@@ -106,29 +106,6 @@ Class("wipeout.template.templateParser", function () {
         return output;
     };
     
-    templateParser.preParse = function(input, beginWith /* optional */, startAtChar /* optional */, output /* optional */) {
-        
-        // begin in the ether
-        beginWith = beginWith || {nextChars: inTheEther};
-        startAtChar = startAtChar || 0;
-        
-        output = output || [];
-        var first = templateParser.findFirstInstance(input, startAtChar, beginWith.nextChars);
-        
-        if(!first) {
-            if(input.length > startAtChar)
-                output.push(input.substr(startAtChar));
-        } else {        
-            if(first.index > startAtChar)
-                output.push(input.substring(startAtChar, first.index));
-
-            output.push(first.type);
-            templateParser.preParse(input, first.type, first.index + first.length, output);
-        }
-        
-        return output;
-    };
-    
     templateParser.preParse = function(input) {
         
         // begin in the ether
@@ -154,8 +131,6 @@ Class("wipeout.template.templateParser", function () {
         return output;
     };
     
-    var validateAttrName = /^.+=$/;
-    var equals = "=";
     templateParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;
         if(typeof preParsed[i] !== "string")
@@ -163,42 +138,43 @@ Class("wipeout.template.templateParser", function () {
             throw {
                 message: "Cannot create template attribute"
             };
-        
+                
         var name = preParsed[i];
         i++;
-        if (preParsed[i] === whiteSpace) { 
+        if (preParsed[i] === whiteSpace || preParsed[i] === closeTag1 || preParsed[i] === closeTag2) 
+            return {
+                index: i,
+                name: name,
+                value: new wipeout.template.templateAttribute("", '"') // arbitrary surrounding quotes
+            }; // <tag attr />
+        
+        if (preParsed[i] === equals) {
             i++;
-            if(preParsed[i] === equals) {
-                name += equals;
+            if(typeof preParsed[i] === "string")
+                return {
+                    index: i + 1,
+                    name: name,
+                    value: new wipeout.template.templateAttribute(preParsed[i], '"') // arbitrary surrounding quotes
+                }; // <tag attr=something />
+            
+            if (preParsed[i] === openDQuote || preParsed[i] === openSQuote) {
                 i++;
-                if (preParsed[i] === whiteSpace)
-                    i++;
+                // do not need to check if opening quote matches closing. Preparser chceks this
+                if (typeof preParsed[i] === "string" && (preParsed[i + 1] === closeDQuote || preParsed[i + 1] === closeSQuote))
+                    return {
+                        index: i + 2,
+                        name: name,
+                        value: new wipeout.template.templateAttribute(preParsed[i], preParsed[i + 1] === closeDQuote ? '"' : "'")
+                    };// <tag attr="something" attr='something' />
+                
+                if (preParsed[i] === closeDQuote || preParsed[i] === closeSQuote)
+                    return {
+                        index: i + 1,
+                        name: name,
+                        value: new wipeout.template.templateAttribute("", preParsed[i] === closeDQuote ? '"' : "'")
+                    };// <tag attr="something" attr='something' />
             }
-        }
-        
-        if(!validateAttrName.test(name))
-            //TODO
-            throw {
-                message: "Cannot create template attribute"
-            };
-        
-        // do not need to check if opening quote matches closing. Preparser chceks this
-        if ((preParsed[i] === openDQuote || preParsed[i] === openSQuote)) {
-            if (typeof preParsed[i + 1] === "string" &&
-            (preParsed[i + 2] === closeDQuote || preParsed[i + 2] === closeSQuote)) {
-                return {
-                    index: i + 3,
-                    name: name.substr(0, name.length - 1),
-                    value: new wipeout.template.templateAttribute(preParsed[i + 1], preParsed[i] === openDQuote ? '"' : "'")
-                };
-            } else if (preParsed[i + 1] === closeDQuote || preParsed[i + 1] === closeSQuote) {
-                return {
-                    index: i + 2,
-                    name: name.substr(0, name.length - 1),
-                    value: new wipeout.template.templateAttribute("", preParsed[i] === openDQuote ? '"' : "'")
-                };
-            }
-        }
+        } 
         
         //TODO
         throw {
