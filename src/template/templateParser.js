@@ -13,6 +13,7 @@ Class("wipeout.template.templateParser", function () {
     // for unit testing
     templateParser.specialTags = {};
     var whiteSpace = templateParser.specialTags.whiteSpace = new wipeout.template.templatePart(/\s+/, false); //NOTE: \s includes newlines
+    var equals = templateParser.specialTags.equals = new wipeout.template.templatePart(/\s*=\s*/, false);
     var openSQuote = templateParser.specialTags.openSQuote = new wipeout.template.templatePart("'", false);
     var closeSQuote = templateParser.specialTags.closeSQuote = new wipeout.template.templatePart("'", "\\");
     var openDQuote = templateParser.specialTags.openDQuote = new wipeout.template.templatePart('"', false);
@@ -25,11 +26,15 @@ Class("wipeout.template.templateParser", function () {
     var closeComment = templateParser.specialTags.closeComment = new wipeout.template.templatePart("-->", false);
     
     // order is important
-    var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2, whiteSpace];
+    var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2, equals, whiteSpace];
     var inTheEther = [openComment, openTag2, openTag1];
     
     enumerateArr(insideTag, function(item) { // \s
         whiteSpace.nextChars.push(item);
+    });
+    
+    enumerateArr(insideTag, function(item) { // =
+        equals.nextChars.push(item);
     });
     
     openSQuote.nextChars.push(closeSQuote); // open - '
@@ -149,7 +154,7 @@ Class("wipeout.template.templateParser", function () {
         return output;
     };
     
-    var validateAttrName = /^[a-zA-Z0-9\-]+=$/;
+    var validateAttrName = /^.+=$/;
     var equals = "=";
     templateParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;

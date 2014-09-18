@@ -133,10 +133,9 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     test.push(templateParser.specialTags.closeSQuote);
     input += "'" + tmp + "'";
     
-    // space
-    tmp = " \t\r\n ";
-    test.push(templateParser.specialTags.whiteSpace);
-    input += tmp;
+    // equals
+    test.push(templateParser.specialTags.equals);
+    input += "      =     ";
     
     // d quote with ignorable and escaped chars
     tmp = 'fff<fff<!--fff\'fff\\"fff\\\\';
@@ -145,9 +144,13 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     test.push(templateParser.specialTags.closeDQuote);
     input += '"' + tmp + '"';
     
+    // space
+    tmp = " \t\r\n ";
+    test.push(templateParser.specialTags.whiteSpace);
+    input += tmp;
+    
     // close xml tag with space before >
     tmp = "ggg\"ggg'ggg";
-    test.push(templateParser.specialTags.whiteSpace);
     test.push(templateParser.specialTags.closeTag1);
     test.push(tmp);
     input += ' >' + tmp;
@@ -266,6 +269,7 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
         sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
         dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
         emptyAttrName = "lknlk",
+        noEqualsAttrName = "sersser",
         noValueAttrName = "ss4se",
         sAttrName = "lkjlhjv",
         sAttr = sAttrName + "='" + sAttrText + "'",
