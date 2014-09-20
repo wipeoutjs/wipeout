@@ -381,3 +381,48 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     
     strictEqual(output[0][3][6].constructor, wipeout.template.templateString);
 });
+
+testUtils.testWithUtils("speed test", null, true, function(methods, classes, subject, invoker) {
+        
+    var factor = 200;
+    
+    // arrange
+    var attrText = "a &a& a *%a*% a ***%a***% a **",
+        sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
+        dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
+        sAttr = "lkjlhjv='" + sAttrText + "'",
+        dAttr = 'dAttrName = "' + dAttrText + '"';
+    
+    var innerEl = "";
+    for(var i = 0; i < factor; i++)
+        innerEl+= "<something>";
+    for(var i = 0; i < factor; i++)
+        innerEl+= "</something>";
+    
+    var val = "<aa>\
+    <!-- hello &hello& 'hello' -->\
+    b &b& b 'b' b opening quote: &\
+    < BB " + sAttr + " " + dAttr + " lknlk='' >\
+        Closing quote: &\
+        <c-c>d 'd' \"d\" > d </c-c>\
+        <dd1/>\
+        < ee1   />" +
+        innerEl +
+    "</ BB ></aa>".replace(/\*/g, "\\").replace(/&/g, "\"");
+    
+    var input = "";
+    for(var i = 0; i < factor; i++)
+        input+= val;
+    
+    var begin = new Date();
+    
+    // act
+    var output = templateParser(input);
+    var time1 = new Date() - begin;
+    
+    begin = new Date();
+    new DOMParser().parseFromString(input, "application/xml");
+    var time2 = new Date() - begin;
+        
+    ok(true, "templateParser: " + time1 + ", DOMParser: " + time2);
+});
