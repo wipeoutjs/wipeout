@@ -54,6 +54,7 @@ Class("wipeout.template.templateElement", function () {
             throw "Invalid parent element";
         
         this.inline = !!inline;
+        this.nodeType = 1;
     });
     
     templateElement.prototype.serialize = function() {
@@ -86,6 +87,7 @@ Class("wipeout.template.templateAttribute", function () {
     return function templateAttribute(value, surrounding) {
         this.value = value;
         this.surrounding = surrounding;
+        this.nodeType = 2;
     };
 });
 
@@ -93,10 +95,25 @@ Class("wipeout.template.templateComment", function () {
     
     var templateComment = function templateComment(commentText) {
         this.commentText = commentText;
+        this.nodeType = 8;
     };
     
     templateComment.serialize = function() {
         return "<!--" + this.commentText + "-->";
+    }
+    
+    return templateComment;
+});
+
+Class("wipeout.template.templateString", function () {
+    
+    var templateComment = function templateComment(text) {
+        this.text = text;
+        this.nodeType = 3;
+    };
+    
+    templateComment.serialize = function() {
+        return this.text;
     }
     
     return templateComment;

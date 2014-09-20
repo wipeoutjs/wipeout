@@ -243,7 +243,7 @@ Class("wipeout.template.templateParser", function () {
         for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
             if (typeof preParsed[i] === "string") {
                 
-                rootElement.push(preParsed[i]);
+                rootElement.push(new wipeout.template.templateString(preParsed[i]));
             } else if(preParsed[i] === openComment) {
                 
                 if (preParsed[i + 1] === closeComment) {
