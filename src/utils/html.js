@@ -332,6 +332,7 @@ Class("wipeout.utils.html", function () {
         // IE throws an exception on invalid xml
     }
     
+    //TODO: remove
     var parseXml = function(xmlString) {  
         ///<summary>Parse a string into an xm ldocumen</summary> 
         ///<param name="xmlString" type="String" optional="false">the xml string</param>

@@ -137,16 +137,14 @@ Class("wipeout.viewModels.view", function () {
     
     view._elementHasModelBinding = function(element) {
         ///<summary>returns whether the view defined in the element was explicitly given a model property</summary>
-        ///<param name="element" type="Element" optional="false">The element to check for a model setter property</param>
+        ///<param name="element" type="wipeout.template.templateElement" optional="false">The element to check for a model setter property</param>
         ///<returns type="Boolean"></returns>
         
-        for(var i = 0, ii = element.attributes.length; i < ii; i++) {
-            if(element.attributes[i].nodeName === "model" || element.attributes[i].nodeName === "model-tw")
-                return true;
-        }
+        if(element.attributes["model"] || element.attributes["model-tw"])
+            return true;
         
-        for(var i = 0, ii = element.childNodes.length; i < ii; i++) {
-            if(element.childNodes[i].nodeType === 1 && element.childNodes[i].nodeName === "model")
+        for(var i = 0, ii = element.length; i < ii; i++) {
+            if(element[i].constructor === wipeout.template.templateElement && element[i].name === "model")
                 return true;
         }
         
@@ -158,7 +156,7 @@ Class("wipeout.viewModels.view", function () {
     
     view.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="Element" optional="false">An XML element containing property setters for the view</param>
+        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
         if(this.__woBag.initialized) throw "Cannot call initialize item twice";
         this.__woBag.initialized = true;
@@ -166,25 +164,24 @@ Class("wipeout.viewModels.view", function () {
         if(!propertiesXml)
             return;
         
-        var prop = propertiesXml.getAttribute("id");
-        if(prop)
-            this.id = prop;
+        if(propertiesXml.attributes["id"])
+            this.id = propertiesXml.attributes["id"].value;
         
-        prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
+        var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
         if(prop)
-            this.shareParentScope = parseBool(prop);
+            this.shareParentScope = parseBool(prop.value);
                 
         if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null) {
             this.bind('model', parentBindingContext.$data.model);
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerateArr(propertiesXml.attributes, function(attr) {
+        enumerateObj(propertiesXml.attributes, function(attr, name) {
             
-            var name = attr.nodeName, setter = "";
+            var setter = "";
             
             // find and removr "-tw" if necessary
-            if(attr.nodeName.length > 3 && name.substr(name.length - 3) === "-tw") {
+            if(name.length > 3 && name.substr(name.length - 3) === "-tw") {
                 name = name.substr(0, name.length - 3);
                 setter = 
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
@@ -205,28 +202,24 @@ Class("wipeout.viewModels.view", function () {
             }
         }, this);
         
-        enumerateArr(propertiesXml.childNodes, function(child, i) {
+        enumerateArr(propertiesXml, function(child, i) {
             
-            var nodeName = camelCase(child.nodeName);
-            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
+            var nodeName = camelCase(child.name);
+            if(child.constructor !== wipeout.template.templateElement || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
             
             // default
             var type = "string";
-            for(var j = 0, jj = child.attributes.length; j < jj; j++) {
-                if(child.attributes[j].nodeName === "constructor" && child.attributes[j].nodeValue) {
-                    type = camelCase(child.attributes[j].nodeValue);
+            for(var j in child.attributes) {
+                if(j === "constructor" && child.attributes[j].value) {
+                    type = camelCase(child.attributes[j].value);
                     break;
                 }
             }
             
             if (view.objectParser[trimToLower(type)]) {
                 var innerHTML = [];
-                var ser = ser || new XMLSerializer();
-                for (var j = 0, jj = child.childNodes.length; j < jj; j++) {
-                    if(child.childNodes[j].nodeType == 3)
-                        innerHTML.push(child.childNodes[j].nodeValue);
-                    else
-                        innerHTML.push(ser.serializeToString(child.childNodes[j]));
+                for (var j = 0, jj = child.length; j < jj; j++) {
+                    innerHTML.push(child[j].serialize());
                 }
             
                 var val = view.objectParser[trimToLower(type)](innerHTML.join(""));

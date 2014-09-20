@@ -53,6 +53,7 @@ Class("wipeout.template.engine", function () {
         ///<param name="templateDocument">The owner document</param>
         
         var script = document.getElementById(template);
+        if(script.innerHTML)debugger;
         if (script instanceof HTMLElement) {        
             // if it is an anonymous template it will already have been rewritten
             if (!engine.scriptHasBeenReWritten.test(script.textContent)) {
@@ -79,21 +80,22 @@ Class("wipeout.template.engine", function () {
             var newScriptId = engine.newScriptId();
             engine.xmlCache[newScriptId] = xmlElement;
             
-            var tag1 = " ko";
+            var tags = "<!-- ko";
             if(DEBUG)
-                tag1 += " wipeout-type: '" + xmlElement.name + "',";
+                tags += " wipeout-type: '" + xmlElement.name + "',";
             
             var id = engine.getId(xmlElement);
             if(id)
                 id = "'" + id + "'";
-            tag1 += " wo: { type: " + camelCase(xmlElement.name) + ", id: " + id + ", name: '" + xmlElement.name + "', initXml: '" + newScriptId + "'} ";
-            var tag2 = " /ko ";
+            tags += " wo: { type: " + camelCase(xmlElement.name) + ", id: " + id + ", name: '" + xmlElement.name + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
+            tags = wipeout.template.templateParser(rewriterCallback(tags));
             
             var index = xmlElement.parentElement.indexOf(xmlElement);
             //TODO: do this a bit better
             xmlElement.parentElement.splice(index, 1);
                         
-            xmlElement.parentElement.splice(index, 0, new wipeout.template.templateComment(tag1), new wipeout.template.templateComment(tag2));
+            for(var i = tags.length - 1; i >= 0; i--)
+                xmlElement.parentElement.splice(index, 0, tags[i]);
         }
     };
     

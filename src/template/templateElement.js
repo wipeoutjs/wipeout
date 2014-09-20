@@ -84,7 +84,7 @@ Class("wipeout.template.templateAttribute", function () {
 
 Class("wipeout.template.templateComment", function () {
     
-    var templateComment = function templateComment(commentText) {
+    var templateComment = function templateComment(commentText) {        
         this.commentText = commentText;
         this.nodeType = 8;
     };
@@ -98,14 +98,14 @@ Class("wipeout.template.templateComment", function () {
 
 Class("wipeout.template.templateString", function () {
     
-    var templateComment = function templateComment(text) {
+    var templateString = function templateString(text) {
         this.text = text;
         this.nodeType = 3;
     };
     
-    templateComment.prototype.serialize = function() {
+    templateString.prototype.serialize = function() {
         return this.text;
     }
     
-    return templateComment;
+    return templateString;
 });
