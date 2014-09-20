@@ -69,47 +69,42 @@ Class("wipeout.template.engine", function () {
     
     engine.wipeoutRewrite = function(xmlElement, rewriterCallback) {
         ///<summary>Recursively go through an xml element and replace all view models with render comments</summary>
-        ///<param name="xmlElement" type="Element">The template</param>
+        ///<param name="xmlElement" type="wipeout.template.templateElement">The template</param>
         ///<param name="rewriterCallback" type="Function">A function which will do the re-writing (provided by knockout)</param>
-        if(wipeout.viewModels.visual.reservedTags[xmlElement.nodeName]) {
-            for(var i = 0; i < xmlElement.childNodes.length; i++)
-                if(xmlElement.childNodes[i].nodeType === 1)
-                    engine.wipeoutRewrite(xmlElement.childNodes[i], rewriterCallback);
+        if(wipeout.viewModels.visual.reservedTags[wipeout.utils.obj.trimToLower(xmlElement.name)]) {
+            for(var i = 0; i < xmlElement.length; i++)
+                if(xmlElement[i] instanceof wipeout.template.templateElement)
+                    engine.wipeoutRewrite(xmlElement[i], rewriterCallback);
         } else {
             var newScriptId = engine.newScriptId();
             engine.xmlCache[newScriptId] = xmlElement;
             
-            var tags = "<!-- ko";
+            var tag1 = " ko";
             if(DEBUG)
-                tags += " wipeout-type: '" + xmlElement.nodeName + "',";
+                tag1 += " wipeout-type: '" + xmlElement.name + "',";
             
             var id = engine.getId(xmlElement);
             if(id)
                 id = "'" + id + "'";
-            tags += " wo: { type: " + camelCase(xmlElement.nodeName) + ", id: " + id + ", name: '" + xmlElement.nodeName + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
+            tag1 += " wo: { type: " + camelCase(xmlElement.name) + ", id: " + id + ", name: '" + xmlElement.name + "', initXml: '" + newScriptId + "'} ";
+            var tag2 = " /ko ";
             
-            var nodes = wipeout.utils.html.parseXml("<root>" + rewriterCallback(tags) + "</root>");
-            while (nodes.childNodes.length) {
-                var node = nodes.childNodes[0];
-                node.parentNode.removeChild(node);
-                xmlElement.parentNode.insertBefore(node, xmlElement);
-            }
-            
-            xmlElement.parentNode.removeChild(xmlElement);
+            var index = xmlElement.parentElement.indexOf(xmlElement);
+            //TODO: do this a bit better
+            xmlElement.parentElement.splice(index, 1);
+                        
+            xmlElement.parentElement.splice(index, 0, new wipeout.template.templateComment(tag1), new wipeout.template.templateComment(tag2));
         }
     };
     
     engine.getId = function(xmlElement) {
         ///<summary>Get the id property of the xmlElement if any</summary>
-        ///<param name="xmlElement" type="Element">Pull the id attribute from an element if possible</param>
+        ///<param name="xmlElement" type="wipeout.template.templateElement">Pull the id attribute from an element if possible</param>
         ///<returns type="String">The id or null</returns>
-        for(var i = 0, ii = xmlElement.attributes.length; i < ii; i++) {
-            if(xmlElement.attributes[i].nodeName === "id") {
-                return xmlElement.attributes[i].value;
-            }
-        }
         
-        return null;
+        return xmlElement.attributes["id"] ?
+            xmlElement.attributes["id"].value :
+            null;
     };
     
     engine.prototype.wipeoutRewrite = function(script, rewriterCallback) {
@@ -117,16 +112,14 @@ Class("wipeout.template.engine", function () {
         ///<param name="script" type="HTMLElement">The template</param>
         ///<param name="rewriterCallback" type="Function">A function which will do the re-writing (provided by knockout)</param>
         
-        var ser = new XMLSerializer();
-        var xmlTemplate = wipeout.utils.html.parseXml("<root>" + script.textContent + "</root>");
-        
+        var xmlTemplate = wipeout.template.templateParser(script.textContent);        
         var scriptContent = [];
         // do not use ii, xmlTemplate.childNodes may change
-        for(var i = 0; i < xmlTemplate.childNodes.length; i++) {            
-            if(xmlTemplate.childNodes[i].nodeType === 1)
-                engine.wipeoutRewrite(xmlTemplate.childNodes[i], rewriterCallback);
+        for(var i = 0; i < xmlTemplate.length; i++) {            
+            if(xmlTemplate[i] instanceof wipeout.template.templateElement)
+                engine.wipeoutRewrite(xmlTemplate[i], rewriterCallback);
             
-            scriptContent.push(ser.serializeToString(xmlTemplate.childNodes[i]));
+            scriptContent.push(xmlTemplate[i].serialize());
         }
         
         script.textContent = scriptContent.join("");

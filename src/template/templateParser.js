@@ -182,7 +182,6 @@ Class("wipeout.template.templateParser", function () {
         };
     };
         
-    var validateTagName = /^[a-zA-Z0-9\-]+$/;    
     templateParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
         
         var i = startIndex;
@@ -199,7 +198,7 @@ Class("wipeout.template.templateParser", function () {
             i++;
         
         // validate name
-        if(!validateTagName.test(preParsed[i]))
+        if(typeof preParsed[i] !== "string" || !preParsed[i].length)
             //TODO
             throw {
                 message: "Cannot create template element"

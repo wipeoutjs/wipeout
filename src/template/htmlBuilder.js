@@ -39,9 +39,9 @@ Class("wipeout.template.htmlBuilder", function () {
     htmlBuilder.prototype.generatePreRender = function(templateString) {
         ///<summary>Pre compile render code</summary>
         ///<param name="templateString" type="String">The template</param>
-                   
+
         // need to convert to xml and back as string is an XML string, not a HTML string
-        var xmlTemplate = wipeout.utils.html.parseXml("<root>" + templateString + "</root>");
+        var xmlTemplate = wipeout.template.templateParser(templateString);
         
         var template = wipeout.template.htmlBuilder.generateTemplate(xmlTemplate);
         
@@ -94,30 +94,26 @@ Class("wipeout.template.htmlBuilder", function () {
         return ids;
     };
     
+    //TODO: is this function necessary?
     htmlBuilder.generateTemplate = function(xmlTemplate) { 
         ///<summary>Convert an xml template to a string</summary>
-        ///<param name="xmlTemplate" type="Element">The template</param>
+        ///<param name="xmlTemplate" type="wipeout.template.templateElement">The template</param>
         ///<returns type="String">A string version of the template</returns>
         
         var result = [];
-        var ser = new XMLSerializer();
         
-        enumerateArr(xmlTemplate.childNodes, function(child) {            
+        enumerateArr(xmlTemplate, function(child) {            
             if(child.nodeType == 1) {
                 
                 // create copy with no child nodes
-                var ch = wipeout.utils.html.parseXml(ser.serializeToString(child));
-                while (ch.childNodes.length) {
-                    ch.removeChild(ch.childNodes[0]);
-                }
+                var ch = wipeout.template.templateParser("<a>" + child.serialize() + "</a>")[0];
+                ch.length = 0;
                 
-                var html = wipeout.utils.html.createElement(ser.serializeToString(ch));
+                var html = wipeout.utils.html.createElement(ch.serialize());
                 html.innerHTML = wipeout.template.htmlBuilder.generateTemplate(child);                
                 result.push(wipeout.utils.html.outerHTML(html));
-            } else if(child.nodeType === 3) {
-                result.push(child.data);
             } else {
-                result.push(ser.serializeToString(child));
+                result.push(child.serialize());
             }
         });
         

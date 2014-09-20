@@ -11,19 +11,10 @@ Class("wipeout.template.templateElementBase", function () {
     
     templateElementBase.prototype.serializeChildren = function() {
         
-        var output = [];
-        
-        for(var i = 0, ii = this.length; i < ii; i++) {
-            if (typeof this[i] === "string")
-                output.push(this[i]);
-            else if (this[i] instanceof wipeout.template.templateElement || this[i] instanceof wipeout.template.templateComment)
-                output.push(this[i].serialize());
-            else
-                throw {
-                    message: "Invalid template element",
-                    value: this[i]
-                };
-        }
+        var output = [];        
+        wipeout.utils.obj.enumerateArr(this, function(i) {
+            output.push(i.serialize());
+        });
         
         return output.join("");
     }
@@ -73,7 +64,7 @@ Class("wipeout.template.templateElement", function () {
         } else {
             output.push(">");
             output.push(children);
-            output.push("<" + this.name + ">");
+            output.push("</" + this.name + ">");
         }
         
         return output.join("");
@@ -98,7 +89,7 @@ Class("wipeout.template.templateComment", function () {
         this.nodeType = 8;
     };
     
-    templateComment.serialize = function() {
+    templateComment.prototype.serialize = function() {
         return "<!--" + this.commentText + "-->";
     }
     
@@ -112,7 +103,7 @@ Class("wipeout.template.templateString", function () {
         this.nodeType = 3;
     };
     
-    templateComment.serialize = function() {
+    templateComment.prototype.serialize = function() {
         return this.text;
     }
     
