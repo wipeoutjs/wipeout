@@ -387,7 +387,7 @@ testUtils.testWithUtils("speed test", null, true, function(methods, classes, sub
     var factor = 200;
     
     // arrange
-    var attrText = "a &a& a *%a*% a ***%a***% a **",
+    var attrText = "bla bla bla",
         sAttrText = attrText.replace(/\%/g, "'").replace(/\&/g, '"').replace(/\*/g, "\\"),
         dAttrText = attrText.replace(/\%/g, '"').replace(/\&/g, "'").replace(/\*/g, "\\"),
         sAttr = "lkjlhjv='" + sAttrText + "'",
@@ -399,16 +399,16 @@ testUtils.testWithUtils("speed test", null, true, function(methods, classes, sub
     for(var i = 0; i < factor; i++)
         innerEl+= "</something>";
     
-    var val = "<aa>\
+    var val = ("<aa>\
     <!-- hello &hello& 'hello' -->\
     b &b& b 'b' b opening quote: &\
-    < BB " + sAttr + " " + dAttr + " lknlk='' >\
+    <BB " + sAttr + " " + dAttr + " lknlk='' >\
         Closing quote: &\
-        <c-c>d 'd' \"d\" > d </c-c>\
-        <dd1/>\
-        < ee1   />" +
+        <cc>d 'd' \"d\" > d </cc>\
+        <dd/>\
+        <ee   />" +
         innerEl +
-    "</ BB ></aa>".replace(/\*/g, "\\").replace(/&/g, "\"");
+    "</BB></aa>").replace(/\*/g, "\\").replace(/&/g, "\"");
     
     var input = "";
     for(var i = 0; i < factor; i++)
@@ -421,7 +421,7 @@ testUtils.testWithUtils("speed test", null, true, function(methods, classes, sub
     var time1 = new Date() - begin;
     
     begin = new Date();
-    new DOMParser().parseFromString(input, "application/xml");
+    new DOMParser().parseFromString("<root>" + input + "</root>", "application/xml");
     var time2 = new Date() - begin;
         
     ok(true, "templateParser: " + time1 + ", DOMParser: " + time2);
