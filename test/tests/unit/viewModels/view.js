@@ -165,7 +165,7 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
 
 testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -176,7 +176,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(me
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root model='asdsad'></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root model='asdsad'></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -187,7 +187,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, f
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as element", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root><model /></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root><model /></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -207,12 +207,12 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     var subject = new wo.view();
     subject.twProp = ko.observable();
     
-    var element = new DOMParser().parseFromString(
+    var element = wipeout.template.templateParser(
 '<root shareParentScope="false" twProp-tw="$parent.twProperty" owProp="$parent.owProperty">\
     <inlinePropString>Hello</inlinePropString>\
     <inlinePropParser constructor="int">22</inlinePropParser>\
     <inlinePropConstructor constructor="Array"></inlinePropConstructor>\
-</root>', "application/xml").documentElement;
+</root>', "application/xml")[0];
     
     // act
     subject._initialize(element, bindingContext);

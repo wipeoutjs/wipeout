@@ -53,7 +53,6 @@ Class("wipeout.template.engine", function () {
         ///<param name="templateDocument">The owner document</param>
         
         var script = document.getElementById(template);
-        if(script.innerHTML)debugger;
         if (script instanceof HTMLElement) {        
             // if it is an anonymous template it will already have been rewritten
             if (!engine.scriptHasBeenReWritten.test(script.textContent)) {
@@ -84,9 +83,9 @@ Class("wipeout.template.engine", function () {
             if(DEBUG)
                 tags += " wipeout-type: '" + xmlElement.name + "',";
             
-            var id = engine.getId(xmlElement);
-            if(id)
-                id = "'" + id + "'";
+            var id = "null";
+            if(xmlElement.attributes["id"])
+                id = "'" + xmlElement.attributes["id"].value + "'";
             tags += " wo: { type: " + camelCase(xmlElement.name) + ", id: " + id + ", name: '" + xmlElement.name + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
             tags = wipeout.template.templateParser(rewriterCallback(tags));
             
@@ -97,16 +96,6 @@ Class("wipeout.template.engine", function () {
             for(var i = tags.length - 1; i >= 0; i--)
                 xmlElement.parentElement.splice(index, 0, tags[i]);
         }
-    };
-    
-    engine.getId = function(xmlElement) {
-        ///<summary>Get the id property of the xmlElement if any</summary>
-        ///<param name="xmlElement" type="wipeout.template.templateElement">Pull the id attribute from an element if possible</param>
-        ///<returns type="String">The id or null</returns>
-        
-        return xmlElement.attributes["id"] ?
-            xmlElement.attributes["id"].value :
-            null;
     };
     
     engine.prototype.wipeoutRewrite = function(script, rewriterCallback) {

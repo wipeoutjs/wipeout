@@ -134,22 +134,3 @@ testUtils.testWithUtils("getTemplateIds", null, true, function(methods, classes,
     ok(actual[id2]);
     strictEqual(actual[id2], $("#" + id2, elements)[0]);
 });
-    
-testUtils.testWithUtils("generateTemplate", "element node, text node, comment node", true, function(methods, classes, subject, invoker) {
-    // arrange 
-    var expected = "<div>jgjhgjhgjhgjg<!--asdsadasdsad--></div>";
-    var element = $("<div>" + expected + "</div>")[0];
-    
-    // act    
-    var actual = new DOMParser().parseFromString(invoker(element), "application/xml").documentElement;
-    
-    //assert
-    strictEqual(actual.nodeName, "div");
-    strictEqual(actual.nodeType, 1);
-    strictEqual(actual.childNodes.length, 2);
-    strictEqual(actual.childNodes[0].nodeType, 3);
-    strictEqual(actual.childNodes[0].nodeValue, "jgjhgjhgjhgjg");
-    strictEqual(actual.childNodes[1].nodeType, 8);
-    strictEqual(actual.childNodes[1].nodeValue, "asdsadasdsad");
-});
-
