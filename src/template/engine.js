@@ -89,12 +89,12 @@ Class("wipeout.template.engine", function () {
             tags += " wo: { type: " + camelCase(xmlElement.name) + ", id: " + id + ", name: '" + xmlElement.name + "', initXml: '" + newScriptId + "'} --><!-- /ko -->";
             tags = wipeout.template.templateParser(rewriterCallback(tags));
             
-            var index = xmlElement.parentElement.indexOf(xmlElement);
-            //TODO: do this a bit better
-            xmlElement.parentElement.splice(index, 1);
+            var parent = xmlElement.getParentElement();
+            var index = parent.indexOf(xmlElement);
+            parent.splice(index, 1);
                         
-            for(var i = tags.length - 1; i >= 0; i--)
-                xmlElement.parentElement.splice(index, 0, tags[i]);
+            while (tags.length)
+                parent.splice(index, 0, tags.splice(tags.length - 1, 1)[0]);
         }
     };
     

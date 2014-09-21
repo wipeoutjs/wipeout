@@ -1,5 +1,14 @@
 //TODO unit test
 
+var getParentElement = function() {
+    if (this._parentElement) {
+        if(this._parentElement.indexOf(this) === -1)
+            delete this._parentElement;
+    }
+    
+    return this._parentElement;
+}
+
 Class("wipeout.template.templateElementBase", function () {
     
     var templateElementBase = wipeout.base.object.extend.call(Array, function templateElementBase() {
@@ -8,6 +17,35 @@ Class("wipeout.template.templateElementBase", function () {
     
     templateElementBase.extend = wipeout.base.object.extend;
     templateElementBase.prototype._super = wipeout.base.object.prototype._super;
+    
+    templateElementBase.prototype.push = function(obj) {
+        if(!obj.getParentElement)
+            throw "Invalid template node";
+        if(obj.getParentElement())
+            throw "This node already has a parent element";
+        
+        var output = this._super(obj);
+        obj._parentElement = this;
+        return output;
+    };
+    
+    templateElementBase.prototype.splice = function() {
+        
+        for(var i = 2, ii = arguments.length; i < ii; i++) {
+            if(!arguments[i].getParentElement)
+                throw "Invalid template node";
+            if(arguments[i].getParentElement())
+                throw "This node already has a parent element";
+        }
+        
+        var output = this._super.apply(this, arguments);
+        
+        for(var i = 2, ii = arguments.length; i < ii; i++) {
+            arguments[i]._parentElement = this;
+        }
+        
+        return output;
+    };
     
     templateElementBase.prototype.serializeChildren = function() {
         
@@ -33,20 +71,17 @@ Class("wipeout.template.rootTemplateElement", function () {
 
 Class("wipeout.template.templateElement", function () {
     
-    var templateElement = wipeout.template.templateElementBase.extend(function templateElement(name, parentElement, inline /*optional*/) {
+    var templateElement = wipeout.template.templateElementBase.extend(function templateElement(name, inline /*optional*/) {
         this._super();
         
         this.name = name;
         
-        this.attributes = {};
-        if(parentElement instanceof wipeout.template.templateElementBase)
-            this.parentElement = parentElement;
-        else
-            throw "Invalid parent element";
-        
+        this.attributes = {};        
         this.inline = !!inline;
         this.nodeType = 1;
     });
+    
+    templateElement.prototype.getParentElement = getParentElement;
     
     templateElement.prototype.serialize = function() {
         var output = [];
@@ -75,11 +110,15 @@ Class("wipeout.template.templateElement", function () {
 
 Class("wipeout.template.templateAttribute", function () {
     
-    return function templateAttribute(value, surrounding) {
+    function templateAttribute(value, surrounding) {
         this.value = value;
         this.surrounding = surrounding;
         this.nodeType = 2;
     };
+    
+    templateAttribute.prototype.getParentElement = getParentElement;
+    
+    return templateAttribute;
 });
 
 Class("wipeout.template.templateComment", function () {
@@ -91,7 +130,9 @@ Class("wipeout.template.templateComment", function () {
     
     templateComment.prototype.serialize = function() {
         return "<!--" + this.commentText + "-->";
-    }
+    };
+    
+    templateComment.prototype.getParentElement = getParentElement;
     
     return templateComment;
 });
@@ -106,6 +147,8 @@ Class("wipeout.template.templateString", function () {
     templateString.prototype.serialize = function() {
         return this.text;
     }
+    
+    templateString.prototype.getParentElement = getParentElement;
     
     return templateString;
 });
