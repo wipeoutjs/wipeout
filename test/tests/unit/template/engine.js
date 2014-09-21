@@ -175,7 +175,7 @@ testUtils.testWithUtils("wipeoutRewrite", "invalid xml", false, function(methods
     // act    
     //assert
     throws(function() {
-        invoker({textContent:"<ASDASDASD>"});
+        invoker({text:"<ASDASDASD>"});
     });
     
 });
@@ -183,7 +183,7 @@ testUtils.testWithUtils("wipeoutRewrite", "invalid xml", false, function(methods
 testUtils.testWithUtils("wipeoutRewrite", "element and comment", false, function(methods, classes, subject, invoker) {
     // arrange
     var html = "<div/><!-- hello -->";
-    var input = {textContent:html};
+    var input = {text:html};
     var rewriter = {};
     classes.mock("wipeout.template.engine.wipeoutRewrite", function() {
         strictEqual(arguments[0].name, "div");
@@ -196,7 +196,7 @@ testUtils.testWithUtils("wipeoutRewrite", "element and comment", false, function
     invoker(input, rewriter);
     
     //assert
-    ok(/^<div\s*\/><!-- hello -->$/.test(input.textContent));
+    ok(/^<div\s*\/><!-- hello -->$/.test(input.text));
 });
 
 testUtils.testWithUtils("renderTemplateSource", "not wo.view", false, function(methods, classes, subject, invoker) {

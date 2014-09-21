@@ -53,9 +53,9 @@ Class("wipeout.template.engine", function () {
         ///<param name="templateDocument">The owner document</param>
         
         var script = document.getElementById(template);
-        if (script instanceof HTMLElement) {        
+        if (script instanceof HTMLElement) {
             // if it is an anonymous template it will already have been rewritten
-            if (!engine.scriptHasBeenReWritten.test(script.textContent)) {
+            if (!engine.scriptHasBeenReWritten.test(script.text)) {
                 ko.templateEngine.prototype.rewriteTemplate.call(this, template, rewriterCallback, templateDocument);
             } else {
                 this.makeTemplateSource(template, templateDocument).data("isRewritten", true);
@@ -103,7 +103,7 @@ Class("wipeout.template.engine", function () {
         ///<param name="script" type="HTMLElement">The template</param>
         ///<param name="rewriterCallback" type="Function">A function which will do the re-writing (provided by knockout)</param>
         
-        var xmlTemplate = wipeout.template.templateParser(script.textContent);        
+        var xmlTemplate = wipeout.template.templateParser(script.text);        
         var scriptContent = [];
         // do not use ii, xmlTemplate.childNodes may change
         for(var i = 0; i < xmlTemplate.length; i++) {            
@@ -113,7 +113,7 @@ Class("wipeout.template.engine", function () {
             scriptContent.push(xmlTemplate[i].serialize());
         }
         
-        script.textContent = scriptContent.join("");
+        script.text = scriptContent.join("");
     };
     
     engine.prototype.renderTemplateSource = function (templateSource, bindingContext, options) {
