@@ -19,7 +19,7 @@ Class("wipeout.template.templateElementBase", function () {
     templateElementBase.prototype._super = wipeout.base.object.prototype._super;
     
     templateElementBase.prototype.push = function(obj) {
-        if(!obj.getParentElement)
+        if(obj.getParentElement !== getParentElement)
             throw "Invalid template node";
         if(obj.getParentElement())
             throw "This node already has a parent element";
@@ -54,7 +54,7 @@ Class("wipeout.template.templateElementBase", function () {
             output.push(i.serialize());
         });
         
-        return output.join("");
+        return output.join("\n");
     }
     
     return templateElementBase;
