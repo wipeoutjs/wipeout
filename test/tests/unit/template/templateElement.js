@@ -27,25 +27,25 @@ testUtils.testWithUtils("serialize", "inline", false, function(methods, classes,
     
     // arrange
     subject = new templateElement("name", true);
-    subject.attributes["attr"] = {surrounding: "@", value: "val"};
+    subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     
     // act
     var output = subject.serialize();
     
     //assert
-    strictEqual(output, "<name attr=@val@ />");
+    strictEqual(output, "<name attrVal />");
 });
 
 testUtils.testWithUtils("serialize", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
     subject = new templateElement("name", false);
-    subject.attributes["attr"] = {surrounding: "@", value: "val"};
+    subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     subject.serializeChildren = function() { return "children"; };
     
     // act
     var output = subject.serialize();
     
     //assert
-    strictEqual(output, "<name attr=@val@>children</name>");
+    strictEqual(output, "<name attrVal>children</name>");
 });

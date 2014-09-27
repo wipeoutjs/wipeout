@@ -198,8 +198,8 @@ testUtils.testWithUtils("_createAttribute", "no val, empty space next", true, fu
     //assert
     strictEqual(output.name, name);
     strictEqual(output.index, input.length - 1);
-    strictEqual(output.value.value, "");
-    strictEqual(output.value.surrounding, '"');
+    strictEqual(output.value.value, null);
+    strictEqual(output.value.surrounding, null);
 });
 
 testUtils.testWithUtils("_createAttribute", "no val, close tag 1 next", true, function(methods, classes, subject, invoker) {
@@ -214,8 +214,8 @@ testUtils.testWithUtils("_createAttribute", "no val, close tag 1 next", true, fu
     //assert
     strictEqual(output.name, name);
     strictEqual(output.index, input.length - 1);
-    strictEqual(output.value.value, "");
-    strictEqual(output.value.surrounding, '"');
+    strictEqual(output.value.value, null);
+    strictEqual(output.value.surrounding, null);
 });
 
 testUtils.testWithUtils("_createAttribute", "no val, close tag 2 next", true, function(methods, classes, subject, invoker) {
@@ -230,8 +230,8 @@ testUtils.testWithUtils("_createAttribute", "no val, close tag 2 next", true, fu
     //assert
     strictEqual(output.name, name);
     strictEqual(output.index, input.length - 1);
-    strictEqual(output.value.value, "");
-    strictEqual(output.value.surrounding, '"');
+    strictEqual(output.value.value, null);
+    strictEqual(output.value.surrounding, null);
 });
 
 testUtils.testWithUtils("_createAttribute", "no quotes", true, function(methods, classes, subject, invoker) {
@@ -247,7 +247,7 @@ testUtils.testWithUtils("_createAttribute", "no quotes", true, function(methods,
     strictEqual(output.name, name);
     strictEqual(output.index, input.length);
     strictEqual(output.value.value, value);
-    strictEqual(output.value.surrounding, '"');
+    strictEqual(output.value.surrounding, null);
 });
 
 testUtils.testWithUtils("_createAttribute", "single quotes", true, function(methods, classes, subject, invoker) {
@@ -354,11 +354,11 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     strictEqual(output[0][3].attributes[emptyAttrName].value, "");
     
     strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.template.templateAttribute);
-    strictEqual(output[0][3].attributes[noEqualsAttrName].surrounding, '"');
-    strictEqual(output[0][3].attributes[noEqualsAttrName].value, "");
+    strictEqual(output[0][3].attributes[noEqualsAttrName].surrounding, null);
+    strictEqual(output[0][3].attributes[noEqualsAttrName].value, null);
     
     strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.template.templateAttribute);
-    strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, '"');
+    strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[quotelessValAttrName].value, quotelessValAttrText);
     
     strictEqual(output[0][3][0].constructor, wipeout.template.templateString);

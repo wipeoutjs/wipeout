@@ -681,7 +681,7 @@ test("items control, $index, shareParentScope", function() {
 function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
     application.template('<wo.view id="i0" />\
-<div id="a">\
+<div id="a" something something1=\'aaa\' something2=wer345>\
     <wo.content-control id="i1">\
         <template>\
             <div id="b">\

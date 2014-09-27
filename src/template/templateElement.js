@@ -89,8 +89,8 @@ Class("wipeout.template.templateElement", function () {
         output.splice(0, 0, "<", this.name);
         var index = 2;
         for(var i in this.attributes) {
-            output.splice(index, 0, " ", i, "=", this.attributes[i].surrounding, this.attributes[i].value, this.attributes[i].surrounding);
-            index+=6;
+            output.splice(index, 0, " ", i, this.attributes[i].serializeValue());
+            index+=3;
         }
         
         var children = this.serializeChildren();
@@ -116,7 +116,13 @@ Class("wipeout.template.templateAttribute", function () {
         this.nodeType = 2;
     };
     
-    templateAttribute.prototype.getParentElement = getParentElement;
+    templateAttribute.prototype.serializeValue = function() {
+        if (!this.value && !this.surrounding) return "";
+        
+        if (!this.surrounding) return "=" + this.value;
+        
+        return "=" + this.surrounding + this.value + this.surrounding;
+    };
     
     return templateAttribute;
 });

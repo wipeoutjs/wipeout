@@ -145,7 +145,7 @@ Class("wipeout.template.templateParser", function () {
             return {
                 index: i,
                 name: name,
-                value: new wipeout.template.templateAttribute("", '"') // arbitrary surrounding quotes
+                value: new wipeout.template.templateAttribute(null, null)
             }; // <tag attr />
         
         if (preParsed[i] === equals) {
@@ -154,7 +154,7 @@ Class("wipeout.template.templateParser", function () {
                 return {
                     index: i + 1,
                     name: name,
-                    value: new wipeout.template.templateAttribute(preParsed[i], '"') // arbitrary surrounding quotes
+                    value: new wipeout.template.templateAttribute(preParsed[i], null)
                 }; // <tag attr=something />
             
             if (preParsed[i] === openDQuote || preParsed[i] === openSQuote) {
