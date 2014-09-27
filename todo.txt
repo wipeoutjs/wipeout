@@ -1,9 +1,5 @@
 
-document async templates
-
-bug, put &lt; in anonymous template
 bug, handle null template id better
 
-changes:    __woBag.type
-
-search ranking
+TODO:   wipeout.base.watched.prototype.observe, do something with dispose function from watch
+        wipeout.base.watched.prototype.observe/watch, unit test dispose functionality
