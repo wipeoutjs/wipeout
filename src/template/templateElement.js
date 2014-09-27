@@ -7,7 +7,7 @@ var getParentElement = function() {
     }
     
     return this._parentElement;
-}
+};
 
 Class("wipeout.template.templateElementBase", function () {
     
@@ -54,7 +54,7 @@ Class("wipeout.template.templateElementBase", function () {
             output.push(i.serialize());
         });
         
-        return output.join("\n");
+        return output.join("");
     }
     
     return templateElementBase;

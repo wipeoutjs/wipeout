@@ -81,5 +81,5 @@ testUtils.testWithUtils("serializeChildren", null, false, function(methods, clas
     var output = invoker();
     
     //assert    
-    strictEqual(output, string1 + "\n" + string2);
+    strictEqual(output, string1 + string2);
 });
