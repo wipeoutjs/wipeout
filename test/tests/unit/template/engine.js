@@ -130,19 +130,17 @@ testUtils.testWithUtils("rewriteTemplate", "is HTMLElement, script has been reWr
 testUtils.testWithUtils("wipeoutRewrite", "html only", true, function(methods, classes, subject, invoker) {
     // arrange
     var data = "<div><span data-bind=\"html: xxx\"/></div>";
-    var element = new DOMParser().parseFromString(data, "application/xml").documentElement;
+    var element = wipeout.template.templateParser(data, "application/xml")[0];
     
     // act    
     invoker(element);
     
     //assert
-    strictEqual(element.nodeName, "div");
-    strictEqual(element.attributes.length, 0);
-    strictEqual(element.childNodes.length, 1);
-    strictEqual(element.firstChild.nodeName, "span");
-    strictEqual(element.firstChild.attributes.length, 1);
-    strictEqual(element.firstChild.childNodes.length, 0);
-    strictEqual(element.firstChild.getAttribute("data-bind"), "html: xxx");
+    strictEqual(element.name, "div");
+    strictEqual(element.length, 1);
+    strictEqual(element[0].name, "span");
+    strictEqual(element[0].length, 0);
+    strictEqual(element[0].attributes["data-bind"].value, "html: xxx");
 });
 
 testUtils.testWithUtils("wipeoutRewrite", "custom tag", true, function(methods, classes, subject, invoker) {
@@ -155,42 +153,29 @@ testUtils.testWithUtils("wipeoutRewrite", "custom tag", true, function(methods, 
     };
     
     var bindingContext = {};
-    var element = new DOMParser().parseFromString("<div><my.tag id='hello'/></div>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<div><my.tag id='hello'/></div>", "application/xml")[0];
     var configTag = element.firstElementChild;
         
     // act    
     invoker(element, function(){ return arguments[0]; });
-    var data = new XMLSerializer().serializeToString(element).substring("<div><!-- ko wipeout-type: 'my.tag', wo: ".length);
+    var data = element.serialize().substring("<div><!-- ko wipeout-type: 'my.tag', wo: ".length);
     data = new Function("return " + data.substring(0, data.length - " --><!-- /ko --></div>".length))();
     
     // assert
-    strictEqual(engine.xmlCache[data.initXml].nodeName, "my.tag");
-    strictEqual(engine.xmlCache[data.initXml].getAttribute("id"), "hello");
+    strictEqual(engine.xmlCache[data.initXml].name, "my.tag");
+    strictEqual(engine.xmlCache[data.initXml].attributes["id"].value, "hello");
     strictEqual(data.type, window.my.tag);
     strictEqual(data.id, "hello");
     
     delete window.my;
-});  
-     
-
-testUtils.testWithUtils("getId", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var expected = "KJBKJBKJB";
-    var element = new DOMParser().parseFromString("<div id='" + expected + "'></div>", "application/xml").documentElement;
-    
-    // act    
-    var actual = invoker(element);
-    
-    //assert
-    strictEqual(actual, expected);
-});
+}); 
 
 testUtils.testWithUtils("wipeoutRewrite", "invalid xml", false, function(methods, classes, subject, invoker) {
     // arrange    
     // act    
     //assert
     throws(function() {
-        invoker({textContent:"<ASDASDASD>"});
+        invoker({text:"<ASDASDASD>"});
     });
     
 });
@@ -198,12 +183,11 @@ testUtils.testWithUtils("wipeoutRewrite", "invalid xml", false, function(methods
 testUtils.testWithUtils("wipeoutRewrite", "element and comment", false, function(methods, classes, subject, invoker) {
     // arrange
     var html = "<div/><!-- hello -->";
-    var input = {textContent:html};
+    var input = {text:html};
     var rewriter = {};
     classes.mock("wipeout.template.engine.wipeoutRewrite", function() {
-        strictEqual(arguments[0].nodeName, "div");
-        strictEqual(arguments[0].attributes.length, 0);
-        strictEqual(arguments[0].childNodes.length, 0);
+        strictEqual(arguments[0].name, "div");
+        strictEqual(arguments[0].length, 0);
         strictEqual(arguments[1], rewriter);
         return arguments[0];
     });
@@ -212,7 +196,7 @@ testUtils.testWithUtils("wipeoutRewrite", "element and comment", false, function
     invoker(input, rewriter);
     
     //assert
-    ok(/^<div\s*\/><!-- hello -->$/.test(input.textContent));
+    ok(/^<div\s*\/><!-- hello -->$/.test(input.text));
 });
 
 testUtils.testWithUtils("renderTemplateSource", "not wo.view", false, function(methods, classes, subject, invoker) {

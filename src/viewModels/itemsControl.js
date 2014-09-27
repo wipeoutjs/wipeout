@@ -110,12 +110,12 @@ Class("wipeout.viewModels.itemsControl", function () {
     
     itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="Element" optional="false">An XML element containing property setters for the view</param>
+        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
     
         if(propertiesXml) {        
-            var prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
-            if(prop && parseBool(prop))
+            var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
+            if(prop && parseBool(prop.value))
                 throw "A wo.itemsControl cannot share it's parents scope.";
         }
         

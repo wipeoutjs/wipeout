@@ -1,6 +1,6 @@
 (function () {    
     
-    wipeout.profile.profile();
+    //wipeout.profile.profile();
     aRoutedEvent = new wo.routedEvent();
     
     initializeView = wipeout.viewModels.contentControl.extend(function initializeView() {

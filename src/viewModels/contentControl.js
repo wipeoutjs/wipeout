@@ -19,7 +19,7 @@ Class("wipeout.viewModels.contentControl", function () {
         var output = ko.dependentObservable({
             read: function () {
                 var script = document.getElementById(templateIdObservable());
-                return script ? script.textContent : "";
+                return script ? script.text : "";
             },
             write: function (newValue) {
                 templateIdObservable(wipeout.viewModels.contentControl.createAnonymousTemplate(newValue));
@@ -122,7 +122,7 @@ Class("wipeout.viewModels.contentControl", function () {
                 att3.value = templateHash;
                 script.setAttributeNode(att3);
                 
-                script.textContent = template;
+                script.text = template;
                 templateArea.appendChild(script);
                 
                 // keep a record of the template before the ko/wo template engine mangles it
