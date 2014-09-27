@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="lib/qunit/qunit-1.12.0.css">
 </head>
 <body>
+  <script type="application/javascript">
+      window.wipeoutDoNotUserObjectObserve = true;
+  </script>
+    
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
   <script src="lib/jquery/jquery-1.10.2.js"></script>
@@ -21,6 +25,7 @@
   <script src="tests/integration/utils/find.js"></script>
     
   <script src="tests/unit/base/disposable.js"></script>
+  <script src="tests/unit/base/watch.js"></script>
   <script src="tests/unit/base/watched.js"></script>
     
   <script src="tests/unit/viewModels/contentControl.js"></script>
@@ -36,8 +41,8 @@
   <script src="tests/unit/template/asyncLoader.js"></script>
   <script src="tests/unit/template/engine.js"></script>
   <script src="tests/unit/template/htmlBuilder.js"></script>
-  <script src="tests/unit/template/templateElementBase.js"></script>
   <script src="tests/unit/template/templateElement.js"></script>
+  <script src="tests/unit/template/templateElementBase.js"></script>
   <script src="tests/unit/template/templateParser.js"></script>
   <script src="tests/unit/template/templatePart.js"></script>
     

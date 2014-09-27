@@ -7,54 +7,22 @@ module("wipeout.base.watched", {
 
 var watched = wipeout.base.watched;
 
-testUtils.testWithUtils("constructor", "enumerable", false, function(methods, classes, subject, invoker) {
+//TODO: test dispose functionality
+
+testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange    
     // act
-    subject = new watched(null, true);
+    subject = new watched();
     
     // assert
     ok(subject.__woBag);
-    var woBag = false;
-    for(var i in subject) {
-        if(subject[i] === subject.__woBag)
-            woBag = true;
-    }
-    
-    ok(woBag);
-});
-
-testUtils.testWithUtils("constructor", "not enumerable", false, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act
-    subject = new watched(null, false);
-    
-    // assert
-    ok(subject.__woBag);
-    var woBag = false;
-    for(var i in subject) {
-        if(subject[i] === subject.__woBag)
-            woBag = true;
-    }
-    
-    ok(!woBag);
-});
-
-testUtils.testWithUtils("constructor", "initial values", false, function(methods, classes, subject, invoker) {
-    // arrange    
-    var vals = {aaa:{}, bbb:{}};
-    
-    // act
-    subject = new watched(vals);
-    
-    // assert
-    strictEqual(subject.aaa, vals.aaa);
-    strictEqual(subject.bbb, vals.bbb);
 });
 
 testUtils.testWithUtils("observe", null, false, function(methods, classes, subject, invoker) {
     // arrange    
     var assertsRun = false, stopped = false;
-    subject = new watched({val: "aaa"});
+    subject = new watched();
+    subject.val = "aaa";
     subject.observe("val", function(oldVal, newVal) {
         strictEqual(oldVal, "aaa");
         strictEqual(newVal, "bbb");
@@ -66,6 +34,7 @@ testUtils.testWithUtils("observe", null, false, function(methods, classes, subje
     // act
     subject.val = "bbb";
     
+    // Object.observe is async
     if (!assertsRun) {
         stop();
         stopped = true;
@@ -78,30 +47,4 @@ testUtils.testWithUtils("observe", null, false, function(methods, classes, subje
     }
     
     // assert
-    debugger;
 });
-
-function aa() {
-    var watched = wipeout.base.object.extend(function watched(woBagIsEnumerable) {
-        ///<summary>An object whose properties can be subscribed to</summary>   
-        this._super();
-        
-        var woBag = {
-            watched: {},
-            propertyChanged: wo.event()
-        };
-            
-        // __woBag should be private, however this has performance penalties, especially in IE
-        // in practice the woBagIsEnumerable flag will be set by wipeout only
-        if(woBagIsEnumerable) {
-            this.__woBag = woBag;
-        } else {
-            Object.defineProperty(this, '__woBag', {
-                enumerable: false,
-                configurable: false,
-                value: woBag,
-                writable: false
-            });
-        }
-    });
-}

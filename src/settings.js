@@ -12,6 +12,7 @@ Class("wipeout.settings", function() {
     settings.suppressWarnings = false;
     settings.asynchronousTemplates = true;
     settings.htmlAsyncTimeout = 10000;
+    settings.useObjectObserve = !window.wipeoutDoNotUserObjectObserve; //TODO: document
     
     return settings;
 });
