@@ -1,7 +1,7 @@
-
+/*
 Class("wipeout.base.array", function () {
         
-    wipeout.base.object.extend.call(Array, function array() { 
+    var array = wipeout.base.object.extend.call(Array, function array() { 
         Array.call(this);
         
         this.__woBag = {
@@ -139,7 +139,7 @@ Class("wipeout.base.array", function () {
 
 
 
-
+*/
 
 
 

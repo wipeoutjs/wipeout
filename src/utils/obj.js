@@ -226,7 +226,16 @@ Class("wipeout.utils.obj", function () {
         return Math.floor(Math.random() * max);
     };
     
+    var extend = function(extend, extendWith) {
+        if(extendWith && extend)
+            for(var i in extendWith)
+                extend[i] = extendWith[i];
+        
+        return extend;
+    };
+    
     var obj = function obj() { };
+    obj.extend = extend;
     obj.camelCase = camelCase;
     obj.ajax = ajax;
     obj.parseBool = parseBool;

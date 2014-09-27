@@ -136,3 +136,16 @@ testUtils.testWithUtils("endsWith", "", true, function(methods, classes, subject
     ok(invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end, end));
     ok(!invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end + " ", end));
 });
+
+testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var obj1 = {};
+    var obj2 = {aaa:{}};
+    
+    // act
+    var out = invoker(obj1, obj2);
+    
+    // assert    
+    strictEqual(out, obj1);
+    strictEqual(out.aaa, obj2.aaa);
+});
