@@ -9,11 +9,14 @@ Class("wipeout.base.watch", function () {
         ///<param name="object" type="Object" optional="true">The object to add functionality to. Defaults to {}</param>
         ///<returns type="Object">The amended object</returns>
         
+        if (watch.canWatch(object))
+            return object;
+        
         object = object || {};
         
         var woBag = new wipeout.base.watched().__woBag;
-        var watch = wipeout.base.watched.createWatchFunction(woBag, {});
-        var observe = wipeout.base.watched.createObserveFunction(woBag, watch);
+        var _watch = wipeout.base.watched.createWatchFunction(woBag, {});
+        var observe = wipeout.base.watched.createObserveFunction(woBag, _watch);
         observe.__token = observeToken;
         
         Object.defineProperty(object, "observe", {
