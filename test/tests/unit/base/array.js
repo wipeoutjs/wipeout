@@ -1,34 +1,50 @@
 
-var watched = wipeout.base.watched;
-var watch = wipeout.base.watch;
-
-function testMe (moduleName, buildSubject) {
-
-    module(moduleName, {
+    module("wipeout.base.array", {
         setup: function() {
         },
         teardown: function() {
         }
     });
 
-    testUtils.testWithUtils("observe", "multiple changes, 1 registration", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("observe", "add", false, function(methods, classes, subject, invoker) {
         // arrange
-        var subject = buildSubject();
-        subject.val = "aaa";
-        subject.observe("val", function(oldVal, newVal) {
-            strictEqual(oldVal, "aaa");
-            strictEqual(newVal, "ccc");
+        var subject = new wipeout.base.array();
+        
+        var val = {};
+        subject.observe(function(removed, added) {
+            strictEqual(removed.length, 0);
+            strictEqual(added.length, 1);
+            strictEqual(added[0], val);
             start();
         });
 
         // act
-        subject.val = "bbb";
-        subject.val = "ccc";
+        subject.push(val);
 
         stop();
     });
 
+    testUtils.testWithUtils("observe", "splice", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = new wipeout.base.array([1, 2, 3]);
+        
+        var val = 4;
+        subject.observe(function(removed, added) {
+            debugger;
+            strictEqual(removed.length, 0);
+            strictEqual(added.length, 1);
+            strictEqual(added[0], val);
+            start();
+        });
 
+        // act
+        debugger;
+        subject.splice(1, 1, val);
+
+        stop();
+    });
+
+/*
     testUtils.testWithUtils("observe", "2 properties", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
@@ -116,8 +132,4 @@ function testMe (moduleName, buildSubject) {
             start();
             ok(true);
         }, 10);
-    });
-}
-
-testMe("wipeout.base.watched", function() { return new watched(); });
-testMe("wipeout.base.watched, do not use prototype", function() { return watch(); });
+    });*/

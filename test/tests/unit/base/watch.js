@@ -27,25 +27,12 @@ testUtils.testWithUtils("observe", null, false, function(methods, classes, subje
     subject.observe("val", function(oldVal, newVal) {
         strictEqual(oldVal, "aaa");
         strictEqual(newVal, "bbb");
-        assertsRun = true;
-        if(stopped)
-            start();
+        start();
     });
     
     // act
-    subject.val = "bbb";
-    
-    // Object.observe is async
-    if (!assertsRun) {
-        stop();
-        stopped = true;
-        setTimeout(function() {
-            if(!assertsRun) {
-                ok(false, "callback not fired");
-                start();
-            }
-        }, 150);
-    }
+    subject.val = "bbb";    
+    stop();
     
     // assert
 });

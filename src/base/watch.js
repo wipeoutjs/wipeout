@@ -26,6 +26,13 @@ Class("wipeout.base.watch", function () {
             writable: false
         });
         
+        Object.defineProperty(object, "del", {
+            enumerable: false,
+            configurable: false,
+            value: wipeout.base.watched.deleteFunction,
+            writable: false
+        });
+        
         return object;
     };
     
