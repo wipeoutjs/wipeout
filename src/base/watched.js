@@ -272,13 +272,12 @@ Class("wipeout.base.watched", function () {
             } else {
                 return _watchedProperties[watchPrefix + property] = {
                     dispose: (function() {
-                        delete _watchedProperties[watchPrefix + property];
-                        
-                        Object.defineProperty(this, {
-                            value: this[property],
-                            writable: true,
-                            configurable: true
-                        });
+                        if (delete _watchedProperties[watchPrefix + property])
+                            Object.defineProperty(this, property, {
+                                value: this[property],
+                                writable: true,
+                                configurable: true
+                            });
                     }).bind(this)
                 };
             }
