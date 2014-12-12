@@ -9,7 +9,7 @@ Class("wipeout.base.array", function () {
         this.__woBag = {
             length: 0,
             simpleCallbacks: [],    // function (removed, added) { }
-            complexCallbacks: []    //TODO
+            complexCallbacks: []    // function (change) { }
         };
         
         this.__woBag.changes = new ap(this);

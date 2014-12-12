@@ -21,12 +21,13 @@ Class("wipeout.base.watched", function () {
         ///<param name="watchFunctionGetter" type="Function" optional="true">The watch function. Defaults to this.watch</param>
         ///<returns type="Function">The observe function</returns>
         
-        return function(property, callback, context, evaluateOnEachChange) {
+        return function(property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
             ///<summary>Observe a property for change</summary>
             ///<param name="property" type="String" optional="false">The property</param>
             ///<param name="callback" type="Function" optional="false">The callback for property change</param>
             ///<param name="context" type="Any" optional="true">The context of the callback</param>
             ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
+            ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
             ///<returns type="Object">A disposable object</returns>
             
             var disposeOfWatch = (watchFunction || this.watch).call(this, property);
@@ -43,7 +44,8 @@ Class("wipeout.base.watched", function () {
                 _woBag.watched.callbacks[property] = [];
 
             var cb = function (oldVal, newVal) {
-                callback.call(context, oldVal, newVal);
+                if(evaluateIfValueHasNotChanged || oldVal !== newVal)
+                    callback.call(context, oldVal, newVal);
             }
             
             cb.evaluateOnEachChange = evaluateOnEachChange;
@@ -87,80 +89,6 @@ Class("wipeout.base.watched", function () {
         }
     };
     
-    //TODO: rename and move
-    function ap (woBag) {
-        this._properties = [];
-        this._changes = [];        
-        
-        this.woBag = woBag;
-    }
-    
-    ap.prototype.push = function(property, oldVal, newVal) {
-        this._properties.push(property);
-        this._changes.push({
-            oldVal: oldVal, 
-            newVal: newVal
-        });
-        
-        setTimeout((function() {
-            this.go();
-        }).bind(this));
-    };
-    
-    ap.prototype.shift = function() {        
-        if (!this._properties.length) {
-            this._changes.length = 0;
-            return;
-        }
-        
-        var changes = this._changes.shift(); 
-        return {
-            property: this._properties.shift(),
-            oldVal: changes.oldVal,
-            newVal: changes.newVal,
-            originalVal: changes.originalVal
-        };
-    };
-    
-    ap.prototype.go = function() {
-        if (this.__going) return;
-        this.__going = true;
-        this._go();
-    };
-    
-    ap.prototype._go = function() {
-
-        var change = this.shift();
-        if (!change) {            
-            delete this.__going;
-            return;
-        }
-
-        setTimeout((function() {
-            var next = this._properties.indexOf(change.property);
-            if(next !== -1)
-                this._changes[next].originalVal = change.originalVal || change.oldVal
-
-            enumerateArr(this.woBag.watched.callbacks[change.property], function(item) {
-                if (item.evaluateOnEachChange)
-                    item(change.oldVal, change.newVal);
-                else if (next === -1)
-                    item(change.originalVal || change.oldVal, change.newVal);
-            });
-
-            this._go();
-        }).bind(this));
-    };
-    
-    function lastIndexOf(array, item) {
-        var i = -1;
-        var returnVal = -1;
-        while ((i = array.indexOf(item, i + 1)) !== -1)
-            returnVal = i;
-        
-        return returnVal;
-    }
-    
     watched.createObjectObserveWatchFunction = function(woBag) {
         ///<summary>Create a custom watch function</summary>
         ///<param name="woBag" type="Object" optional="true">The __woBag to observe from. Defaults to this.__woBag</param>
@@ -177,16 +105,14 @@ Class("wipeout.base.watched", function () {
             if (_woBag.watched.dosposeOfObjectObserved) // using this as a flag also
                 return _woBag.watched.dosposeOfObjectObserved;
             
-            _woBag.watched.alteredProperties = new ap(_woBag);
-            
             var observeFunction = (function(changes) {
                 
                 enumerateArr(changes, function(change) {
-                    var i = lastIndexOf(_woBag.watched.alteredProperties._properties, change.name);
+                    var i = wipeout.utils.changeHandler.instance.lastIndexOf(this, change.name);
                     if(i !== -1)
-                        _woBag.watched.alteredProperties._changes[i].newVal = change.oldValue;
+                        wipeout.utils.changeHandler.instance._changes[i].newVal = change.oldValue; //TODO, investigate and comment
                     
-                    _woBag.watched.alteredProperties.push(change.name, change.oldValue, this[change.name]);
+                    wipeout.utils.changeHandler.instance.push(this, change.name, _woBag, change.oldValue, this[change.name]);
                 }, this);
             }).bind(this);
             
@@ -208,12 +134,10 @@ Class("wipeout.base.watched", function () {
     function buildWoBag (woBag) {        
         if(!woBag.watched) {
             woBag.watched = {
-                alteredProperties: new ap(woBag),
                 oldValues: {},
                 callbacks: {}
             };
         } else { 
-            woBag.watched.alteredProperties = woBag.watched.alteredProperties || new ap(woBag);
             woBag.watched.oldValues = woBag.watched.oldValues || {};
             woBag.watched.callbacks = woBag.watched.callbacks || {};
         }
@@ -260,7 +184,7 @@ Class("wipeout.base.watched", function () {
                     __woBag.watched.oldValues[property] = value;
                     
                     if(__woBag.watched.callbacks[property])
-                        __woBag.watched.alteredProperties.push(property, old, value);
+                        wipeout.utils.changeHandler.instance.push(this, property, __woBag, old, value);
                 },
                 enumerable: true,
                 configurable: !usePrototype
