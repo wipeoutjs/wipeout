@@ -167,35 +167,14 @@ testUtils.testWithUtils("_go", "with values", false, function(methods, classes, 
     
     var next = 2
     subject.shift = methods.method([], {
-        object: 1, 
-        property: 2, 
-        originalVal: 3,
-        oldVal: 4,
-        newVal: 5,
-        woBag: {
-            watched: {
-                callbacks: {
-                    "2": [callback1]
-                }
-            }
+        go: function() {
+            strictEqual(arguments[0], subject);
+            start();
         }
     });
     
-    subject._changes = [{}, {}, {}];
-    
-    subject.lastIndexOf = function(a, b) {
-        strictEqual(a, 1);
-        strictEqual(b, 2);
-        return next;
-    };
-    
     // act
+    // assert
     invoker();
     stop();
-    subject._go = function() { strictEqual(callback1, null); start(); };
-    
-    // assert
-    setTimeout(function() {
-        strictEqual(subject._changes[next].originalVal, 3);
-    });
 });

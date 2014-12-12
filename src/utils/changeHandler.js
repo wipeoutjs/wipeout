@@ -50,14 +50,13 @@ Class("wipeout.utils.changeHandler", function () {
         }
         
         var changes = this._changes.shift(); 
-        return {
-            object: this._objects.shift(),
-            property: this._properties.shift(),
-            oldVal: changes.oldVal,
-            newVal: changes.newVal,
-            woBag: changes.woBag,
-            originalVal: changes.originalVal
-        };
+        return new objectChangeHandler(
+            this._objects.shift(),
+            this._properties.shift(),
+            changes.oldVal,
+            changes.newVal,
+            changes.woBag,
+            changes.originalVal);
     };
     
     changeHandler.prototype.go = function() {
@@ -75,22 +74,35 @@ Class("wipeout.utils.changeHandler", function () {
         }
 
         setTimeout((function() {
-            var next = this.lastIndexOf(change.object, change.property);
-            if(next !== -1)
-                this._changes[next].originalVal = change.originalVal || change.oldVal;
-
-            enumerateArr(change.woBag.watched.callbacks[change.property], function(callback) {
-                if (callback.evaluateOnEachChange)
-                    callback(change.oldVal, change.newVal);
-                else if (next === -1)
-                    callback(change.originalVal || change.oldVal, change.newVal);
-            });
-
-            this._go();
+            change.go(this);
         }).bind(this));
     };
     
-    changeHandler.instance = new changeHandler();    
+    changeHandler.instance = new changeHandler(); 
+    
+    function objectChangeHandler(object, property, oldVal, newVal, woBag, originalVal) {
+        this.object = object;
+        this.property = property;
+        this.oldVal = oldVal;
+        this.newVal = newVal;
+        this.woBag = woBag;
+        this.originalVal = originalVal;
+    }
+    
+    objectChangeHandler.prototype.go = function(changeHandler) {
+        var next = this.lastIndexOf(this.object, this.property);
+        if(next !== -1)
+            changeHandler._changes[next].originalVal = this.originalVal || this.oldVal;
+
+        enumerateArr(this.woBag.watched.callbacks[this.property], function(callback) {
+            if (callback.evaluateOnEachChange)
+                callback(this.oldVal, this.newVal);
+            else if (next === -1)
+                callback(this.originalVal || this.oldVal, this.newVal);
+        });
+
+        changeHandler._go();
+    };
     
     return changeHandler;
 });
