@@ -12,8 +12,10 @@ Class("wipeout.base.array", function () {
         
         this.__woBag = {
             length: initialValues ? initialValues.length : 0,
-            simpleCallbacks: [],    // function (removed, added) { }
-            complexCallbacks: []    // function (change) { }
+            watchedArray: {
+                simpleCallbacks: [],    // function (removed, added) { }
+                complexCallbacks: []    // function (change) { }
+            }  
         };
         
         // doing it this way as it will not publish changes
@@ -186,8 +188,8 @@ Class("wipeout.base.array", function () {
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
         var callbacks = complexCallback ? 
-            this.__woBag.complexCallbacks : 
-            this.__woBag.simpleCallbacks;
+            this.__woBag.watchedArray.complexCallbacks : 
+            this.__woBag.watchedArray.simpleCallbacks;
         
         var cb = {
             callback: callback, 
