@@ -1,4 +1,13 @@
 window.testUtils = window.testUtils || {};
+
+window.asyncAssert = function(callback, context) {
+    stop();
+    setTimeout(function() {
+        callback.call(context);
+        start();
+    }, 20);
+};
+
 $.extend(testUtils, (function() {
     
     var cached = [];
