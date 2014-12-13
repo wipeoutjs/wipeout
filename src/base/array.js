@@ -216,5 +216,10 @@ Class("wipeout.base.array", function () {
         return d;
     };
     
+    array.prototype.dispose = function() {
+        this.__woBag.watchedArray.complexCallbacks.length = 0;
+        this.__woBag.watchedArray.simpleCallbacks.length = 0;
+    }
+    
     return array;
 });
