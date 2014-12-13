@@ -31,6 +31,46 @@ Class("wipeout.viewModels.contentControl", function () {
             owner.registerDisposable(output);
         
         return output;
+    };   
+    
+    contentControl.createNONOBSERVABLETemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+        ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
+        ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
+        ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
+        ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
+        
+        function changeTemplate(oldVal, newVal) {
+            var script = document.getElementById(newVal);            
+            owner[templateProperty] = script ? script.text : "";
+        }
+        
+        changeTemplate(null, owner[templateIdProperty]);
+        
+        var d1 = owner.observe(templateIdProperty, changeTemplate);
+        
+        var d2 = owner.observe(templateProperty, function(oldVal, newVal) {
+            // TODO: this is inefficient, will always be executed twice
+            owner[templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        });
+        
+        var output = {
+            dispose: function() {
+                if (d1) {
+                    d1.dispose();
+                    d1 = null;
+                }
+                
+                if (d2) {
+                    d2.dispose();
+                    d2 = null;
+                }
+            }
+        };
+        
+        if (owner instanceof wipeout.viewModels.visual)
+            owner.registerDisposable(output);
+        
+        return output;
     };
     
     var dataTemplateHash = "data-templatehash";  

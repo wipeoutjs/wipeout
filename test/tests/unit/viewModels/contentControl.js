@@ -44,6 +44,56 @@ testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods,
     strictEqual(template(), templateValue);
 });
 
+testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var templateValue = "Hi";
+    var owner = new wipeout.viewModels.visual();
+    var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
+    
+    // act
+    contentControl.createNONOBSERVABLETemplatePropertyFor(owner, "testTemplateId", "testTemplate");
+    
+    // assert
+    asyncAssert(function() {
+        strictEqual($("#" + owner.testTemplateId).html(), owner.testTemplate);
+        
+        owner.testTemplate = "Bye";
+        asyncAssert(function() {
+            ok(t1 != owner.testTemplateId);
+        
+            owner.testTemplateId = t1;
+            asyncAssert(function() {
+                strictEqual(owner.testTemplate, templateValue);
+            });
+        });
+    });
+});
+
+testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "disposal, dependant on \"createNONOBSERVABLETemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var templateValue = "Hi";
+    var owner = new wipeout.viewModels.visual();
+    var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
+    
+    // act
+    contentControl.createNONOBSERVABLETemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
+    
+    // assert
+    asyncAssert(function() {
+        strictEqual($("#" + owner.testTemplateId).html(), owner.testTemplate);
+        
+        templateValue = owner.testTemplate = "Bye";
+        asyncAssert(function() {
+            strictEqual(t1, owner.testTemplateId);
+                    
+            owner.testTemplateId = contentControl.createAnonymousTemplate("Something else");
+            asyncAssert(function() {
+                strictEqual(owner.testTemplate, templateValue);
+            });
+        });
+    });
+});
+
 testUtils.testWithUtils("createAnonymousTemplate", "Create same template twice", true, function(methods, classes, subject, invoker) {
     // arrange
     var val = "LKJBLKJBKJBLKJBKJBKJB";
