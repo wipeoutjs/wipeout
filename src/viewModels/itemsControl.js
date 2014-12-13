@@ -18,10 +18,12 @@ Class("wipeout.viewModels.itemsControl", function () {
         this._super(templateId || deafaultTemplateId, model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
-        this.itemTemplateId = ko.observable(itemTemplateId);
+        this.itemTemplateId = itemTemplateId || wipeout.viewModels.visual.getBlankTemplateId();
 
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
-        this.itemTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.itemTemplateId, this);
+        this.itemTemplate = "";
+        
+        wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="ko.observableArray" generic0="Any">An array of models to render</Summary>
         this.itemSource = ko.observableArray([]);
@@ -38,17 +40,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         var d1 = this.items.subscribe(this._syncModelsAndViewModels, this);
         this.registerDisposable(d1);
 
-        itemTemplateId = this.itemTemplateId.peek();
-        var d2 = this.itemTemplateId.subscribe(function (newValue) {
-            if (itemTemplateId !== newValue) {
-                try {
-                    this.reDrawItems();
-                } finally {
-                    itemTemplateId = newValue;
-                }
-            }
-        }, this);
-        this.registerDisposable(d2);
+        this.observe("itemTemplateId", this.reDrawItems, this);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
@@ -260,7 +252,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        return new wipeout.viewModels.view(this.itemTemplateId(), model);        
+        return new wipeout.viewModels.view(this.itemTemplateId, model);        
     };
 
     itemsControl.prototype.reDrawItems = function () {

@@ -8,7 +8,7 @@ TODO:   wipeout.base.watched.prototype.observe, do something with dispose functi
 observables -
 x    condition
 x    elseTemplateId
-    itemTemplateId
+x    itemTemplateId
     itemSource
     items
     model

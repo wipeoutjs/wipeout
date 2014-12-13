@@ -31,8 +31,10 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     // arrange
     var templateId = {}, itemTemplateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
-    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function () {
-        methods.method([subject.itemTemplateId, subject])(arguments[0], arguments[1]);
+    subject.observe =function(){}// methods.method(["templateId", subject.reDrawItems = {}, subject]);
+    
+    classes.mock("wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor", function () {
+        methods.method([subject, "itemTemplateId", "itemTemplate"])(arguments[0], arguments[1], arguments[2]);
     }, 1);
     
     var mock = wipeout.utils.ko.version()[0] < 3 ? "_subscribeV2" : "_subscribeV3";
@@ -50,7 +52,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     invoker(templateId, itemTemplateId, model);
     
     // assert
-    strictEqual(subject.itemTemplateId(), itemTemplateId);
+    strictEqual(subject.itemTemplateId, itemTemplateId);
     ok(ko.isObservable(subject.itemSource));
     ok(ko.isObservable(subject.items));
 });
@@ -227,7 +229,7 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     // arrange
     var itemTemplateId = {};
     var model = {};
-    subject.itemTemplateId = function() { return itemTemplateId; };
+    subject.itemTemplateId = itemTemplateId;
     
     // act
     var actual = invoker(model);
