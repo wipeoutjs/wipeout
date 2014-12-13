@@ -85,7 +85,9 @@ Class("wipeout.viewModels.visual", function () {
             ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
             ///<returns type="Object">A disposable object</returns>
         
-        this.registerDisposable(this._super.apply(this, arguments));
+        var output = this._super.apply(this, arguments);
+        this.registerDisposable(output);
+        return output;
     };
     
     visual.prototype.entireViewModelHtml = function() {

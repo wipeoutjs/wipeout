@@ -5,7 +5,7 @@ window.asyncAssert = function(callback, context) {
     setTimeout(function() {
         callback.call(context);
         start();
-    }, 20);
+    }, 50);
 };
 
 $.extend(testUtils, (function() {
