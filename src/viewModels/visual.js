@@ -76,6 +76,18 @@ Class("wipeout.viewModels.visual", function () {
         return output;
     };
     
+    visual.prototype.observe = function(property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
+            ///<summary>Observe a property for change</summary>
+            ///<param name="property" type="String" optional="false">The property</param>
+            ///<param name="callback" type="Function" optional="false">The callback for property change</param>
+            ///<param name="context" type="Any" optional="true">The context of the callback</param>
+            ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
+            ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
+            ///<returns type="Object">A disposable object</returns>
+        
+        this.registerDisposable(this._super.apply(this, arguments));
+    };
+    
     visual.prototype.entireViewModelHtml = function() {
         ///<summary>Gets all of the html nodes included in this view model</summary>
         ///<returns type="Array" generic0="Node">The html elements</returns>
