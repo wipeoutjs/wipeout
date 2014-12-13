@@ -9,14 +9,15 @@ testUtils.testWithUtils("if", "and all functionality (kind of an integration tes
     // arrange
     var subject = new wipeout.viewModels["if"]();
     subject.condition = true;
-    subject.template("asdfsdfgkhlsaklksndf");
-    subject.elseTemplate("LAJKISBDKJBASDKJ");
-    var yes = subject.templateId();
-    var no = subject.elseTemplateId();
+    subject.template = "asdfsdfgkhlsaklksndf";
+    subject.elseTemplate = "LAJKISBDKJBASDKJ";
     
     // act
     // assert
     asyncAssert(function() {
+        var yes = subject.templateId();
+        var no = subject.elseTemplateId;
+        
         subject.condition = false;
         asyncAssert(function() {
             strictEqual(no, subject.templateId());
