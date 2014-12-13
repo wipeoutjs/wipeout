@@ -1,11 +1,11 @@
-module("wipeout.utils.changeHandler", {
+module("wipeout.change.handler", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var changeHandler = wipeout.utils.changeHandler;
+var changeHandler = wipeout.change.handler;
 
 testUtils.testWithUtils("constructor", "", false, function(methods, classes, subject, invoker) {
     // arrange    

@@ -1,12 +1,12 @@
 
-Class("wipeout.utils.changeHandler", function () {
-    function changeHandler() {
+Class("wipeout.change.handler", function () {
+    function handler() {
         this._properties = [];
         this._changes = [];        
         this._objects = [];
     };
     
-    changeHandler.allIndexesOf = function(array, item) {
+    handler.allIndexesOf = function(array, item) {
         var current = -1, returnVal = [];
         
         while (true) {
@@ -18,9 +18,9 @@ Class("wipeout.utils.changeHandler", function () {
         }
     };
     
-    changeHandler.prototype.indexOf = function(object, propertyName) {
+    handler.prototype.indexOf = function(object, propertyName) {
         
-        var objects = changeHandler.allIndexesOf(this._objects, object);
+        var objects = handler.allIndexesOf(this._objects, object);
         
         for (var i = 0, ii = objects.length; i < ii; i++)
             if (this._properties[objects[i]] === propertyName)
@@ -29,9 +29,9 @@ Class("wipeout.utils.changeHandler", function () {
         return -1;
     };
     
-    changeHandler.prototype.lastIndexOf = function(object, propertyName) {
+    handler.prototype.lastIndexOf = function(object, propertyName) {
         
-        var objects = changeHandler.allIndexesOf(this._objects, object);
+        var objects = handler.allIndexesOf(this._objects, object);
         
         for (var i = objects.length - 1; i >= 0; i--)
             if (this._properties[objects[i]] === propertyName)
@@ -40,7 +40,7 @@ Class("wipeout.utils.changeHandler", function () {
         return -1;
     };
     
-    changeHandler.prototype.pushObj = function(object, property, woBag, oldVal, newVal) {
+    handler.prototype.pushObj = function(object, property, woBag, oldVal, newVal) {
         this._objects.push(object);
         this._properties.push(property);
         this._changes.push(new objectChangeHandler(object, property, oldVal, newVal, woBag));
@@ -51,7 +51,7 @@ Class("wipeout.utils.changeHandler", function () {
     };
     
     var arrayChangeProperty = {};
-    changeHandler.prototype.pushArray = function(array, change, woBag) {
+    handler.prototype.pushArray = function(array, change, woBag) {
         this._objects.push(array);
         this._properties.push(arrayChangeProperty);
         this._changes.push(new arrayChangeHandler(array, change, woBag));
@@ -125,7 +125,7 @@ Class("wipeout.utils.changeHandler", function () {
         changeHandler._go();
     };
     
-    changeHandler.prototype.shift = function() {        
+    handler.prototype.shift = function() {        
         if (!this._properties.length) {
             this._changes.length = 0;
             return;
@@ -136,13 +136,13 @@ Class("wipeout.utils.changeHandler", function () {
         return this._changes.shift();
     };
     
-    changeHandler.prototype.go = function() {
+    handler.prototype.go = function() {
         if (this.__going) return;
         this.__going = true;
         this._go();
     };
     
-    changeHandler.prototype._go = function() {
+    handler.prototype._go = function() {
 
         var change = this.shift();
         if (!change) {            
@@ -155,7 +155,7 @@ Class("wipeout.utils.changeHandler", function () {
         }).bind(this));
     };
     
-    changeHandler.instance = new changeHandler(); 
+    handler.instance = new handler(); 
     
     function objectChangeHandler(object, property, oldVal, newVal, woBag, originalVal) {
         this.object = object;
@@ -181,5 +181,5 @@ Class("wipeout.utils.changeHandler", function () {
         changeHandler._go();
     };
     
-    return changeHandler;
+    return handler;
 });

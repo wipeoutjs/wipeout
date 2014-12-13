@@ -108,11 +108,11 @@ Class("wipeout.base.watched", function () {
             var observeFunction = (function(changes) {
                 
                 enumerateArr(changes, function(change) {
-                    var i = wipeout.utils.changeHandler.instance.lastIndexOf(this, change.name);
+                    var i = wipeout.change.handler.instance.lastIndexOf(this, change.name);
                     if(i !== -1)
-                        wipeout.utils.changeHandler.instance._changes[i].newVal = change.oldValue; //TODO, investigate and comment
+                        wipeout.change.handler.instance._changes[i].newVal = change.oldValue; //TODO, investigate and comment
                     
-                    wipeout.utils.changeHandler.instance.pushObj(this, change.name, _woBag, change.oldValue, this[change.name]);
+                    wipeout.change.handler.instance.pushObj(this, change.name, _woBag, change.oldValue, this[change.name]);
                 }, this);
             }).bind(this);
             
@@ -184,7 +184,7 @@ Class("wipeout.base.watched", function () {
                     __woBag.watched.oldValues[property] = value;
                     
                     if(__woBag.watched.callbacks[property])
-                        wipeout.utils.changeHandler.instance.pushObj(this, property, __woBag, old, value);
+                        wipeout.change.handler.instance.pushObj(this, property, __woBag, old, value);
                 },
                 enumerable: true,
                 configurable: !usePrototype

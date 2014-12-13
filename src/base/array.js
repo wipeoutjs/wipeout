@@ -24,7 +24,7 @@ Class("wipeout.base.array", function () {
         if (useObjectObserve)
             Array.observe(this, (function(changes) {
                 enumerateArr(changes, function(change) {
-                    wipeout.utils.changeHandler.instance.pushArray(this, change, this.__woBag);
+                    wipeout.change.handler.instance.pushArray(this, change, this.__woBag);
                 }, this)
             }).bind(this));
     });
@@ -89,7 +89,7 @@ Class("wipeout.base.array", function () {
     array.prototype.replaceElement = function(index, replacement) {
         
         if (!useObjectObserve)
-            wipeout.utils.changeHandler.instance.pushArray(this, {
+            wipeout.change.handler.instance.pushArray(this, {
                 name: index.toString(),
                 object: this,
                 oldValue: this[index],
@@ -106,7 +106,7 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.__woBag.length)
-                wipeout.utils.changeHandler.instance.pushArray(this, {
+                wipeout.change.handler.instance.pushArray(this, {
                     addedCount: 0,
                     index: this.__woBag.length - 1,
                     object: this,
@@ -123,7 +123,7 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.__woBag.length)
-                wipeout.utils.changeHandler.instance.pushArray(this, {
+                wipeout.change.handler.instance.pushArray(this, {
                     addedCount: 0,
                     index: 0,
                     object: this,
@@ -139,7 +139,7 @@ Class("wipeout.base.array", function () {
     array.prototype.push = function(item) {
 
         if (!useObjectObserve)
-            wipeout.utils.changeHandler.instance.pushArray(this, {
+            wipeout.change.handler.instance.pushArray(this, {
                 addedCount: 1,
                 index: this.__woBag.length,
                 object: this,
@@ -161,7 +161,7 @@ Class("wipeout.base.array", function () {
                 i++)
                 removed.push(this[i]);
 
-            wipeout.utils.changeHandler.instance.pushArray(this, {
+            wipeout.change.handler.instance.pushArray(this, {
                 addedCount: arguments.length - 2,
                 index: index,
                 object: this,
