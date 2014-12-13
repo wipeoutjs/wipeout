@@ -40,8 +40,8 @@ testUtils.testWithUtils("allIndexesOf", "2 indexes", true, function(methods, cla
 
 testUtils.testWithUtils("lastIndexOf", "No index", false, function(methods, classes, subject, invoker) {
     // arrange
-    subject._objects =      [{}, 11, {}, {}, {}, 11, 11, {}];
-    subject._properties =   [{}, 22, {}, {}, {}, 22, {}, {}];
+    subject._objects =      [{}, 11, 11, 11, {}];
+    subject._properties =   [{}, 22, 22, {}, {}];
     
     // act
     var output = invoker(33, 33);
@@ -62,7 +62,31 @@ testUtils.testWithUtils("lastIndexOf", "Has index", false, function(methods, cla
     strictEqual(output, 2);
 });
 
-testUtils.testWithUtils("push", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("indexOf", "No index", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject._objects =      [{}, 11, 11, 11, {}];
+    subject._properties =   [{}, {}, 22, 22, {}];
+    
+    // act
+    var output = invoker(33, 33);
+    
+    // assert
+    strictEqual(output, -1);
+});
+
+testUtils.testWithUtils("indexOf", "Has index", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject._objects =      [{}, 11, 11, 11, {}];
+    subject._properties =   [{}, {}, 22, 22, {}];
+    
+    // act
+    var output = invoker(11, 22);
+    
+    // assert
+    strictEqual(output, 2);
+});
+
+testUtils.testWithUtils("pushObj", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject._objects = [];
     subject._properties = [];
@@ -103,21 +127,17 @@ testUtils.testWithUtils("shift", "has values", false, function(methods, classes,
     // arrange
     subject._objects = [1, {}];
     subject._properties = [2, {}];
-    subject._changes = [{
-        oldVal: 3,
-        newVal: 4,
-        woBag: 5
-    },{}];
+    subject._changes = [3, {}];
     
     // act
     var output = invoker();
     
     // assert
-    strictEqual(output.object, 1);
-    strictEqual(output.property, 2);
-    strictEqual(output.oldVal, 3);
-    strictEqual(output.newVal, 4);
-    strictEqual(output.woBag, 5);
+    strictEqual(subject._objects.length, 1);
+    strictEqual(subject._properties.length, 1);
+    strictEqual(subject._changes.length, 1);
+    
+    strictEqual(output, 3);
 });
 
 testUtils.testWithUtils("go", "does go", false, function(methods, classes, subject, invoker) {
