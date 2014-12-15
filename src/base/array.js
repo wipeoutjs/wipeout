@@ -14,14 +14,17 @@ Class("wipeout.base.array", function () {
             length: initialValues ? initialValues.length : 0,
             watchedArray: {
                 simpleCallbacks: [],    // function (removed, added) { }
-                complexCallbacks: []    // function (change) { }
+                complexCallbacks: [],   // function (change) { }
+                arrayCopy: []
             }  
         };
         
-        // doing it this way as it will not publish changes
-        if (initialValues)
-            for(var i = 0, ii = initialValues.length; i < ii; i++)
-                this[i] = initialValues[i];
+        if (initialValues) {
+            for(var i = 0, ii = initialValues.length; i < ii; i++) {
+                this[i] = initialValues[i]; // doing it this way as it will not publish changes
+                this.__woBag.watchedArray.arrayCopy.push(initialValues[i]);
+            }
+        }
         
         if (useObjectObserve)
             Array.observe(this, (function(changes) {
