@@ -91,7 +91,7 @@ Class("wipeout.base.array", function () {
         }
     };
 
-    array.prototype.replaceElement = function(index, replacement) {
+    array.prototype.replace = function(index, replacement) {
         
         if (!useObjectObserve)
             wipeout.change.handler.instance.pushArray(this, {

@@ -31,8 +31,10 @@ Class("wipeout.change.array", function () {
                 index: parseInt(this.change.name),
                 removed: [this.change.oldValue]
             };
-        } else if (this.change.name === "length") {
-            // there will be a corresponding splice
+        } else {
+            // if this.change.name === "length" there will be a corresponding splice
+            // otherwise, cannot object observe an array (right now)
+            changeHandler._go();
             return;           
         }
 
