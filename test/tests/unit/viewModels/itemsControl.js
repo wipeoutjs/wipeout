@@ -227,7 +227,7 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     // assert
     ok(actual instanceof wipeout.viewModels.view);
     strictEqual(actual.model, model);
-    strictEqual(actual.templateId(), itemTemplateId);
+    strictEqual(actual.templateId, itemTemplateId);
 });
 
 testUtils.testWithUtils("reDrawItems", "", false, function(methods, classes, subject, invoker) {

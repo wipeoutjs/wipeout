@@ -12,16 +12,14 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
     var template = {}, templateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
     subject.templateId = {};
-    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function() {
-        methods.method([subject.templateId, subject])(arguments[0], arguments[1]);
+    classes.mock("wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor", function() {
+        methods.method([subject, "templateId", "template"])(arguments[0], arguments[1]);
         return template;
     }, 1);
     
     // act
-    invoker(templateId, model);
-    
     // assert
-    strictEqual(subject.template, template);
+    invoker(templateId, model);
 });
 
 testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {

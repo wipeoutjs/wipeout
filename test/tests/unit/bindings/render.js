@@ -139,33 +139,9 @@ testUtils.testWithUtils("render", "not a visual", false, function(methods, class
     var val = new wo.visual(templateId);
     subject.element = {};
     subject.unRender = {};
-    subject.onTemplateChanged = methods.method([templateId]);
-    val.__woBag.disposed.register = methods.method([subject.unRender, subject], {dispose: methods.method()});
-    val.templateId.subscribe = methods.method([subject.onTemplateChanged, subject], {dispose: methods.method()});    
-    
-    // act
-    invoker(val);
-    
-    // assert
-    strictEqual(wipeout.utils.domData.get(subject.element, wipeout.bindings.wipeout.utils.wipeoutKey), val);
-    strictEqual(subject.value.__woBag.rootHtmlElement, subject.element);
-    ok(subject.onDisposeEventSubscription);
-    ok(subject.templateChangedSubscription);
-    
-    // act, ensure disposal works
-    val.disposeOf(subject.onDisposeEventSubscription);
-    val.disposeOf(subject.templateChangedSubscription);
-});
-
-testUtils.testWithUtils("render", "not a visual", false, function(methods, classes, subject, invoker) {
-    // arrange
-    var templateId = "sadsadsadsadsd";
-    var val = new wo.visual(templateId);
-    subject.element = {};
-    subject.unRender = {};
-    subject.onTemplateChanged = methods.method([templateId]);
-    val.__woBag.disposed.register = methods.method([subject.unRender, subject], {dispose: methods.method()});
-    val.templateId.subscribe = methods.method([subject.onTemplateChanged, subject], {dispose: methods.method()});    
+    subject.onTemplateChanged = methods.method([null, templateId], null, "onTemplateChanged");
+    val.__woBag.disposed.register = methods.method([subject.unRender, subject], {dispose: methods.method()}, "register");
+    val.observe = methods.method(["templateId", subject.onTemplateChanged, subject], {dispose: methods.method()}, "observe");    
     
     // act
     invoker(val);
@@ -218,14 +194,14 @@ testUtils.testWithUtils("onTemplateChanged", "no async", false, function(methods
     wipeout.settings.asynchronousTemplates = false;
     
     subject.element = {};
-    subject.unTemplate = methods.method();
+    subject.unTemplate = methods.method([], null, "unTemplate");
     subject.value = {
-        templateId: ko.observable({})
+        templateId: {}
     };
-    subject.doRendering = methods.method();
+    subject.doRendering = methods.method([], null, "doRendering");
     
     // act
-    invoker(subject.value.templateId());
+    invoker(null, subject.value.templateId);
     
     // assert
 });
@@ -243,19 +219,19 @@ testUtils.testWithUtils("onTemplateChanged", "async", false, function(methods, c
         return placeholder;
     }, 1);
     classes.mock("wipeout.template.asyncLoader.instance.load", function() {
-        strictEqual(arguments[0], subject.value.templateId());
+        strictEqual(arguments[0], subject.value.templateId);
         arguments[1]();
     }, 1);
     
     subject.element = {};
     subject.unTemplate = methods.method();
     subject.value = {
-        templateId: ko.observable({})
+        templateId: {}
     };
     subject.doRendering = methods.method();
     
     // act
-    invoker(subject.value.templateId());
+    invoker(null, subject.value.templateId);
     
     // assert
 });
@@ -348,7 +324,7 @@ var testCreateValueAccessor = function(methods, classes, subject, invoker, share
     
     // assert
     strictEqual(output.templateEngine, wipeout.template.engine.instance);
-    strictEqual(output.name, value.templateId());
+    strictEqual(output.name, value.templateId);
     strictEqual(output.data, shareParentScope ? undefined : value);
     
     

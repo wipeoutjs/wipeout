@@ -138,18 +138,19 @@ Binding("render", true, function () {
         var subscription1 = this.value.__woBag.disposed.register(this.unRender, this);
         this.onDisposeEventSubscription = this.value.registerDisposable(subscription1);
 
-        var subscription2 = this.value.templateId.subscribe(this.onTemplateChanged, this);
+        var subscription2 = this.value.observe("templateId", this.onTemplateChanged, this);
         this.templateChangedSubscription = this.value.registerDisposable(subscription2);
-        this.onTemplateChanged(this.value.templateId.peek());
+        this.onTemplateChanged(null, this.value.templateId);
     };
     
-    render.prototype.onTemplateChanged = function(newVal) {
+    render.prototype.onTemplateChanged = function(oldVal, newVal) {
         ///<summary>Apply the template of the value to the binding element</summary>  
+        ///<param name="oldVal" type="wo.view" optional="false">The old value</param>   
         ///<param name="newVal" type="wo.view" optional="false">The value to render</param>      
         
         var _this = this;
         function reRender() {
-            if(_this.value && _this.value.templateId.peek() !== newVal) return;
+            if(_this.value && _this.value.templateId !== newVal) return;
             _this.doRendering();
         }
 
@@ -203,7 +204,7 @@ Binding("render", true, function () {
 
             var output = {
                 templateEngine: wipeout.template.engine.instance,
-                name: value.templateId.peek(),
+                name: value.templateId,
                 afterRender: function(nodes, context) {
                     var old = [];
                     enumerateArr(value.__woBag.nodes, function(node) {

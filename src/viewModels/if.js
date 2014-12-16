@@ -38,7 +38,7 @@ Class("wipeout.viewModels.if", function () {
         
         this.observe("condition", this.onConditionChanged, this);
         
-        this.templateId.subscribe(this.copyTemplateId, this);
+        this.observe("templateId", function(oldVal, newVal) { this.copyTemplateId(newVal); }, this);
         
         this.copyTemplateId(this.templateId());
     });
@@ -48,7 +48,7 @@ Class("wipeout.viewModels.if", function () {
         ///<param name="oldVal" type="String" optional="false">The old else template Id</param>    
         ///<param name="newVal" type="String" optional="false">The else template Id</param>   
         if (!this.condition) {
-            this.templateId(newVal);
+            this.templateId = newVal;
         }
     };
     
@@ -58,9 +58,9 @@ Class("wipeout.viewModels.if", function () {
         ///<param name="newVal" type="Boolean" optional="false">The condition</param>   
         
         if (this.__oldConditionVal && !newVal) {
-            this.templateId(this.elseTemplateId);
+            this.templateId = this.elseTemplateId;
         } else if (!this.__oldConditionVal && newVal) {
-            this.templateId(this.__cachedTemplateId);
+            this.templateId = this.__cachedTemplateId;
         }
         
         this.__oldConditionVal = !!newVal;
@@ -73,7 +73,7 @@ Class("wipeout.viewModels.if", function () {
             this.__cachedTemplateId = templateId;
     
         if (!this.condition && templateId !== this.elseTemplateId) {
-            this.templateId(this.elseTemplateId);
+            this.templateId = this.elseTemplateId;
         }
     };
     
