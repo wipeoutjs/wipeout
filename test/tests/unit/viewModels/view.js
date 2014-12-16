@@ -125,23 +125,6 @@ testUtils.testWithUtils("setObservable", "observable", true, function(methods, c
     // assert    
     strictEqual(obj.val(), val);
 });
-    
-
-testUtils.testWithUtils("disposeOfBinding", "", false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.__woBag = {
-        bindings: {
-            propertyName: {
-                dispose: methods.method([])
-            }
-        }
-    };
-    
-    // act
-    invoker("propertyName");
-    
-    // assert    
-});
    
 
 testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject, invoker) {
@@ -150,11 +133,12 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
     subject.__woBag = {
         "wipeout.viewModels.view.modelRoutedEvents": {},
         bindings: {
-            blabla: {}
+            blabla: {
+                dispose: methods.method()
+            }
         }
     };
     subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
-    subject.disposeOfBinding = methods.method(["blabla"]);
     
     // act
     invoker();

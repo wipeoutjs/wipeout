@@ -42,15 +42,6 @@ Class("wipeout.viewModels.view", function () {
         }
     };
     
-    view.prototype.disposeOfBinding = function(propertyName) {
-        ///<summary>Un-bind this property.</summary>
-        ///<param name="propertyName" type="String" optional="false">The name of the property to un-bind</param>
-        
-        if(this.__woBag.bindings[propertyName]) {
-            this.__woBag.bindings[propertyName].dispose();
-        }
-    };
-    
     view.prototype.dispose = function() {
         ///<summary>Dispose of view specific items</summary>    
         this._super();
@@ -61,7 +52,8 @@ Class("wipeout.viewModels.view", function () {
         }
         
         for(var i in this.__woBag.bindings)
-            this.disposeOfBinding(i);
+            if(this.__woBag.bindings[i])
+                this.__woBag.bindings[i].dispose();
     };
 
     
@@ -80,7 +72,8 @@ Class("wipeout.viewModels.view", function () {
         if(twoWay && (!ko.isObservable(this[property]) || !ko.isObservable(valueAccessor())))
            throw 'Two way bindings must be between 2 observables';
            
-        this.disposeOfBinding(property);
+        if(this.__woBag.bindings[property])
+            this.__woBag.bindings[property].dispose();
         
         var toBind = ko.dependentObservable({ 
             read: function() { return ko.utils.unwrapObservable(valueAccessor()); },
