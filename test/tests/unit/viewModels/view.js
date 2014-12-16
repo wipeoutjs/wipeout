@@ -81,19 +81,16 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     var model = {};
     subject.__woBag = {};
     subject._super = methods.method([templateId]);
-    subject.registerDisposable = methods.customMethod();
+    subject._onModelChanged = {};
+    subject.observe = methods.method(["model", subject._onModelChanged, subject], 666);
+    subject.registerDisposable = methods.method([666]);
     
     // act
     invoker(templateId, model);
     
     // assert    
-    strictEqual(subject.model(), model);
+    strictEqual(subject.model, model);
     strictEqual(subject.__woBag.bindings.constructor, Object);
-    
-    // test on model changed
-    var newModel = {};
-    subject._onModelChanged = methods.method([model, newModel]);
-    subject.model(newModel);
 });
 
 testUtils.testWithUtils("setObservable", "non observable", true, function(methods, classes, subject, invoker) {

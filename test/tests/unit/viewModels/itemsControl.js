@@ -84,7 +84,7 @@ testUtils.testWithUtils("_syncModelsAndViewModels", "", false, function(methods,
     // arrange
     var m0 = {}, m1 = {};
     subject.itemSource = new wipeout.base.array([{}, {}, {}, {}]);
-    subject.items = [{model: ko.observable(m0)}, {model: ko.observable(m1)}];
+    subject.items = [{model: m0}, {model: m1}];
     
     // act
     invoker();
@@ -99,7 +99,7 @@ testUtils.testWithUtils("_modelsAndViewModelsAreSynched", "different lengths", f
     // arrange
     var m0 = {}, m1 = {};
     subject.itemSource = [m0, m1, {}];
-    subject.items = [{model: ko.observable(m0)}, {model: ko.observable(m1)}];
+    subject.items = [{model: m0}, {model: m1}];
     
     // act
     var actual = invoker();
@@ -112,7 +112,7 @@ testUtils.testWithUtils("_modelsAndViewModelsAreSynched", "different values", fa
     // arrange
     var m0 = {}, m1 = {};
     subject.itemSource = [m0, {}];
-    subject.items = [{model: ko.observable(m0)}, {model: ko.observable(m1)}];
+    subject.items = [{model: m0}, {model: m1}];
     
     // act
     var actual = invoker();
@@ -125,7 +125,7 @@ testUtils.testWithUtils("_modelsAndViewModelsAreSynched", "are synched", false, 
     // arrange
     var m0 = {}, m1 = {};
     subject.itemSource = [m0, m1];
-    subject.items = [{model: ko.observable(m0)}, {model: ko.observable(m1)}];
+    subject.items = [{model: m0}, {model: m1}];
     
     // act
     var actual = invoker();
@@ -226,7 +226,7 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     
     // assert
     ok(actual instanceof wipeout.viewModels.view);
-    strictEqual(actual.model(), model);
+    strictEqual(actual.model, model);
     strictEqual(actual.templateId(), itemTemplateId);
 });
 

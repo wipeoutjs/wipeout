@@ -9,7 +9,7 @@ observables -
 x    condition
 x    elseTemplateId
 x    itemTemplateId
-    itemSource
-    items
+x    itemSource
+x    items
     model
     templateId

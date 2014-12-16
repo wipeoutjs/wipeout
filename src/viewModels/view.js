@@ -10,19 +10,10 @@ Class("wipeout.viewModels.view", function () {
 
         this._super(templateId);
         
-        if(model === undefined)
-            model = null;
+        ///<Summary type="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
+        this.model = model === undefined ? null : model;
         
-        ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
-        this.model = ko.observable(model);
-        
-        var d1 = this.model.subscribe(function(newVal) {
-            try {
-                this._onModelChanged(model, newVal);
-            } finally {
-                model = newVal;
-            }                                          
-        }, this);
+        var d1 = this.observe("model", this._onModelChanged, this);
         this.registerDisposable(d1);
                                 
         ///<Summary type="Object">Placeholder to store binding disposal objects</Summary>
@@ -66,6 +57,58 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
     };
     
+    view.prototype.biNOOBSERVABLESnd = function (property, otherObject, otherProperty, twoWay) {
+        ///<summary>Bind the value returned by valueAccessor to this[property]</summary>
+        ///<param name="property" type="String" optional="false">The name of the property to bind</param>
+        ///<param name="otherObject" type="wo.watched" optional="false">The other object to bind to</param>
+        ///<param name="otherProperty" type="String" optional="false">The name of the property on the other object to bind to</param>
+        ///<param name="twoWay" type="Boolean" optional="true">Specifies whether to bind the destination to the source as well</param>
+        ///<returns type="wo.disposable">A item to dispose of the binding</returns>
+        
+        var binding1, binding2;
+        
+        binding1 = otherObject.observe(otherProperty, (function (oldValue, newValue) {
+            wipeout.utils.obj.set(this, property, newValue);
+        }).bind(this));
+        
+        if (twoWay) {            
+            binding2 = otherObject.observe(property, function (oldValue, newValue) {
+                wipeout.utils.obj.set(otherObject, otherProperty, newValue);
+            });
+        }
+        
+        var binding = new wipeout.base.disposable((function() {
+            if(binding1) {
+                binding1.dispose();
+                binding1 = null;
+            }
+
+            if(binding1) {
+                binding1.dispose();
+                binding1 = null;
+            }
+            
+            if(binding) {
+                var tmp;
+                if (this.__woBag.bindings[property] && (tmp = this.__woBag.bindings[property].indexOf(binding)) !== -1) {
+                    this.__woBag.bindings[property].splice(tmp, 1);
+                    if (!this.__woBag.bindings[property].length) {
+                        delete this.__woBag.bindings[property];
+                    }
+                }
+                
+                binding = null;
+            }
+        }).bind(this));
+        
+        if(!this.__woBag.bindings[property])
+            this.__woBag.bindings[property] = [binding];
+        else
+            this.__woBag.bindings[property].push(binding);
+        
+        return binding;
+    };   
+                
     view.prototype.bind = function(property, valueAccessor, twoWay) {
         ///<summary>Bind the value returned by valueAccessor to this[property]</summary>
         ///<param name="property" type="String" optional="false">The name of the property to bind</param>
@@ -182,8 +225,8 @@ Class("wipeout.viewModels.view", function () {
         if(prop)
             this.shareParentScope = parseBool(prop.value);
                 
-        if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null) {
-            this.bind('model', parentBindingContext.$data.model);
+        if(!view._elementHasModelBinding(propertiesXml) && this.model == null) {
+            this.biNOOBSERVABLESnd('model', parentBindingContext.$data.model);
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        

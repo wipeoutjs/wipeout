@@ -22,7 +22,7 @@ Binding("wipeout", true, function () {
         if (this.renderedView.shareParentScope)
             throw "The root of an application cannot share its parents scope";
 
-        this.renderedView.model(viewModel);                   
+        this.renderedView.model = viewModel;                   
         this.render(this.renderedView);
         
         ///<Summary type="Function">The render method is overridden to prevent re-rendering</Summary>

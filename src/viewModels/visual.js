@@ -274,8 +274,8 @@ Class("wipeout.viewModels.visual", function () {
         
         // trigger event on model
         if(eventArgs.handled) return;
-        if(this.model() instanceof wipeout.events.routedEventModel) {
-            this.model().routedEventTriggered(routedEvent, eventArgs);
+        if(this.model instanceof wipeout.events.routedEventModel) {
+            this.model.routedEventTriggered(routedEvent, eventArgs);
         }
 
         // trigger event on parent

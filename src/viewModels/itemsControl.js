@@ -81,8 +81,8 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
         
         for(var i = 0, ii = this.items.length; i < ii; i++) {
-            if(this.items[i].model() !== this.itemSource[i]) {
-                this.itemSource.replace(i, this.items[i].model());
+            if(this.items[i].model !== this.itemSource[i]) {
+                this.itemSource.replace(i, this.items[i].model);
             }
         }
     };
@@ -95,7 +95,7 @@ Class("wipeout.viewModels.itemsControl", function () {
             return false;
         
         for(var i = 0, ii = this.itemSource.length; i < ii; i++) {
-            if(this.itemSource[i] !== this.items[i].model())
+            if(this.itemSource[i] !== this.items[i].model)
                 return false;
         }
         

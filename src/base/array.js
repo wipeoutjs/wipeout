@@ -91,6 +91,7 @@ Class("wipeout.base.array", function () {
         }
     };
 
+    //TODO: test
     array.prototype.replace = function(index, replacement) {
         
         if (!useObjectObserve)

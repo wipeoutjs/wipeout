@@ -42,7 +42,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     // assert
     ok(view);
     ok(subject.renderedView instanceof viewType);
-    strictEqual(view.model(), vm);
+    strictEqual(view.model, vm);
 });
 
 testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
