@@ -51,9 +51,13 @@ Class("wipeout.viewModels.view", function () {
             delete this.__woBag[modelRoutedEventKey];
         }
         
-        for(var i in this.__woBag.bindings)
-            if(this.__woBag.bindings[i])
-                this.__woBag.bindings[i].dispose();
+        for(var i in this.__woBag.bindings) {
+            for (var j = 0, jj = this.__woBag.bindings[i].length; j < jj; j++) {
+                this.__woBag.bindings[i][j].dispose();
+            }
+            
+            delete this.__woBag.bindings[i];
+        }
     };
 
     
@@ -71,9 +75,6 @@ Class("wipeout.viewModels.view", function () {
         
         if(twoWay && (!ko.isObservable(this[property]) || !ko.isObservable(valueAccessor())))
            throw 'Two way bindings must be between 2 observables';
-           
-        if(this.__woBag.bindings[property])
-            this.__woBag.bindings[property].dispose();
         
         var toBind = ko.dependentObservable({ 
             read: function() { return ko.utils.unwrapObservable(valueAccessor()); },
@@ -108,7 +109,7 @@ Class("wipeout.viewModels.view", function () {
             null;
         
         var _this = this;
-        return this.__woBag.bindings[property] = new wipeout.base.disposable(function() {
+        var binding = new wipeout.base.disposable(function() {
             if(subscription1) {
                 subscription1.dispose();
                 subscription1 = null;
@@ -124,8 +125,25 @@ Class("wipeout.viewModels.view", function () {
                 toBind = null;
             }
             
-            delete _this.__woBag.bindings[property];
+            if(binding) {
+                var tmp;
+                if (_this.__woBag.bindings[property] && (tmp = _this.__woBag.bindings[property].indexOf(binding)) !== -1) {
+                    _this.__woBag.bindings[property].splice(tmp, 1);
+                    if (!_this.__woBag.bindings[property].length) {
+                        delete _this.__woBag.bindings[property];
+                    }
+                }
+                
+                binding = null;
+            }
         });
+        
+        if(!this.__woBag.bindings[property])
+            this.__woBag.bindings[property] = [binding];
+        else
+            this.__woBag.bindings[property].push(binding);
+        
+        return binding;
     };    
     
     view._elementHasModelBinding = function(element) {

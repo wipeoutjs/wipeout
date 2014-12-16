@@ -133,9 +133,9 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
     subject.__woBag = {
         "wipeout.viewModels.view.modelRoutedEvents": {},
         bindings: {
-            blabla: {
+            blabla: [{
                 dispose: methods.method()
-            }
+            }]
         }
     };
     subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
@@ -145,6 +145,7 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
     
     // assert    
     ok(!subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]);
+    ok(!subject.__woBag.bindings.blabla);
 });
 
 testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
