@@ -234,6 +234,21 @@ Class("wipeout.utils.obj", function () {
         return extend;
     };
     
+    var set = function(object, property, value, throwOnNull) {
+        var properties = property.split(".");
+        
+        for (var i = 0, ii = properties.length - 1; i < ii; i++) {
+            object = object[properties[i]];
+            
+            if (object == null) {
+                if (throwOnNull) throw "Cannot set property: \"" + property + "\"";
+                else return;
+            }
+        }
+        
+        object[properties[i]] = value;
+    };
+    
     var obj = function obj() { };
     obj.extend = extend;
     obj.camelCase = camelCase;
@@ -248,5 +263,6 @@ Class("wipeout.utils.obj", function () {
     obj.copyArray = copyArray;
     obj.random = random;
     obj.endsWith = endsWith;
+    obj.set = set;
     return obj;
 });

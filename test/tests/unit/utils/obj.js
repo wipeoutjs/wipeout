@@ -149,3 +149,37 @@ testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, 
     strictEqual(out, obj1);
     strictEqual(out.aaa, obj2.aaa);
 });
+
+testUtils.testWithUtils("set", "ok", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var obj1 = {obj2:{obj3:{}}};
+    var val = {};
+    
+    // act
+    invoker(obj1, "obj2.obj3.obj4", val);
+    
+    // assert    
+    strictEqual(obj1.obj2.obj3.obj4, val);
+});
+
+testUtils.testWithUtils("set", "null, no exception", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var obj1 = {};
+    
+    // act
+    invoker(obj1, "obj2.obj3.obj4", {});
+    
+    // assert    
+    strictEqual(obj1.obj2, undefined);
+});
+
+testUtils.testWithUtils("set", "null, with exception", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var obj1 = {};
+    
+    // act
+    // assert    
+    throws(function() {
+        invoker(obj1, "obj2.obj3.obj4", {}, true);
+    });
+});
