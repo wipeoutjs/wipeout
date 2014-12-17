@@ -24,6 +24,10 @@ Class("wipeout.template.viewModelElement", function () {
     }    
     
     function init() {
+        
+        // ensure each node can only be rendered once
+        this.init = null;
+        
         this.nextSibling ? 
             this.parentElement.insertBefore(this.closingTag, this.nextSibling) : 
             this.parentElement.appendChild(this.closingTag);
@@ -31,7 +35,11 @@ Class("wipeout.template.viewModelElement", function () {
         this.viewModel.render();
     }    
     
-    function dispose() {       
+    function dispose() {   
+        
+        // ensure each node can only be disposed of once
+        this.dispose = null;
+        
         this.closingTag.parentElement.removeChild(this.closingTag);
         this.viewModel.dispose();
         delete this.viewModel;

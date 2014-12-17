@@ -49,11 +49,12 @@ testUtils.testWithUtils("dispose", null, false, function(methods, classes, subje
     // arrange    
     subject.closingTag = {};
     subject.closingTag.parentElement = {
-            removeChild: methods.method([subject.closingTag])
-        };
+        removeChild: methods.method([subject.closingTag])
+    };
     subject.viewModel = {
         dispose: methods.method()
     };
+    subject.dispose = {};
                                 
     var item = viewModelElement("asd");
     
@@ -62,6 +63,7 @@ testUtils.testWithUtils("dispose", null, false, function(methods, classes, subje
     
     //assert
     ok(!subject.viewModel);
+    ok(!subject.dispose);
 });
 
 testUtils.testWithUtils("init", "not lastTag", false, function(methods, classes, subject, invoker) {
@@ -74,12 +76,15 @@ testUtils.testWithUtils("init", "not lastTag", false, function(methods, classes,
     subject.viewModel = {
         render: methods.method()
     };
-                                
+                           
+    subject.init = {};     
     var item = viewModelElement("asd");
     
     // act
+    item.init.apply(subject);
+    
     //assert
-    item.init.apply(subject);    
+    ok(!subject.init);
 });
 
 testUtils.testWithUtils("init", "lastTag", false, function(methods, classes, subject, invoker) {
@@ -91,10 +96,14 @@ testUtils.testWithUtils("init", "lastTag", false, function(methods, classes, sub
     subject.viewModel = {
         render: methods.method()
     };
+                           
+    subject.init = {};    
                                 
     var item = viewModelElement("asd");
     
     // act
+    item.init.apply(subject);  
+    
     //assert
-    item.init.apply(subject);    
+    ok(!subject.init);  
 });
