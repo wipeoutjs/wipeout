@@ -78,6 +78,10 @@ Class("wipeout.viewModels.visual", function () {
         return output;
     };
     
+    visual.prototype.render = function() {
+        //TODO: placeholder
+    };
+    
     visual.prototype.entireViewModelHtml = function() {
         ///<summary>Gets all of the html nodes included in this view model</summary>
         ///<returns type="Array" generic0="Node">The html elements</returns>
