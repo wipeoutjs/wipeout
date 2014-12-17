@@ -10,34 +10,36 @@ var viewModelElement = wipeout.template.viewModelElement;
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "something";
+    var name = "something", vm = {};
     
     // act
-    invoker("       " + name + "        ");
+    var output = invoker("       " + name + "        ", vm);
     
     //assert
-    strictEqual(subject.openingTag.nodeType, 8);
-    strictEqual(subject.openingTag.nodeValue, " " + name + " ");
-    strictEqual(subject.closingTag.nodeType, 8);
-    strictEqual(subject.closingTag.nodeValue, " /" + name + " ");
+    strictEqual(output.nodeType, 8);
+    strictEqual(output.nodeValue, " " + name + " ");
+    strictEqual(output.closingTag.nodeType, 8);
+    strictEqual(output.closingTag.nodeValue, " /" + name + " ");
     
-    strictEqual(subject.closingTag.wipeoutClosingTag, true);
-    strictEqual(subject.openingTag.wipeoutOpeningTag, true);
+    strictEqual(output.closingTag.wipeoutClosingTag, true);
+    strictEqual(output.wipeoutOpeningTag, true);
     
-    strictEqual(subject.closingTag.openingTag, subject.openingTag);
-    strictEqual(subject.openingTag.closingTag, subject.closingTag);
+    strictEqual(output.closingTag.openingTag, output);
+    strictEqual(output.closingTag, output.closingTag);
+    
+    strictEqual(output.viewModel, vm);
 });
 
 testUtils.testWithUtils("setName", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
     var name = "something";
-    subject = new viewModelElement("LKJBLKJB");
+    subject = viewModelElement("LKJBLKJB");
     
     // act
     subject.setName(name);
     
     //assert
-    strictEqual(subject.openingTag.nodeValue, " " + name + " ");
+    strictEqual(subject.nodeValue, " " + name + " ");
     strictEqual(subject.closingTag.nodeValue, " /" + name + " ");
 });
