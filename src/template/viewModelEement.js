@@ -1,15 +1,42 @@
 
 Class("wipeout.template.viewModelElement", function () {
     
-        ///<Summary type="MutrationObserver">The mutation observer used</Summary>
-    var observer = new MutationObserver(function(mutations) {
-        _this.appendRemovedNodes(mutations);
-    });
-    
-    observer.initializeOnAdded = function(element) {
-    }
+    //TODO: IE compatability
+    new MutationObserver(function(mutations) {
         
-       // this._observer.observe(document.body, {childList: true, subtree: true});
+        enumerateArr(mutations, function(mutation) {
+            enumerateArr(mutation.removedNodes, function(node) {                
+                if(node.wipeoutOpeningTag && !document.body.contains(node))
+                    node.dispose();
+            }, this);
+            
+            enumerateArr(mutation.addedNodes, function(node) {                
+                if(node.wipeoutOpeningTag && document.body.contains(node))
+                    node.init();
+            }, this);
+        }, this);
+    }).observe(document.body, {childList: true, subtree: true});
+    
+    function setName(name) {        
+        name = wipeout.utils.obj.trim(name);
+        this.nodeValue = " " + name + " ";
+        this.closingTag.nodeValue = " /" + name + " ";
+    }    
+    
+    //TODO: test
+    function init() {
+        var next = this.nextSibling();
+        next ? this.parentElement.insertBefore(this.closingTag, next) : this.parentElement.appendChild(this.closingTag);
+        
+        this.viewModel.render();
+    }    
+    
+    //TODO: test
+    function dispose() {       
+        this.parentElement.removeChild(this.closingTag);
+        this.viewModel.dispose();
+        delete this.viewModel;
+    }
     
     //TODO: inherit from HTMLComment?
     function viewModelElement(name, viewModel) {
@@ -27,22 +54,12 @@ Class("wipeout.template.viewModelElement", function () {
         
         openingTag.closingTag.openingTag = openingTag;
         
-        openingTag.setName = function(name) {        
-            name = wipeout.utils.obj.trim(name);
-            this.nodeValue = " " + name + " ";
-            this.closingTag.nodeValue = " /" + name + " ";
-        }
+        openingTag.setName = setName;
+        openingTag.dispose = dispose;
+        openingTag.init = init;
         
         return openingTag;
     }
-    
-    /*
-        enumerateArr(mutations, function(mutation) {
-            enumerateArr(mutation.removedNodes, function(node) {
-                if(this._mutations.indexOf(node) === -1)
-                    this._mutations.push(node);
-            }, this);
-        }, this);*/
     
     return viewModelElement;    
 });
