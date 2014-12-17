@@ -23,15 +23,14 @@ Class("wipeout.template.viewModelElement", function () {
         this.closingTag.nodeValue = " /" + name + " ";
     }    
     
-    //TODO: test
     function init() {
-        var next = this.nextSibling();
-        next ? this.parentElement.insertBefore(this.closingTag, next) : this.parentElement.appendChild(this.closingTag);
+        this.nextSibling ? 
+            this.parentElement.insertBefore(this.closingTag, this.nextSibling) : 
+            this.parentElement.appendChild(this.closingTag);
         
         this.viewModel.render();
     }    
     
-    //TODO: test
     function dispose() {       
         this.parentElement.removeChild(this.closingTag);
         this.viewModel.dispose();

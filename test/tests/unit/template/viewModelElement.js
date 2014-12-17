@@ -66,11 +66,10 @@ testUtils.testWithUtils("dispose", null, false, function(methods, classes, subje
 
 testUtils.testWithUtils("init", "not lastTag", false, function(methods, classes, subject, invoker) {
     // arrange
-    var nextSibling = {};
     subject.closingTag = {};
-    subject.nextSibling = methods.method([], nextSibling);
+    subject.nextSibling = {};
     subject.parentElement = {
-        insertBefore: methods.method([subject.closingTag, nextSibling])
+        insertBefore: methods.method([subject.closingTag, subject.nextSibling])
     };
     subject.viewModel = {
         render: methods.method()
@@ -84,14 +83,8 @@ testUtils.testWithUtils("init", "not lastTag", false, function(methods, classes,
 });
 
 testUtils.testWithUtils("init", "lastTag", false, function(methods, classes, subject, invoker) {
-    /*
-        var next = this.nextSibling();
-        next ? this.parentElement.insertBefore(this.closingTag, next) : this.parentElement.appendChild(this.closingTag);
-        
-        this.viewModel.render();*/
     // arrange
     subject.closingTag = {};
-    subject.nextSibling = methods.method([]);
     subject.parentElement = {
         appendChild: methods.method([subject.closingTag])
     };
