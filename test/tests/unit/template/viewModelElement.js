@@ -27,3 +27,17 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.closingTag.openingTag, subject.openingTag);
     strictEqual(subject.openingTag.closingTag, subject.closingTag);
 });
+
+testUtils.testWithUtils("setName", null, false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var name = "something";
+    subject = new viewModelElement("LKJBLKJB");
+    
+    // act
+    subject.setName(name);
+    
+    //assert
+    strictEqual(subject.openingTag.nodeValue, " " + name + " ");
+    strictEqual(subject.closingTag.nodeValue, " /" + name + " ");
+});

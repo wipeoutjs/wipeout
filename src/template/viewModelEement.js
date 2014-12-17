@@ -16,5 +16,12 @@ Class("wipeout.template.viewModelElement", function () {
         this.closingTag.openingTag = this.openingTag;
     }
     
+    viewModelElement.prototype.setName = function(name) {
+        
+        name = wipeout.utils.obj.trim(name);
+        this.openingTag.nodeValue = " " + name + " ";
+        this.closingTag.nodeValue = " /" + name + " ";
+    }
+    
     return viewModelElement;    
 });
