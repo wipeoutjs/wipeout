@@ -9,8 +9,13 @@ var visual = wipeout.viewModels.visual;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange
-    var templateId = {};
+    subject.constructor = {viewModelName: "a name"}
+    var templateId = {}, vme;
     subject._super = methods.method();
+    classes.mock("wipeout.template.viewModelElement", function() {
+        strictEqual(arguments[0], "a name");
+        vme = this;
+    }, 1);
     
     // act
     invoker(templateId);
@@ -23,6 +28,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.__woBag.createdByWipeout, false);
     strictEqual(subject.__woBag.rootHtmlElement, null);
     strictEqual(subject.__woBag.routedEventSubscriptions.constructor, Array);
+    strictEqual(subject.__woBag.viewModelElement, vme);
 });
 
 

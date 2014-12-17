@@ -15,6 +15,7 @@ Class("wipeout.viewModels.visual", function () {
         ///<Summary type="ko.observable" generic0="String">The template of the visual, giving it an appearance</Summary>
         this.templateId = ko.observable(templateId || visual.getDefaultTemplateId());
 
+        //TODO: most of this is to do with old templating
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.__woBag = {
             disposed: wipeout.events.event(),
@@ -22,7 +23,8 @@ Class("wipeout.viewModels.visual", function () {
             createdByWipeout: false,
             rootHtmlElement: null,
             routedEventSubscriptions: [],
-            nodes: []
+            nodes: [],
+            viewModelElement: new wipeout.template.viewModelElement(this.constructor.viewModelName) // TODO: add this to constructor
         };
     });
     
