@@ -32,7 +32,7 @@ Class("wipeout.template.viewModelElement", function () {
     }    
     
     function dispose() {       
-        this.parentElement.removeChild(this.closingTag);
+        this.closingTag.parentElement.removeChild(this.closingTag);
         this.viewModel.dispose();
         delete this.viewModel;
     }

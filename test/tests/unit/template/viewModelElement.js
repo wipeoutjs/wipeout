@@ -46,11 +46,11 @@ testUtils.testWithUtils("setName", null, false, function(methods, classes, subje
 
 
 testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
-    // arrange
+    // arrange    
     subject.closingTag = {};
-    subject.parentElement = {
-        removeChild: methods.method([subject.closingTag])
-    };
+    subject.closingTag.parentElement = {
+            removeChild: methods.method([subject.closingTag])
+        };
     subject.viewModel = {
         dispose: methods.method()
     };

@@ -24,7 +24,7 @@ Class("wipeout.viewModels.visual", function () {
             rootHtmlElement: null,
             routedEventSubscriptions: [],
             nodes: [],
-            viewModelElement: wipeout.template.viewModelElement(this.constructor.viewModelName) // TODO: add this to constructor
+            viewModelElement: wipeout.template.viewModelElement(this.constructor.viewModelName, this) // TODO: add this to constructor
         };
     });
     
