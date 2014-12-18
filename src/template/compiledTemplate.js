@@ -97,6 +97,7 @@ Class("wipeout.template.compiledTemplate", function () {
         this.modifications = template.modifications;
         this.ids = ids;
         
+        // the ammount of idPlaceholders should correspond to the amount of modifications
         if(this.modifications.length !== this.ids.length) throw "Invalid html engine";
     }
     
