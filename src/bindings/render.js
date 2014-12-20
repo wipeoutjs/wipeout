@@ -1,3 +1,88 @@
+(function(visual) {    
+    
+    visual.prototype.reRender = function() {
+        ///<summary>Re render the value</summary>
+        
+        this.unTemplate();
+        this.onUnrendered();
+        this.render();
+    };
+    
+    visual.prototype.unTemplate = function() {
+        ///<summary>Removes and disposes (if necessary) of all of the children of the visual</summary>
+
+        // delete all template items
+        enumerateObj(this.templateItems, function(item, i) {
+            delete this.templateItems[i];
+        }, this);
+
+        var removed = [];
+        var next = this.__woBag.viewModelElement;
+        while ((next = next.nextSibling) && el !== this.__woBag.viewModelElement.closingTag) {
+            var ct = next.closingTag;
+            removed.push(next);
+            next.parentElement.removeChild(next);   //TODO: remove events/bindings
+            
+            // do not remove nodes of a child viewModel
+            if (ct)
+                next = ct;
+        }
+        
+        return removed;
+    };
+    
+    visual.prototype.render = function () {
+        ///<summary>Render this visual</summary>
+        
+        if (!this.value.__woBag.viewModelElement.parentElement)
+            throw "Cannot render an item which is not present in the DOM.";
+
+        wipeout.utils.domData.set(this.element, wipeout.bindings.wipeout.utils.wipeoutKey, this.value);
+        this.value.__woBag.rootHtmlElement = this.element;
+
+        var subscription1 = this.value.__woBag.disposed.register(this.unRender, this);
+        this.onDisposeEventSubscription = this.value.registerDisposable(subscription1);
+
+        var subscription2 = this.value.templateId.subscribe(this.onTemplateChanged, this);
+        this.templateChangedSubscription = this.value.registerDisposable(subscription2);
+        this.onTemplateChanged(this.value.templateId.peek());
+    };
+    
+    visual.prototype.onTemplateChanged = function(newVal) {
+        ///<summary>Apply the template of the value to the binding element</summary>  
+        ///<param name="newVal" type="wo.view" optional="false">The value to render</param>      
+        
+        var _this = this;
+        function reRender() {
+            if(_this.value && _this.value.templateId.peek() !== newVal) return;
+            _this.doRendering();
+        }
+
+        this.unTemplate();
+
+        if(newVal && wipeout.settings.asynchronousTemplates) {
+            ko.virtualElements.prepend(this.element, wipeout.utils.html.createTemplatePlaceholder(this.value));
+            wipeout.template.asyncLoader.instance.load(newVal, reRender);
+        } else {
+            reRender();
+        }
+    };
+    
+    visual.prototype.doRendering = function() {
+        ///<summary>Do the rendering</summary>  
+
+        ko.bindingHandlers.template.update(this.element, wipeout.bindings.render.createValueAccessor(this.value), this.allBindingsAccessor, null, this.bindingContext);
+
+        var bindings = this.allBindingsAccessor();
+        if(bindings["wipeout-type"])
+            wipeout.bindings["wipeout-type"].utils.comment(this.element, bindings["wipeout-type"]);
+    };
+    
+    
+}(wipeout.viewModels.visual))
+
+
+
 Binding("render", true, function () {
     
     var render = wipeout.bindings.bindingBase.extend(function render(element, value, allBindingsAccessor, bindingContext) { 

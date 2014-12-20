@@ -1,5 +1,4 @@
 window.wipeout = wipeout;
-window.wo = {};
 
 window.wo.object = wipeout.base.watch;
 window.wo.array = function (initialValues) {

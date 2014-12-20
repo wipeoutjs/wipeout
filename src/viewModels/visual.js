@@ -23,8 +23,7 @@ Class("wipeout.viewModels.visual", function () {
             createdByWipeout: false,
             rootHtmlElement: null,
             routedEventSubscriptions: [],
-            nodes: [],
-            viewModelElement: wipeout.template.viewModelElement(this.constructor.viewModelName, this) // TODO: add this to constructor
+            nodes: []
         };
     });
     
@@ -76,10 +75,6 @@ Class("wipeout.viewModels.visual", function () {
         }
 
         return output;
-    };
-    
-    visual.prototype.render = function() {
-        //TODO: placeholder
     };
     
     visual.prototype.entireViewModelHtml = function() {

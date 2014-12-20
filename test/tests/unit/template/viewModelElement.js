@@ -107,3 +107,21 @@ testUtils.testWithUtils("init", "lastTag", false, function(methods, classes, sub
     //assert
     ok(!subject.init);  
 });
+
+/*
+module("xxx", {
+    setup: function() {
+    },
+    teardown: function() {
+    }
+}); 
+
+test("test", function() {
+    window.hello = {yes:{}}
+    var ttt = new wipeout.template.compiledTemplate(
+        wipeout.template.templateParser("<div><hello.yes /><span /></div>"));
+    
+    
+    debugger;
+    ok(true);
+});*/

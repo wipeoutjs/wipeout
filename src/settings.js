@@ -14,5 +14,9 @@ Class("wipeout.settings", function() {
     settings.htmlAsyncTimeout = 10000;
     settings.useObjectObserve = !window.wipeoutDoNotUseObjectObserve; //TODO: document
     
+    settings.wipeoutAttributes = {
+        viewModelName: "wo-view-model"
+    };
+    
     return settings;
 });
