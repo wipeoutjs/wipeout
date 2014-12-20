@@ -5,11 +5,9 @@ TODO:   wipeout.base.watched.prototype.observe, do something with dispose functi
         wipeout.base.watched.prototype.observe/watch, unit test dispose functionality
         
         
-observables -
-x    condition
-    elseTemplateId
-    itemTemplateId
-    itemSource
-    items
-    model
-    templateId
+cleanup:
+            viewModelElement.js
+            visual.js (added viewModelElement to __woBag only)
+            compiledTemplate.js
+            render.js
+            
