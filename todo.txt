@@ -10,4 +10,7 @@ cleanup:
             visual.js (added viewModelElement to __woBag only)
             compiledTemplate.js
             render.js
+            newEngine.js
+            renderContext.js
+            wo.js
             

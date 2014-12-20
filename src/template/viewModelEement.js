@@ -5,16 +5,18 @@ Class("wipeout.template.viewModelElement", function () {
     new MutationObserver(function(mutations) {
         
         enumerateArr(mutations, function(mutation) {
-            enumerateArr(mutation.removedNodes, function(node) {                
-                if(node.wipeoutOpeningTag && !document.body.contains(node))
+            
+           /* enumerateArr(mutation.removedNodes, function(node) {                
+                if(node.wipeoutOpeningTag)
                     node.dispose();
-            }, this);
+            }, this);*/
             
             enumerateArr(mutation.addedNodes, function(node) {                
                 if(node.wipeoutOpeningTag && document.body.contains(node))
                     node.init();
             }, this);
         }, this);
+        
     }).observe(document.body, {childList: true, subtree: true});
     
     function getParent(node) {
@@ -37,29 +39,13 @@ Class("wipeout.template.viewModelElement", function () {
             this.parentElement.insertBefore(this.closingTag, this.nextSibling) : 
             this.parentElement.appendChild(this.closingTag);
                 
-        var dispose;
-        this.viewModel = new this.vmConstructor();
         var tid = this.viewModel.templateId();
-        this.viewModel.templateId.subscribe(function(newVal) {
-            //this.viewModel.unTemplate();
-            
-            if(dispose)
-                dispose();
-            
-            var builder = wipeout.template.newEngine.instance.getTemplate(newVal).getBuilder();
-            
-            //TODO: hack
-            var scr = document.createElement("script");
-            this.parentElement.insertBefore(scr, this.closingTag);
-            scr.insertAdjacentHTML('afterend', builder.html);
-            scr.parentElement.removeChild(scr);
-            
-            dispose = builder.execute();
-        }, this);
         
         var parent = getParent(this);
-        if (parent)
+        if (parent) {
+            parent.childVms.push(this);
             parent = parent.renderContext;
+        }
         
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parent);
                 
@@ -68,15 +54,48 @@ Class("wipeout.template.viewModelElement", function () {
             this.viewModel.templateId.valueHasMutated();
     }
     
-    function dispose() {   
+    function unTemplate(leaveChildNodes) {
         
-        // ensure each node can only be disposed of once
-        this.dispose = null;
+        //dispose of child vms
+        enumerateArr(this.childVms, function (item) {
+            item.dispose(true);
+        });
         
-        // order is important
+        this.childVms.length = 0;
+            
+        // dispose of bindings
+        if (this.disposeOfBindings) {
+            this.disposeOfBindings();
+            delete this.disposeOfBindings;
+        }
+
+        // remove all children
+        if(!leaveChildNodes)
+            while (this.nextSibling && this.nextSibling !== this.closingTag)
+                this.nextSibling.parentNode.removeChild(this.nextSibling);
+    }
+    
+    function template(templateId) {
+            
+        this.unTemplate();
+
+        var builder = wipeout.template.newEngine.instance.getTemplate(templateId).getBuilder();
+
+        //TODO: hack
+        var scr = document.createElement("script");
+        this.parentElement.insertBefore(scr, this.closingTag);
+        scr.insertAdjacentHTML('afterend', builder.html);
+        scr.parentElement.removeChild(scr);
+
+        this.disposeOfBindings = builder.execute();
+    }
+    
+    function dispose(leaveChildNodes) {          
+        this.unTemplate(leaveChildNodes);        
         this.viewModel.dispose();
         this.closingTag.parentElement.removeChild(this.closingTag);
         delete this.viewModel;
+        this.parentElement.removeChild(this);
     }
     
     //TODO: inherit from HTMLComment?
@@ -88,7 +107,7 @@ Class("wipeout.template.viewModelElement", function () {
         var vm = xmlOverride ? {
             constructor: wipeout.utils.obj.getObject(xmlOverride.name),
             name: xmlOverride.name
-        }: getMeAViewModel(element);
+        } : getMeAViewModel(element);
         
         if(!vm)
             throw "Invalid view model";
@@ -104,13 +123,19 @@ Class("wipeout.template.viewModelElement", function () {
         openingTag.closingTag.openingTag = openingTag;
         
         openingTag.initialization = xmlOverride || wipeout.template.templateParser(wipeout.utils.html.outerHTML(element))[0];
-        openingTag.vmConstructor = vm.constructor;
+        
+        openingTag.viewModel = new vm.constructor();
+        openingTag.viewModel.templateId.subscribe(template, openingTag);
         
         element.parentElement.insertBefore(openingTag, element);
         element.parentElement.removeChild(element);
         
-        openingTag.dispose = dispose;
+        openingTag.childVms = [];
+        
         openingTag.init = init;
+        openingTag.template = template;
+        openingTag.unTemplate = unTemplate;
+        openingTag.dispose = dispose;
         
         return openingTag;
     }
