@@ -160,7 +160,7 @@ Class("wipeout.template.compiledTemplate", function () {
             element.id = value;
         },
         wipeoutCreateViewModel: function (value, element, renderContext) {
-            wipeout.template.viewModelElement(element, value);
+            new wipeout.template.viewModelElement(element, value);
         }
     };
         

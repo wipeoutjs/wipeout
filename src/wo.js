@@ -14,7 +14,7 @@ window.wo = function (model, htmlElement) {
 
         // element may have been removed since get all elements
         if (htmlElement.contains(element) && getMeAViewModel(element))
-            wipeout.template.viewModelElement(element);
+            new wipeout.template.viewModelElement(element);
     });        
 }
 
