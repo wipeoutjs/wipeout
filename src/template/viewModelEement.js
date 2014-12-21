@@ -79,6 +79,7 @@ Class("wipeout.template.viewModelElement", function () {
             delete this.disposeOfBindings;
         }
 
+        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
         // remove all children
         if(!leaveChildNodes)
             while (this.openingTag.nextSibling && this.openingTag.nextSibling !== this.closingTag)

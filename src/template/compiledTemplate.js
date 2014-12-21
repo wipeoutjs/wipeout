@@ -1,16 +1,10 @@
 
 Class("wipeout.template.compiledTemplate", function () {
     
-    var wipeoutPlaceholder = "wipeout_placeholder_", string = "string", idString = "id";
-    var generator = (function() {
-        var i = 0;
-        return function() {
-            return wipeoutPlaceholder + (++i);
-        }
-    }());
+    var string = "string", idString = "id";
     
-    var idPlaceholder = {};
-    var compiledTemplate = function compiledTemplate(template) {
+    compiledTemplate.idPlaceholder = {};
+    function compiledTemplate(template) {
         ///<summary>The wipeout template engine, inherits from ko.templateEngine</summary>
         
         this.html = [];
@@ -35,7 +29,7 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.prototype.addViewModel = function(vmNode) {
         this.html.push("<script");
-        this.html.push(idPlaceholder);
+        this.html.push(compiledTemplate.idPlaceholder);
         this.modifications.push([{
             action: attributes.wipeoutCreateViewModel,
             value: vmNode
@@ -58,7 +52,7 @@ Class("wipeout.template.compiledTemplate", function () {
                     modifications = [];
                     
                     // give it a unique id
-                    this.html.push(idPlaceholder);
+                    this.html.push(compiledTemplate.idPlaceholder);
                     this.modifications.push(modifications);
                 }
 
@@ -105,49 +99,8 @@ Class("wipeout.template.compiledTemplate", function () {
     };
     
     compiledTemplate.prototype.getBuilder = function() {
-        return new builder(this);
+        return new wipeout.template.builder(this);
     };
-    
-    function builder(template) {
-        var htmlFragments = [];
-        
-        var ids = [];
-        enumerateArr(template.html, function(html, i) {
-            if (html === idPlaceholder) {
-                var id = generator();
-                htmlFragments.push(" id=\"" + id + "\"");
-                ids.push(id);
-            } else {
-                htmlFragments.push(html);
-            }
-        });
-        
-        this.html = htmlFragments.join("");
-        this.modifications = template.modifications;
-        this.ids = ids;
-        
-        // the ammount of idPlaceholders should correspond to the amount of modifications
-        if(this.modifications.length !== this.ids.length) throw "Invalid html engine";
-    }
-    
-    builder.prototype.execute = function(renderContext) {
-        
-        var output = [];
-        enumerateArr(this.ids, function(id, i) {
-            var element = document.getElementById(id);
-            enumerateArr(this.modifications[i], function(mod) {
-                var dispose = mod.action(mod.value, element, renderContext);
-                if(dispose instanceof Function)
-                    output.push(dispose);
-            });
-        }, this);
-    
-        return function() {
-            enumerateArr(output.splice(0, output.length), function(f) {
-                f();
-            });
-        };
-    }
     
     // return dispose function
     var attributes = {

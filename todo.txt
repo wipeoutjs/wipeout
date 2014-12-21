@@ -9,7 +9,7 @@ cleanup:
             viewModelElement.js
             visual.js (added viewModelElement to __woBag only)
             compiledTemplate.js
-            render.js
+            builder.js
             newEngine.js
             renderContext.js
             wo.js
