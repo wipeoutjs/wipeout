@@ -5,10 +5,12 @@ Class("wipeout.template.renderContext", function () {
         
         this.$data = forVm;
         this.$parents = [];
+        this.$parent = null;
         
         if (parentContext) {
+            this.$parent = parentContext.$data;
+            this.$parents.push(this.$parent);
             enumerateArr(parentContext.$parents, this.$parents.push, this.$parents);
-            this.$parents.push(parentContext.$data);
         }            
     }
     

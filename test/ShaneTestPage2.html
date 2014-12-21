@@ -12,21 +12,25 @@
     </root>
 
     <script type="text/javascript">
-        window.root = wo.view.extend(function() {
+        window.root = wo.view.extend(function root() {
             this._super("rrrooottt");
         });
-        window.root2 = wo.view.extend(function() {
+        window.root2 = wo.view.extend(function root2() {
             this._super("rrrooottt2");
+            
+            setTimeout((function() {
+                alert(this.xy);
+            }).bind(this), 2000);
         });
         
-        setTimeout(function() {
+        /*setTimeout(function() {
             document.getElementById("xxx").nextSibling.nextSibling.wipeoutOpening.dispose()
-        }, 2000);
+        }, 2000);*/
     </script>
     
     <script id="rrrooottt" type="text/xml">
     Hello
-    <root2 />
+    <root2 xy="22" />
     </script>
     
     <script id="rrrooottt2" type="text/xml">

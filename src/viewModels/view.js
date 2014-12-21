@@ -165,29 +165,37 @@ Class("wipeout.viewModels.view", function () {
     // properties which will not be copied onto the view if defined in the template
     view.reservedPropertyNames = ["constructor", "id"];
     
-    view.prototype._initialize = function(propertiesXml, parentBindingContext) {
+    view.prototype._initialize = function(propertiesXml, renderContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
         ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
-        ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
+        ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The binding context of the wipeout view model</param>
         if(this.__woBag.initialized) throw "Cannot call initialize item twice";
         this.__woBag.initialized = true;
         
         if(!propertiesXml)
             return;
         
+        var compiled = wipeout.template.newEngine.instance.getVmInitializer(propertiesXml);
+        
+        compiled.initialize(renderContext);
+        return;
+        
+        //TODO: remove
         if(propertiesXml.attributes["id"])
             this.id = propertiesXml.attributes["id"].value;
         
+        //TODO: is this needed?
         var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
         if(prop)
             this.shareParentScope = parseBool(prop.value);
-                
-        if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null) {
-            this.bind('model', parentBindingContext.$data.model);
+        
+        if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null && renderContext.$parent) {
+            this.bind('model', renderContext.$parent.model);
         }
         
-        var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerateObj(propertiesXml.attributes, function(attr, name) {
+        
+        
+        /*enumerateObj(propertiesXml.attributes, function(attr, name) {
             
             var setter = "";
             
@@ -244,7 +252,7 @@ Class("wipeout.viewModels.view", function () {
                 
                 view.setObservable(this, nodeName, val);
             }
-        }, this);
+        }, this);*/
     };
     
     view.objectParser = {

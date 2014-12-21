@@ -56,11 +56,13 @@ Class("wipeout.template.viewModelElement", function () {
         if (parent) {
             parent.childVms.push(this);
             parent = parent.renderContext;
+        } else {
+            // Set root model
         }
         
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parent);
-                
-        //this.viewModel._initialize(this.initialization, parent);
+        this.viewModel._initialize(this.initialization, this.renderContext);
+        
         if(this.viewModel.templateId() === tid)
             this.viewModel.templateId.valueHasMutated();
     };
