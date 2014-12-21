@@ -3,12 +3,12 @@ Class("wipeout.template.renderContext", function () {
     
     function renderContext (forVm, parentContext) {
         
-        this.$this = forVm;
+        this.$data = forVm;
         this.$parents = [];
         
         if (parentContext) {
             enumerateArr(parentContext.$parents, this.$parents.push, this.$parents);
-            this.$parents.push(parentContext.$this);
+            this.$parents.push(parentContext.$data);
         }            
     }
     

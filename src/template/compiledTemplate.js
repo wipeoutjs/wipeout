@@ -109,7 +109,7 @@ Class("wipeout.template.compiledTemplate", function () {
             };
         },
         id: function (value, element, renderContext) {
-            renderContext.$this.templateItems[value] = element;
+            renderContext.$data.templateItems[value] = element;
             element.id = value;
         },
         wipeoutCreateViewModel: function (value, element, renderContext) {
