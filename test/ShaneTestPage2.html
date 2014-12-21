@@ -7,6 +7,7 @@
 
     <script src="../build/wipeout.debug.js" type="text/javascript"></script> 
     
+    <div id="xxx"></div>
     <root>
     </root>
 
@@ -17,6 +18,10 @@
         window.root2 = wo.view.extend(function() {
             this._super("rrrooottt2");
         });
+        
+        setTimeout(function() {
+            document.getElementById("xxx").nextSibling.nextSibling.wipeoutOpening.dispose()
+        }, 2000);
     </script>
     
     <script id="rrrooottt" type="text/xml">

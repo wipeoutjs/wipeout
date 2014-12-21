@@ -46,11 +46,8 @@ Class("wipeout.template.viewModelElement", function () {
     
     viewModelElement.prototype.init = function() {
         
-        // ensure each node can only be rendered once
-        this.init = null;
-        
         this.openingTag.nextSibling ? 
-            this.openingTag.parentElement.insertBefore(this.closingTag, this.nextSibling) : 
+            this.openingTag.parentElement.insertBefore(this.closingTag, this.openingTag.nextSibling) : 
             this.openingTag.parentElement.appendChild(this.closingTag);
                 
         var tid = this.viewModel.templateId();
@@ -69,7 +66,6 @@ Class("wipeout.template.viewModelElement", function () {
     };
     
     viewModelElement.prototype.unTemplate = function(leaveChildNodes) {
-        
         //dispose of child vms
         enumerateArr(this.childVms, function (item) {
             item.dispose(true);
@@ -85,8 +81,8 @@ Class("wipeout.template.viewModelElement", function () {
 
         // remove all children
         if(!leaveChildNodes)
-            while (this.nextSibling && this.nextSibling !== this.closingTag)
-                this.nextSibling.parentNode.removeChild(this.nextSibling);
+            while (this.openingTag.nextSibling && this.openingTag.nextSibling !== this.closingTag)
+                this.openingTag.nextSibling.parentNode.removeChild(this.openingTag.nextSibling);
     };
     
     viewModelElement.prototype.template = function(templateId) {
@@ -109,8 +105,8 @@ Class("wipeout.template.viewModelElement", function () {
         this.unTemplate(leaveChildNodes);        
         this.viewModel.dispose();
         this.closingTag.parentElement.removeChild(this.closingTag);
+        this.openingTag.parentElement.removeChild(this.openingTag);
         delete this.viewModel;
-        this.openingTag.parentElement.removeChild(this);
     };
     
     return viewModelElement;    
