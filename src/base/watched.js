@@ -15,6 +15,69 @@ Class("wipeout.base.watched", function () {
     
     watched.prototype.__watching = {};
     
+    watched.watchPath = function(property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
+        ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
+        ///<param name="property" type="String" optional="false">The property</param>
+        ///<param name="callback" type="Function" optional="false">The callback for property change</param>
+        ///<param name="context" type="Any" optional="true">The context of the callback</param>
+        ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
+        ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
+        ///<returns type="Object">A disposable object</returns>
+        
+        path = property.split(".");
+        var disposables = new Array(path.length), 
+            _this = this,
+            val = wipeout.utils.obj.getObject(property, this);
+        
+        //TODO: multiple changes on multiple objects
+        var redo = (function (begin, end) {
+            
+            // dispose of anything in the path after the change
+            for (var i = begin; i < end; i++) {
+                if (disposables[i]) {
+                    disposables[i].dispose();
+                    disposables[i] = null;
+                } else {
+                    break;
+                }
+            }
+            
+            // subscribe to new objects after the change and get the latest object in the path which is observable
+            var current = this;
+            for (var i = 0; current && current.observe /*TODO: better way of telling*/ && i < end - 1; i++) {
+                if (current[path[i]] && i >= begin)              
+                    disposables[i] = current.observe(path[i], (function (i) {
+                        return function() {
+                            redo.call(_this, i, end);
+                            
+                        };
+                    }(i)));                
+                
+                current = current[path[i]];
+            }
+            
+            if (current && current.observe /*TODO: better way of telling*/)
+                disposables[i] = current.observe(path[i], callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+            
+            var newVal = wipeout.utils.obj.getObject(property, this);
+            if (val !== newVal) {
+                callback.call(context, val, newVal);
+                val = newVal;
+            }
+        }).bind(this);
+        
+        redo(0, path.length);
+        
+        return {
+            dispose: function() {
+                for (var i = 0, ii = disposables.length; i < ii && disposables[i]; i++)
+                    disposables[i].dispose();
+                
+                disposables.length = 0;
+            }
+        };
+    };
+    
     watched.createObserveFunction = function(woBag, watchFunction) {
         ///<summary>Create a custom observe function. An observe function observes a property of the contextual object</summary>
         ///<param name="woBag" type="Object" optional="true">The __woBag to observe from. Defaults to this.__woBag</param>
@@ -29,6 +92,9 @@ Class("wipeout.base.watched", function () {
             ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
             ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
             ///<returns type="Object">A disposable object</returns>
+            
+            if (property.indexOf(".") !== -1)
+                return watched.watchPath.apply(this, arguments);
             
             var disposeOfWatch = (watchFunction || this.watch).call(this, property);
             
