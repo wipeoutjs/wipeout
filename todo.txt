@@ -16,4 +16,16 @@ cleanup:
             renderContext.js
             wo.js
             view.js (_initialize)
-            
+
+
+
+observables -
+x    condition
+    elseTemplateId
+    itemTemplateId
+    itemSource
+    items
+    model
+    templateId
+    
+>>>>>>> wipeout-2
