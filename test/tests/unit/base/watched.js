@@ -203,6 +203,27 @@ function testMe (moduleName, buildSubject) {
         subject.aa = newVal;
         
     });
+
+    testUtils.testWithUtils("computed", "", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = buildSubject();
+        subject.val1.val2 = "hello";
+        subject.val3 = "world";
+        
+        subject.computed(function() {
+            return this.val1.val2 + " " + this.val3;
+        }).observe(function(oldVal, newVal) {
+            strictEqual(oldVal, "hello world");
+            strictEqual(newVal, "hello shane");
+            start();
+        });
+
+        // act
+        stop();
+        subject.val3 = "shane";
+        
+    });
 }
 
 testMe("wipeout.base.watched", function() { return new watched(); });

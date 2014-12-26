@@ -272,7 +272,7 @@ Class("wipeout.base.watched", function () {
                 };
             }
         };
-    }
+    };
     
     watched.deleteFunction = function(property) {
         ///<summary>Do "delete obj.prop" functionality</summary>
@@ -285,9 +285,63 @@ Class("wipeout.base.watched", function () {
         return delete this[property];
     };
     
+    var STRIP_INLINE_COMMENTS = /\/\/.*$/mg;  
+    var STRIP_BLOCK_COMMENTS = /\/\*[\s\S]*?\*\//mg;
+    var STRIP_STRINGS = /"[\s\S]*?"/mg;
+    var STRIP_UNWANTEDS = "\\s*(\\.([\\w\\$_]+))+"; // athis.something, thisa.something, this.sthis
+    var GET_ITEMS = "\\s*(\\.\\s*([\\w\\$_]+))+";
+    
+    var stripFunction = function(input) {
+        return input
+            .toString()
+            .replace(STRIP_INLINE_COMMENTS, "")
+            .replace(STRIP_BLOCK_COMMENTS, "")
+            .replace(STRIP_STRINGS, "");
+    };
+    
+    watched.computedFunction = function(callback, context) {
+        ///<summary>Do "delete obj.prop" functionality</summary>
+        ///<param name="property" type="String" optional="false">The property name</param>
+        ///<returns type="Boolean">The result of the delete</returns>
+        
+        context = context || this;
+        var oldVal = callback.call(context);
+        var cb = stripFunction(callback);
+        
+        var subscriptions = [];
+        var output = {
+            watchVariable: function(variableName, variable) {
+                var cb2 = cb.replace(new RegExp(variableName + STRIP_UNWANTEDS, "m", "g"), "");
+                
+                debugger;
+                var items = cb2.match(new RegExp(variableName + GET_ITEMS, "g"));
+
+                for (var i = 0, ii = items ? items.length : 0; i < ii; i++) {
+                    variable.observe(items[i].substring(items[i].indexOf(".") + 1), function() {
+                        var newVal = callback.call(context);
+                        for(var i = 0, ii = subscriptions.length; i < ii; i++)
+                        subscriptions[i].callback.call(subscriptions[i].context, oldVal, newVal); //TODO: ensure it is not called twice
+                        oldVal = newVal;
+                    });
+                }                
+                
+                return output;
+            },
+            observe: function(callback, context) {
+                subscriptions.push({callback: callback, context: context});
+                return output;
+                //TODO: dispose
+            }
+        };
+        
+        
+        return output.watchVariable("this", context);
+    };
+    
     watched.prototype.watch = watched.createWatchFunction(null, null, true);
     watched.prototype.observe = watched.createObserveFunction();
     watched.prototype.del = watched.deleteFunction;
+    watched.prototype.computed = watched.computedFunction;
                                       
     return watched;
 });

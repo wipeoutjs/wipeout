@@ -33,6 +33,13 @@ Class("wipeout.base.watch", function () {
             writable: false
         });
         
+        Object.defineProperty(object, "computed", {
+            enumerable: false,
+            configurable: false,
+            value: wipeout.base.watched.computedFunction,
+            writable: false
+        });
+        
         return object;
     };
     
