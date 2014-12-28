@@ -204,7 +204,7 @@ function testMe (moduleName, buildSubject) {
         
     });
 
-    testUtils.testWithUtils("computed", "", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("computed", "simple change", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
         subject.val1 = buildSubject();
@@ -223,6 +223,69 @@ function testMe (moduleName, buildSubject) {
         stop();
         subject.val3 = "shane";
         
+    });
+
+    testUtils.testWithUtils("computed", "complex change", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = buildSubject();
+        subject.val1.val2 = "hello";
+        subject.val3 = "world";
+        
+        subject.computed(function() {            
+            return this.val1.val2 + " " + this.val3;
+        }).observe(function(oldVal, newVal) {
+            strictEqual(oldVal, "hello world");
+            strictEqual(newVal, "goodbye world");
+            start();
+        });
+
+        // act
+        stop();
+        subject.val1 = {val2: "goodbye"};
+        
+    });
+
+    testUtils.testWithUtils("computed", "two changes", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = buildSubject();
+        subject.val1.val2 = "hello";
+        subject.val3 = "world";
+        
+        subject.computed(function() {
+            return this.val1.val2 + " " + this.val3;
+        }).observe(function(oldVal, newVal) {
+            strictEqual(oldVal, "hello world");
+            strictEqual(newVal, "goodbye shane");
+            start();
+        });
+
+        // act
+        stop();
+        subject.val1 = {val2: "goodbye"};
+        subject.val3 = "shane";
+        
+    });
+
+    testUtils.testWithUtils("computed", "strings", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = 1;
+        
+        subject.computed(function() {
+            return "this.val1";
+        }).observe(function(oldVal, newVal) {
+            ok(false);
+        });
+
+        // act
+        stop();
+        subject.val1 = 44;
+        setTimeout(function() {
+            ok(true);
+            start();
+        }, 50);        
     });
 }
 

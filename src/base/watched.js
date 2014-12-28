@@ -287,16 +287,37 @@ Class("wipeout.base.watched", function () {
     
     var STRIP_INLINE_COMMENTS = /\/\/.*$/mg;  
     var STRIP_BLOCK_COMMENTS = /\/\*[\s\S]*?\*\//mg;
-    var STRIP_STRINGS = /"[\s\S]*?"/mg;
-    var STRIP_UNWANTEDS = "\\s*(\\.([\\w\\$_]+))+"; // athis.something, thisa.something, this.sthis
-    var GET_ITEMS = "\\s*(\\.\\s*([\\w\\$_]+))+";
+    var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
     
     var stripFunction = function(input) {
-        return input
+        input = input
             .toString()
             .replace(STRIP_INLINE_COMMENTS, "")
-            .replace(STRIP_BLOCK_COMMENTS, "")
-            .replace(STRIP_STRINGS, "");
+            .replace(STRIP_BLOCK_COMMENTS, "");
+        
+        var regex = /["']/g;
+        
+        // leading "
+        while (regex.exec(input)) {
+            
+            var r = input[regex.lastIndex - 1] === "'" ? /'/g : /"/g;
+            r.lastIndex = regex.lastIndex;
+            
+            // trailing "
+            while(r.exec(input)) {
+                
+                var backslashes = 0;
+                for (var i = r.lastIndex - 1; input[i - 1] === "\\"; i--)
+                    backslashes++;
+
+                if (backslashes % 2 === 0) {
+                    input = input.substr(0, regex.lastIndex - 1) + "#" + input.substr(r.lastIndex);
+                    break;
+                }
+            }
+        }
+        
+        return input;
     };
     
     watched.computedFunction = function(callback, context) {
@@ -311,19 +332,40 @@ Class("wipeout.base.watched", function () {
         var subscriptions = [];
         var output = {
             watchVariable: function(variableName, variable) {
-                var cb2 = cb.replace(new RegExp(variableName + STRIP_UNWANTEDS, "m", "g"), "");
                 
-                debugger;
-                var items = cb2.match(new RegExp(variableName + GET_ITEMS, "g"));
-
-                for (var i = 0, ii = items ? items.length : 0; i < ii; i++) {
-                    variable.observe(items[i].substring(items[i].indexOf(".") + 1), function() {
+                var match, found = [], regex = new RegExp(variableName + GET_ITEMS, "g"), matches = cb.match(regex);
+                while ((match = regex.exec(cb)) !== null) {
+                    found.push({
+                        value: match[0],
+                        index: regex.lastIndex - match[0].length
+                    });
+                }
+                
+                enumerateArr(found, function (item) {
+                    if (item.index > 0) {
+                        if (cb[item.index - 1].search(/[\w\$]/) !== -1)
+                            return;
+                        
+                        for (var j = item.index - 1; j >= 0; j--) {
+                            if (cb[j] === ".")
+                                return;
+                            else if (cb[j] !== " ")
+                                break;
+                        }
+                    }
+                    
+                    variable.observe(item.value.substring(item.value.indexOf(".") + 1), function() {
                         var newVal = callback.call(context);
-                        for(var i = 0, ii = subscriptions.length; i < ii; i++)
-                        subscriptions[i].callback.call(subscriptions[i].context, oldVal, newVal); //TODO: ensure it is not called twice
+                        if (oldVal === newVal)
+                            return;
+                        
+                        enumerateArr(subscriptions, function (subscription) {
+                            subscription.callback.call(subscription.context, oldVal, newVal);
+                        });
+                        
                         oldVal = newVal;
                     });
-                }                
+                });
                 
                 return output;
             },
