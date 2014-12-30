@@ -24,7 +24,7 @@ Class("wipeout.base.computed", function () {
         this.callback = computed.stripFunction(callback);
         
         this.watchVariable("this", context);
-        if(watchVariables)
+        if (watchVariables)
             for (var i in watchVariables)
                 this.watchVariable(i, watchVariables[i]);
     };
