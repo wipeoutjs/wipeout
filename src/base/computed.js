@@ -7,7 +7,7 @@ Class("wipeout.base.computed", function () {
     var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
     
     // monitor a function and change the value of a "watched" when it changes
-    var computed = function computed(context, name, callback, watchVariables) {
+    function computed(context, name, callback, watchVariables) {
         
         //TODO: if can watch        
         if (name.indexOf(".") !== -1)
@@ -101,16 +101,6 @@ Class("wipeout.base.computed", function () {
         
         this.disposables.length = 0;
     };
-    
-    /*
-            ,
-            observe: function(callback, context) {
-                subscriptions.push({callback: callback, context: context});
-                return output;
-                //TODO: dispose
-            }*/
-    
-    
     
     return computed;
 });

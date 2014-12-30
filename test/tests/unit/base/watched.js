@@ -322,8 +322,58 @@ function testMe (moduleName, buildSubject) {
             start();
         }, 50);        
     });
-    
-    //TODO: computed.dispose, variable
+
+    testUtils.testWithUtils("computed", "dispose", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = buildSubject();
+        subject.val1.val2 = "hello";
+        subject.val3 = "world";
+        
+        var disp = subject.computed("comp", function() {
+            return this.val1.val2 + " " + this.val3;
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        // act
+        stop();
+        disp.dispose();
+        subject.val3 = "shane";
+        
+        setTimeout(function() {
+            ok(true);
+            start();
+        }, 100)
+    });
+
+    testUtils.testWithUtils("computed", "variable change", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        var var1 = buildSubject();
+        var1.val1 = buildSubject();
+        var1.val1.val2 = "hello";
+        var1.val3 = "world";
+        
+        subject.computed("comp", function() {
+            return var1.val1.val2 + " " + var1.val3;
+        }, {
+            var1: var1
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
+            strictEqual(oldVal, "hello world");
+            strictEqual(newVal, "hello shane");
+            start();
+        });
+
+        // act
+        stop();
+        var1.val3 = "shane";
+        
+    });
 }
 
 testMe("wipeout.base.watched", function() { return new watched(); });
