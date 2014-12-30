@@ -124,7 +124,7 @@ function testMe (moduleName, buildSubject) {
         subject.aa = buildSubject();
         subject.aa.bb = buildSubject();
         subject.aa.bb.cc = 11;
-                
+        
         //debugger;
         var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
             strictEqual(oldVal, 11);
@@ -202,6 +202,34 @@ function testMe (moduleName, buildSubject) {
         stop();
         subject.aa = newVal;
         
+    });
+
+    testUtils.testWithUtils("observe", "path, mid element changed, after disposal", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.aa = buildSubject();
+        subject.aa.bb = buildSubject();
+        subject.aa.bb.cc = 11;
+        
+        var newVal = buildSubject();
+        newVal.bb = buildSubject();
+        newVal.bb.cc = 22;
+        
+        //debugger;
+        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        // act
+        stop();
+        dispose.dispose();
+        subject.aa = newVal;
+        
+        setTimeout(function() {
+            start();
+        }, 100);
+        
+        ok(true);
     });
 
     testUtils.testWithUtils("computed", "simple change", false, function(methods, classes, subject, invoker) {

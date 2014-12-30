@@ -24,58 +24,7 @@ Class("wipeout.base.watched", function () {
         ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
         ///<returns type="Object">A disposable object</returns>
         
-        path = property.split(".");
-        var disposables = new Array(path.length), 
-            _this = this,
-            val = wipeout.utils.obj.getObject(property, this);
-        
-        //TODO: multiple changes on multiple objects
-        var redo = (function (begin, end) {
-            
-            // dispose of anything in the path after the change
-            for (var i = begin; i < end; i++) {
-                if (disposables[i]) {
-                    disposables[i].dispose();
-                    disposables[i] = null;
-                } else {
-                    break;
-                }
-            }
-            
-            // subscribe to new objects after the change and get the latest object in the path which is observable
-            var current = this;
-            for (var i = 0; current && current.observe /*TODO: better way of telling*/ && i < end - 1; i++) {
-                if (current[path[i]] && i >= begin)              
-                    disposables[i] = current.observe(path[i], (function (i) {
-                        return function() {
-                            redo.call(_this, i, end);
-                            
-                        };
-                    }(i)));                
-                
-                current = current[path[i]];
-            }
-            
-            if (current && current.observe /*TODO: better way of telling*/)
-                disposables[i] = current.observe(path[i], callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
-            
-            var newVal = wipeout.utils.obj.getObject(property, this);
-            if (val !== newVal) {
-                callback.call(context, val, newVal);
-                val = newVal;
-            }
-        }).bind(this);
-        
-        redo(0, path.length);
-        
-        return {
-            dispose: function() {
-                for (var i = 0, ii = disposables.length; i < ii && disposables[i]; i++)
-                    disposables[i].dispose();
-                
-                disposables.length = 0;
-            }
-        };
+        return new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     };
     
     watched.createObserveFunction = function(woBag, watchFunction) {
