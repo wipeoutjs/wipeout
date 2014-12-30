@@ -24,6 +24,7 @@ Class("wipeout.base.pathWatch", function () {
         this.val = wipeout.utils.obj.getObject(property, forObject);
         
         this.redo(0, this.path.length);
+        this.init = true;
     }
     
     pathWatch.prototype.redo = function (begin, end) {
@@ -55,7 +56,7 @@ Class("wipeout.base.pathWatch", function () {
             this.disposables[i] = current.observe(this.path[i], this.callback, this.context, this.evaluateOnEachChange, this.evaluateIfValueHasNotChanged);
 
         var newVal = wipeout.utils.obj.getObject(this.property, this.forObject);
-        if (this.val !== newVal) {
+        if (this.init) {
             this.callback.call(this.context, this.val, newVal);
             this.val = newVal;
         }
@@ -66,6 +67,9 @@ Class("wipeout.base.pathWatch", function () {
             this.disposables[i].dispose();
 
         this.disposables.length = 0;
+        
+        for (var i in this)
+            delete this[i];
     };
                                       
     return pathWatch;

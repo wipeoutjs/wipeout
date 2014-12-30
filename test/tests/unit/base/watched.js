@@ -180,19 +180,18 @@ function testMe (moduleName, buildSubject) {
         
     });
 
-    testUtils.testWithUtils("observe", "path, mid element changed, has val", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("observe", "path, mid element and last element changed", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
         subject.aa = buildSubject();
-        subject.aa.bb = buildSubject();
+        var bb = subject.aa.bb = buildSubject();
         subject.aa.bb.cc = 11;
         
         var newVal = buildSubject();
         newVal.bb = buildSubject();
         newVal.bb.cc = 22;
         
-        //debugger;
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
+        subject.observe("aa.bb.cc", function(oldVal, newVal) {
             strictEqual(oldVal, 11);
             strictEqual(newVal, 22);
             start();
@@ -201,6 +200,7 @@ function testMe (moduleName, buildSubject) {
         // act
         stop();
         subject.aa = newVal;
+        bb.cc = 33;
         
     });
 
@@ -215,7 +215,6 @@ function testMe (moduleName, buildSubject) {
         newVal.bb = buildSubject();
         newVal.bb.cc = 22;
         
-        //debugger;
         var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
             ok(false);
         });
