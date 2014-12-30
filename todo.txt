@@ -27,5 +27,6 @@ x    condition
     items
     model
     templateId
-    
->>>>>>> wipeout-2
+
+
+Alter xml engine to use RegExp(/something/g).lastIndex
