@@ -23,11 +23,11 @@ Class("wipeout.base.pathWatch", function () {
         this.disposables = new Array(this.path.length);
         this.val = wipeout.utils.obj.getObject(property, forObject);
         
-        this.redo(0, this.path.length);
+        this.buildObservableChain(0, this.path.length);
         this.init = true;
     }
     
-    pathWatch.prototype.redo = function (begin, end) {
+    pathWatch.prototype.buildObservableChain = function (begin, end) {
                            
         // dispose of anything in the path after the change
         for (var i = begin; i < end; i++) {
@@ -45,7 +45,7 @@ Class("wipeout.base.pathWatch", function () {
             if (current[this.path[i]] && i >= begin)              
                 this.disposables[i] = current.observe(this.path[i], (function (i) {
                     return function() {
-                        _this.redo(i, end);                            
+                        _this.buildObservableChain(i, end);                            
                     };
                 }(i)));                
 

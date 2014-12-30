@@ -43,7 +43,7 @@ Class("wipeout.base.watched", function () {
             ///<returns type="Object">A disposable object</returns>
             
             if (property.indexOf(".") !== -1)
-                return watched.watchPath.apply(this, arguments);
+                return new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
             
             var disposeOfWatch = (watchFunction || this.watch).call(this, property);
             
