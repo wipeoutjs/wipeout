@@ -238,9 +238,11 @@ function testMe (moduleName, buildSubject) {
         subject.val1.val2 = "hello";
         subject.val3 = "world";
         
-        subject.computed(function() {
+        subject.computed("comp", function() {
             return this.val1.val2 + " " + this.val3;
-        }).observe(function(oldVal, newVal) {
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
             strictEqual(oldVal, "hello world");
             strictEqual(newVal, "hello shane");
             start();
@@ -259,9 +261,11 @@ function testMe (moduleName, buildSubject) {
         subject.val1.val2 = "hello";
         subject.val3 = "world";
         
-        subject.computed(function() {            
+        subject.computed("comp", function() {            
             return this.val1.val2 + " " + this.val3;
-        }).observe(function(oldVal, newVal) {
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
             strictEqual(oldVal, "hello world");
             strictEqual(newVal, "goodbye world");
             start();
@@ -280,9 +284,11 @@ function testMe (moduleName, buildSubject) {
         subject.val1.val2 = "hello";
         subject.val3 = "world";
         
-        subject.computed(function() {
+        subject.computed("comp", function() {
             return this.val1.val2 + " " + this.val3;
-        }).observe(function(oldVal, newVal) {
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
             strictEqual(oldVal, "hello world");
             strictEqual(newVal, "goodbye shane");
             start();
@@ -300,9 +306,11 @@ function testMe (moduleName, buildSubject) {
         var subject = buildSubject();
         subject.val1 = 1;
         
-        subject.computed(function() {
+        subject.computed("comp", function() {
             return "this.val1";
-        }).observe(function(oldVal, newVal) {
+        });
+        
+        subject.observe("comp", function(oldVal, newVal) {
             ok(false);
         });
 
@@ -314,6 +322,8 @@ function testMe (moduleName, buildSubject) {
             start();
         }, 50);        
     });
+    
+    //TODO: computed.dispose, variable
 }
 
 testMe("wipeout.base.watched", function() { return new watched(); });

@@ -9,7 +9,7 @@ Class("wipeout.base.watched", function () {
                     
         this.__woBag = {
             watched: {},
-            propertyChanged: wo.event()
+            propertyChanged: wo.event() //TODO: is this used?
         };
     });
     
@@ -234,99 +234,12 @@ Class("wipeout.base.watched", function () {
         return delete this[property];
     };
     
-    var STRIP_INLINE_COMMENTS = /\/\/.*$/mg;  
-    var STRIP_BLOCK_COMMENTS = /\/\*[\s\S]*?\*\//mg;
-    var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
-    
-    var stripFunction = function(input) {
-        input = input
-            .toString()
-            .replace(STRIP_INLINE_COMMENTS, "")
-            .replace(STRIP_BLOCK_COMMENTS, "");
-        
-        var regex = /["']/g;
-        
-        // leading "
-        while (regex.exec(input)) {
-            
-            var r = input[regex.lastIndex - 1] === "'" ? /'/g : /"/g;
-            r.lastIndex = regex.lastIndex;
-            
-            // trailing "
-            while(r.exec(input)) {
-                
-                var backslashes = 0;
-                for (var i = r.lastIndex - 1; input[i - 1] === "\\"; i--)
-                    backslashes++;
-
-                if (backslashes % 2 === 0) {
-                    input = input.substr(0, regex.lastIndex - 1) + "#" + input.substr(r.lastIndex);
-                    break;
-                }
-            }
-        }
-        
-        return input;
-    };
-    
-    watched.computedFunction = function(callback, context) {
+    watched.computedFunction = function(name, callback, watchVariables) {
         ///<summary>Do "delete obj.prop" functionality</summary>
         ///<param name="property" type="String" optional="false">The property name</param>
         ///<returns type="Boolean">The result of the delete</returns>
         
-        context = context || this;
-        var oldVal = callback.call(context);
-        var cb = stripFunction(callback);
-        
-        var subscriptions = [];
-        var output = {
-            watchVariable: function(variableName, variable) {
-                
-                var match, found = [], regex = new RegExp(variableName + GET_ITEMS, "g"), matches = cb.match(regex);
-                while ((match = regex.exec(cb)) !== null) {
-                    found.push({
-                        value: match[0],
-                        index: regex.lastIndex - match[0].length
-                    });
-                }
-                
-                enumerateArr(found, function (item) {
-                    if (item.index > 0) {
-                        if (cb[item.index - 1].search(/[\w\$]/) !== -1)
-                            return;
-                        
-                        for (var j = item.index - 1; j >= 0; j--) {
-                            if (cb[j] === ".")
-                                return;
-                            else if (cb[j] !== " ")
-                                break;
-                        }
-                    }
-                    
-                    variable.observe(item.value.substring(item.value.indexOf(".") + 1), function() {
-                        var newVal = callback.call(context);
-                        if (oldVal === newVal)
-                            return;
-                        
-                        enumerateArr(subscriptions, function (subscription) {
-                            subscription.callback.call(subscription.context, oldVal, newVal);
-                        });
-                        
-                        oldVal = newVal;
-                    });
-                });
-                
-                return output;
-            },
-            observe: function(callback, context) {
-                subscriptions.push({callback: callback, context: context});
-                return output;
-                //TODO: dispose
-            }
-        };
-        
-        
-        return output.watchVariable("this", context);
+        return new wipeout.base.computed(this, name, callback, watchVariables);
     };
     
     watched.prototype.watch = watched.createWatchFunction(null, null, true);
