@@ -9,7 +9,8 @@ Class("wipeout.base.computed", function () {
     // monitor a function and change the value of a "watched" when it changes
     function computed(context, name, callback, watchVariables) {
         
-        //TODO: if can watch        
+        //TODO: if can watch
+        
         if (name.indexOf(".") !== -1)
             throw "Computed variables cannot contain the \".\" character."
         

@@ -1,4 +1,5 @@
 
+
 var watched = wipeout.base.watched;
 var watch = wipeout.base.watch;
 
@@ -231,138 +232,17 @@ function testMe (moduleName, buildSubject) {
         ok(true);
     });
 
-    testUtils.testWithUtils("computed", "simple change", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("computed", "simple change, complex functions are in computed.js", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
         subject.val1 = buildSubject();
         subject.val1.val2 = "hello";
         subject.val3 = "world";
-        
-        subject.computed("comp", function() {
-            return this.val1.val2 + " " + this.val3;
-        });
-        
-        subject.observe("comp", function(oldVal, newVal) {
-            strictEqual(oldVal, "hello world");
-            strictEqual(newVal, "hello shane");
-            start();
-        });
 
-        // act
-        stop();
-        subject.val3 = "shane";
-        
-    });
-
-    testUtils.testWithUtils("computed", "complex change", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.val1 = buildSubject();
-        subject.val1.val2 = "hello";
-        subject.val3 = "world";
-        
-        subject.computed("comp", function() {            
-            return this.val1.val2 + " " + this.val3;
-        });
-        
-        subject.observe("comp", function(oldVal, newVal) {
-            strictEqual(oldVal, "hello world");
-            strictEqual(newVal, "goodbye world");
-            start();
-        });
-
-        // act
-        stop();
-        subject.val1 = {val2: "goodbye"};
-        
-    });
-
-    testUtils.testWithUtils("computed", "two changes", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.val1 = buildSubject();
-        subject.val1.val2 = "hello";
-        subject.val3 = "world";
-        
-        subject.computed("comp", function() {
-            return this.val1.val2 + " " + this.val3;
-        });
-        
-        subject.observe("comp", function(oldVal, newVal) {
-            strictEqual(oldVal, "hello world");
-            strictEqual(newVal, "goodbye shane");
-            start();
-        });
-
-        // act
-        stop();
-        subject.val1 = {val2: "goodbye"};
-        subject.val3 = "shane";
-        
-    });
-
-    testUtils.testWithUtils("computed", "strings", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.val1 = 1;
-        
-        subject.computed("comp", function() {
-            return "this.val1";
-        });
-        
-        subject.observe("comp", function(oldVal, newVal) {
-            ok(false);
-        });
-
-        // act
-        stop();
-        subject.val1 = 44;
-        setTimeout(function() {
-            ok(true);
-            start();
-        }, 50);        
-    });
-
-    testUtils.testWithUtils("computed", "dispose", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.val1 = buildSubject();
-        subject.val1.val2 = "hello";
-        subject.val3 = "world";
-        
         var disp = subject.computed("comp", function() {
             return this.val1.val2 + " " + this.val3;
         });
-        
-        subject.observe("comp", function(oldVal, newVal) {
-            ok(false);
-        });
 
-        // act
-        stop();
-        disp.dispose();
-        subject.val3 = "shane";
-        
-        setTimeout(function() {
-            ok(true);
-            start();
-        }, 100)
-    });
-
-    testUtils.testWithUtils("computed", "variable change", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        var var1 = buildSubject();
-        var1.val1 = buildSubject();
-        var1.val1.val2 = "hello";
-        var1.val3 = "world";
-        
-        subject.computed("comp", function() {
-            return var1.val1.val2 + " " + var1.val3;
-        }, {
-            var1: var1
-        });
-        
         subject.observe("comp", function(oldVal, newVal) {
             strictEqual(oldVal, "hello world");
             strictEqual(newVal, "hello shane");
@@ -371,8 +251,10 @@ function testMe (moduleName, buildSubject) {
 
         // act
         stop();
-        var1.val3 = "shane";
+        subject.val3 = "shane";
         
+        // assert
+        ok(disp instanceof wipeout.base.computed);
     });
 }
 
