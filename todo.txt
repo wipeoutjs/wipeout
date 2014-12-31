@@ -7,7 +7,6 @@ TODO:   wipeout.base.watched.prototype.observe, do something with dispose functi
 -tw on view model definition, rather than in template
         
 cleanup:
-            viewModelElement.js
             visual.js (added viewModelElement to __woBag, computed and observe functions)
             compiledTemplate.js
             compiledInitializer.js

@@ -5,7 +5,7 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.idPlaceholder = {};
     function compiledTemplate(template) {
-        ///<summary>The wipeout template engine, inherits from ko.templateEngine</summary>
+        ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
         
         this.html = [];
         this.modifications = [];
@@ -19,26 +19,40 @@ Class("wipeout.template.compiledTemplate", function () {
                 this.html[i - 1] += this.html.splice(i, 1)[0];
         }
         
-        // protection from infite loops
+        // protection from infite loops not needed
         delete this._addedElements;
     };
     
     compiledTemplate.prototype.addNonElement = function(node) {
+        ///<summary>Add a node to the html string without scanning for dynamic functionality</summary>
+        ///<param name="node" type="Object">The node</param>
+        
         this.html.push(node.serialize());
     };
     
     compiledTemplate.prototype.addViewModel = function(vmNode) {
+        ///<summary>Add a node which will be scanned and converted to a view model at a later stage</summary>
+        ///<param name="node" type="wipeout.template.templateElement">The node</param>
+        
+        // add the beginning of a placeholder
         this.html.push("<script");
+        
+        // add the id flag and the id generator
         this.html.push(compiledTemplate.idPlaceholder);
         this.modifications.push([{
             action: wipeout.template.htmlAttributes.wipeoutCreateViewModel,
             value: vmNode
         }]);
         
+        // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
     };
     
     compiledTemplate.prototype.addElement = function(element) {
+        ///<summary>Add an element which will be scanned for functionality and added to the dom</summary>
+        ///<param name="node" type="wipeout.template.templateElement">The node</param>
+        
+        // add the element beginning
         this.html.push("<" + element.name);
 
         var modifications;
@@ -56,7 +70,7 @@ Class("wipeout.template.compiledTemplate", function () {
                     this.modifications.push(modifications);
                 }
 
-                // ensure the id modification is the first to be done
+                // ensure the "id" modification is the first to be done
                 attr === idString ?
                     modifications.splice(0, 0, {
                         action: wipeout.template.htmlAttributes[attr],
@@ -67,10 +81,12 @@ Class("wipeout.template.compiledTemplate", function () {
                         value: element.attributes[attr].value
                     });
             } else {
+                // add non special attribute
                 this.html.push(" " + attr + element.attributes[attr].serializeValue()); //TODO: put this on attr class
             }
         }
 
+        // add the element end
         if (element.inline) {
             this.html.push(" />");
         } else {
@@ -83,6 +99,8 @@ Class("wipeout.template.compiledTemplate", function () {
     };
     
     compiledTemplate.prototype.addNode = function(node) {
+        ///<summary>Add a node dynamic or not to the generated html</summary>
+        ///<param name="node" type="Object">The node</param>
         
         if(this._addedElements.indexOf(node) !== -1)
             throw "Infinite loop"; //TODO
@@ -99,6 +117,8 @@ Class("wipeout.template.compiledTemplate", function () {
     };
     
     compiledTemplate.prototype.getBuilder = function() {
+        ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
+        
         return new wipeout.template.builder(this);
     };
         
