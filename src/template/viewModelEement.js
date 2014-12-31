@@ -36,11 +36,11 @@ Class("wipeout.template.viewModelElement", function () {
         var node = this.openingTag;
         while (node = (node.previousSibling || node.parentElement)) {
             
-            if (node.wipeoutOpeningTag)
-                return node;
+            if (node.wipeoutOpening)
+                return node.wipeoutOpening;
             
-            if (node.wipeoutClosingTag)
-                node = node.openingTag;
+            if (node.wipeoutClosing)
+                node = node.wipeoutClosing.openingTag;
         }
     };
     

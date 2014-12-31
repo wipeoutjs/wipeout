@@ -49,7 +49,7 @@ Class("wipeout.template.compiledInitializer", function () {
             });
             
             if(!setters[flags.name].autoParser)
-                setters[flags.name].autoParser = getAutoParser(item.value); //TODO: lazy create
+                setters[flags.name].autoParser = compiledInitializer.getAutoParser(item.value); //TODO: lazy create
         });
         
         /*
@@ -62,7 +62,7 @@ Class("wipeout.template.compiledInitializer", function () {
             var model = "$parent ? $parent.model : null";
             setters.model = {
                 value: model,
-                autoParser: getAutoParser(model) //TODO: lazy create
+                autoParser: compiledInitializer.getAutoParser(model) //TODO: lazy create
             };
         }
         
@@ -71,15 +71,24 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (renderContext) {
         enumerateObj(this.setters, function (setter, name) {
+            renderContext.$data.computed(name, setter.parser || setter.autoParser, {
+                "value": setter.value, 
+                "propertyName": name,
+                "renderContext": renderContext
+            });
             
-            var parser = setter.parser || setter.autoParser;
-            
-            renderContext.$data[name] = parser(setter.value, name, renderContext);            
+            //TODO: tw
         });
     };
     
-    var getAutoParser = function (value) {
-        return new Function("value", "propertyName", "renderContext", "with (renderContext) return " + value + ";");
+    compiledInitializer.getAutoParser = function (value) {
+        
+        //TODO: this is very non standard
+        value = "return " + value
+            .replace(/\$data/g, "renderContext.$data")
+            .replace(/\$parent/g, "renderContext.$parent") + ";";
+        
+        return new Function("value", "propertyName", "renderContext", value);
     };
     
     var bindingTypes = {}; // ow, tw, owts

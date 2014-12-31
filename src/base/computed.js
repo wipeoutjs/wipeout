@@ -2,6 +2,7 @@
 
 Class("wipeout.base.computed", function () {
     
+    var GET_ARGUMENT_NAMES = /([^\s,]+)/g;
     var STRIP_INLINE_COMMENTS = /\/\/.*$/mg;  
     var STRIP_BLOCK_COMMENTS = /\/\*[\s\S]*?\*\//mg;
     var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
@@ -14,22 +15,38 @@ Class("wipeout.base.computed", function () {
         if (name.indexOf(".") !== -1)
             throw "Computed variables cannot contain the \".\" character."
         
-            //TODO spelling
+        this.arguments = [];
         this.disposables = [];
-        this.execute = function() {
-            context[name] = callback.call(context);
-        };
+        this.execute = (function() {
+            context[name] = callback.apply(context, this.arguments);
+        }).bind(this);
         
-        this.execute(); //TODO: can i remove this so that I don't have to execute at the very beginning?
-                
         this.callback = computed.stripFunction(callback);
         
+        //TODO: order is important but try to remove duplication
+        if (watchVariables) {
+            // get all argument names
+            var args = this.callback.slice(
+                this.callback.indexOf('(') + 1, this.callback.indexOf(')')).match(GET_ARGUMENT_NAMES) || [];
+            
+            var tmp;
+            for (var i in watchVariables) {
+                // if variable is an argument, add it to args
+                if ((tmp = args.indexOf(i)) !== -1)
+                    this.arguments[tmp] = watchVariables[i];
+            }
+        }
+        
+        this.execute(); //TODO: can i remove this so that I don't have to execute at the very beginning?
+        //TODO: check for partial argument definition
         this.watchVariable("this", context);
-        if (watchVariables)
-            for (var i in watchVariables)
+        if (watchVariables) {
+            for (var i in watchVariables) {                
                 this.watchVariable(i, watchVariables[i]);
+            }
+        }
     };
-    
+        
     computed.stripFunction = function(input) { //TODO: unit test independantly
         input = input
             .toString()
@@ -89,10 +106,19 @@ Class("wipeout.base.computed", function () {
                         break;
                 }
             }
-
-            // when path item changes, execute
-            this.disposables.push(
-                variable.observe(item.value.substring(item.value.indexOf(".") + 1), this.execute, this));
+            
+            // find the first observable
+            var current = variable, path = item.value.substr(item.value.indexOf(".") + 1).split(".");
+            while (current && path.length > 1 && !current.observe /*TODO: better way of doing this*/) {
+                current = current[path[0]];
+                path.splice(0, 1);
+            }
+            
+            if (path.length && current && current.observe /*TODO: better way of doing this*/) {
+                // when path item changes, execute
+                this.disposables.push(
+                    current.observe(path.join("."), this.execute, this));
+            }
         }, this);
     };    
     

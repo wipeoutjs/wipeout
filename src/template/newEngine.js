@@ -15,7 +15,7 @@ Class("wipeout.template.newEngine", function () {
         this.value = function (key) {
             return valueArray[keyArray.indexOf(key)];
         };
-    }    
+    }
     
     function engine () {
         this.compiledTemplates = {};
