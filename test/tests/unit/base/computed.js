@@ -289,3 +289,37 @@ testUtils.testWithUtils("integration test", "variable name with character after"
         start();
     }, 100);
 });
+
+testUtils.testWithUtils("integration test", "with args", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject = wo.watch();
+    var var1 = wo.watch({val: 2});  
+
+    new wipeout.base.computed(subject, "comp", function(var1) {
+        return var1.val;
+    }, {
+        var1: var1
+    });
+
+    subject.observe("comp", function(oldVal, newVal) {
+        strictEqual(oldVal, 2);
+        strictEqual(newVal, 3);
+        start();
+    });
+
+    // act
+    stop();
+    var1.val = 3;
+});
+
+testUtils.testWithUtils("integration test", "with args, arg not added as watched arg", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject = wo.watch();
+    var var1 = wo.watch({val: 2});  
+
+    throws(function() {
+        new wipeout.base.computed(subject, "comp", function(var1) {
+            return var1.val;
+        });
+    });
+});

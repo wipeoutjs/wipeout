@@ -16,29 +16,38 @@ Class("wipeout.base.computed", function () {
             throw "Computed variables cannot contain the \".\" character."
         
         this.arguments = [];
-        this.disposables = [];
-        this.execute = (function() {
-            context[name] = callback.apply(context, this.arguments);
-        }).bind(this);
-        
+        this.disposables = [];        
         this.callback = computed.stripFunction(callback);
+                
+        // get all argument names
+        var args = this.callback.slice(
+            this.callback.indexOf('(') + 1, this.callback.indexOf(')')).match(GET_ARGUMENT_NAMES) || [], completeArg = {};
         
-        //TODO: order is important but try to remove duplication
-        if (watchVariables) {
-            // get all argument names
-            var args = this.callback.slice(
-                this.callback.indexOf('(') + 1, this.callback.indexOf(')')).match(GET_ARGUMENT_NAMES) || [];
-            
+        // get all watch variables which are also arguments
+        if (watchVariables && args.length) {            
             var tmp;
             for (var i in watchVariables) {
                 // if variable is an argument, add it to args
-                if ((tmp = args.indexOf(i)) !== -1)
+                if ((tmp = args.indexOf(i)) !== -1) {
                     this.arguments[tmp] = watchVariables[i];
+                    args[tmp] = completeArg;
+                }
             }
         }
         
-        this.execute(); //TODO: can i remove this so that I don't have to execute at the very beginning?
-        //TODO: check for partial argument definition
+        // checking that all args have been set
+        enumerateArr(args, function(arg) {
+            if (arg !== completeArg)
+                throw "Argument \"" + arg + "\" must be added as a watch variable";
+        });
+        
+        this.execute = function() {
+            context[name] = callback.apply(context, this.arguments);
+        };
+        
+        this.execute();
+        
+        // watch each watch variable
         this.watchVariable("this", context);
         if (watchVariables) {
             for (var i in watchVariables) {                
@@ -62,10 +71,10 @@ Class("wipeout.base.computed", function () {
             r.lastIndex = regex.lastIndex;
             
             // trailing "
-            while(r.exec(input)) {
+            while (r.exec(input)) {
                 
                 var backslashes = 0;
-                for (var i = r.lastIndex - 1; input[i - 1] === "\\"; i--)
+                for (var i = r.lastIndex - 2; input[i] === "\\"; i--)
                     backslashes++;
 
                 if (backslashes % 2 === 0) {

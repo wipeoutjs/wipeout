@@ -162,9 +162,6 @@ Class("wipeout.viewModels.view", function () {
         return false;
     };
     
-    // properties which will not be copied onto the view if defined in the template
-    view.reservedPropertyNames = ["constructor", "id"];
-    
     view.prototype._initialize = function(propertiesXml, renderContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
         ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
@@ -175,84 +172,9 @@ Class("wipeout.viewModels.view", function () {
         if(!propertiesXml)
             return;
         
-        var compiled = wipeout.template.newEngine.instance.getVmInitializer(propertiesXml);
-        
-        compiled.initialize(renderContext);
-        return;
-        
-        //TODO: remove
-        if(propertiesXml.attributes["id"])
-            this.id = propertiesXml.attributes["id"].value;
-        
-        //TODO: is this needed?
-        var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
-        if(prop)
-            this.shareParentScope = parseBool(prop.value);
-        
-        if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null && renderContext.$parent) {
-            this.bind('model', renderContext.$parent.model);
-        }
-        
-        
-        
-        /*enumerateObj(propertiesXml.attributes, function(attr, name) {
-            
-            var setter = "";
-            
-            // find and removr "-tw" if necessary
-            if(name.length > 3 && name.substr(name.length - 3) === "-tw") {
-                name = name.substr(0, name.length - 3);
-                setter = 
-        ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
-            }
-            
-            name = camelCase(name);
-            
-            // reserved
-            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
-                        
-            try {
-                bindingContext.__$woCurrent = this;
-                wipeout.template.engine.createJavaScriptEvaluatorFunction(
-        "(function() {\n\t\t\t__$woCurrent.bind('" + name + "', function() {\n\t\t\t\treturn " + attr.value + ";\n\t\t\t}" + setter + ");\n\n\t\t\treturn '';\n\t\t})()"
-                )(bindingContext);
-            } finally {
-                delete bindingContext.__$woCurrent;
-            }
-        }, this);
-        
-        enumerateArr(propertiesXml, function(child, i) {
-            
-            var nodeName = camelCase(child.name);
-            if(child.constructor !== wipeout.template.templateElement || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
-            
-            // default
-            var type = "string";
-            for(var j in child.attributes) {
-                if(j === "constructor" && child.attributes[j].value) {
-                    type = camelCase(child.attributes[j].value);
-                    break;
-                }
-            }
-            
-            if (view.objectParser[trimToLower(type)]) {
-                var innerHTML = [];
-                for (var j = 0, jj = child.length; j < jj; j++) {
-                    innerHTML.push(child[j].serialize());
-                }
-            
-                var val = view.objectParser[trimToLower(type)](innerHTML.join(""));
-                view.setObservable(this, nodeName, val);
-            } else {
-                var val = wipeout.utils.obj.createObject(type);
-                if(val instanceof wipeout.viewModels.view) {
-                    val.__woBag.createdByWipeout = true;
-                    val._initialize(child, bindingContext);
-                }
-                
-                view.setObservable(this, nodeName, val);
-            }
-        }, this);*/
+        wipeout.template.newEngine.instance
+            .getVmInitializer(propertiesXml)
+            .initialize(renderContext);
     };
     
     view.objectParser = {

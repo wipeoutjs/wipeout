@@ -30,7 +30,7 @@ Class("wipeout.template.compiledInitializer", function () {
                 value: item.value
             };
             
-            enumerateArr(flags, function (flag) {
+            enumerateArr(flags.flags, function (flag) {
                 if (parser[flag]) {
                     if (setters[flags.name].parser) {
                         var p = setters[flags.name].parser;
@@ -40,16 +40,13 @@ Class("wipeout.template.compiledInitializer", function () {
                     } else {
                         setters[flags.name].parser = parser[flag];
                     }
-                } else if (bindingTypes[flag]) {
+                } else if (wipeout.template.bindingTypes[flag]) {
                     if (setters[flags.name].bindingType)
                         throw "A binding type is already specified for this property.";
                         
-                    setters[flags.name].bindingType = bindingTypes[flag];
+                    setters[flags.name].bindingType = flag;
                 }
             });
-            
-            if(!setters[flags.name].autoParser)
-                setters[flags.name].autoParser = compiledInitializer.getAutoParser(item.value); //TODO: lazy create
         });
         
         /*
@@ -61,8 +58,7 @@ Class("wipeout.template.compiledInitializer", function () {
         if(!setters.model) {
             var model = "$parent ? $parent.model : null";
             setters.model = {
-                value: model,
-                autoParser: compiledInitializer.getAutoParser(model) //TODO: lazy create
+                value: model
             };
         }
         
@@ -71,11 +67,7 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (renderContext) {
         enumerateObj(this.setters, function (setter, name) {
-            renderContext.$data.computed(name, setter.parser || setter.autoParser, {
-                "value": setter.value, 
-                "propertyName": name,
-                "renderContext": renderContext
-            });
+            wipeout.template.bindingTypes[setter.bindingType || "ow"](setter, name, renderContext);
             
             //TODO: tw
         });
@@ -91,7 +83,6 @@ Class("wipeout.template.compiledInitializer", function () {
         return new Function("value", "propertyName", "renderContext", value);
     };
     
-    var bindingTypes = {}; // ow, tw, owts
     
     var parser = {
         "json": function (value, propertyName, renderContext) {

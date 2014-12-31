@@ -31,7 +31,7 @@ Class("wipeout.template.compiledTemplate", function () {
         this.html.push("<script");
         this.html.push(compiledTemplate.idPlaceholder);
         this.modifications.push([{
-            action: attributes.wipeoutCreateViewModel,
+            action: wipeout.template.htmlAttributes.wipeoutCreateViewModel,
             value: vmNode
         }]);
         
@@ -45,7 +45,7 @@ Class("wipeout.template.compiledTemplate", function () {
         for (var attr in element.attributes) {
 
             // if it is a special attribute
-            if (attributes[attr]) {
+            if (wipeout.template.htmlAttributes[attr]) {
                 
                 // if it is the first special attribute for this element
                 if (!modifications) {
@@ -59,11 +59,11 @@ Class("wipeout.template.compiledTemplate", function () {
                 // ensure the id modification is the first to be done
                 attr === idString ?
                     modifications.splice(0, 0, {
-                        action: attributes[attr],
+                        action: wipeout.template.htmlAttributes[attr],
                         value: element.attributes[attr].value
                     }) :
                     modifications.push({
-                        action: attributes[attr],
+                        action: wipeout.template.htmlAttributes[attr],
                         value: element.attributes[attr].value
                     });
             } else {
@@ -100,21 +100,6 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.prototype.getBuilder = function() {
         return new wipeout.template.builder(this);
-    };
-    
-    // return dispose function
-    var attributes = {
-        "wo-click": function (value, element, renderContext) {
-            return function() {
-            };
-        },
-        id: function (value, element, renderContext) {
-            renderContext.$data.templateItems[value] = element;
-            element.id = value;
-        },
-        wipeoutCreateViewModel: function (value, element, renderContext) {
-            new wipeout.template.viewModelElement(element, value);
-        }
     };
         
     return compiledTemplate;

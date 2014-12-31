@@ -30,9 +30,9 @@
         
         setTimeout((function() {//return;
             alert(r1.xy);
-            r.val = 555;
+            r1.xy = 555;
             setTimeout(function() {
-                alert(r1.xy);
+                alert(r.val);
             }, 100);
         }).bind(this), 2000);
         
@@ -43,7 +43,7 @@
     
     <script id="rrrooottt" type="text/xml">
     Hello
-    <root2 xy="$parent.val" />
+    <root2 xy--tw="$parent.val" />
     </script>
     
     <script id="rrrooottt2" type="text/xml">
