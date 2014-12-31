@@ -158,7 +158,7 @@ function testMe (moduleName, buildSubject) {
         subject.aa.bb.cc = 22;        
     });
 
-    testUtils.testWithUtils("observe", "path, mid element nulled", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("observe", "path, mid element nulled then last element changed", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
         var aa = subject.aa = buildSubject();
@@ -237,6 +237,7 @@ function testMe (moduleName, buildSubject) {
         newVal.bb.cc = 22;
         
         var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
+            debugger;
             ok(false);
         });
 
@@ -246,10 +247,9 @@ function testMe (moduleName, buildSubject) {
         subject.aa = newVal;
         
         setTimeout(function() {
+            ok(true);
             start();
         }, 100);
-        
-        ok(true);
     });
 
     testUtils.testWithUtils("computed", "simple change, complex functions are in computed.js", false, function(methods, classes, subject, invoker) {
