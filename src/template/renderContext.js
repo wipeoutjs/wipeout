@@ -1,6 +1,7 @@
 
 Class("wipeout.template.renderContext", function () {
     
+    // warning: do not make observable. This will create a LOT of un necessary subscriptions
     function renderContext (forVm, parentContext) {
         
         this.$data = forVm;

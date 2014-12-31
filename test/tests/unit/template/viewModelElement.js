@@ -10,26 +10,45 @@ var viewModelElement = wipeout.template.viewModelElement;
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "something", vm = {};
+    subject.template = {};
+    subject.init = methods.method();
+    var xmlOverride = {
+        name: "KJBKBJK"
+    },
+    constructor = function(){
+        this.templateId = {
+            subscribe: methods.method([subject.template, subject])
+        };
+    },
+    parent = {},
+    element;
+    
+    classes.mock("wipeout.utils.obj.getObject", function() {
+        strictEqual(arguments[0], xmlOverride.name);
+        return constructor;
+    });
+    
+    document.getElementById("qunit-fixture").appendChild(element = document.createElement("div"));
     
     // act
-    var output = invoker("       " + name + "        ", vm);
+    invoker(element, xmlOverride, parent);
     
-    //assert
-    strictEqual(output.nodeType, 8);
-    strictEqual(output.nodeValue, " " + name + " ");
-    strictEqual(output.closingTag.nodeType, 8);
-    strictEqual(output.closingTag.nodeValue, " /" + name + " ");
+    // assert
+    strictEqual(subject.openingTag.constructor, Comment);
+    strictEqual(subject.openingTag.textContent, " " + xmlOverride.name + " ");
+    strictEqual(subject.openingTag.wipeoutOpening, subject);
+    strictEqual(subject.closingTag.constructor, Comment);
+    strictEqual(subject.closingTag.textContent, " /" + xmlOverride.name + " ");
+    strictEqual(subject.closingTag.wipeoutClosing, subject);
     
-    strictEqual(output.closingTag.wipeoutClosingTag, true);
-    strictEqual(output.wipeoutOpeningTag, true);
+    strictEqual(subject.viewModel.constructor, constructor);
+    strictEqual(subject.renderContext.constructor, wipeout.template.renderContext);
     
-    strictEqual(output.closingTag.openingTag, output);
-    strictEqual(output.closingTag, output.closingTag);
-    
-    strictEqual(output.viewModel, vm);
+    equal(element.parentElement, undefined);
+    strictEqual(subject.openingTag.parentElement, document.getElementById("qunit-fixture"));
 });
 
+/*
 testUtils.testWithUtils("setName", null, false, function(methods, classes, subject, invoker) {
     
     // arrange

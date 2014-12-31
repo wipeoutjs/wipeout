@@ -24,7 +24,7 @@ Class("wipeout.template.htmlAttributes", function () {
     };
     
     htmlAttributes.wipeoutCreateViewModel = function (value, element, renderContext) {
-        var op = new wipeout.template.viewModelElement(element, value);
+        var op = new wipeout.template.viewModelElement(element, value, renderContext);
         
         return function () {
             op.dispose(true);
