@@ -138,6 +138,26 @@ function testMe (moduleName, buildSubject) {
         subject.aa.bb.cc = 22;        
     });
 
+
+    testUtils.testWithUtils("observe", "path, last element changed, has non observable in path", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.aa = {};
+        subject.aa.bb = buildSubject();
+        subject.aa.bb.cc = 11;
+        
+        //debugger;
+        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
+            strictEqual(oldVal, 11);
+            strictEqual(newVal, 22);
+            start();
+        });
+
+        // act
+        stop();
+        subject.aa.bb.cc = 22;        
+    });
+
     testUtils.testWithUtils("observe", "path, mid element nulled", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();

@@ -41,12 +41,10 @@ Class("wipeout.base.pathWatch", function () {
 
         // subscribe to new objects after the change and get the latest object in the path which is observable
         var current = this.forObject, _this = this;
-        for (var i = 0; current && current.observe /*TODO: better way of telling*/ && i < end - 1; i++) {
-            if (current[this.path[i]] && i >= begin)              
+        for (var i = 0; current && i < end - 1; i++) {            
+            if (current.observe /*TODO: better way of telling*/ && current[this.path[i]] && i >= begin)              
                 this.disposables[i] = current.observe(this.path[i], (function (i) {
-                    return function() {
-                        _this.buildObservableChain(i, end);                            
-                    };
+                    return function() { _this.buildObservableChain(i, end); };
                 }(i)));                
 
             current = current[this.path[i]];
