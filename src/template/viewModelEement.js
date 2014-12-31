@@ -91,7 +91,7 @@ Class("wipeout.template.viewModelElement", function () {
         //TODO: hack
         // add builder html
         var scr = document.createElement("script");
-        this.openingTag.parentElement.insertBefore(scr, this.closingTag);
+        this.closingTag.parentElement.insertBefore(scr, this.closingTag);
         scr.insertAdjacentHTML('afterend', builder.html);
         scr.parentElement.removeChild(scr);
 

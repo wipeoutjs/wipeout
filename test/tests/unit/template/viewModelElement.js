@@ -48,99 +48,92 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.openingTag.parentElement, document.getElementById("qunit-fixture"));
 });
 
-/*
-testUtils.testWithUtils("setName", null, false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("init", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var name = "something";
-    subject = viewModelElement("LKJBLKJB");
+    var tid1 = {}, tid = 0;
+    subject.initialization = {};
+    subject.renderContext = {};
+    subject.openingTag = document.createElement("div");
+    subject.closingTag = document.createElement("div");
+    document.getElementById("qunit-fixture").appendChild(subject.openingTag);
+    subject.viewModel = {
+        templateId: function() {
+            tid++;
+            return tid1;
+        },
+        _initialize: methods.method([subject.initialization, subject.renderContext])
+    };
+    subject.viewModel.templateId.valueHasMutated = methods.method();
     
     // act
-    subject.setName(name);
+    invoker();
     
-    //assert
-    strictEqual(subject.nodeValue, " " + name + " ");
-    strictEqual(subject.closingTag.nodeValue, " /" + name + " ");
+    // assert
+    strictEqual(tid, 2);
 });
 
+testUtils.testWithUtils("unTemplate", null, false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    subject.disposeOfBindings = methods.method();
+    document.getElementById("qunit-fixture").innerHTML = '<div id="opening"></div><div id="rem1"></div><div id="rem2"></div><div id="closing"></div>';
+    subject.openingTag = $("#opening", "#qunit-fixture")[0];
+    subject.closingTag = $("#closing", "#qunit-fixture")[0];
+        
+    // act
+    invoker();
+    
+    // assert
+    equal(subject.disposeOfBindings, null);
+    equal($("#rem1", "#qunit-fixture").length, 0);
+    equal($("#rem2", "#qunit-fixture").length, 0);
+    
+    equal($("#opening", "#qunit-fixture").length, 1);
+    equal($("#closing", "#qunit-fixture").length, 1);
+});
+
+testUtils.testWithUtils("template", null, false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var templateId = {}, html = "LKJBVJLKHVJKHVK", dob = {};
+    subject.unTemplate = methods.method();
+    subject.renderContext = {};
+    classes.mock("wipeout.template.newEngine.instance.getTemplate", function() {
+        strictEqual(templateId, arguments[0]);
+        return {
+            getBuilder: methods.method([], {
+                html: html,
+                execute: methods.method([subject.renderContext], dob)
+            })
+        };
+    });
+    $("#qunit-fixture").append(subject.closingTag = document.createElement("div"));
+    
+    // act
+    invoker(templateId);
+    
+    // assert
+    strictEqual(subject.closingTag.previousSibling.textContent, html);
+    strictEqual(subject.disposeOfBindings, dob);
+});
 
 testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
-    // arrange    
-    subject.closingTag = {};
-    subject.closingTag.parentElement = {
-        removeChild: methods.method([subject.closingTag])
-    };
+    
+    // arrange
+    subject.unTemplate = methods.method([undefined]);
     subject.viewModel = {
         dispose: methods.method()
     };
-    subject.dispose = {};
-                                
-    var item = viewModelElement("asd");
+    
+    $("#qunit-fixture").append(subject.closingTag = document.createElement("div"));
+    $("#qunit-fixture").append(subject.openingTag = document.createElement("div"));
     
     // act
-    item.dispose.apply(subject);
+    invoker();
     
-    //assert
-    ok(!subject.viewModel);
-    ok(!subject.dispose);
+    // assert
+    strictEqual(subject.viewModel, undefined);
+    strictEqual(subject.openingTag.parentElement, null);
+    strictEqual(subject.closingTag.parentElement, null);
 });
-
-testUtils.testWithUtils("init", "not lastTag", false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.closingTag = {};
-    subject.nextSibling = {};
-    subject.parentElement = {
-        insertBefore: methods.method([subject.closingTag, subject.nextSibling])
-    };
-    subject.viewModel = {
-        render: methods.method()
-    };
-                           
-    subject.init = {};     
-    var item = viewModelElement("asd");
-    
-    // act
-    item.init.apply(subject);
-    
-    //assert
-    ok(!subject.init);
-});
-
-testUtils.testWithUtils("init", "lastTag", false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.closingTag = {};
-    subject.parentElement = {
-        appendChild: methods.method([subject.closingTag])
-    };
-    subject.viewModel = {
-        render: methods.method()
-    };
-                           
-    subject.init = {};    
-                                
-    var item = viewModelElement("asd");
-    
-    // act
-    item.init.apply(subject);  
-    
-    //assert
-    ok(!subject.init);  
-});
-
-/*
-module("xxx", {
-    setup: function() {
-    },
-    teardown: function() {
-    }
-}); 
-
-test("test", function() {
-    window.hello = {yes:{}}
-    var ttt = new wipeout.template.compiledTemplate(
-        wipeout.template.templateParser("<div><hello.yes /><span /></div>"));
-    
-    
-    debugger;
-    ok(true);
-});*/
