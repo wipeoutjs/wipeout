@@ -3,8 +3,6 @@ Class("wipeout.template.viewModelElement", function () {
     
     function viewModelElement (element, xmlOverride) {
         
-        this.childVms = [];
-        
         var vm = xmlOverride ? {
             constructor: wipeout.utils.obj.getObject(xmlOverride.name),
             name: xmlOverride.name
@@ -53,10 +51,9 @@ Class("wipeout.template.viewModelElement", function () {
         var tid = this.viewModel.templateId();
         
         var parent = this.getParent();
-        if (parent) {
-            parent.childVms.push(this);
+        if (parent)
             parent = parent.renderContext;
-        } else {
+        else {
             // Set root model
         }
         
@@ -67,14 +64,7 @@ Class("wipeout.template.viewModelElement", function () {
             this.viewModel.templateId.valueHasMutated();
     };
     
-    viewModelElement.prototype.unTemplate = function(leaveChildNodes) {
-        //dispose of child vms
-        enumerateArr(this.childVms, function (item) {
-            item.dispose(true);
-        });
-        
-        this.childVms.length = 0;
-            
+    viewModelElement.prototype.unTemplate = function(leaveDeadChildNodes) {
         // dispose of bindings
         if (this.disposeOfBindings) {
             this.disposeOfBindings();
@@ -83,7 +73,7 @@ Class("wipeout.template.viewModelElement", function () {
 
         // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
         // remove all children
-        if(!leaveChildNodes)
+        if(!leaveDeadChildNodes)
             while (this.openingTag.nextSibling && this.openingTag.nextSibling !== this.closingTag)
                 this.openingTag.nextSibling.parentNode.removeChild(this.openingTag.nextSibling);
     };
@@ -104,7 +94,6 @@ Class("wipeout.template.viewModelElement", function () {
     };
     
     viewModelElement.prototype.dispose = function(leaveChildNodes) {  
-        
         this.unTemplate(leaveChildNodes);        
         this.viewModel.dispose();
         this.closingTag.parentElement.removeChild(this.closingTag);

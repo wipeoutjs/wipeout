@@ -28,7 +28,8 @@
             r1 = this;
         });
         
-        setTimeout((function() {//return;
+        setTimeout((function() {
+            return;
             alert(r1.xy);
             r1.xy = 555;
             setTimeout(function() {
@@ -36,14 +37,14 @@
             }, 100);
         }).bind(this), 2000);
         
-        /*setTimeout(function() {
+        setTimeout(function() {
             document.getElementById("xxx").nextSibling.nextSibling.wipeoutOpening.dispose()
-        }, 2000);*/
+        }, 500);
     </script>
     
     <script id="rrrooottt" type="text/xml">
     Hello
-    <root2 xy--tw="$parent.val" />
+    <root2 xy="$parent.val" />
     </script>
     
     <script id="rrrooottt2" type="text/xml">

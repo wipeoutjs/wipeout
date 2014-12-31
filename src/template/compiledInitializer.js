@@ -19,34 +19,40 @@ Class("wipeout.template.compiledInitializer", function () {
     function compiledInitializer(template) {
         var setters = {};
         
-        enumerateObj(template.attributes, function(item, flags) {
+        enumerateObj(template.attributes, function(item, property) {
             
-            var flags = compiledInitializer.getPropertyFlags(flags);
-            if (setters[flags.name]) throw "The property \"" + flags.name + "\"has been set more than once.";
+            property = compiledInitializer.getPropertyFlags(property);
+            if (setters[property.name]) throw "The property \"" + property.name + "\"has been set more than once.";
             
-            setters[flags.name] = {
-                parser: null,
+            setters[property.name] = {
+                parser: [],
                 bindingType: null,
                 value: item.value
             };
             
-            enumerateArr(flags.flags, function (flag) {
+            enumerateArr(property.flags, function (flag) {
                 if (parser[flag]) {
-                    if (setters[flags.name].parser) {
-                        var p = setters[flags.name].parser;
-                        setters[flags.name].parser = function(value, propertyName, renderContext) {
-                            parser[flag](p(value, propertyName, renderContext), propertyName, renderContext);
-                        };
-                    } else {
-                        setters[flags.name].parser = parser[flag];
-                    }
+                    setters[property.name].parser.push(parser[flag]);
                 } else if (wipeout.template.bindingTypes[flag]) {
-                    if (setters[flags.name].bindingType)
+                    if (setters[property.name].bindingType)
                         throw "A binding type is already specified for this property.";
                         
-                    setters[flags.name].bindingType = flag;
+                    setters[property.name].bindingType = flag;
                 }
             });
+            
+            var p = setters[property.name].parser;
+            if (p.length === 1)
+                setters[property.name].parser = p[0];
+            else if (p.length)
+                setters[property.name].parser = function (value, propertyName, renderContext) {
+                    for(var i = 0, ii = p.length; i < ii; i++)
+                        value = p[i](value, propertyName, renderContext);
+                    
+                    return value;
+                };
+            else 
+                setters[property.name].parser = null;
         });
         
         /*
@@ -116,8 +122,6 @@ Class("wipeout.template.compiledInitializer", function () {
     parser.f = parser["float"];
     parser.r = parser["regexp"];
     parser.d = parser["date"];
-    
-    
-    
+        
     return compiledInitializer;
 });

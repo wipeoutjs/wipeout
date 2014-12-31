@@ -1,9 +1,9 @@
 
 Class("wipeout.template.builder", function () {
         
-    var wipeoutPlaceholder = "wipeout_placeholder_";
+    var wipeoutPlaceholder = "wipeout_placeholder_id_";
     var generator = (function() {
-        var i = 0;
+        var i = Math.floor(Math.random() * 1000000000);
         return function() {
             return wipeoutPlaceholder + (++i);
         }

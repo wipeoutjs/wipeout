@@ -1,11 +1,14 @@
 
 Class("wipeout.template.htmlAttributes", function () {
     function htmlAttributes() {
-    }
+    }    
     
-    
-    // return dispose function
     htmlAttributes.click = function (value, element, renderContext) {
+        return function() {
+        };
+    };    
+    
+    htmlAttributes.text = function (value, element, renderContext) {
         return function() {
         };
     };
@@ -13,10 +16,19 @@ Class("wipeout.template.htmlAttributes", function () {
     htmlAttributes.id = function (value, element, renderContext) {
         renderContext.$data.templateItems[value] = element;
         element.id = value;
+        
+        return function() {
+            if (renderContext.$data.templateItems[value] === element)
+                delete renderContext.$data.templateItems[value]
+        }
     };
     
     htmlAttributes.wipeoutCreateViewModel = function (value, element, renderContext) {
-        new wipeout.template.viewModelElement(element, value);
+        var op = new wipeout.template.viewModelElement(element, value);
+        
+        return function () {
+            op.dispose(true);
+        };
     };
     
     var tmp = {};
