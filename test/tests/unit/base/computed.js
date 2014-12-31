@@ -205,3 +205,87 @@ testUtils.testWithUtils("integration test", "variable change", false, function(m
     stop();
     var1.val3 = "shane";        
 });
+
+testUtils.testWithUtils("integration test", "variable name vs property name", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject = wo.watch();
+    var var1 = wo.watch({
+        var2: wo.watch({
+            var3: 44
+        })
+    });
+    
+    var var2 = wo.watch();
+
+    new wipeout.base.computed(subject, "comp", function() {
+        return var1.
+        var2.var3;
+    }, {
+        var2: var2    // watch var2
+    });
+
+    subject.observe("comp", function(oldVal, newVal) {
+        ok(false);
+    });
+
+    // act
+    stop();
+    var2.var3 = "shane";
+    
+    setTimeout(function() {
+        ok(true);
+        start();
+    }, 100);
+});
+
+testUtils.testWithUtils("integration test", "variable name with character before", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject = wo.watch();
+    var var1 = wo.watch({val: 2});    
+    var avar1 = wo.watch({val: 3});
+
+    new wipeout.base.computed(subject, "comp", function() {
+        return avar1.val;
+    }, {
+        var1: var1
+    });
+
+    subject.observe("comp", function(oldVal, newVal) {
+        ok(false);
+    });
+
+    // act
+    stop();
+    var1.val = "shane";
+    
+    setTimeout(function() {
+        ok(true);
+        start();
+    }, 100);
+});
+
+testUtils.testWithUtils("integration test", "variable name with character after", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject = wo.watch();
+    var var1 = wo.watch({val: 2});    
+    var var1a = wo.watch({val: 3});
+
+    new wipeout.base.computed(subject, "comp", function() {
+        return var1a.val;
+    }, {
+        var1: var1
+    });
+
+    subject.observe("comp", function(oldVal, newVal) {
+        ok(false);
+    });
+
+    // act
+    stop();
+    var1.val = "shane";
+    
+    setTimeout(function() {
+        ok(true);
+        start();
+    }, 100);
+});

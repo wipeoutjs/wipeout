@@ -15,18 +15,6 @@ Class("wipeout.base.watched", function () {
     
     watched.prototype.__watching = {};
     
-    watched.watchPath = function(property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
-        ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
-        ///<param name="property" type="String" optional="false">The property</param>
-        ///<param name="callback" type="Function" optional="false">The callback for property change</param>
-        ///<param name="context" type="Any" optional="true">The context of the callback</param>
-        ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
-        ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
-        ///<returns type="Object">A disposable object</returns>
-        
-        return new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
-    };
-    
     watched.createObserveFunction = function(woBag, watchFunction) {
         ///<summary>Create a custom observe function. An observe function observes a property of the contextual object</summary>
         ///<param name="woBag" type="Object" optional="true">The __woBag to observe from. Defaults to this.__woBag</param>

@@ -77,6 +77,7 @@ Class("wipeout.base.computed", function () {
             
             if (item.index > 0) {
                 // determine whether the instance is part of a bigger variable name
+                // do not need to check trailing char as this is filtered by the regex
                 if (this.callback[item.index - 1].search(/[\w\$]/) !== -1)  //TODO test (another char before and after)
                     return;
 
@@ -84,7 +85,7 @@ Class("wipeout.base.computed", function () {
                 for (var j = item.index - 1; j >= 0; j--) { // TODO: test
                     if (this.callback[j] === ".")
                         return;
-                    else if (this.callback[j] !== " ")
+                    else if (this.callback[j].search(/\s/) !== 0)
                         break;
                 }
             }
