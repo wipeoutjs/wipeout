@@ -119,15 +119,14 @@ function testMe (moduleName, buildSubject) {
         }, 10);
     });
 
-    testUtils.testWithUtils("observe", "path, last element changed", false, function(methods, classes, subject, invoker) {
+    testUtils.testWithUtils("observe", "simple change, complex functions are in pathWatch.js", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();
         subject.aa = buildSubject();
         subject.aa.bb = buildSubject();
         subject.aa.bb.cc = 11;
         
-        //debugger;
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
+        var disp = subject.observe("aa.bb.cc", function(oldVal, newVal) {
             strictEqual(oldVal, 11);
             strictEqual(newVal, 22);
             start();
@@ -135,121 +134,8 @@ function testMe (moduleName, buildSubject) {
 
         // act
         stop();
-        subject.aa.bb.cc = 22;        
-    });
-
-
-    testUtils.testWithUtils("observe", "path, last element changed, has non observable in path", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.aa = {};
-        subject.aa.bb = buildSubject();
-        subject.aa.bb.cc = 11;
-        
-        //debugger;
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
-            strictEqual(oldVal, 11);
-            strictEqual(newVal, 22);
-            start();
-        });
-
-        // act
-        stop();
-        subject.aa.bb.cc = 22;        
-    });
-
-    testUtils.testWithUtils("observe", "path, mid element nulled then last element changed", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        var aa = subject.aa = buildSubject();
-        subject.aa.bb = buildSubject();
-        subject.aa.bb.cc = 11;
-        
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
-            strictEqual(oldVal, 11);
-            strictEqual(newVal, null);
-            start();
-            aa.bb.cc = 33; // make sure disposals are activated
-        });
-
-        // act
-        stop(2);
-        subject.aa = null;
-        
-        setTimeout(function() {
-            start();
-        }, 100);
-    });
-
-    testUtils.testWithUtils("observe", "path, mid element changed, null val", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.aa = buildSubject();
-        subject.aa.bb = buildSubject();
-        subject.aa.bb.cc = 11;
-        
-        //debugger;
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
-            strictEqual(oldVal, 11);
-            strictEqual(newVal, null);
-            start();
-        });
-
-        // act
-        stop();
-        subject.aa = {};
-        
-    });
-
-    testUtils.testWithUtils("observe", "path, mid element and last element changed", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.aa = buildSubject();
-        var bb = subject.aa.bb = buildSubject();
-        subject.aa.bb.cc = 11;
-        
-        var newVal = buildSubject();
-        newVal.bb = buildSubject();
-        newVal.bb.cc = 22;
-        
-        subject.observe("aa.bb.cc", function(oldVal, newVal) {
-            strictEqual(oldVal, 11);
-            strictEqual(newVal, 22);
-            start();
-        });
-
-        // act
-        stop();
-        subject.aa = newVal;
-        bb.cc = 33;
-        
-    });
-
-    testUtils.testWithUtils("observe", "path, mid element changed, after disposal", false, function(methods, classes, subject, invoker) {
-        // arrange
-        var subject = buildSubject();
-        subject.aa = buildSubject();
-        subject.aa.bb = buildSubject();
-        subject.aa.bb.cc = 11;
-        
-        var newVal = buildSubject();
-        newVal.bb = buildSubject();
-        newVal.bb.cc = 22;
-        
-        var dispose = subject.observe("aa.bb.cc", function(oldVal, newVal) {
-            debugger;
-            ok(false);
-        });
-
-        // act
-        stop();
-        dispose.dispose();
-        subject.aa = newVal;
-        
-        setTimeout(function() {
-            ok(true);
-            start();
-        }, 100);
+        subject.aa.bb.cc = 22;
+        ok(disp instanceof wipeout.base.pathWatch);
     });
 
     testUtils.testWithUtils("computed", "simple change, complex functions are in computed.js", false, function(methods, classes, subject, invoker) {
