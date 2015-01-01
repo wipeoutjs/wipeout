@@ -45,29 +45,34 @@ Class("wipeout.template.compiledTemplate", function () {
         this.html.push(' type="placeholder"></script>');
     };
     
-    compiledTemplate.prototype.addAttribute = function(attribute, name) {
+    compiledTemplate.prototype.addAttributes = function(attributes) {
         
-        var modifications = [];
+        var modifications;
         
-        // if it is a special attribute
-        if (wipeout.template.htmlAttributes[name]) {
+        enumerateObj(attributes, function (attribute, name) {
+        
+            // if it is a special attribute
+            if (wipeout.template.htmlAttributes[name]) {
 
-            // ensure the "id" modification is the first to be done
-            name === idString ?
-                modifications.splice(0, 0, {
-                    action: wipeout.template.htmlAttributes[name],
-                    value: attribute.value
-                }) :
-                modifications.push({
-                    action: wipeout.template.htmlAttributes[name],
-                    value: attribute.value
-                });
-        } else {
-            // add non special attribute
-            this.html.push(" " + name + element.attributes[name].serializeValue()); //TODO: put this on attr class
-        }
-        
-        return modifications;
+                // if it is the first special attribute for this element
+                if (!modifications)
+                    this.html.push(modifications = []);
+
+                // ensure the "id" modification is the first to be done
+                name === idString ?
+                    modifications.splice(0, 0, {
+                        action: wipeout.template.htmlAttributes[name],
+                        value: attribute.value
+                    }) :
+                    modifications.push({
+                        action: wipeout.template.htmlAttributes[name],
+                        value: attribute.value
+                    });
+            } else {
+                // add non special attribute
+                this.html.push(" " + name + attribute.serializeValue()); //TODO: put this on attr class
+            }
+        }, this);
     };
     
     compiledTemplate.prototype.addElement = function(element) {
@@ -77,16 +82,7 @@ Class("wipeout.template.compiledTemplate", function () {
         // add the element beginning
         this.html.push("<" + element.name);
 
-        var modifications;
-        enumerateObj(element.attributes, function (attr, name) {
-            if (modifications && modifications.length) {
-                enumerateArr(this.addAttribute(attr, name), modifications.push, modifications);
-            } else {
-                modifications = this.addAttribute(attr, name);
-                if (modifications.length)
-                    this.html.push(modifications);
-            }
-        }, this);
+        this.addAttributes(element.attributes);
 
         // add the element end
         if (element.inline) {
