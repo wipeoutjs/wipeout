@@ -3,12 +3,10 @@ Class("wipeout.template.compiledTemplate", function () {
     
     var string = "string", idString = "id";
     
-    compiledTemplate.idPlaceholder = {};
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
         
         this.html = [];
-        this.modifications = [];
         this._addedElements = [];
         
         enumerateArr(template, this.addNode, this);
@@ -38,8 +36,7 @@ Class("wipeout.template.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push(compiledTemplate.idPlaceholder);
-        this.modifications.push([{
+        this.html.push([{
             action: wipeout.template.htmlAttributes.wipeoutCreateViewModel,
             value: vmNode
         }]);
@@ -62,13 +59,8 @@ Class("wipeout.template.compiledTemplate", function () {
             if (wipeout.template.htmlAttributes[attr]) {
                 
                 // if it is the first special attribute for this element
-                if (!modifications) {
-                    modifications = [];
-                    
-                    // give it a unique id
-                    this.html.push(compiledTemplate.idPlaceholder);
-                    this.modifications.push(modifications);
-                }
+                if (!modifications)
+                    this.html.push(modifications = []);
 
                 // ensure the "id" modification is the first to be done
                 attr === idString ?

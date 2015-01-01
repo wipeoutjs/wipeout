@@ -12,31 +12,29 @@ Class("wipeout.template.builder", function () {
     function builder(template) {
         var htmlFragments = [];
         
-        var ids = [];
-        enumerateArr(template.html, function(html, i) {
-            if (html === wipeout.template.compiledTemplate.idPlaceholder) {
+        this.elements = [];
+        enumerateArr(template.html, function(html) {
+            if (typeof html === "string") {
+                htmlFragments.push(html);
+            } else {
                 var id = generator();
                 htmlFragments.push(" id=\"" + id + "\"");
-                ids.push(id);
-            } else {
-                htmlFragments.push(html);
+                this.elements.push({
+                    id: id,
+                    actions: html
+                });
             }
-        });
+        }, this);
         
         this.html = htmlFragments.join("");
-        this.modifications = template.modifications;
-        this.ids = ids;
-        
-        // the ammount of idPlaceholders should correspond to the amount of modifications
-        if(this.modifications.length !== this.ids.length) throw "Invalid html engine";
     }
     
     builder.prototype.execute = function(renderContext) {
         
         var output = [];
-        enumerateArr(this.ids, function(id, i) {
-            var element = document.getElementById(id);
-            enumerateArr(this.modifications[i], function(mod) {
+        enumerateArr(this.elements, function(elementAction) {
+            var element = document.getElementById(elementAction.id);
+            enumerateArr(elementAction.actions, function(mod) {
                 var dispose = mod.action(mod.value, element, renderContext);
                 if(dispose instanceof Function)
                     output.push(dispose);
