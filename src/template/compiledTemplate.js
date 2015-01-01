@@ -45,6 +45,35 @@ Class("wipeout.template.compiledTemplate", function () {
         this.html.push(' type="placeholder"></script>');
     };
     
+    compiledTemplate.prototype.addAttribute = function(attribute, name) {
+        
+        var modifications = this.html[this.html.length - 1] instanceof Array ? 
+            this.html[this.html.last - 1] : 
+            null;
+        
+        // if it is a special attribute
+        if (wipeout.template.htmlAttributes[name]) {
+
+            // if it is the first special attribute for this element
+            if (!modifications)
+                this.html.push(modifications = []);
+
+            // ensure the "id" modification is the first to be done
+            name === idString ?
+                modifications.splice(0, 0, {
+                    action: wipeout.template.htmlAttributes[name],
+                    value: attribute.value
+                }) :
+                modifications.push({
+                    action: wipeout.template.htmlAttributes[name],
+                    value: attribute.value
+                });
+        } else {
+            // add non special attribute
+            this.html.push(" " + name + element.attributes[name].serializeValue()); //TODO: put this on attr class
+        }
+    };
+    
     compiledTemplate.prototype.addElement = function(element) {
         ///<summary>Add an element which will be scanned for functionality and added to the dom</summary>
         ///<param name="node" type="wipeout.template.templateElement">The node</param>
@@ -52,31 +81,7 @@ Class("wipeout.template.compiledTemplate", function () {
         // add the element beginning
         this.html.push("<" + element.name);
 
-        var modifications;
-        for (var attr in element.attributes) {
-
-            // if it is a special attribute
-            if (wipeout.template.htmlAttributes[attr]) {
-                
-                // if it is the first special attribute for this element
-                if (!modifications)
-                    this.html.push(modifications = []);
-
-                // ensure the "id" modification is the first to be done
-                attr === idString ?
-                    modifications.splice(0, 0, {
-                        action: wipeout.template.htmlAttributes[attr],
-                        value: element.attributes[attr].value
-                    }) :
-                    modifications.push({
-                        action: wipeout.template.htmlAttributes[attr],
-                        value: element.attributes[attr].value
-                    });
-            } else {
-                // add non special attribute
-                this.html.push(" " + attr + element.attributes[attr].serializeValue()); //TODO: put this on attr class
-            }
-        }
+        enumerateObj(element.attributes, this.addAttribute, this);
 
         // add the element end
         if (element.inline) {
