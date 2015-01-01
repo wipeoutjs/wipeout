@@ -47,16 +47,10 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.prototype.addAttribute = function(attribute, name) {
         
-        var modifications = this.html[this.html.length - 1] instanceof Array ? 
-            this.html[this.html.last - 1] : 
-            null;
+        var modifications = [];
         
         // if it is a special attribute
         if (wipeout.template.htmlAttributes[name]) {
-
-            // if it is the first special attribute for this element
-            if (!modifications)
-                this.html.push(modifications = []);
 
             // ensure the "id" modification is the first to be done
             name === idString ?
@@ -72,6 +66,8 @@ Class("wipeout.template.compiledTemplate", function () {
             // add non special attribute
             this.html.push(" " + name + element.attributes[name].serializeValue()); //TODO: put this on attr class
         }
+        
+        return modifications;
     };
     
     compiledTemplate.prototype.addElement = function(element) {
@@ -81,7 +77,16 @@ Class("wipeout.template.compiledTemplate", function () {
         // add the element beginning
         this.html.push("<" + element.name);
 
-        enumerateObj(element.attributes, this.addAttribute, this);
+        var modifications;
+        enumerateObj(element.attributes, function (attr, name) {
+            if (modifications && modifications.length) {
+                enumerateArr(this.addAttribute(attr, name), modifications.push, modifications);
+            } else {
+                modifications = this.addAttribute(attr, name);
+                if (modifications.length)
+                    this.html.push(modifications);
+            }
+        }, this);
 
         // add the element end
         if (element.inline) {
