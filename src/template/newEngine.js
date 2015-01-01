@@ -42,7 +42,7 @@ Class("wipeout.template.newEngine", function () {
     engine.prototype.getVmInitializer = function (xmlInitializer) {
         
         var tmp;
-        return tmp = this.xmlIntializers.value(xmlInitializer) ?
+        return (tmp = this.xmlIntializers.value(xmlInitializer)) ?
             tmp :
             this.xmlIntializers.add(xmlInitializer, new wipeout.template.compiledInitializer(xmlInitializer));
     };

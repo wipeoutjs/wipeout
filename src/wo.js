@@ -10,7 +10,7 @@ window.wo = function (model, htmlElement) {
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
 
-    enumerateArr(htmlElement.getElementsByTagName("*"), function (element) {
+    enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
         // element may have been removed since get all elements
         if (htmlElement.contains(element) && getMeAViewModel(element))

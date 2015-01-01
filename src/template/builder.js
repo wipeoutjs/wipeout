@@ -1,6 +1,7 @@
 
 Class("wipeout.template.builder", function () {
         
+    // generate unique ids
     var wipeoutPlaceholder = "wipeout_placeholder_id_";
     var generator = (function() {
         var i = Math.floor(Math.random() * 1000000000);
@@ -10,13 +11,19 @@ Class("wipeout.template.builder", function () {
     }());
     
     function builder(template) {
-        var htmlFragments = [];
+        ///<summary>Build html and execute logic giving the html functionality</summary>
+        ///<param name="template" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
         
         this.elements = [];
+        
+        var htmlFragments = [];
+        
         enumerateArr(template.html, function(html) {
             if (typeof html === "string") {
+                // static html, add to output
                 htmlFragments.push(html);
             } else {
+                // dynamic content. Generate an id to find the html and add actions
                 var id = generator();
                 htmlFragments.push(" id=\"" + id + "\"");
                 this.elements.push({
@@ -30,10 +37,15 @@ Class("wipeout.template.builder", function () {
     }
     
     builder.prototype.execute = function(renderContext) {
+        ///<summary>Add dynamic content to the html</summary>
+        ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The context of the dynamic content</param>
         
         var output = [];
         enumerateArr(this.elements, function(elementAction) {
+            // get the element
             var element = document.getElementById(elementAction.id);
+            
+            // run all actions on it
             enumerateArr(elementAction.actions, function(mod) {
                 var dispose = mod.action(mod.value, element, renderContext);
                 if(dispose instanceof Function)

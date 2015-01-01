@@ -8,7 +8,6 @@ TODO:   wipeout.base.watched.prototype.observe, do something with dispose functi
         
 cleanup:
             visual.js (added viewModelElement to __woBag, computed and observe functions)
-            compiledTemplate.js
             compiledInitializer.js
             builder.js
             newEngine.js
