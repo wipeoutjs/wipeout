@@ -5,13 +5,23 @@ Class("wipeout.template.bindingTypes", function () {
     function bindingTypes() {
     }
     
-    var VALID_FOR_TW_BINDING = /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/;
-    bindingTypes.ow = function (setter, name, renderContext) {
+    bindingTypes.nb = function (setter, globalSetter, name, renderContext) {
         // use parser or lazy create auto parser
         var parser = 
             setter.parser || 
-            setter.autoParser || 
-            (setter.autoParser = wipeout.template.compiledInitializer.getAutoParser(setter.value));
+            (globalSetter && globalSetter.parser) ||
+            (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.value));
+        
+        renderContext.$data[name] = parser(setter.value, name, renderContext);
+    };
+    
+    var VALID_FOR_TW_BINDING = /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/;
+    bindingTypes.ow = function (setter, globalSetter, name, renderContext) {
+        // use parser or lazy create auto parser
+        var parser = 
+            setter.parser || 
+            (globalSetter && globalSetter.parser) ||
+            (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.value));
         
         renderContext.$data.computed(name, parser, {
             "value": setter.value, 
@@ -20,7 +30,7 @@ Class("wipeout.template.bindingTypes", function () {
         });
     };
     
-    bindingTypes.owts = function (setter, name, renderContext) {
+    bindingTypes.owts = function (setter, globalSetter, name, renderContext) {
         if (!VALID_FOR_TW_BINDING.test(setter.value))
             throw "Setter \"" + value + "\" must reference only one value when binding back to the source.";
 
@@ -38,9 +48,9 @@ Class("wipeout.template.bindingTypes", function () {
         });
     };
     
-    bindingTypes.tw = function (setter, name, renderContext) {
-        bindingTypes.ow(setter, name, renderContext);
-        bindingTypes.owts(setter, name, renderContext);
+    bindingTypes.tw = function (setter, globalSetter, name, renderContext) {
+        bindingTypes.ow(setter, globalSetter, name, renderContext);
+        bindingTypes.owts(setter, globalSetter, name, renderContext);
     };
     
     return bindingTypes;
