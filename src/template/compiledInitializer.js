@@ -142,9 +142,14 @@ Class("wipeout.template.compiledInitializer", function () {
             this.setters[name].parser = null;
     };
     
-    compiledInitializer.prototype.initialize = function (viewModel, renderContext) {        
+    compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
+        var globalSetter = viewModel.__woBag.propertySettings;
+        
         enumerateObj(this.setters, function (setter, name) {
-            wipeout.template.bindingTypes[setter.bindingType || "ow"](viewModel, setter, name, renderContext);
+            
+            // use binding type or globally defined binding type or default binding type
+            var bt = setter.bindingType || (globalSetter[name] && globalSetter[name].bindingType) || "ow";            
+            wipeout.template.bindingTypes[bt](viewModel, setter, name, renderContext);
         });
     };
     
