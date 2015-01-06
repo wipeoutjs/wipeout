@@ -174,7 +174,7 @@ Class("wipeout.viewModels.view", function () {
         
         wipeout.template.newEngine.instance
             .getVmInitializer(propertiesXml)
-            .initialize(renderContext);
+            .initialize(this, renderContext);
     };
     
     view.objectParser = {

@@ -118,10 +118,10 @@ Class("wipeout.template.compiledTemplate", function () {
         ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
         
         // This only works if builder is gaurenteed to work synchronusly.
-        // If not, create a new builder each time        
-        return this._builder || (this._builder = new wipeout.template.builder(this));
-        
+        // If not, create a new builder each time:
         //return new wipeout.template.builder(this);
+        
+        return this._builder || (this._builder = new wipeout.template.builder(this));        
     };
         
     return compiledTemplate;
