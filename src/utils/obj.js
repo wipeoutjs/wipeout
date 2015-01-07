@@ -58,22 +58,6 @@ var enumerateObj = function(enumerate, action, context) {
         action.call(context, enumerate[i], i);
 };
 
-var Binding = function(bindingName, allowVirtual, accessorFunction) {
-    ///<summary>Create a knockout binding</summary>
-    ///<param name="bindingName" type="String">The name of the binding</param>
-    ///<param name="allowVirtual" type="Boolean">Specify whether the binding can be used with virtual elements</param>
-    ///<param name="accessorFunction" type="Function">A function which returns the binding</param>
-    
-    var cls = Class("wipeout.bindings." + bindingName, accessorFunction);    
-    ko.bindingHandlers[bindingName] = {
-        init: cls.init,
-        update: cls.update
-    };
-    
-    if(allowVirtual)
-        ko.virtualElements.allowedBindings[bindingName] = true;
-};
-
 var Class = function(classFullName, accessorFunction) {
     ///<summary>Create a wipeout class</summary>
     ///<param name="classFullName" type="String">The name of the class</param>

@@ -129,15 +129,13 @@ Class("wipeout.utils.html", function () {
         ///<summary>Get the view model associated with a html node</summary>
         ///<param name="forHtmlNode" type="HTMLNode">The element which is the root node of a wo.view</param>
         ///<returns type="wo.view">The view model associated with this node, or null</returns>
-        var vm = wipeout.utils.domData.get(forHtmlNode, wipeout.bindings.wipeout.utils.wipeoutKey);
-        if(vm)
-            return vm;
         
-        var parent = wipeout.utils.ko.parentElement(forHtmlNode);
-        if(parent)
-            return getViewModel(parent);
+        if (!forHtmlNode.wipeoutOpening)
+            forHtmlNode = wipeout.template.viewModelElement.getParentElement(forHtmlNode);
         
-        return null;
+        return forHtmlNode ?
+            forHtmlNode.wipeoutOpening.viewModel :
+            null;
     };
     
     var createTemplatePlaceholder = function(forViewModel) {
@@ -155,37 +153,6 @@ Class("wipeout.utils.html", function () {
         wipeout.template.asyncLoader.instance.load(templateId);
     };
     
-    var cleanNode = function(node) {
-        ///<summary>Clean down and dispose of all of the bindings (ko and wo) associated with this node and its children</summary> 
-        ///<param name="node" type="HTMLNode" optional="false">The node</param>
-        
-        var bindings = wipeout.utils.domData.get(node, wipeout.bindings.bindingBase.dataKey);
-        
-        // check if children have to be disposed
-        var controlChildren = false;
-        enumerateArr(bindings, function(binding) {
-            controlChildren |= binding.bindingMeta.controlsDescendantBindings;
-        });
-
-        // dispose of all children
-        if(!controlChildren) {
-            var child = ko.virtualElements.firstChild(node);
-            while (child) {
-                cleanNode(child);
-                child = ko.virtualElements.nextSibling(child);
-            }
-        }
-        
-        // dispose of all wo bindings
-        enumerateArr(bindings, function(binding) {
-            binding.dispose();
-        });
-
-        // clear ko and wo data
-        wipeout.utils.domData.clear(node, wipeout.bindings.bindingBase.dataKey);
-        ko.cleanNode(node);
-    };
-    
     var html = function html(htmlManipulationLogic) {
         ///<summary>If html elements are to be moved or deleted, wrap the move logic in a call to this function to ensure disposal of unused view models</summary> 
         ///<param name="htmlManipulationLogic" type="Function" optional="false">A callback to manipulate html</param>
@@ -196,7 +163,6 @@ Class("wipeout.utils.html", function () {
         });
     };
     
-    html.cleanNode = cleanNode;
     html.cannotCreateTags = cannotCreateTags;
     html.createTemplatePlaceholder = createTemplatePlaceholder;
     html.specialTags = specialTags;
