@@ -1,8 +1,8 @@
 
 bug, handle null template id better
 
-global binding type (e.g. bind model two ways by default)
-global parser (e.g. always parse template as string)
+profiler
+is templateArea needed?
 
 TODO:   wipeout.base.watched.prototype.observe, do something with dispose function from watch
         wipeout.base.watched.prototype.observe/watch, unit test dispose functionality

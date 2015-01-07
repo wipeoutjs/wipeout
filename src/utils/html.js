@@ -125,135 +125,6 @@ Class("wipeout.utils.html", function () {
         keygen: "select"
     };
     
-    var createElement = function(htmlString) {
-        ///<summary>Create a html element from a string</summary>
-        ///<param name="htmlString" type="String">A string of html</param>
-        ///<returns type="HTMLElement">The first element in the string as a HTMLElement</returns>
-        
-        var tagName = wipeout.utils.obj.trimToLower(getTagName(htmlString));
-        if(cannotCreateTags[tagName]) throw "Cannot create an instance of the \"" + tagName + "\" tag.";
-        
-        var parentTagName = specialTags[tagName] || "div";
-        
-        // the innerHTML for some tags is readonly in IE
-        if(ko.utils.ieVersion && ieReadonlyElements[parentTagName])
-            return firstChildOfType(createElement("<" + parentTagName + ">" + htmlString + "</" + parentTagName + ">"), tagName);
-            
-        var parent = document.createElement(parentTagName);
-        parent.innerHTML = htmlString;
-        
-        function getElement(tagName) {
-            if(!tagName) return null;
-            
-            for(var i  = 0, ii = parent.childNodes.length; i < ii; i++) {
-                // IE might create some other elements along with the one specified
-                if(parent.childNodes[i].nodeType === 1 && parent.childNodes[i].tagName.toLowerCase() === tagName) {
-                    var element = parent.childNodes[i];
-                    parent.removeChild(element);
-                    return element;
-                }
-            }
-            
-            return null;
-        }
-        
-        return getElement(tagName) || getElement(replaceTags[tagName]);
-    }; 
-       
-    var createElements = function(htmlString) {
-        ///<summary>Create an array of html elements from a string</summary>
-        ///<param name="htmlString" type="String">A string of html</param>
-        ///<returns type="HTMLElement">The string as an array of HTMLElements</returns>
-        
-        if(htmlString == null) return [];
-        
-        var sibling = getFirstTagName(htmlString) || "div";
-        var parent = specialTags[getTagName("<" + sibling + "/>")] || "div";
-        
-        // the innerHTML for some tags is readonly in IE
-        if(ko.utils.ieVersion && ieReadonlyElements[parent]) {
-            var div = createElement("<" + parent + ">" + htmlString + "</" + parent + ">");
-            var output = [];
-            while(div.firstChild) {
-                output.push(div.firstChild);
-                div.removeChild(div.firstChild);
-            }
-            
-            return output;
-        }
-        
-        // add wrapping elements so that text element won't be trimmed
-        htmlString = "<" + sibling + "></" + sibling + ">" + htmlString + "<" + sibling + "></" + sibling + ">";
-        
-        var div = document.createElement(parent);
-        div.innerHTML = htmlString;
-        
-        var output = [];
-        while(div.firstChild) {
-            output.push(div.firstChild);
-            div.removeChild(div.firstChild);
-        }
-        
-        // remove added divs
-        output.splice(0, 1);
-        output.splice(output.length - 1, 1);
-        
-        return output;
-    };  
- 
-    var getAllChildren = function (element) {
-        ///<summary>Get all of the children of a html element or knockout virtual element</summary>
-        ///<param name="element" type="HTMLNode">An element or knockout virtual element</param>
-        ///<returns type="Array" generic0="HTMLNode">All of the nodes in the element</returns>
-        
-        var children = [];
-        if (wipeout.utils.ko.isVirtual(element)) {
-            var parent = wipeout.utils.ko.parentElement(element);
-            
-            // find index of "element"
-            for (var i = 0, ii = parent.childNodes.length; i < ii; i++) {
-                if (parent.childNodes[i] === element)
-                    break;
-            }
- 
-            i++;
- 
-            // use previous i
-            // get all children of the virtual element. It is ok to get more than
-            // just the children as the next block will break out when un wanted nodes are reached
-            for (var ii = parent.childNodes.length; i < ii; i++) {
-                children.push(parent.childNodes[i]);
-            }
-        } else {
-            children = element.childNodes;
-        }
- 
-        var output = [];
-        var depth = 0;
- 
-        for (var i = 0, ii = children.length; i < ii; i++) {
-            if (wipeout.utils.ko.isVirtualClosing(children[i])) {
-                depth--;
-                
-                // we are in a virtual parent element
-                if (depth < 0) return output;
-                continue;
-            }
- 
-            // we are in a virtual child element
-            if (depth > 0)
-                continue;
- 
-            output.push(children[i]);
-            
-            // the next element will be in a virtual child
-            if (wipeout.utils.ko.isVirtual(children[i]))
-                depth++;
-        }
- 
-        return output;
-    };
-    
     var getViewModel = function(forHtmlNode) {
         ///<summary>Get the view model associated with a html node</summary>
         ///<param name="forHtmlNode" type="HTMLNode">The element which is the root node of a wo.view</param>
@@ -331,10 +202,7 @@ Class("wipeout.utils.html", function () {
     html.specialTags = specialTags;
     html.getFirstTagName = getFirstTagName;
     html.getTagName = getTagName;
-    html.getAllChildren = getAllChildren;
     html.outerHTML = outerHTML;
-    html.createElement = createElement;
-    html.createElements = createElements;
     html.getViewModel = getViewModel
     
     return html;    

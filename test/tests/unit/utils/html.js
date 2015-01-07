@@ -29,24 +29,6 @@ test("outerHTML", function() {
     });    
 });
 
-test("createElement", function() {
-    // arrange    
-    // act    
-    //assert
-    wo.obj.enumerateObj(wo.visual.reservedTags, function(val, tag) {
-        if(wo.html.cannotCreateTags[tag])
-            throws(function() { wo.html.createElement("<" + createElement + "></" + createElement + ">"); }, tag);
-        else {
-            var element = wo.html.createElement("<" + tag + "></" + tag + ">");
-            ok(element instanceof HTMLElement, tag + " instance");
-            
-            // firefox creates select elements instead of keygens
-            if(tag !==  "keygen")
-                strictEqual(element.tagName.toLowerCase(), tag, tag + " created");
-        }
-    });    
-});
-
 testUtils.testWithUtils("getTagName", "", true, function(methods, classes, subject, invoker) {
     // arrange    
     // act    
@@ -64,55 +46,6 @@ testUtils.testWithUtils("getFirstTagName", "", true, function(methods, classes, 
     strictEqual(invoker("<asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
     strictEqual(invoker("    <asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
     strictEqual(invoker(" sadsad   <asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-});
-
-testUtils.testWithUtils("createElements", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    
-    // act
-    var elements = invoker("<div></div><span></span><input></input>");
-    
-    // assert    
-    strictEqual(elements.length, 3);
-    strictEqual(elements[0].constructor, HTMLDivElement);
-    strictEqual(elements[1].constructor, HTMLSpanElement);
-    strictEqual(elements[2].constructor, HTMLInputElement);
-});
-
-testUtils.testWithUtils("createElements", "special tags", true, function(methods, classes, subject, invoker) {
-    // arrange
-    
-    // act
-    var elements = invoker("<tbody></tbody>");
-    
-    // assert    
-    strictEqual(elements.length, 1);
-    strictEqual(elements[0].constructor, HTMLTableSectionElement);
-});
-
-testUtils.testWithUtils("getAllChildren", "virtual", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var html = $("<div><!-- ko --><span></span><!-- /ko --><input /></div>");
-    
-    // act
-    var result = invoker(html[0].childNodes[0]);
-    
-    // assert 
-    strictEqual(result.length, 1);
-    strictEqual(result[0].constructor, HTMLSpanElement);
-});
-
-testUtils.testWithUtils("getAllChildren", "non virtual", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var html = $("<div><!-- ko --><span></span><!-- /ko --><input /></div>");
-    
-    // act
-    var result = invoker(html[0]);
-    
-    // assert 
-    strictEqual(result.length, 2);
-    strictEqual(result[0].constructor, Comment);
-    strictEqual(result[1].constructor, HTMLInputElement);
 });
 
 testUtils.testWithUtils("getViewModel", "", true, function(methods, classes, subject, invoker) {

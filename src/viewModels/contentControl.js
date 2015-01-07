@@ -40,7 +40,8 @@ Class("wipeout.viewModels.contentControl", function () {
             var templateArea = null;
             return function() {
                 if(!templateArea) {
-                    templateArea = wipeout.utils.html.createElement("<div style='display: none'></div>");
+                    templateArea = document.createElement("div");
+                    templateArea.style.display = "none";
                     document.body.appendChild(templateArea);
                 }
                 

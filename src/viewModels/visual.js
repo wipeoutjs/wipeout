@@ -56,7 +56,9 @@ Class("wipeout.viewModels.visual", function () {
         ///<param name="displayFunction" type="Function" optional="true">A function to convert view models found into a custom type</param>
         ///<returns type="Array" generic0="Object">The visual graph</returns>
 
-        if (!rootElement)
+        throw "TODO";
+        
+        /*if (!rootElement)
             return [];
 
         displayFunction = displayFunction || function() { return typeof arguments[0]; };
@@ -71,7 +73,7 @@ Class("wipeout.viewModels.visual", function () {
             return [{ viewModel: vm, display: displayFunction(vm), children: output}];
         }
 
-        return output;
+        return output;*/
     };
     
     visual.prototype.dispose = function() {
