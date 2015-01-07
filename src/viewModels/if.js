@@ -21,43 +21,43 @@ Class("wipeout.viewModels.if", function () {
         ///<Summary type="Boolean">Specifies whether this object should be used as a binding context. If true, the binding context of this object will be it's parent. Default is true</Summary>
         this.shareParentScope = true;
         
-        ///<Summary type="ko.observable" generic0="Boolean">if true, the template will be rendered, otherwise a blank template is rendered</Summary>
-        this.condition = ko.observable();
+        ///<Summary type="Boolean">if true, the template will be rendered, otherwise a blank template is rendered</Summary>
+        this.condition = false;
         
-        ///<Summary type="ko.observable" generic0="String">the template to render if the condition is false. Defaults to a blank template</Summary>
-        this.elseTemplateId = ko.observable(_if.blankTemplateId);
+        ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
+        this.elseTemplateId = _if.blankTemplateId;
         
-        var d1 = this.elseTemplateId.subscribe(this.elseTemplateChanged, this);
-        this.registerDisposable(d1);
+        this.observe("elseTemplateId", this.elseTemplateChanged, this);
         
-        ///<Summary type="ko.observable" generic0="String">Anonymous version of elseTemplateId</Summary>
-        this.elseTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.elseTemplateId, this);
+        ///<Summary type="String">Anonymous version of elseTemplateId</Summary>
+        this.elseTemplate = "";
+        wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "elseTemplateId", "elseTemplate");
         
         ///<Summary type="String">Stores the template id if the condition is false</Summary>
         this.__cachedTemplateId = this.templateId;
         
-        var d2 = this.condition.subscribe(this.onConditionChanged, this);
-        this.registerDisposable(d2);
-        
-        var d3 = this.observe("templateId", this.copyTemplateId, this);
-        this.registerDisposable(d3);
-        
+        this.observe("condition", this.onConditionChanged, this);
+        this.observe("templateId", this.copyTemplateId, this);
+                
         this.copyTemplateId(null, this.templateId);
     });
     
-    _if.prototype.elseTemplateChanged = function (newVal) {
+    _if.prototype.elseTemplateChanged = function (oldVal, newVal) {
         ///<summary>Resets the template id to the else template if condition is not met</summary>  
-        ///<param name="newVal" type="String" optional="false">The else template Id</param>   
-        if (!this.condition()) {
+        ///<param name="oldVal" type="String" optional="false">The old else template Id</param>    
+        ///<param name="newVal" type="String" optional="false">The else template Id</param>
+        if (!this.condition) {
             this.templateId = newVal;
         }
     };
     
-    _if.prototype.onConditionChanged = function (newVal) {
+    _if.prototype.onConditionChanged = function (oldVal, newVal) {
         ///<summary>Set the template based on whether the condition is met</summary>      
+        ///<param name="oldVal" type="Boolean" optional="false">The old condition</param>     
         ///<param name="newVal" type="Boolean" optional="false">The condition</param>   
+        
         if (this.__oldConditionVal && !newVal) {
-            this.templateId = this.elseTemplateId();
+            this.templateId = this.elseTemplateId;
         } else if (!this.__oldConditionVal && newVal) {
             this.templateId = this.__cachedTemplateId;
         }
@@ -69,11 +69,11 @@ Class("wipeout.viewModels.if", function () {
         ///<summary>Cache the template id and check whether correct template is applied</summary>
         ///<param name="oldTemplateId" type="String" optional="false">The old template id</param>
         ///<param name="templateId" type="String" optional="false">The template id to cache</param>      
-        if (templateId !== this.elseTemplateId())
+        if (templateId !== this.elseTemplateId)
             this.__cachedTemplateId = templateId;
     
-        if (!this.condition() && templateId !== this.elseTemplateId()) {
-            this.templateId = this.elseTemplateId();
+        if (!this.condition && templateId !== this.elseTemplateId) {
+            this.templateId = this.elseTemplateId;
         }
     };
     
