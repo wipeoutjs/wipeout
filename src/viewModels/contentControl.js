@@ -7,8 +7,10 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         this._super(templateId || wipeout.viewModels.visual.getBlankTemplateId(), model);
 
-        ///<Summary type="ko.observable" generic0="string">The template which corresponds to the templateId for this item</Summary>
-        this.template = contentControl.createTemplatePropertyFor(this.templateId, this);
+        ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
+        this.template = "";
+        
+        wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "templateId", "template");
     });    
     
     contentControl.createTemplatePropertyFor = function(templateIdObservable, owner) {
@@ -28,6 +30,46 @@ Class("wipeout.viewModels.contentControl", function () {
         });
         
         if(owner instanceof wipeout.viewModels.visual)
+            owner.registerDisposable(output);
+        
+        return output;
+    };   
+    
+    contentControl.createNONOBSERVABLETemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+        ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
+        ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
+        ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
+        ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
+        
+        function changeTemplate(oldVal, newVal) {
+            var script = document.getElementById(newVal);            
+            owner[templateProperty] = script ? script.text : "";
+        }
+        
+        changeTemplate(null, owner[templateIdProperty]);
+        
+        var d1 = owner.observe(templateIdProperty, changeTemplate);
+        
+        var d2 = owner.observe(templateProperty, function(oldVal, newVal) {
+            // TODO: this is inefficient, will always be executed twice
+            owner[templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        });
+        
+        var output = {
+            dispose: function() {
+                if (d1) {
+                    d1.dispose();
+                    d1 = null;
+                }
+                
+                if (d2) {
+                    d2.dispose();
+                    d2 = null;
+                }
+            }
+        };
+        
+        if (owner instanceof wipeout.viewModels.visual)
             owner.registerDisposable(output);
         
         return output;
