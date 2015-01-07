@@ -151,6 +151,20 @@ Class("wipeout.base.object", function () {
         
         return childClass.constructor;
     };
+    
+    //TODO: test
+    object.getInheritanceChain = function(forClass) {
+        var chain = [];
+            
+        while (forClass) {            
+            chain.push(forClass);
+            forClass = Object.getPrototypeOf(forClass.prototype);
+            if(forClass)
+                forClass = forClass.constructor
+        }
+        
+        return chain;
+    };
 
     return object;
 });

@@ -162,21 +162,6 @@ Class("wipeout.viewModels.view", function () {
         return false;
     };
     
-    view.prototype._initialize = function(propertiesXml, renderContext) {
-        ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
-        ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The binding context of the wipeout view model</param>
-        if(this.__woBag.initialized) throw "Cannot call initialize item twice";
-        this.__woBag.initialized = true;
-        
-        if(!propertiesXml)
-            return;
-        
-        wipeout.template.newEngine.instance
-            .getVmInitializer(propertiesXml)
-            .initialize(this, renderContext);
-    };
-    
     view.objectParser = {
         "json": function (value) {
             return JSON.parse(value);

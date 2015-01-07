@@ -16,7 +16,7 @@
         window.newObject = wo.view.extend(function newObject() {
             this._super();
         });
-        
+                
         window.root = wo.view.extend(function root() {
             this._super("rrrooottt");
             
@@ -30,11 +30,17 @@
             r1 = this;
         });
         
-        setTimeout(function() {return;
+        root2.addGlobalBindingType("xY", "tw");
+        
+        setTimeout(function() {
+            
+            console.log(r1.xZ.prop2 + " " + typeof r1.xZ.prop2);
+            
+            return;
             alert(r1.xY);
-            r.val = 555;
+            r1.xY = 555;
             setTimeout(function() {
-                alert(r1.xY);
+                alert(r.val);
             }, 100);
         }, 2000);
         

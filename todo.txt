@@ -15,10 +15,14 @@ cleanup:
             builder.js
             newEngine.js
             renderContext.js
+            visual.js (dispose stuff is gone or changed)
             wo.js
-            view.js (_initialize)
+            view.js (_initialize is gone)
             bindingTypes.js
             htmlAttributes.js
+            object.js (see TODO)
+            dictionary.js
+            bindable.js
 
 
 

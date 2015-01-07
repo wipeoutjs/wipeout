@@ -1,26 +1,10 @@
 
 Class("wipeout.template.newEngine", function () {
-
-    // only used once in app, so not bothering with prototype
-    function dictionary () {
-        var keyArray = [], valueArray = [];
-        
-        this.add = function (key, value) {
-            var i = keyArray.indexOf(key);
-            i === -1 ? (keyArray.push(key), valueArray.push(value)) : valueArray[i] = value;
-            
-            return value;
-        };
-        
-        this.value = function (key) {
-            return valueArray[keyArray.indexOf(key)];
-        };
-    }
     
     function engine () {
         this.compiledTemplates = {};
         
-        this.xmlIntializers = new dictionary();
+        this.xmlIntializers = new wipeout.utils.dictionary;
     }
     
     engine.prototype.getTemplate = function (templateId) {

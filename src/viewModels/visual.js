@@ -1,7 +1,7 @@
 
 Class("wipeout.viewModels.visual", function () {
     
-    var visual = wipeout.base.watched.extend(function visual (templateId) {
+    var visual = wipeout.base.bindable.extend(function visual (templateId) {
         ///<summary>Base class for anything with a visual element. Interacts with the wipeout template engine to render content</summary>
         ///<param name="templateId" type="String" optional="true">A default template id</param>
         this._super();
@@ -18,14 +18,10 @@ Class("wipeout.viewModels.visual", function () {
         //TODO: most of this is to do with old templating
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.__woBag.disposed = wipeout.events.event();
-        this.__woBag.disposables = {};
         this.__woBag.createdByWipeout = false;
         this.__woBag.rootHtmlElement = null;
         this.__woBag.routedEventSubscriptions = [];
         this.__woBag.nodes = [];
-        
-        //TODO: temporary
-        this.__woBag.propertySettings = {};
     });
     
     visual.getDefaultTemplateId = (function () {
@@ -78,28 +74,17 @@ Class("wipeout.viewModels.visual", function () {
         return output;
     };
     
-    visual.prototype.computed = function(name, callback, watchVariables) {
-        ///<summary>Do "delete obj.prop" functionality</summary>
-        ///<param name="property" type="String" optional="false">The property name</param>
-        ///<returns type="Boolean">The result of the delete</returns>
-        
-        var comp = this._super.apply(this, arguments);
-        this.registerDisposable(comp);
-        return comp;
-    };
-    
-    visual.prototype.observe = function(property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
-        ///<summary>Observe a property for change</summary>
-        ///<param name="property" type="String" optional="false">The property</param>
-        ///<param name="callback" type="Function" optional="false">The callback for property change</param>
-        ///<param name="context" type="Any" optional="true">The context of the callback</param>
-        ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
-        ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
-        ///<returns type="Object">A disposable object</returns>
-        
-        var obs = this._super.apply(this, arguments);
-        this.registerDisposable(obs);
-        return obs;
+    visual.prototype.dispose = function() {
+        ///<summary>Dispose of this visual</summary>
+
+        this._super();
+
+        // dispose of routed event subscriptions
+        enumerateArr(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
+            event.dispose();
+        });
+
+        this.__woBag.disposed.trigger();
     };
     
     visual.prototype.entireViewModelHtml = function() {
@@ -133,68 +118,10 @@ Class("wipeout.viewModels.visual", function () {
         return [];
     };
     
-    visual.prototype.disposeOf = function(key) {
-        ///<summary>Dispose of an item registered as a disposable</summary>
-        ///<param name="key" type="String" optional="false">The key of the item to dispose</param>
-        if(this.__woBag.disposables[key]) {
-            this.__woBag.disposables[key]();
-            delete this.__woBag.disposables[key];
-        }
-    };
-    
-    visual.prototype.disposeOfAll = function() {
-        ///<summary>Dispose of all items registered as a disposable</summary>
-        for(var i in this.__woBag.disposables)
-            this.disposeOf(i);
-    };
-    
-    visual.prototype.registerDisposeCallback = (function() {
-        var i = 0;
-        return function(disposeFunction) {
-            ///<summary>Register a dispose function which will be called when this object is disposed of.</summary>
-            ///<param name="disposeFunction" type="Function" optional="false">The function to call when on dispose</param>
-            ///<returns type="String">A key to dispose off this object manually</returns>
-
-            if(!disposeFunction || disposeFunction.constructor !== Function) throw "The dispose function must be a Function";
-
-            var id = (++i).toString();            
-            this.__woBag.disposables[id] = disposeFunction;            
-            return id;
-        };
-    })();
-    
-    visual.prototype.registerDisposable = function(disposableOrDisposableGetter) {
-        ///<summary>An object with a dispose function to be disposed when this object is disposed of.</summary>
-        ///<param name="disposableOrDisposableGetter" type="Function" optional="false">The function to dispose of on dispose, ar a function to get this object</param>
-        ///<returns type="String">A key to dispose off this object manually</returns>
-        
-        if(!disposableOrDisposableGetter) throw "Invalid disposeable object";        
-        if(disposableOrDisposableGetter.constructor === Function && !disposableOrDisposableGetter.dispose) disposableOrDisposableGetter = disposableOrDisposableGetter.call(this);        
-        if(!disposableOrDisposableGetter || !(disposableOrDisposableGetter.dispose instanceof Function)) throw "The disposable object must have a dispose(...) function";
-
-        return this.registerDisposeCallback(function() { disposableOrDisposableGetter.dispose(); });
-    };
-    
     visual.prototype.getRootHtmlElement = function() {
         ///<summary>Get the root of this view model. Unless rendered manually using the render binding, it will be a knockout virtual element</summary>
         ///<returns type="Node">The root element</returns>
         return this.__woBag.rootHtmlElement;
-    };
-    
-    visual.prototype.dispose = function() {
-        ///<summary>Dispose of this visual</summary>
-
-        // dispose of any computeds
-        for(var i in this)
-            if(ko.isObservable(this[i]) && this[i].dispose instanceof Function)
-                this[i].dispose();
-
-        // dispose of routed event subscriptions
-        enumerateArr(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
-            event.dispose();
-        });
-
-        this.__woBag.disposed.trigger();
     };
     
     visual.prototype.getParents = function(includeSharedParentScopeItems) {

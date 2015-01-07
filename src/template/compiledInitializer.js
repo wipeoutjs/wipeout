@@ -65,14 +65,14 @@ Class("wipeout.template.compiledInitializer", function () {
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
                     this.setters[name] = {
-                        parser: parser.createAndSet,
+                        parser: compiledInitializer.parsers.createAndSet,
                         bindingType: "nb",
                         value: {
                             xml: element[i],
                             constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
                         }
                     };
-
+                    
                     return;
                 }
             }
@@ -110,8 +110,8 @@ Class("wipeout.template.compiledInitializer", function () {
     compiledInitializer.prototype.addFlags = function (setter, flags) {
         // process parseing and binding flags
         enumerateArr(flags, function (flag) {
-            if (parser[flag]) {
-                setter.parser.push(parser[flag]);
+            if (compiledInitializer.parsers[flag]) {
+                setter.parser.push(compiledInitializer.parsers[flag]);
             } else if (wipeout.template.bindingTypes[flag]) {
                 if (setter.bindingType)
                     throw "A binding type is already specified for this property.";
@@ -143,14 +143,18 @@ Class("wipeout.template.compiledInitializer", function () {
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
-        var globalSetter = viewModel.__woBag.propertySettings;
         
         enumerateObj(this.setters, function (setter, name) {
             
-            // use binding type or globally defined binding type or default binding type
-            var bt = setter.bindingType || (globalSetter[name] && globalSetter[name].bindingType) || "ow";            
+            // use binding type, globally defined binding type or default binding type
+            var bt = setter.bindingType || 
+                (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
+                "ow";
+            
             wipeout.template.bindingTypes[bt](viewModel, setter, name, renderContext);
         });
+        
+        return viewModel;
     };
     
     compiledInitializer.getAutoParser = function (value) {
@@ -164,7 +168,7 @@ Class("wipeout.template.compiledInitializer", function () {
     };
     
     
-    var parser = {
+    compiledInitializer.parsers = {
         "json": function (value, propertyName, renderContext) {
             return JSON.parse(value);
         },
@@ -188,9 +192,13 @@ Class("wipeout.template.compiledInitializer", function () {
             return new Date(trim(value));
         },
         "createAndSet": function (value, propertyName, renderContext) {
-            //TODO: if output is not a view model?
+            //TODO: dispose
             var output = new value.constructor;
-            output._initialize(value.xml, renderContext);
+        
+            wipeout.template.newEngine.instance
+                .getVmInitializer(value.xml)
+                .initialize(output, renderContext);
+            
             return output;
         },
         "set": function (value, propertyName, renderContext) {
@@ -198,13 +206,13 @@ Class("wipeout.template.compiledInitializer", function () {
         }
     };
     
-    parser.j = parser["json"];
-    parser.s = parser["string"];
-    parser.b = parser["bool"];
-    parser.i = parser["int"];
-    parser.f = parser["float"];
-    parser.r = parser["regexp"];
-    parser.d = parser["date"];
+    compiledInitializer.parsers.j = compiledInitializer.parsers["json"];
+    compiledInitializer.parsers.s = compiledInitializer.parsers["string"];
+    compiledInitializer.parsers.b = compiledInitializer.parsers["bool"];
+    compiledInitializer.parsers.i = compiledInitializer.parsers["int"];
+    compiledInitializer.parsers.f = compiledInitializer.parsers["float"];
+    compiledInitializer.parsers.r = compiledInitializer.parsers["regexp"];
+    compiledInitializer.parsers.d = compiledInitializer.parsers["date"];
         
     return compiledInitializer;
 });

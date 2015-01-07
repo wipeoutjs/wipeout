@@ -7,25 +7,28 @@ Class("wipeout.template.bindingTypes", function () {
     
     //TODO: remove global setter: get it from view model
     bindingTypes.nb = function (viewModel, setter, name, renderContext) {
-        var globalSetter = viewModel.__woBag.propertySettings;
+        var globalParser = viewModel instanceof wipeout.base.bindable ?
+            viewModel.getGlobalParser(name) :
+            null;
         
-        // use parser or lazy create auto parser
+        // use parser, global parser or lazy create auto parser
         var parser = 
             setter.parser || 
-            (globalSetter && globalSetter.parser) ||
+            globalParser ||
             (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.value));
         
         viewModel[name] = parser(setter.value, name, renderContext);
     };
     
-    var VALID_FOR_TW_BINDING = /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/;
     bindingTypes.ow = function (viewModel, setter, name, renderContext) {
-        var globalSetter = viewModel.__woBag.propertySettings;
+        var globalParser = viewModel instanceof wipeout.base.bindable ?
+            viewModel.getGlobalParser(name) :
+            null;
         
         // use parser or lazy create auto parser
         var parser = 
             setter.parser || 
-            (globalSetter && globalSetter.parser) ||
+            globalParser ||
             (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.value));
         
         viewModel.computed(name, parser, {
@@ -35,10 +38,10 @@ Class("wipeout.template.bindingTypes", function () {
         });
     };
     
+    var VALID_FOR_OWTS_BINDING = /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/;
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
-        var globalSetter = viewModel.__woBag.propertySettings;
         
-        if (!VALID_FOR_TW_BINDING.test(setter.value))
+        if (!VALID_FOR_OWTS_BINDING.test(setter.value))
             throw "Setter \"" + value + "\" must reference only one value when binding back to the source.";
 
         //TODO: this is very non standard
@@ -56,12 +59,10 @@ Class("wipeout.template.bindingTypes", function () {
     };
     
     bindingTypes.tw = function (viewModel, setter, name, renderContext) {
-        var globalSetter = viewModel.__woBag.propertySettings;
         
-        bindingTypes.ow(viewModel, setter, globalSetter, name, renderContext);
-        bindingTypes.owts(viewModel, setter, globalSetter, name, renderContext);
+        bindingTypes.ow(viewModel, setter, name, renderContext);
+        bindingTypes.owts(viewModel, setter, name, renderContext);
     };
     
     return bindingTypes;
-
 });

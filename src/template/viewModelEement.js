@@ -53,7 +53,9 @@ Class("wipeout.template.viewModelElement", function () {
         var tid = this.viewModel.templateId();
         
         // initialize the view model
-        this.viewModel._initialize(this.initialization, this.renderContext);
+        wipeout.template.newEngine.instance
+            .getVmInitializer(this.initialization)
+            .initialize(this.viewModel, this.renderContext);
         
         // if the initialize did not trigger a templateId mutation, trigger one
         if(this.viewModel.templateId() === tid)

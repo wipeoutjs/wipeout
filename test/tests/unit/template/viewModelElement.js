@@ -61,10 +61,16 @@ testUtils.testWithUtils("init", null, false, function(methods, classes, subject,
         templateId: function() {
             tid++;
             return tid1;
-        },
-        _initialize: methods.method([subject.initialization, subject.renderContext])
+        }
     };
     subject.viewModel.templateId.valueHasMutated = methods.method();
+    
+    classes.mock("wipeout.template.newEngine.instance.getVmInitializer", function () {
+        strictEqual(arguments[0], subject.initialization);
+        return {
+            initialize: methods.method([subject.viewModel, subject.renderContext])
+        };
+    }, 1);
     
     // act
     invoker();
