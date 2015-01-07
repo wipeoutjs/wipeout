@@ -14,14 +14,17 @@ Class("wipeout.base.array", function () {
             length: initialValues ? initialValues.length : 0,
             watchedArray: {
                 simpleCallbacks: [],    // function (removed, added) { }
-                complexCallbacks: []    // function (change) { }
+                complexCallbacks: [],   // function (change) { }
+                arrayCopy: []
             }  
         };
         
-        // doing it this way as it will not publish changes
-        if (initialValues)
-            for(var i = 0, ii = initialValues.length; i < ii; i++)
-                this[i] = initialValues[i];
+        if (initialValues) {
+            for(var i = 0, ii = initialValues.length; i < ii; i++) {
+                this[i] = initialValues[i]; // doing it this way as it will not publish changes
+                this.__woBag.watchedArray.arrayCopy.push(initialValues[i]);
+            }
+        }
         
         if (useObjectObserve)
             Array.observe(this, (function(changes) {
@@ -88,7 +91,8 @@ Class("wipeout.base.array", function () {
         }
     };
 
-    array.prototype.replaceElement = function(index, replacement) {
+    //TODO: test
+    array.prototype.replace = function(index, replacement) {
         
         if (!useObjectObserve)
             wipeout.change.handler.instance.pushArray(this, {
@@ -215,6 +219,11 @@ Class("wipeout.base.array", function () {
         
         return d;
     };
+    
+    array.prototype.dispose = function() {
+        this.__woBag.watchedArray.complexCallbacks.length = 0;
+        this.__woBag.watchedArray.simpleCallbacks.length = 0;
+    }
     
     return array;
 });

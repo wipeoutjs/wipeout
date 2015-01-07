@@ -11,10 +11,17 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     var subject = new wipeout.base.array();
 
     var val = {};
-    subject.observe(function(removed, added) {
+    subject.observe(function(removed, added, indexes) {
         strictEqual(removed.length, 0);
         strictEqual(added.length, 1);
         strictEqual(added[0], val);
+        
+        strictEqual(indexes.removed.length, 0);
+        strictEqual(indexes.moved.length, 0);
+        strictEqual(indexes.added.length, 1);
+        strictEqual(indexes.added[0].index, 0);
+        strictEqual(indexes.added[0].value, val);
+        
         start();
     });
 
@@ -28,11 +35,18 @@ testUtils.testWithUtils("observe", "length decrease", false, function(methods, c
     // arrange
     var subject = new wipeout.base.array([3, 4, 5]);
 
-    subject.observe(function(removed, added) {
+    subject.observe(function(removed, added, indexes) {
         strictEqual(removed.length, 1);
         strictEqual(removed[0], 5);
         
         strictEqual(added.length, 0);
+        
+        strictEqual(indexes.added.length, 0);
+        strictEqual(indexes.moved.length, 0);
+        strictEqual(indexes.removed.length, 1);
+        strictEqual(indexes.removed[0].index, 2);
+        strictEqual(indexes.removed[0].value, 5);
+        
         start();
     });
     
@@ -59,11 +73,18 @@ testUtils.testWithUtils("observe", "length increase", false, function(methods, c
     // arrange
     var subject = new wipeout.base.array([3, 4, 5]);
 
-    subject.observe(function(removed, added) {
+    subject.observe(function(removed, added, indexes) {
         strictEqual(added.length, 1);
         strictEqual(added[0], undefined);
         
-        strictEqual(removed.length, 0);
+        strictEqual(removed.length, 0);        
+        
+        strictEqual(indexes.removed.length, 0);
+        strictEqual(indexes.moved.length, 0);
+        strictEqual(indexes.added.length, 1);
+        strictEqual(indexes.added[0].index, 3);
+        strictEqual(indexes.added[0].value, undefined);
+        
         start();
     });
     
@@ -89,17 +110,34 @@ testUtils.testWithUtils("observe", "splice", false, function(methods, classes, s
     // arrange
     var subject = new wipeout.base.array([1, 2, 3]);
 
-    var val = 4;
-    subject.observe(function(removed, added) {
+    var val1 = 4, val2 = 5;
+    subject.observe(function(removed, added, indexes) {
         strictEqual(removed.length, 1);
         strictEqual(removed[0], 2);
-        strictEqual(added.length, 1);
-        strictEqual(added[0], val);
+        strictEqual(added.length, 2);
+        strictEqual(added[0], val1);
+        strictEqual(added[1], val2);
+        
+        strictEqual(indexes.removed.length, 1);
+        strictEqual(indexes.removed[0].index, 1);
+        strictEqual(indexes.removed[0].value, 2);
+        
+        strictEqual(indexes.added.length, 2);
+        strictEqual(indexes.added[0].index, 1);
+        strictEqual(indexes.added[0].value, val1);
+        strictEqual(indexes.added[1].index, 2);
+        strictEqual(indexes.added[1].value, val2);
+        
+        strictEqual(indexes.moved.length, 1);
+        strictEqual(indexes.moved[0].from, 2);
+        strictEqual(indexes.moved[0].to, 3);
+        strictEqual(indexes.moved[0].value, 3);
+        
         start();
     });
 
     // act
-    subject.splice(1, 1, val);
+    subject.splice(1, 1, val1, val2);
 
     stop();
 });
