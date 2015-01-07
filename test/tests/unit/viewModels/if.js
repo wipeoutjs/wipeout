@@ -11,13 +11,13 @@ testUtils.testWithUtils("if", "and all functionality (kind of an integration tes
     subject.condition(true);
     subject.template("asdfsdfgkhlsaklksndf");
     subject.elseTemplate("LAJKISBDKJBASDKJ");
-    var yes = subject.templateId();
+    var yes = subject.templateId;
     var no = subject.elseTemplateId();
     
     // act
     // assert
     subject.condition(false);
-    strictEqual(no, subject.templateId());
+    strictEqual(no, subject.templateId);
     subject.condition(true);
-    strictEqual(yes, subject.templateId());
+    strictEqual(yes, subject.templateId);
 });

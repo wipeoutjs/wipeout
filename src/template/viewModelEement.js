@@ -31,7 +31,7 @@ Class("wipeout.template.viewModelElement", function () {
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parentRenderContext);
         
         // bind the content of this to the view model template
-        this.viewModel.templateId.subscribe(this.template, this);
+        this.viewModel.observe("templateId", this.template, this);
         
         // add this to DOM and remove placeholder
         element.parentElement.insertBefore(this.openingTag, element);
@@ -62,7 +62,7 @@ Class("wipeout.template.viewModelElement", function () {
             this.openingTag.parentElement.appendChild(this.closingTag);
                 
         // cache templateId
-        var tid = this.viewModel.templateId();
+        var tid = this.viewModel.templateId;
         
         // initialize the view model
         wipeout.template.newEngine.instance
@@ -70,7 +70,7 @@ Class("wipeout.template.viewModelElement", function () {
             .initialize(this.viewModel, this.renderContext);
         
         // if the initialize did not trigger a templateId mutation, trigger one
-        if(this.viewModel.templateId() === tid)
+        if(this.viewModel.templateId === tid)
             this.viewModel.templateId.valueHasMutated();
     };
     
@@ -91,8 +91,9 @@ Class("wipeout.template.viewModelElement", function () {
                 this.openingTag.nextSibling.parentNode.removeChild(this.openingTag.nextSibling);
     };
     
-    viewModelElement.prototype.template = function(templateId) {
+    viewModelElement.prototype.template = function(oldTemplateId, templateId) {
         ///<summary>Render the view model with the given template</summary>
+        ///<param name="oldTemplateId" type="String">The previous value</param>
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
             
         // remove old template

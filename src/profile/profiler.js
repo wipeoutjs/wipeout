@@ -62,7 +62,7 @@ If view models have odd names ensure you are not using a minifier';
                     this.value.__woBag.profiler = {};
                 
                 this.value.__woBag.profiler["Render time"] = time;
-                var template = document.getElementById(this.value.templateId());
+                var template = document.getElementById(this.value.templateId);
                 if(template)
                     this.value.__woBag.profiler["Template compile time"] =  wipeout.utils.domData.get(template, "rewriteTemplateTime");
             };

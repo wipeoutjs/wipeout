@@ -21,7 +21,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     invoker(templateId);
     
     // assert
-    strictEqual(subject.templateId(), templateId);
+    strictEqual(subject.templateId, templateId);
     strictEqual(subject.templateItems.constructor, Object);
     strictEqual(subject.__woBag.constructor, Object);
     strictEqual(subject.__woBag.disposables.constructor, Object);
@@ -40,7 +40,7 @@ testUtils.testWithUtils("constructor", "default template", false, function(metho
     invoker();
     
     // assert
-    strictEqual(subject.templateId(), wo.visual.getDefaultTemplateId());
+    strictEqual(subject.templateId, wo.visual.getDefaultTemplateId());
 });
 
 testUtils.testWithUtils("disposeOf", null, false, function(methods, classes, subject, invoker) {

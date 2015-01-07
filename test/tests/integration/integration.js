@@ -556,12 +556,12 @@ test("advanced items control, creating/destroying", function() {
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model }"></div>');
     
     var itemsControl1 = new wo.itemsControl();
-    itemsControl1.templateId(templateId);
+    itemsControl1.templateId = templateId;
     itemsControl1.itemTemplateId(itemTemplateId);
     itemsControl1.itemSource(["a", "b", "c"]);
     
     var itemsControl2 = new wo.itemsControl();
-    itemsControl2.templateId(templateId);
+    itemsControl2.templateId = templateId;
     itemsControl2.itemTemplateId(itemTemplateId);
     itemsControl2.itemSource(["d", "e", "f"]);
     
@@ -587,7 +587,7 @@ test("items control, $index", function() {
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model, \'data-index\': $index }"></div><wo.view id="item" index="$parentContext.$index" />');
     
     var itemsControl1 = new wo.itemsControl();
-    itemsControl1.templateId(templateId);
+    itemsControl1.templateId = templateId;
     itemsControl1.itemTemplateId(itemTemplateId);
     itemsControl1.itemSource(["a", "b", "c"]);
     
@@ -611,7 +611,7 @@ test("items control, $index, shareParentScope", function() {
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model, \'data-index\': $index }"></div>');
     
     var itemsControl1 = new wo.itemsControl();
-    itemsControl1.templateId(templateId);
+    itemsControl1.templateId = templateId;
     itemsControl1.itemTemplateId(itemTemplateId);
     itemsControl1.itemSource(["a", "b", "c"]);
     itemsControl1.createItem = function (model) {

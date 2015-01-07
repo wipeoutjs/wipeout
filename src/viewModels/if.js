@@ -34,22 +34,22 @@ Class("wipeout.viewModels.if", function () {
         this.elseTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.elseTemplateId, this);
         
         ///<Summary type="String">Stores the template id if the condition is false</Summary>
-        this.__cachedTemplateId = this.templateId();
+        this.__cachedTemplateId = this.templateId;
         
         var d2 = this.condition.subscribe(this.onConditionChanged, this);
         this.registerDisposable(d2);
         
-        var d3 = this.templateId.subscribe(this.copyTemplateId, this);
+        var d3 = this.observe("templateId", this.copyTemplateId, this);
         this.registerDisposable(d3);
         
-        this.copyTemplateId(this.templateId());
+        this.copyTemplateId(null, this.templateId);
     });
     
     _if.prototype.elseTemplateChanged = function (newVal) {
         ///<summary>Resets the template id to the else template if condition is not met</summary>  
         ///<param name="newVal" type="String" optional="false">The else template Id</param>   
         if (!this.condition()) {
-            this.templateId(newVal);
+            this.templateId = newVal;
         }
     };
     
@@ -57,22 +57,23 @@ Class("wipeout.viewModels.if", function () {
         ///<summary>Set the template based on whether the condition is met</summary>      
         ///<param name="newVal" type="Boolean" optional="false">The condition</param>   
         if (this.__oldConditionVal && !newVal) {
-            this.templateId(this.elseTemplateId());
+            this.templateId = this.elseTemplateId();
         } else if (!this.__oldConditionVal && newVal) {
-            this.templateId(this.__cachedTemplateId);
+            this.templateId = this.__cachedTemplateId;
         }
         
         this.__oldConditionVal = !!newVal;
     };
     
-    _if.prototype.copyTemplateId = function (templateId) {
-        ///<summary>Cache the template id and check whether correct template is applied</summary>  
+    _if.prototype.copyTemplateId = function (oldTemplateId, templateId) {
+        ///<summary>Cache the template id and check whether correct template is applied</summary>
+        ///<param name="oldTemplateId" type="String" optional="false">The old template id</param>
         ///<param name="templateId" type="String" optional="false">The template id to cache</param>      
         if (templateId !== this.elseTemplateId())
             this.__cachedTemplateId = templateId;
     
         if (!this.condition() && templateId !== this.elseTemplateId()) {
-            this.templateId(this.elseTemplateId());
+            this.templateId = this.elseTemplateId();
         }
     };
     
