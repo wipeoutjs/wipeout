@@ -41,6 +41,18 @@ Class("wipeout.template.viewModelElement", function () {
         this.init();
     }
     
+    viewModelElement.getParentElement = function(forHtmlElement) {
+        var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
+        while (current = current.previousSibling) {
+            if (current.wipeoutClosing)
+                current = current.wipeoutClosing.openingTag;
+            else if (current.wipeoutOpening)
+                return current;
+        }
+        
+        return forHtmlElement.parentElement;
+    };
+    
     viewModelElement.prototype.init = function() {
         ///<summary>Initialize this by adding the closing tag and rendering the view model</summary>
         

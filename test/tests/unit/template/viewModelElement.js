@@ -79,6 +79,57 @@ testUtils.testWithUtils("init", null, false, function(methods, classes, subject,
     strictEqual(tid, 2);
 });
 
+testUtils.testWithUtils("getParentElement", "parent is element", false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var parent = document.createElement("div");
+    parent.innerHTML = "<div id='xxx' wo-view-model='wo.view'></div>"
+    document.getElementById("qunit-fixture").appendChild(parent);
+    var vm = new viewModelElement(document.getElementById("xxx"));
+    
+    // act    
+    // assert
+    strictEqual(viewModelElement.getParentElement(vm.closingTag), parent);
+    strictEqual(viewModelElement.getParentElement(vm.openingTag), parent);
+    
+    vm.dispose();
+});
+
+testUtils.testWithUtils("getParentElement", "parent is element, has sibling", false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var parent = document.createElement("div");
+    parent.innerHTML = "<div id='xxx' wo-view-model='wo.view'></div><div id='yyy' wo-view-model='wo.view'></div>"
+    document.getElementById("qunit-fixture").appendChild(parent);
+    var vm1 = new viewModelElement(document.getElementById("xxx"));
+    var vm2 = new viewModelElement(document.getElementById("yyy"));
+    
+    // act    
+    // assert
+    strictEqual(viewModelElement.getParentElement(vm2.closingTag), parent);
+    strictEqual(viewModelElement.getParentElement(vm2.openingTag), parent);
+    
+    vm1.dispose();
+    vm2.dispose();
+});
+
+testUtils.testWithUtils("getParentElement", "parent is element", false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var parent = document.createElement("div");
+    var child = document.createElement("div");
+    parent.innerHTML = "<div id='xxx' wo-view-model='wo.view'></div>"
+    document.getElementById("qunit-fixture").appendChild(parent);
+    var vm = new viewModelElement(document.getElementById("xxx"));
+    vm.closingTag.parentElement.insertBefore(child, vm.closingTag);
+    
+    // act    
+    // assert
+    strictEqual(viewModelElement.getParentElement(child), vm.openingTag);
+    
+    vm.dispose();
+});
+
 testUtils.testWithUtils("unTemplate", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
