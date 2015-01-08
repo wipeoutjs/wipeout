@@ -92,6 +92,16 @@ Class("wipeout.base.bindable", function () {
         return this[bindingPrefix + forProperty];
     };
     
+    bindable.getGlobalParser = function (forProperty) {
+        
+        return this.prototype[parserPrefix + forProperty];
+    };
+    
+    bindable.getGlobalBinding = function (forProperty) {
+        
+        return this.prototype[bindingPrefix + forProperty];
+    };
+    
     bindable.prototype.disposeOf = function(key) {
         ///<summary>Dispose of an item registered as a disposable</summary>
         ///<param name="key" type="String" optional="false">The key of the item to dispose</param>
