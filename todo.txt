@@ -1,3 +1,12 @@
+Templates:  add template prop to view
+            remove content control altogether
+            have template accept xml or string
+            add default parser as part of createNONOBSERVABLETemplatePropertyFor
+            stop creating script tags
+            create a template parser which accepts xml
+            do not serialize xml when setting template property (compiledInitializer, "element.serializeChildren()")
+            
+remove hack to add bindingContext to binding strings
 
 bug, handle null template id better
 
