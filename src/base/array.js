@@ -142,6 +142,13 @@ Class("wipeout.base.array", function () {
         });
     };
 
+    array.prototype.remove = function(item) {
+
+        var i;
+        if ((i = this.indexOf(item)) !== -1)
+            this.splice(i, 1);
+    };
+
     array.prototype.push = function(item) {
 
         if (!useObjectObserve)

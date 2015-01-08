@@ -64,6 +64,7 @@ Class("wipeout.template.compiledInitializer", function () {
         if (!p) {
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
+                    debugger;
                     this.setters[name] = {
                         parser: compiledInitializer.parsers.createAndSet,
                         bindingType: "nb",

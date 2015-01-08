@@ -22,26 +22,6 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
     invoker(templateId, model);
 });
 
-testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var templateValue = "Hi";
-    var owner = new wipeout.viewModels.visual();
-    var templateId = ko.observable(contentControl.createAnonymousTemplate(templateValue));
-    
-    // act
-    var template = contentControl.createTemplatePropertyFor(templateId, owner);
-    var t1 = templateId();
-    
-    // assert
-    strictEqual($("#" + templateId()).html(), template());
-    
-    template("Bye");
-    ok(t1 != templateId());
-    
-    templateId(t1);
-    strictEqual(template(), templateValue);
-});
-
 testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";

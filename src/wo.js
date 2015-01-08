@@ -24,7 +24,7 @@ window.addEventListener("load", function () {
 
 var getMeAViewModel = function(element) {   
     
-    var vmName = wipeout.utils.obj.trimToLower(element.tagName);
+    var vmName = wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(element.tagName));
     var vmConstructor = wipeout.utils.obj.getObject(vmName);
     if (!vmConstructor && element.attributes[wipeout.settings.wipeoutAttributes.viewModelName])
         vmConstructor = wipeout.utils.obj.getObject(vmName = element.attributes[wipeout.settings.wipeoutAttributes.viewModelName].value);

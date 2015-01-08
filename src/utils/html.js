@@ -143,7 +143,9 @@ Class("wipeout.utils.html", function () {
         ///<param name="forViewModel" type="wo.view">The view to which this temp template will be applied. May be null</param>
         ///<returns type="HTMLElement">A new html element to use as a placeholder template</returns>
         
-        return createElement("<span>Loading template</span>");
+        var el = document.createElement("span");
+        el.innerHTML = "Loading template";
+        return el;
     };
     
     var loadTemplate = function(templateId) {

@@ -279,3 +279,16 @@ testUtils.testWithUtils("observe", "shift", false, function(methods, classes, su
     strictEqual(result, 4);
     strictEqual(subject.length, 1);
 });
+
+testUtils.testWithUtils("remove", null, false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([3, 4, 5]);
+
+    // act
+    subject.remove(4);
+
+    // assert
+    strictEqual(subject.length, 2);
+    strictEqual(subject[0], 3);
+    strictEqual(subject[1], 5);
+});

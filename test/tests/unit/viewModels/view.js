@@ -87,13 +87,13 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     invoker(templateId, model);
     
     // assert    
-    strictEqual(subject.model(), model);
+    strictEqual(subject.model, model);
     strictEqual(subject.__woBag.bindings.constructor, Object);
     
     // test on model changed
     var newModel = {};
     subject._onModelChanged = methods.method([model, newModel]);
-    subject.model(newModel);
+    subject.model = newModel;
 });
 
 testUtils.testWithUtils("setObservable", "non observable", true, function(methods, classes, subject, invoker) {
@@ -204,7 +204,7 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     
     // assert
     strictEqual(subject.shareParentScope, false);
-    strictEqual(subject.model(), bindingContext.$data.model());
+    strictEqual(subject.model, bindingContext.$data.model);
     strictEqual(subject.twProp(), bindingContext.$data.twProperty());
     strictEqual(subject.owProp, bindingContext.$data.owProperty);
     strictEqual(subject.inlinePropString, "Hello");

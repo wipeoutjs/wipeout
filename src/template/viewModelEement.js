@@ -8,7 +8,7 @@ Class("wipeout.template.viewModelElement", function () {
         ///<param name="parentRenderContext" type="wipeout.template.renderContext" optional="true">The render context of the parent view model</param>
         
         var vm = xmlOverride ? {
-            constructor: wipeout.utils.obj.getObject(xmlOverride.name),
+            constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(xmlOverride.name)),
             name: xmlOverride.name
         } : getMeAViewModel(element);
         
@@ -71,7 +71,7 @@ Class("wipeout.template.viewModelElement", function () {
         
         // if the initialize did not trigger a templateId mutation, trigger one
         if(this.viewModel.templateId === tid)
-            this.viewModel.templateId.valueHasMutated();
+            this.template(tid, tid);
     };
     
     viewModelElement.prototype.unTemplate = function(leaveDeadChildNodes) {
@@ -98,20 +98,31 @@ Class("wipeout.template.viewModelElement", function () {
             
         // remove old template
         this.unTemplate();
+        
+        var reRender = (function () {
+            // get template builder. This generates a html string and a function to
+            // add dynamic functionality after it is added to the DOM
+            var builder = wipeout.template.newEngine.instance.getTemplate(templateId).getBuilder();
 
-        // get template builder. This generates a html string and a function to
-        // add dynamic functionality after it is added to the DOM
-        var builder = wipeout.template.newEngine.instance.getTemplate(templateId).getBuilder();
+            //TODO: hack
+            // add builder html
+            var scr = document.createElement("script");
+            this.closingTag.parentElement.insertBefore(scr, this.closingTag);
+            scr.insertAdjacentHTML('afterend', builder.html);
+            scr.parentElement.removeChild(scr);
 
-        //TODO: hack
-        // add builder html
-        var scr = document.createElement("script");
-        this.closingTag.parentElement.insertBefore(scr, this.closingTag);
-        scr.insertAdjacentHTML('afterend', builder.html);
-        scr.parentElement.removeChild(scr);
+            // add dynamic functionality and cache dispose function
+            this.disposeOfBindings = builder.execute(this.renderContext);
+        }).bind(this);
 
-        // add dynamic functionality and cache dispose function
-        this.disposeOfBindings = builder.execute(this.renderContext);
+        this.unTemplate();
+
+        if(templateId && wipeout.settings.asynchronousTemplates) {
+            this.closingTag.parentElement.insertBefore(wipeout.utils.html.createTemplatePlaceholder(this.viewModel), this.closingTag);
+            wipeout.template.asyncLoader.instance.load(templateId, reRender);
+        } else {
+            reRender();
+        }
     };
     
     viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {

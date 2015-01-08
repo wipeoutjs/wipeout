@@ -10,23 +10,10 @@ Class("wipeout.viewModels.view", function () {
 
         this._super(templateId);
         
-        if(model === undefined)
-            model = null;
-        
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
-        this.model = ko.observable(model);
+        this.model = model == null ? null : model;
         
-        var d1 = this.model.subscribe(function(newVal) {
-            try {
-                this._onModelChanged(model, newVal);
-            } finally {
-                model = newVal;
-            }                                          
-        }, this);
-        this.registerDisposable(d1);
-                                
-        ///<Summary type="Object">Placeholder to store binding disposal objects</Summary>
-        this.__woBag.bindings = {};
+        this.observe("model", this._onModelChanged, this);
     }); 
     
     view.setObservable = function(obj, property, value) {
@@ -50,141 +37,12 @@ Class("wipeout.viewModels.view", function () {
             this.disposeOf(this.__woBag[modelRoutedEventKey]);
             delete this.__woBag[modelRoutedEventKey];
         }
-        
-        for(var i in this.__woBag.bindings) {
-            for (var j = 0, jj = this.__woBag.bindings[i].length; j < jj; j++) {
-                this.__woBag.bindings[i][j].dispose();
-            }
-            
-            delete this.__woBag.bindings[i];
-        }
     };
 
     
     // virtual
     view.prototype.onInitialized = function() {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
-    };
-    
-    view.prototype.bind = function(property, valueAccessor, twoWay) {
-        ///<summary>Bind the value returned by valueAccessor to this[property]</summary>
-        ///<param name="property" type="String" optional="false">The name of the property to bind</param>
-        ///<param name="valueAccessor" type="Function" optional="false">A function which returns an observable or object to bind to</param>
-        ///<param name="twoWay" type="Boolean" optional="true">Specifies whether to bind the destination to the source as well</param>
-        ///<returns type="wo.disposable">A item to dispose of the binding</returns>
-        
-        if(twoWay && (!ko.isObservable(this[property]) || !ko.isObservable(valueAccessor())))
-           throw 'Two way bindings must be between 2 observables';
-        
-        var toBind = ko.dependentObservable({ 
-            read: function() { return ko.utils.unwrapObservable(valueAccessor()); },
-            write: twoWay ? function() { var va = valueAccessor(); if(va) va(arguments[0]); } : undefined
-        });                                 
-        
-        var unsubscribe1 = false;
-        var unsubscribe2 = false;
-        view.setObservable(this, property, toBind.peek());
-        var subscription1 = toBind.subscribe(function(newVal) {
-            if(!unsubscribe1) {
-                try {
-                    unsubscribe2 = true;
-                    view.setObservable(this, property, newVal);
-                } finally {
-                    unsubscribe2 = false;
-                }
-            }
-        }, this);
-        
-        var subscription2 = twoWay ?
-            this[property].subscribe(function(newVal) {
-                if(!unsubscribe2) {
-                    try {
-                        unsubscribe1 = true;
-                        view.setObservable({x: toBind}, "x", newVal);
-                    } finally {
-                        unsubscribe1 = false;
-                    }
-                }
-            }, this) :
-            null;
-        
-        var _this = this;
-        var binding = new wipeout.base.disposable(function() {
-            if(subscription1) {
-                subscription1.dispose();
-                subscription1 = null;
-            }
-
-            if(subscription2) {
-                subscription2.dispose();
-                subscription2 = null;
-            }
-
-            if(toBind) {
-                toBind.dispose();
-                toBind = null;
-            }
-            
-            if(binding) {
-                var tmp;
-                if (_this.__woBag.bindings[property] && (tmp = _this.__woBag.bindings[property].indexOf(binding)) !== -1) {
-                    _this.__woBag.bindings[property].splice(tmp, 1);
-                    if (!_this.__woBag.bindings[property].length) {
-                        delete _this.__woBag.bindings[property];
-                    }
-                }
-                
-                binding = null;
-            }
-        });
-        
-        if(!this.__woBag.bindings[property])
-            this.__woBag.bindings[property] = [binding];
-        else
-            this.__woBag.bindings[property].push(binding);
-        
-        return binding;
-    };    
-    
-    view._elementHasModelBinding = function(element) {
-        ///<summary>returns whether the view defined in the element was explicitly given a model property</summary>
-        ///<param name="element" type="wipeout.template.templateElement" optional="false">The element to check for a model setter property</param>
-        ///<returns type="Boolean"></returns>
-        
-        if(element.attributes["model"] || element.attributes["model-tw"])
-            return true;
-        
-        for(var i = 0, ii = element.length; i < ii; i++) {
-            if(element[i].constructor === wipeout.template.templateElement && element[i].name === "model")
-                return true;
-        }
-        
-        return false;
-    };
-    
-    view.objectParser = {
-        "json": function (value) {
-            return JSON.parse(value);
-        },
-        "string": function (value) {
-            return value;
-        },
-        "bool": function (value) {
-            var tmp = trimToLower(value);
-            return tmp ? tmp !== "false" && tmp !== "0" : false;
-        },
-        "int": function (value) {
-            return parseInt(trim(value));
-        },
-        "float": function (value) {
-            return parseFloat(trim(value));
-        },
-        "regexp": function (value) {
-            return new RegExp(trim(value));
-        },
-        "date": function (value) {
-            return new Date(trim(value));
-        }
     };
         
     view.prototype._onModelChanged = function (oldValue, newValue) {

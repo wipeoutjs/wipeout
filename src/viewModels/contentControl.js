@@ -11,29 +11,7 @@ Class("wipeout.viewModels.contentControl", function () {
         this.template = "";
         
         wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "templateId", "template");
-    });    
-    
-    contentControl.createTemplatePropertyFor = function(templateIdObservable, owner) {
-        ///<summary>Creates a computed for a template property which is bound to the templateIdObservable property</summary>
-        ///<param name="templateIdObservable" type="ko.observable" generic0="String" optional="false">The observable containing the templateId to create a template property for</param>
-        ///<param name="owner" type="Object" optional="false">The new owner of the created template property</param>
-        ///<returns type="String">A template property bound to the template id</returns>
-        var output = ko.dependentObservable({
-            read: function () {
-                var script = document.getElementById(templateIdObservable());
-                return script ? script.text : "";
-            },
-            write: function (newValue) {
-                templateIdObservable(wipeout.viewModels.contentControl.createAnonymousTemplate(newValue));
-            },
-            owner: owner
-        });
-        
-        if(owner instanceof wipeout.viewModels.visual)
-            owner.registerDisposable(output);
-        
-        return output;
-    };   
+    });  
     
     contentControl.createNONOBSERVABLETemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>

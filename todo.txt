@@ -24,7 +24,7 @@ cleanup:
             dictionary.js
             bindable.js
 
-
+there is a lot of camelcasing. Is there a single point of failure I can use here?
 
 observables -
 x    condition

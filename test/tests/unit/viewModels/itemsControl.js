@@ -71,13 +71,13 @@ testUtils.testWithUtils("_removeItem", "", false, function(methods, classes, sub
 testUtils.testWithUtils("removeItem", "", false, function(methods, classes, subject, invoker) {
     // arrange    
     var data = {};
-    subject.itemSource = ko.observableArray([data]);
+    subject.itemSource = new wo.array([data]);
     
     // act
     invoker(data);
     
     // assert
-    strictEqual(subject.itemSource().length, 0)
+    strictEqual(subject.itemSource.length, 0)
 });
 
 testUtils.testWithUtils("_syncModelsAndViewModels", "", false, function(methods, classes, subject, invoker) {

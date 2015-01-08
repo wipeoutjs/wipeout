@@ -107,7 +107,7 @@ Class("wipeout.template.compiledTemplate", function () {
         
         if (node.nodeType !== 1)
             this.addNonElement(node);
-        else if (wipeout.utils.obj.getObject(node.name))//TODO
+        else if (wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(node.name)))//TODO
             this.addViewModel(node);
         else
             this.addElement(node);

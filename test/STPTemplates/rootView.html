@@ -8,47 +8,51 @@
             <div id="routedEvent"></div>
         </div>
     </div>
-    <initializeView item1="'ok1'">
-        <item2>ok2</item2>
-    </initializeView>
-    <wo.contentControl id="listTest">
+    <initialize-view item1--s="ok1">
+        <item2 parser="s">ok2</item2>
+    </initialize-view>
+    <wo.content-control id="listTest">
         <template>
-            <div data-bind="html: model().rootTitle"></div>
+            <div data-bind="html: model.rootTitle"></div>
             <div style="float: left">
-                <wo.itemsControl id="theInnerItemsControl1" itemSource-tw="model().items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="1" />
+                <wo.items-control id="theInnerItemsControl1" itemSource-tw="model.items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="1" />
             </div>
             <div style="float: left; margin-left: 20px;">
-                <wo.itemsControl id="theInnerItemsControl2" itemSource-tw="model().items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="2" />
+                <wo.items-control id="theInnerItemsControl2" itemSource-tw="model.items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="2" />
             </div>
             <div style="clear: both"></div>
             <!-- ko render: totals --><!-- /ko -->
         </template>
-        <totals constructor="wo.contentControl">
-            <template>
-                <div data-bind="html: model().totalOfIds"></div>
-            </template>
-        </totals>
-    </wo.contentControl>
-    <br/>
-    <wo.contentControl model="$parent.model().deepItem" id="multiLevelTest">
-        <template>
-            <wo.contentControl model="$parent.model().item">
+        <totals>
+            <wo.content-control>
                 <template>
-                    <wo.contentControl model="$parent.model().value">
-                        <supplimentaryProp constructor="childView" model-tw="$parent.model" value-tw="model">
-                            <template>
-                                <input type="text" data-bind="value: value"></input>
-                            </template>
+                    <div data-bind="html: model.totalOfIds"></div>
+                </template>
+            </wo.content-control>
+        </totals>
+    </wo.content-control>
+    <br/>
+    <wo.content-control model="$parent.model.deepItem" id="multiLevelTest">
+        <template>
+            <wo.content-control model="$parent.model.item">
+                <template>
+                    <wo.content-control model="$parent.model.value">
+                        <supplimentaryProp>
+                            <child-view model-tw="$parent.model" value-tw="model">
+                                <template>
+                                    <input type="text" data-bind="value: value"></input>
+                                </template>
+                            </child-view>
                         </supplimentaryProp>
                         <template>
                             <div data-bind="html: model"></div>
                             <div data-bind="render: supplimentaryProp"></div>
                         </template>
-                    </wo.contentControl>
+                    </wo.content-control>
                 </template>
-            </wo.contentControl>                
+            </wo.content-control>                
         </template>
-    </wo.contentControl>        
+    </wo.content-control>        
     <br/>
     <br/>
 </div>
