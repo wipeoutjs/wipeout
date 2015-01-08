@@ -13,6 +13,8 @@ Class("wipeout.viewModels.contentControl", function () {
         wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "templateId", "template");
     });  
     
+    contentControl.addGlobalParser("template", "string");
+    
     contentControl.createNONOBSERVABLETemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
         ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>

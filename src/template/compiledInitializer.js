@@ -62,9 +62,14 @@ Class("wipeout.template.compiledInitializer", function () {
         
         var p = (element.attributes.parser || element.attributes.parsers);        
         if (!p) {
+            var parent = wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element._parentElement.name))
+            if (parent)
+                p = parent.getGlobalParser(name);
+        }
+            
+        if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-                    debugger;
                     this.setters[name] = {
                         parser: compiledInitializer.parsers.createAndSet,
                         bindingType: "nb",
@@ -73,7 +78,7 @@ Class("wipeout.template.compiledInitializer", function () {
                             constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
                         }
                     };
-                    
+
                     return;
                 }
             }
@@ -85,8 +90,11 @@ Class("wipeout.template.compiledInitializer", function () {
             value: element.serializeChildren()
         };
 
-        if (p)
+        if (p && p.constructor === Function)
+            this.setters[name].parser.push(p);
+        else if (p)
             this.addFlags(this.setters[name], compiledInitializer.getPropertyFlags("--" + p.value).flags);
+        
         this.combineParser(name);
     };
     
@@ -94,7 +102,7 @@ Class("wipeout.template.compiledInitializer", function () {
         
         // spit name and flags
         name = compiledInitializer.getPropertyFlags(name);
-        if (this.setters[name.name]) throw "The property \"" + name.name + "\"has been set more than once.";
+        if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
         this.setters[name.name] = {
             parser: [],

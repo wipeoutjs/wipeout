@@ -100,6 +100,11 @@ Class("wipeout.template.viewModelElement", function () {
         this.unTemplate();
         
         var reRender = (function () {
+            if (element) {
+                element.parentElement.removeChild(element);
+                element = null;
+            }
+            
             // get template builder. This generates a html string and a function to
             // add dynamic functionality after it is added to the DOM
             var builder = wipeout.template.newEngine.instance.getTemplate(templateId).getBuilder();
@@ -115,11 +120,11 @@ Class("wipeout.template.viewModelElement", function () {
             this.disposeOfBindings = builder.execute(this.renderContext);
         }).bind(this);
 
-        this.unTemplate();
-
         if(templateId && wipeout.settings.asynchronousTemplates) {
-            if (!wipeout.template.asyncLoader.instance.load(templateId, reRender))
-                this.closingTag.parentElement.insertBefore(wipeout.utils.html.createTemplatePlaceholder(this.viewModel), this.closingTag);
+            if (!wipeout.template.asyncLoader.instance.load(templateId, reRender)) {
+                var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
+                this.closingTag.parentElement.insertBefore(element, this.closingTag);
+            }
         } else {
             reRender();
         }
