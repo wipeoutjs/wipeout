@@ -11,10 +11,11 @@ Class("wipeout.template.asyncLoader", function () {
         ///<summary>Load a template</summary>
         ///<param name="templateId" type="string" optional="false">The url for the template to load. This will also be the id when the template is loaded</param>
         ///<param name="success" type="Function" optional="true">Run when the template exists in the DOM</param>
+        ///<returns type="Boolean">True if the template is available, false if the template must be loaded</returns>
         if (!this.pending[templateId])
             this.pending[templateId] = new loader(templateId);
             
-        this.pending[templateId].add(success || function() {});
+        return this.pending[templateId].add(success || function() {});
     };
     
     function loader(templateName) {
@@ -57,13 +58,19 @@ Class("wipeout.template.asyncLoader", function () {
     loader.prototype.add = function(success) {
         ///<summary>Call success when this template is loaded</summary>
         ///<param name="success" type="Function" optional="false">The callback</param>
+        ///<returns type="Boolean">True if the template is available, false if the template must be loaded</returns>
         
-        if(this._callbacks)
+        if(this._callbacks) {
             this._callbacks.push(success);
-        else if(this._success)
+            return false;
+        }
+        
+        if(this._success) {
             success();
-        else
-            throw "Could not load template \"" + this.templateName + "\"";
+            return true;
+        }
+        
+        throw "Could not load template \"" + this.templateName + "\"";
     }
     
     asyncLoader.instance = new asyncLoader();

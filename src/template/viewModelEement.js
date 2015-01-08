@@ -118,8 +118,8 @@ Class("wipeout.template.viewModelElement", function () {
         this.unTemplate();
 
         if(templateId && wipeout.settings.asynchronousTemplates) {
-            this.closingTag.parentElement.insertBefore(wipeout.utils.html.createTemplatePlaceholder(this.viewModel), this.closingTag);
-            wipeout.template.asyncLoader.instance.load(templateId, reRender);
+            if (!wipeout.template.asyncLoader.instance.load(templateId, reRender))
+                this.closingTag.parentElement.insertBefore(wipeout.utils.html.createTemplatePlaceholder(this.viewModel), this.closingTag);
         } else {
             reRender();
         }
