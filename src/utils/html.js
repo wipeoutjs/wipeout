@@ -148,13 +148,6 @@ Class("wipeout.utils.html", function () {
         return el;
     };
     
-    var loadTemplate = function(templateId) {
-        ///<summary>Asynchronously load a template</summary>
-        ///<param name="templateId" type="String">The url and subsequent template id of the template</param>
-        
-        wipeout.template.asyncLoader.instance.load(templateId);
-    };
-    
     var html = function html(htmlManipulationLogic) {
         ///<summary>If html elements are to be moved or deleted, wrap the move logic in a call to this function to ensure disposal of unused view models</summary> 
         ///<param name="htmlManipulationLogic" type="Function" optional="false">A callback to manipulate html</param>
