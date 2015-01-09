@@ -204,7 +204,7 @@ Class("wipeout.template.compiledInitializer", function () {
             //TODO: dispose
             var output = new value.constructor;
         
-            wipeout.template.newEngine.instance
+            wipeout.template.engine.instance
                 .getVmInitializer(value.xml)
                 .initialize(output, renderContext);
             

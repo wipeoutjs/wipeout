@@ -65,7 +65,7 @@ testUtils.testWithUtils("init", null, false, function(methods, classes, subject,
     };
     subject.viewModel.templateId.valueHasMutated = methods.method();
     
-    classes.mock("wipeout.template.newEngine.instance.getVmInitializer", function () {
+    classes.mock("wipeout.template.engine.instance.getVmInitializer", function () {
         strictEqual(arguments[0], subject.initialization);
         return {
             initialize: methods.method([subject.viewModel, subject.renderContext])
@@ -156,7 +156,7 @@ testUtils.testWithUtils("template", null, false, function(methods, classes, subj
     var templateId = {}, html = "LKJBVJLKHVJKHVK", dob = {};
     subject.unTemplate = methods.method();
     subject.renderContext = {};
-    classes.mock("wipeout.template.newEngine.instance.getTemplate", function() {
+    classes.mock("wipeout.template.engine.instance.getTemplate", function() {
         strictEqual(templateId, arguments[0]);
         return {
             getBuilder: methods.method([], {

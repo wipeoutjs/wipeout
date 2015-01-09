@@ -65,7 +65,7 @@ Class("wipeout.template.viewModelElement", function () {
         var tid = this.viewModel.templateId;
         
         // initialize the view model
-        wipeout.template.newEngine.instance
+        wipeout.template.engine.instance
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
@@ -107,7 +107,7 @@ Class("wipeout.template.viewModelElement", function () {
             
             // get template builder. This generates a html string and a function to
             // add dynamic functionality after it is added to the DOM
-            var builder = wipeout.template.newEngine.instance.getTemplate(templateId).getBuilder();
+            var builder = wipeout.template.engine.instance.getTemplate(templateId).getBuilder();
 
             //TODO: hack
             // add builder html

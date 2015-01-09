@@ -1,5 +1,5 @@
 
-Class("wipeout.template.newEngine", function () {
+Class("wipeout.template.engine", function () {
     
     function engine () {
         this.compiledTemplates = {};

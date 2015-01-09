@@ -22,7 +22,7 @@ cleanup:
             visual.js (added viewModelElement to __woBag, computed and observe functions)
             compiledInitializer.js
             builder.js
-            newEngine.js
+            engine.js
             renderContext.js
             visual.js (dispose stuff is gone or changed)
             wo.js
