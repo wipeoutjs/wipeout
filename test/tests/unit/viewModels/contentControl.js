@@ -12,7 +12,7 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
     var template = {}, templateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
     subject.templateId = {};
-    classes.mock("wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor", function() {
+    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function() {
         methods.method([subject, "templateId", "template"])(arguments[0], arguments[1]);
         return template;
     }, 1);
@@ -22,14 +22,14 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
     invoker(templateId, model);
 });
 
-testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
     var owner = new wipeout.viewModels.visual();
     var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
     
     // act
-    contentControl.createNONOBSERVABLETemplatePropertyFor(owner, "testTemplateId", "testTemplate");
+    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate");
     
     // assert
     asyncAssert(function() {
@@ -47,14 +47,14 @@ testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "", true, func
     });
 });
 
-testUtils.testWithUtils("createNONOBSERVABLETemplatePropertyFor", "disposal, dependant on \"createNONOBSERVABLETemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createTemplatePropertyFor", "disposal, dependant on \"createTemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
     var owner = new wipeout.viewModels.visual();
     var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
     
     // act
-    contentControl.createNONOBSERVABLETemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
+    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
     
     // assert
     asyncAssert(function() {

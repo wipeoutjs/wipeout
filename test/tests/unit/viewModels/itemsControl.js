@@ -33,7 +33,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     subject._super = methods.method([templateId, model]);
     subject.observe =function(){}// methods.method(["templateId", subject.reDrawItems = {}, subject]);
     
-    classes.mock("wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor", function () {
+    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function () {
         methods.method([subject, "itemTemplateId", "itemTemplate"])(arguments[0], arguments[1], arguments[2]);
     }, 1);
     

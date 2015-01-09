@@ -36,15 +36,12 @@ Class("wipeout.template.asyncLoader", function () {
             wipeout.utils.obj.ajax({
                 type: "GET",
                 url: templateName,
-                success: function(result) {                
-                    wipeout.viewModels.contentControl.createTemplate(templateName, result.responseText);                
-
+                success: function(result) {
                     _this._success = true;
                     var callbacks = _this._callbacks;
                     delete _this._callbacks;
-                    for(var i = 0, ii = callbacks.length; i < ii; i++) {
-                        callbacks[i]();
-                    }
+                    for(var i = 0, ii = callbacks.length; i < ii; i++)
+                        callbacks[i](result.responseText);
                 },
                 error: function() {
                     delete _this._callbacks;

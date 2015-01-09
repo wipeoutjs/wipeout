@@ -97,9 +97,10 @@ Class("wipeout.template.viewModelElement", function () {
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
             
         // remove old template
-        this.unTemplate();
+        if (this.__initialTemplate)
+            this.unTemplate();
         
-        var reRender = (function () {
+        var synchronous = wipeout.template.engine.instance.getCompiledTemplate(templateId, (function (template) {
             if (element) {
                 element.parentElement.removeChild(element);
                 element = null;
@@ -107,26 +108,24 @@ Class("wipeout.template.viewModelElement", function () {
             
             // get template builder. This generates a html string and a function to
             // add dynamic functionality after it is added to the DOM
-            var builder = wipeout.template.engine.instance.getTemplate(templateId).getBuilder();
-
+            template = template.getBuilder();
+            
             //TODO: hack
             // add builder html
             var scr = document.createElement("script");
             this.closingTag.parentElement.insertBefore(scr, this.closingTag);
-            scr.insertAdjacentHTML('afterend', builder.html);
+            scr.insertAdjacentHTML('afterend', template.html);
             scr.parentElement.removeChild(scr);
+            
+            this.__initialTemplate = true;
 
             // add dynamic functionality and cache dispose function
-            this.disposeOfBindings = builder.execute(this.renderContext);
-        }).bind(this);
-
-        if(templateId && wipeout.settings.asynchronousTemplates) {
-            if (!wipeout.template.asyncLoader.instance.load(templateId, reRender)) {
-                var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
-                this.closingTag.parentElement.insertBefore(element, this.closingTag);
-            }
-        } else {
-            reRender();
+            this.disposeOfBindings = template.execute(this.renderContext);            
+        }).bind(this));
+        
+        if (!synchronous) {            
+            var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
+            this.closingTag.parentElement.insertBefore(element, this.closingTag);
         }
     };
     

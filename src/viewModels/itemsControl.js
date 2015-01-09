@@ -23,7 +23,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
         this.itemTemplate = "";
         
-        wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="wipeout.base.array">An array of models to render</Summary>
         this.itemSource = new wipeout.base.array();

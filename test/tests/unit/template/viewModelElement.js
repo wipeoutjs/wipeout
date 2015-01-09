@@ -156,7 +156,7 @@ testUtils.testWithUtils("template", null, false, function(methods, classes, subj
     var templateId = {}, html = "LKJBVJLKHVJKHVK", dob = {};
     subject.unTemplate = methods.method();
     subject.renderContext = {};
-    classes.mock("wipeout.template.engine.instance.getTemplate", function() {
+    classes.mock("wipeout.template.engine.instance.getCompiledTemplate", function() {
         strictEqual(templateId, arguments[0]);
         return {
             getBuilder: methods.method([], {

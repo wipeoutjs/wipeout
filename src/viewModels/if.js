@@ -31,7 +31,7 @@ Class("wipeout.viewModels.if", function () {
         
         ///<Summary type="String">Anonymous version of elseTemplateId</Summary>
         this.elseTemplate = "";
-        wipeout.viewModels.contentControl.createNONOBSERVABLETemplatePropertyFor(this, "elseTemplateId", "elseTemplate");
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "elseTemplateId", "elseTemplate");
         
         ///<Summary type="String">Stores the template id if the condition is false</Summary>
         this.__cachedTemplateId = this.templateId;
