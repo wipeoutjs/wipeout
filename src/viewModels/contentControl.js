@@ -22,33 +22,41 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
         
-        if (!(owner instanceof wipeout.base.watched)) {
-            throw "In order to create a bound template property the owner must inherit from \"wipeout.base.watched.\"";
-        }
+        var pendingLoad, setTemplate = owner[templateProperty], setTemplateId = owner[templateIdProperty];
         
-        if (owner.__woBag.boundTemplates) {
-            if (owner.__woBag.boundTemplates[templateIdProperty])
-                throw "This template ID property is already bound to another template";
-        } else {
-            owner.__woBag.boundTemplates = {};
-            owner.__woBag.boundTemplates[templateIdProperty] = true;
-        }
-        
-        function onTemplateIdChange(oldVal, newVal) {            
-            wipeout.template.engine.instance.getTemplateXml(newVal, function (template) {
-                owner.__woBag.boundTemplates[templateIdProperty] = template;    //TODO: test
-                owner[templateProperty] = template;
+        function refreshTemplate(templateId) {
+            pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, function (template) {
+                pendingLoad = null;                
+                setTemplate = owner[templateProperty] = template;
             }); 
         }
         
-        function onTemplateChange(oldVal, newVal) {
-            if (owner.__woBag.boundTemplates[templateIdProperty] === newVal)
-                owner.__woBag.boundTemplates[templateIdProperty] = true;
-            else
-                owner[templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        // bind template to template id
+        refreshTemplate(setTemplateId);
+        
+        function onTemplateIdChange(oldVal, newVal) {
+            if (newVal === setTemplateId) {
+                setTemplateId = null;
+                return;
+            }
+            
+            setTemplateId = null;
+                
+            if (pendingLoad)
+                pendingLoad.cancel();
+            
+            refreshTemplate(newVal);
         }
         
-        onTemplateIdChange(null, owner[templateIdProperty]);
+        function onTemplateChange(oldVal, newVal) {
+            if (newVal === setTemplate) {
+                setTemplate = null;
+                return;
+            }
+            
+            setTemplate = null;
+            setTemplateId = owner[templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        }
         
         var d1 = owner.observe(templateIdProperty, onTemplateIdChange);        
         var d2 = owner.observe(templateProperty, onTemplateChange);

@@ -1,6 +1,7 @@
 
 Class("wipeout.template.engine", function () {
     
+    //TODO, move from this file
     function asyncLoader(templateName) {
         ///<summary>Private class for loading templates asynchronously</summary>
         ///<param name="templateName" type="string" optional="false">The name and url of this template</param>
@@ -11,25 +12,22 @@ Class("wipeout.template.engine", function () {
         // the name and url of the template to load
         this.templateName = templateName;
         
-        if(!this._success) {
-            var _this = this;
-            wipeout.utils.obj.ajax({
-                type: "GET",
-                url: templateName,
-                success: function(result) {
-                    _this._success = true;
-                    var callbacks = _this._callbacks;
-                    delete _this._callbacks;
-                    for(var i = 0, ii = callbacks.length; i < ii; i++)
-                        callbacks[i](result.responseText);
-                },
-                error: function() {
-                    delete _this._callbacks;
-                    _this._success = false;
-                    throw "Could not locate template \"" + templateName + "\"";
-                }
-            });
-        }
+        wipeout.utils.obj.ajax({
+            type: "GET",
+            url: templateName,
+            success: (function(result) {
+                this._success = true;
+                var callbacks = this._callbacks;
+                delete this._callbacks;
+                for(var i = 0, ii = callbacks.length; i < ii; i++)
+                    callbacks[i](result.responseText);
+            }).bind(this),
+            error: (function() {
+                delete this._callbacks;
+                this._success = false;
+                throw "Could not locate template \"" + templateName + "\"";
+            }).bind(this)
+        });
     }
     
     asyncLoader.prototype.add = function(success) {
@@ -71,13 +69,12 @@ Class("wipeout.template.engine", function () {
     };
     
     engine.prototype.getTemplateXml = function (templateId, callback) {        
-        return this.getCompiledTemplate(templateId, (function() {
-            callback(this.templates[templateId].templateXml);
+        return this.compileTemplate(templateId, (function() {
+            callback(this.templates[templateId].xml);
         }).bind(this));
     };
     
-    //TODO: rename to compileTemplate
-    engine.prototype.getCompiledTemplate = function (templateId, callback) {
+    engine.prototype.compileTemplate = function (templateId, callback) {
         
         // if the template exists
         if (this.templates[templateId] instanceof wipeout.template.compiledTemplate) {
@@ -91,7 +88,7 @@ Class("wipeout.template.engine", function () {
                 if (this.templates[templateId] instanceof asyncLoader)
                     this.setTemplate(templateId, template);
                 
-                this.getCompiledTemplate(templateId, callback);
+                this.compileTemplate(templateId, callback);
             }).bind(this));
         } 
         
@@ -107,7 +104,7 @@ Class("wipeout.template.engine", function () {
             // if an async process has not been kicked off yet
             if (wipeout.settings.asynchronousTemplates) {                
                 this.templates[templateId] = new asyncLoader(templateId);
-                return this.getCompiledTemplate(templateId, callback);
+                return this.compileTemplate(templateId, callback);
             }
         }
         

@@ -69,6 +69,8 @@ Class("wipeout.template.viewModelElement", function () {
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
+        this.viewModel.onInitialized();
+        
         // if the initialize did not trigger a templateId mutation, trigger one
         if(this.viewModel.templateId === tid)
             this.template(tid, tid);
@@ -104,7 +106,7 @@ Class("wipeout.template.viewModelElement", function () {
         if (this.__initialTemplate)
             this.unTemplate();
         
-        this.asynchronous = wipeout.template.engine.instance.getCompiledTemplate(templateId, (function (template) {
+        this.asynchronous = wipeout.template.engine.instance.compileTemplate(templateId, (function (template) {
             delete this.asynchronous;
             
             if (element) {
