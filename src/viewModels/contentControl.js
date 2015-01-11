@@ -60,7 +60,7 @@ Class("wipeout.viewModels.contentControl", function () {
             }
         };
         
-        if (owner instanceof wipeout.viewModels.bindable)
+        if (owner instanceof wipeout.base.bindable)
             owner.registerDisposable(output);
         
         return output;

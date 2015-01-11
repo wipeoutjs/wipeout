@@ -29,11 +29,8 @@ Class("wipeout.viewModels.visual", function () {
         return function () {
             ///<summary>Returns the Id for the default template</summary>   
             ///<returns type="String">The Id for an default template</returns>     
-            if (!templateId) {
-                templateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<span>No template has been specified</span>");
-            }
 
-            return templateId;
+            return templateId || (templateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<span>No template has been specified</span>"));
         };
     })();
     
