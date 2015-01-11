@@ -1,3 +1,7 @@
+Newest changes: asyncLoader, remove instance, remove case where template already exists, add to engine, return something to cancel callback
+                engine, add async loader instance, getCompiledTemplate and getTemplateXml now return something different
+
+
 Templates:  add template prop to view
             remove content control altogether
             have template accept xml or string
