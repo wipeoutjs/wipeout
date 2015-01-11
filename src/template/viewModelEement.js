@@ -95,12 +95,18 @@ Class("wipeout.template.viewModelElement", function () {
         ///<summary>Render the view model with the given template</summary>
         ///<param name="oldTemplateId" type="String">The previous value</param>
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
-            
+        
+        // if a previous request is pending, cancel it
+        if (this.asynchronous)
+            this.asynchronous.cancel();
+        
         // remove old template
         if (this.__initialTemplate)
             this.unTemplate();
         
-        var synchronous = wipeout.template.engine.instance.getCompiledTemplate(templateId, (function (template) {
+        this.asynchronous = wipeout.template.engine.instance.getCompiledTemplate(templateId, (function (template) {
+            delete this.asynchronous;
+            
             if (element) {
                 element.parentElement.removeChild(element);
                 element = null;
@@ -123,7 +129,7 @@ Class("wipeout.template.viewModelElement", function () {
             this.disposeOfBindings = template.execute(this.renderContext);            
         }).bind(this));
         
-        if (!synchronous) {            
+        if (this.asynchronous) {            
             var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
             this.closingTag.parentElement.insertBefore(element, this.closingTag);
         }

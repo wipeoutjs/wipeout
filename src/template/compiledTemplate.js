@@ -6,6 +6,7 @@ Class("wipeout.template.compiledTemplate", function () {
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
         
+        this.xml = template;
         this.html = [];
         this._addedElements = [];
         

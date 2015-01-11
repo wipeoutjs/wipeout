@@ -35,7 +35,7 @@ Class("wipeout.viewModels.contentControl", function () {
         }
         
         function onTemplateIdChange(oldVal, newVal) {            
-            wipeout.template.engine.instnace.getTemplateXml(newVal, function (template) {
+            wipeout.template.engine.instance.getTemplateXml(newVal, function (template) {
                 owner.__woBag.boundTemplates[templateIdProperty] = template;    //TODO: test
                 owner[templateProperty] = template;
             }); 

@@ -3,8 +3,6 @@ Class("wipeout.template.asyncLoader", function () {
     var asyncLoader = function asyncLoader() {
         ///<summary>Loads remote templates and runs callbacks when the template is added to the DOM</summary>
                 
-        ///<Summary type="Object">individual template loaders</Summary>
-        this.pending = {};
     };
     
     asyncLoader.prototype.load = function(templateId, success) {
