@@ -5,7 +5,9 @@ Templates:  add template prop to view
             stop creating script tags
             create a template parser which accepts xml
             do not serialize xml when setting template property (compiledInitializer, "element.serializeChildren()")
-            
+        
+Cleanup arrays, observe arrays as objects        
+
 remove hack to add bindingContext to binding strings
 
 bug, handle null template id better
