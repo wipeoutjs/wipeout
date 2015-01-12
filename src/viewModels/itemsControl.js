@@ -5,7 +5,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     var staticConstructor = function() {
         if(deafaultTemplateId) return;
         
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<div data-bind='itemsControl: null'></div>");
+        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('<div itemscontrol></div>');
     };
     
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
