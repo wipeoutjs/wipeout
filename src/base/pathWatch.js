@@ -10,7 +10,6 @@ Class("wipeout.base.pathWatch", function () {
         ///<param name="context" type="Any" optional="true">The context of the callback</param>
         ///<param name="evaluateOnEachChange" type="Boolean" optional="true">If set to true, will fire callback each time the property changes, rather than once, for the last time the property changed</param>
         ///<param name="evaluateIfValueHasNotChanged" type="Boolean" optional="true">If set to true, will fire callback if the new value is the same as the old value</param>
-        ///<returns type="Object">A disposable object</returns>
         
         this._super();
         
@@ -30,6 +29,18 @@ Class("wipeout.base.pathWatch", function () {
         
         this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
+    
+    pathWatch.prototype.execute = function () {
+        
+        var current = this.forObject;
+        
+        // get item at index "begin"
+        for (i = 0, ii = this.path.length; current != null && i < ii; i++) {
+            current = current[this.path[i]];
+        }
+        
+        return current;
+    };
     
     pathWatch.prototype.buildObservableChain = function (begin) {
                            

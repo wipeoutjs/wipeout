@@ -13,12 +13,12 @@
     </initialize-view>
     <wo.content-control id="listTest">
         <template>
-            <div data-bind="html: model.rootTitle"></div>
+            <div wo-content="$data.model.rootTitle"></div>
             <div style="float: left">
-                <wo.items-control id="theInnerItemsControl1" itemSource-tw="model.items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="1" />
+                <wo.items-control id="theInnerItemsControl1" item-source--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="1" />
             </div>
             <div style="float: left; margin-left: 20px;">
-                <wo.items-control id="theInnerItemsControl2" itemSource-tw="model.items" itemTemplateId="'STPTemplates/itemsControlTemplate.html'" xxx="2" />
+                <wo.items-control id="theInnerItemsControl2" item-source--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="2" />
             </div>
             <div style="clear: both"></div>
             <!-- ko render: totals --><!-- /ko -->
@@ -26,7 +26,7 @@
         <totals>
             <wo.content-control>
                 <template>
-                    <div data-bind="html: model.totalOfIds"></div>
+                    <div content="model.totalOfIds"></div>
                 </template>
             </wo.content-control>
         </totals>

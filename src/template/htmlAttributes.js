@@ -8,8 +8,15 @@ Class("wipeout.template.htmlAttributes", function () {
         };
     };    
     
-    htmlAttributes.text = function (value, element, renderContext) {
+    htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
+        var disposable = new wipeout.base.pathWatch(renderContext, value, function (oldVal, newVal) {
+            element.innerHTML = newVal;
+        });
+        
+        element.innerHTML = disposable.execute();
+        
         return function() {
+            disposable.dispose();
         };
     };
     
