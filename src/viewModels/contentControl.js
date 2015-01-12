@@ -20,8 +20,7 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
-        
-        
+                
         return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
@@ -65,6 +64,8 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
+      
+        //TODO: this.setTemplate and this.setTemplateId should use watched.beforeNextObserveCycle or watched.afterNextObserveCycle        
         
         this.pendingLoad = null;
         this.setTemplate = owner[templateProperty];
@@ -74,7 +75,7 @@ Class("wipeout.viewModels.contentControl", function () {
         this.templateIdProperty = templateIdProperty;
         this.templateProperty = templateProperty;
         
-        // bind template to template id
+        // bind template to template id for the first time
         this.refreshTemplate(this.setTemplateId);
         
         this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        

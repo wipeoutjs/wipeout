@@ -250,8 +250,8 @@ Class("wipeout.base.watched", function () {
         });
     };
     
-    watched.beforeNextObserveCycle = function(callback) {
-        var dispose = wipeout.change.handler.beforeObserveCycle(function() {
+    watched.afterNextObserveCycle = function(callback) {
+        var dispose = wipeout.change.handler.afterObserveCycle(function() {
             dispose.dispose();
             callback()
         });
