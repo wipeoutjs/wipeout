@@ -11,10 +11,7 @@
     
     initializeView.prototype.onInitialized = function() {
         this._super();
-        
-        wipeout.base.watched.afterNextObserveCycle((function () {
-            this.templateItems.theDiv.innerHTML = this.item1 + " " + this.item2;
-        }).bind(this));        
+        this.templateItems.theDiv.innerHTML = this.item1 + " " + this.item2;
     };
     
     childView = wipeout.viewModels.contentControl.extend(function childView() {

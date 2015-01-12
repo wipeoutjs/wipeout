@@ -69,7 +69,8 @@ Class("wipeout.template.viewModelElement", function () {
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
-        this.viewModel.onInitialized();
+        // run onInitialized after templating is complete
+        wipeout.base.watched.afterNextObserveCycle(this.viewModel.onInitialized.bind(this.viewModel));
         
         // if the initialize did not trigger a templateId mutation, trigger one
         if(this.viewModel.templateId === tid)

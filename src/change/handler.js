@@ -103,7 +103,7 @@ Class("wipeout.change.handler", function () {
     handler.prototype.go = function() {
         if (this.__going) return;
         
-        enumerateArr(this.preObserveCycles, function (x) {
+        enumerateArr(wipeout.utils.obj.copyArray(this.preObserveCycles), function (x) {
             x();
         });
         
@@ -117,7 +117,7 @@ Class("wipeout.change.handler", function () {
         if (!change) {
             delete this.__going;
                     
-            enumerateArr(this.apreObserveCycles, function (x) {
+            enumerateArr(wipeout.utils.obj.copyArray(this.apreObserveCycles), function (x) {
                 x();
             });
             
