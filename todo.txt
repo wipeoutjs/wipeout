@@ -11,12 +11,9 @@ remove hack to add bindingContext to binding strings
 bug, handle null template id better
 
 profiler
-is templateArea needed?
 
 TODO:   wipeout.base.watched.prototype.observe, do something with dispose function from watch
         wipeout.base.watched.prototype.observe/watch, unit test dispose functionality
-        
--tw on view model definition, rather than in template
         
 cleanup:
             visual.js (added viewModelElement to __woBag, computed and observe functions)

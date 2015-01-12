@@ -236,22 +236,22 @@ Class("wipeout.base.watched", function () {
     watched.prototype.computed = watched.computedFunction;
     
     watched.beforeObserveCycle = function(callback) {
-        return wipeout.change.handler.beforeObserveCycle(callback);
+        return wipeout.change.handler.instance.beforeObserveCycle(callback);
     };
     
     watched.afterObserveCycle = function(callback) {
-        return wipeout.change.handler.afterObserveCycle(callback);
+        return wipeout.change.handler.instance.afterObserveCycle(callback);
     };
     
     watched.beforeNextObserveCycle = function(callback) {
-        var dispose = wipeout.change.handler.beforeObserveCycle(function () {
+        var dispose = wipeout.change.handler.instance.beforeObserveCycle(function () {
             dispose.dispose();
             callback();
         });
     };
     
     watched.afterNextObserveCycle = function(callback) {
-        var dispose = wipeout.change.handler.afterObserveCycle(function() {
+        var dispose = wipeout.change.handler.instance.afterObserveCycle(function() {
             dispose.dispose();
             callback()
         });

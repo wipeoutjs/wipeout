@@ -14,11 +14,11 @@ Class("wipeout.change.handler", function () {
         this.preObserveCycles.push(callback);
         
         return {
-            dispose: function () {
+            dispose: (function () {
                 var i;
                 if ((i = this.preObserveCycles.indexOf(callback)) !== -1)
                     this.preObserveCycles.splice(i, 1);
-            }
+            }).bind(this)
         };
     };
     
@@ -27,11 +27,11 @@ Class("wipeout.change.handler", function () {
         this.apreObserveCycles.push(callback);
         
         return {
-            dispose: function () {
+            dispose: (function () {
                 var i;
                 if ((i = this.apreObserveCycles.indexOf(callback)) !== -1)
                     this.apreObserveCycles.splice(i, 1);
-            }
+            }).bind(this)
         };
     };
     
