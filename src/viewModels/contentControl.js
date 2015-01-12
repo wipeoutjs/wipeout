@@ -15,63 +15,14 @@ Class("wipeout.viewModels.contentControl", function () {
     
     contentControl.addGlobalParser("template", "string");
     
-    var woBagStart = "wo_templateProperty";
     contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
         ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
         
-        var pendingLoad, setTemplate = owner[templateProperty], setTemplateId = owner[templateIdProperty];
         
-        function refreshTemplate(templateId) {
-            pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, function (template) {
-                pendingLoad = null;                
-                setTemplate = owner[templateProperty] = template;
-            }); 
-        }
-        
-        // bind template to template id
-        refreshTemplate(setTemplateId);
-        
-        function onTemplateIdChange(oldVal, newVal) {
-            if (newVal === setTemplateId) {
-                setTemplateId = null;
-                return;
-            }
-            
-            setTemplateId = null;
-                
-            if (pendingLoad)
-                pendingLoad.cancel();
-            
-            refreshTemplate(newVal);
-        }
-        
-        function onTemplateChange(oldVal, newVal) {
-            if (newVal === setTemplate) {
-                setTemplate = null;
-                return;
-            }
-            
-            setTemplate = null;
-            setTemplateId = owner[templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
-        }
-        
-        var d1 = owner.observe(templateIdProperty, onTemplateIdChange);        
-        var d2 = owner.observe(templateProperty, onTemplateChange);
-        
-        var output = {
-            dispose: function() {
-                d1.dispose();
-                d2.dispose();
-            }
-        };
-        
-        if (owner instanceof wipeout.base.bindable)
-            owner.registerDisposable(output);
-        
-        return output;
+        return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
     contentControl.createAnonymousTemplate = (function () {
@@ -108,6 +59,63 @@ Class("wipeout.viewModels.contentControl", function () {
             }
         };
     })();
+    
+    function boundTemplate (owner, templateIdProperty, templateProperty) {
+        ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
+        ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
+        ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
+        ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
+        
+        this.pendingLoad = null;
+        this.setTemplate = owner[templateProperty];
+        this.setTemplateId = owner[templateIdProperty];
+        
+        this.owner = owner;
+        this.templateIdProperty = templateIdProperty;
+        this.templateProperty = templateProperty;
+        
+        // bind template to template id
+        this.refreshTemplate(this.setTemplateId);
+        
+        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        
+        this.d2 = owner.observe(templateProperty, this.onTemplateChange, this);
+    };
+        
+    boundTemplate.prototype.dispose = function() {
+        this.d1.dispose();
+        this.d2.dispose();
+    };
+    
+    boundTemplate.prototype.refreshTemplate = function(templateId) {
+        this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
+            this.pendingLoad = null;                
+            this.setTemplate = this.owner[this.templateProperty] = template;
+        }).bind(this)); 
+    }
+
+    boundTemplate.prototype.onTemplateIdChange = function(oldVal, newVal) {
+        if (newVal === this.setTemplateId) {
+            this.setTemplateId = null;
+            return;
+        }
+
+        this.setTemplateId = null;
+
+        if (this.pendingLoad)
+            this.pendingLoad.cancel();
+
+        this.refreshTemplate(newVal);
+    }
+
+    boundTemplate.prototype.onTemplateChange = function(oldVal, newVal) {
+        if (newVal === this.setTemplate) {
+            this.setTemplate = null;
+            return;
+        }
+
+        this.setTemplate = null;
+        this.setTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+    }
     
     return contentControl;
 });
