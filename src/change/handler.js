@@ -4,6 +4,35 @@ Class("wipeout.change.handler", function () {
         this._properties = [];
         this._changes = [];        
         this._objects = [];
+        
+        this.preObserveCycles = [];
+        this.apreObserveCycles = [];
+    };
+    
+    //TODO: test
+    handler.prototype.beforeObserveCycle = function(callback) {
+        this.preObserveCycles.push(callback);
+        
+        return {
+            dispose: function () {
+                var i;
+                if ((i = this.preObserveCycles.indexOf(callback)) !== -1)
+                    this.preObserveCycles.splice(i, 1);
+            }
+        };
+    };
+    
+    //TODO: test
+    handler.prototype.afterObserveCycle = function(callback) {
+        this.apreObserveCycles.push(callback);
+        
+        return {
+            dispose: function () {
+                var i;
+                if ((i = this.apreObserveCycles.indexOf(callback)) !== -1)
+                    this.apreObserveCycles.splice(i, 1);
+            }
+        };
     };
     
     handler.allIndexesOf = function(array, item) {
@@ -73,6 +102,11 @@ Class("wipeout.change.handler", function () {
     
     handler.prototype.go = function() {
         if (this.__going) return;
+        
+        enumerateArr(this.preObserveCycles, function (x) {
+            x();
+        });
+        
         this.__going = true;
         this._go();
     };
@@ -80,8 +114,13 @@ Class("wipeout.change.handler", function () {
     handler.prototype._go = function() {
 
         var change = this.shift();
-        if (!change) {            
+        if (!change) {
             delete this.__going;
+                    
+            enumerateArr(this.apreObserveCycles, function (x) {
+                x();
+            });
+            
             return;
         }
 

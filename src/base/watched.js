@@ -234,6 +234,28 @@ Class("wipeout.base.watched", function () {
     watched.prototype.observe = watched.createObserveFunction();
     watched.prototype.del = watched.deleteFunction;
     watched.prototype.computed = watched.computedFunction;
+    
+    watched.beforeObserveCycle = function(callback) {
+        return wipeout.change.handler.beforeObserveCycle(callback);
+    };
+    
+    watched.afterObserveCycle = function(callback) {
+        return wipeout.change.handler.afterObserveCycle(callback);
+    };
+    
+    watched.beforeNextObserveCycle = function(callback) {
+        var dispose = wipeout.change.handler.beforeObserveCycle(function () {
+            dispose.dispose();
+            callback();
+        });
+    };
+    
+    watched.beforeNextObserveCycle = function(callback) {
+        var dispose = wipeout.change.handler.beforeObserveCycle(function() {
+            dispose.dispose();
+            callback()
+        });
+    };
                                       
     return watched;
 });
