@@ -25,8 +25,40 @@ Class("wipeout.template.compiledTemplate", function () {
     compiledTemplate.prototype.addNonElement = function(node) {
         ///<summary>Add a node to the html string without scanning for dynamic functionality</summary>
         ///<param name="node" type="Object">The node</param>
-        
+                
         this.html.push(node.serialize());
+    };
+    
+    // TODO: ability to modify
+    // TODO: escape characters
+    var begin = /\{\{/g;
+    var end = /\}\}/g;
+    compiledTemplate.prototype.addTextNode = function(node) {
+        ///<summary>Add a text node to the html string scanning for dynamic functionality</summary>
+        ///<param name="node" type="Object">The node</param>
+                
+        var html = node.serialize();
+        
+        while (begin.exec(html)) {
+            this.html.push(html.substring(end.lastIndex, begin.lastIndex - 2)); //TODO: -2 is for {{, what if it changes
+            end.lastIndex = begin.lastIndex;
+            if (!end.exec(html))
+                throw "TODO";
+            
+            // add the beginning of a placeholder
+            this.html.push("<script");
+
+            // add the id flag and the id generator
+            this.html.push([{
+                action: wipeout.template.htmlAttributes.render,
+                value: html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
+            }]);
+
+            // add the end of the placeholder
+            this.html.push(' type="placeholder"></script>');
+        }
+        
+        this.html.push(html.substr(end.lastIndex));
     };
     
     compiledTemplate.prototype.addViewModel = function(vmNode) {
@@ -106,7 +138,9 @@ Class("wipeout.template.compiledTemplate", function () {
         
         this._addedElements.push(node);
         
-        if (node.nodeType !== 1)
+        if (node.nodeType === 3)
+            this.addTextNode(node);
+        else if (node.nodeType !== 1)
             this.addNonElement(node);
         else if (wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(node.name)))//TODO
             this.addViewModel(node);

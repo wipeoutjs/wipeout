@@ -21,12 +21,12 @@
                 <wo.items-control id="theInnerItemsControl2" item-source--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="2" />
             </div>
             <div style="clear: both"></div>
-            <!-- ko render: totals --><!-- /ko -->
+            {{$data.totals}}
         </template>
         <totals>
             <wo.content-control>
                 <template>
-                    <div content="model.totalOfIds"></div>
+                    <div content="$data.model.totalOfIds"></div>
                 </template>
             </wo.content-control>
         </totals>

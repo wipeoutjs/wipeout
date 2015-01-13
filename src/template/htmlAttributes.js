@@ -8,6 +8,24 @@ Class("wipeout.template.htmlAttributes", function () {
         };
     };    
     
+    htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
+        
+        var context = new wipeout.base.watched(), name = "value";
+        var callback = wipeout.template.compiledInitializer.getAutoParser(value);
+        var disposable1 = new wipeout.base.computed(context, name, callback, {renderContext: renderContext, value: value, propertyName: ""});
+        var disposable2 = context.observe(name, function (oldVal, newVal) {
+            disposable3.render(newVal);
+        });
+        var disposable3 = new wipeout.template.renderedContent(element, value, renderContext);
+        disposable3.render(callback(value, "", renderContext));
+        
+        return function() {
+            disposable1.dispose();
+            disposable2.dispose();
+            disposable3.dispose();
+        }
+    };   
+    
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
         var disposable = new wipeout.base.pathWatch(renderContext, value, function (oldVal, newVal) {
             element.innerHTML = newVal;

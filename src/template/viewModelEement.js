@@ -1,7 +1,7 @@
 
 Class("wipeout.template.viewModelElement", function () {
     
-    function viewModelElement (element, xmlOverride, parentRenderContext) {
+    var viewModelElement = wipeout.template.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="xmlOverride" type="wipeout.template.templateElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
@@ -15,13 +15,7 @@ Class("wipeout.template.viewModelElement", function () {
         if(!vm)
             throw "Invalid view model";
         
-        name = wipeout.utils.obj.trim(vm.name);
-                
-        // create opening and closing tags and link to this
-        this.openingTag = document.createComment(" " + name + " ");        
-        this.openingTag.wipeoutOpening = this;
-        this.closingTag = document.createComment(" /" + name + " ");
-        this.closingTag.wipeoutClosing = this;
+        this._super(element, wipeout.utils.obj.trim(vm.name), parentRenderContext);
         
         // create initialization xml
         this.initialization = xmlOverride || wipeout.template.templateParser(wipeout.utils.html.outerHTML(element))[0];
@@ -30,17 +24,18 @@ Class("wipeout.template.viewModelElement", function () {
         this.viewModel = new vm.constructor();
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parentRenderContext);
         
-        // bind the content of this to the view model template
-        this.viewModel.observe("templateId", this.template, this);
+        // initialize the view model
+        wipeout.template.engine.instance
+            .getVmInitializer(this.initialization)
+            .initialize(this.viewModel, this.renderContext);
         
-        // add this to DOM and remove placeholder
-        element.parentElement.insertBefore(this.openingTag, element);
-        element.parentElement.removeChild(element);
+        // run onInitialized after templating is complete
+        wipeout.base.watched.afterNextObserveCycle(this.viewModel.onInitialized.bind(this.viewModel));
         
-        // initialize
-        this.init();
-    }
+        this.render(this.viewModel);
+    });
     
+    //TODO: move to parent
     viewModelElement.getParentElement = function(forHtmlElement) {
         var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
         while (current = current.previousSibling) {
@@ -51,140 +46,6 @@ Class("wipeout.template.viewModelElement", function () {
         }
         
         return forHtmlElement.parentElement;
-    };
-    
-    viewModelElement.prototype.init = function() {
-        ///<summary>Initialize this by adding the closing tag and rendering the view model</summary>
-        
-        // insert closing tag
-        this.openingTag.nextSibling ? 
-            this.openingTag.parentElement.insertBefore(this.closingTag, this.openingTag.nextSibling) : 
-            this.openingTag.parentElement.appendChild(this.closingTag);
-                
-        // cache templateId
-        var tid = this.viewModel.templateId;
-        
-        // initialize the view model
-        wipeout.template.engine.instance
-            .getVmInitializer(this.initialization)
-            .initialize(this.viewModel, this.renderContext);
-        
-        // run onInitialized after templating is complete
-        wipeout.base.watched.afterNextObserveCycle(this.viewModel.onInitialized.bind(this.viewModel));
-        
-        // if the initialize did not trigger a templateId mutation, trigger one
-        if(this.viewModel.templateId === tid)
-            this.template(tid, tid);
-    };
-    
-    //TODO: test
-    viewModelElement.prototype.move = function (insertBefore) {
-        
-        if (insertBefore.wipeoutClosing)
-            insertBefore = insertBefore.wipeoutClosing.openingTag;
-        
-        var html = this.allHtml();
-        for (var i = 0, ii = html.length; i < ii; i++)
-            insertBefore.parentElement.insertBefore(html[i], insertBefore);
-    };
-    
-    //TODO: test
-    viewModelElement.prototype.appendTo = function (parent) {
-        
-        if (parent.wipeoutClosing)
-            parent = parent.wipeoutClosing.openingTag;
-        
-        if (parent.wipeoutOpening)
-            return this.move(parent.firstChild || parent.wipeoutOpening.closingTag);
-        
-        var html = this.allHtml();
-        for (var i = html.length - 1; i >= 0; i--)
-            parent.appendChild(html[i]);            
-    };
-    
-    viewModelElement.prototype.allHtml = function() {
-        var output = [this.openingTag], current = this.openingTag;
-        
-        while (current && current !== this.closingTag) {
-            output.push(current = current.nextSibling); 
-        }
-        
-        return output;
-    };
-    
-    viewModelElement.prototype.unTemplate = function(leaveDeadChildNodes) {
-        ///<summary>Remove a view model's template, leaving it blank</summary>
-        ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
-        
-        // dispose of bindings
-        if (this.disposeOfBindings) {
-            this.disposeOfBindings();
-            delete this.disposeOfBindings;
-        }
-
-        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
-        // remove all children
-        if(!leaveDeadChildNodes)
-            while (this.openingTag.nextSibling && this.openingTag.nextSibling !== this.closingTag)
-                this.openingTag.nextSibling.parentNode.removeChild(this.openingTag.nextSibling);
-    };
-    
-    viewModelElement.prototype.template = function(oldTemplateId, templateId) {
-        ///<summary>Render the view model with the given template</summary>
-        ///<param name="oldTemplateId" type="String">The previous value</param>
-        ///<param name="templateId" type="String">A pointer to the template to apply</param>
-        
-        // if a previous request is pending, cancel it
-        if (this.asynchronous)
-            this.asynchronous.cancel();
-        
-        // remove old template
-        if (this.__initialTemplate)
-            this.unTemplate();
-        
-        this.asynchronous = wipeout.template.engine.instance.compileTemplate(templateId, (function (template) {
-            delete this.asynchronous;
-            
-            if (element) {
-                element.parentElement.removeChild(element);
-                element = null;
-            }
-            
-            // get template builder. This generates a html string and a function to
-            // add dynamic functionality after it is added to the DOM
-            template = template.getBuilder();
-            
-            //TODO: hack
-            // add builder html
-            var scr = document.createElement("script");
-            this.closingTag.parentElement.insertBefore(scr, this.closingTag);
-            scr.insertAdjacentHTML('afterend', template.html);
-            scr.parentElement.removeChild(scr);
-            
-            this.__initialTemplate = true;
-
-            // add dynamic functionality and cache dispose function
-            this.disposeOfBindings = template.execute(this.renderContext);            
-        }).bind(this));
-        
-        if (this.asynchronous) {            
-            var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
-            this.closingTag.parentElement.insertBefore(element, this.closingTag);
-        }
-    };
-    
-    viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {
-        ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
-        ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
-        
-        this.unTemplate(leaveDeadChildNodes);        
-        this.viewModel.dispose();
-        delete this.viewModel;
-        
-        if (!leaveDeadChildNodes) {
-            this.closingTag.parentElement.removeChild(this.closingTag);
-            this.openingTag.parentElement.removeChild(this.openingTag);
-        }        
     };
     
     return viewModelElement;    

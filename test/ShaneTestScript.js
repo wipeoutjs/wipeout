@@ -1,4 +1,4 @@
-(function () {    
+(function () {
     
     //wipeout.profile.profile();
     aRoutedEvent = new wo.routedEvent();
@@ -55,7 +55,7 @@
         })
     });
     
-    model.computed("totalOfIds", function() { 
+    model.computed("totalOfIds", function() {
         var allIds = model.items;
         var total = 0;
         for(var i = 0, ii = allIds.length; i < ii; i++) {
