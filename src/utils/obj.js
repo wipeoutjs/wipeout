@@ -186,6 +186,10 @@ Class("wipeout.utils.obj", function () {
         ///<summary>Make a deep copy of an array</summary>
         ///<param name="input" type="Array">The array to copy</param>
         ///<returns type="Array">The copied array</returns>
+        
+        if (input instanceof Array)
+            return input.slice();
+        
         var output = [];
         for(var i = 0, ii = input.length; i < ii; i++) {
             output.push(input[i]);
