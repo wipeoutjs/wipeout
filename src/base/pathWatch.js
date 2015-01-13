@@ -2,6 +2,7 @@
 
 Class("wipeout.base.pathWatch", function () {
     
+    var arrayMatch = /\[\s*\d\s*\]$/g;
     var pathWatch = wipeout.base.watched.extend(function pathWatch (forObject, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
         ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
         ///<param name="forObject" type="wipeout.base.watched" optional="false">The object to watch</param>
@@ -20,7 +21,18 @@ Class("wipeout.base.pathWatch", function () {
         this.evaluateOnEachChange = evaluateOnEachChange;
         this.evaluateIfValueHasNotChanged = evaluateIfValueHasNotChanged;
         
-        this.path = property.split(".");        
+        this.path = property.split(".");
+        for (var i = 0; i < this.path.length; i++) {
+            this.path[i] = wipeout.utils.obj.trim(this.path[i]);
+            var match = this.path[i].match(arrayMatch);
+            if (match) {
+                this.path[i] = wipeout.utils.obj.trim(this.path[i].replace(arrayMatch, ""));
+                
+                for (var j = 0, jj = match.length; j < jj; j++)
+                    this.path.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
+            }
+        }
+        
         this.disposables = new Array(this.path.length);
         this.val = wipeout.utils.obj.getObject(property, forObject);
         
@@ -62,14 +74,20 @@ Class("wipeout.base.pathWatch", function () {
         }
         
         // get the last item in the path subscribing to changes along the way
-        for (; current && i < this.path.length - 1; i++) {            
-            if (current.observe /*TODO: better way of telling*/ && current[this.path[i]] && i >= begin)              
-                this.disposables[i] = current.observe(this.path[i], (function (i) {
+        for (; current && i < this.path.length - 1; i++) {
+            if (current.observe /*TODO: better way of telling*/ && current[this.path[i]] && i >= begin) {
+                var args = [(function (i) {
                     return function(oldVal, newVal) {
                         _this.buildObservableChain(i);
                         _this.val = wipeout.utils.obj.getObject(_this.property, _this.forObject);
                     };
-                }(i)));                
+                }(i))];
+                
+                if (isNaN(this.path[i]))
+                    args.splice(0, 0, this.path[i]);
+                
+                this.disposables[i] = current.observe.apply(current, args);
+            }
 
             current = current[this.path[i]];
         }

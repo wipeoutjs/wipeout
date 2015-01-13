@@ -145,6 +145,9 @@ var camelCase = function(input) {
 
 Class("wipeout.utils.obj", function () {
         
+    //TODO: merge with path watch
+    //TODO: test for array
+    var arrayMatch = /\[\s*\d\s*\]$/g;
     var getObject = function(constructorString, context) {
         ///<summary>Get an object from string</summary>
         ///<param name="constructorString" type="String">A pointer to the object to create</param>
@@ -153,7 +156,18 @@ Class("wipeout.utils.obj", function () {
         if(!context) context = window;
         
         var constructor = constructorString.split(".");
-        for(var i = 0, ii = constructor.length; i <ii; i++) {
+        for (var i = 0; i < constructor.length; i++) {
+            constructor[i] = wipeout.utils.obj.trim(constructor[i]);
+            var match = constructor[i].match(arrayMatch);
+            if (match) {
+                constructor[i] = wipeout.utils.obj.trim(constructor[i].replace(arrayMatch, ""));
+                
+                for (var j = 0, jj = match.length; j < jj; j++)
+                    constructor.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
+            }
+        }
+        
+        for (var i = 0, ii = constructor.length; i <ii; i++) {
             context = context[constructor[i]];
             if(context == null)
                 return null;

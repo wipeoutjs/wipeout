@@ -27,6 +27,44 @@ testUtils.testWithUtils("observe", "path, last element changed", false, function
 });
 
 
+testUtils.testWithUtils("observe", "path, last element changed, has array", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = wo.watch();
+    subject.aa = wo.watch();
+    subject.aa.bb = new wipeout.base.array([{}, wo.watch()]);
+    subject.aa.bb[1].cc = 11;
+
+    var dispose = new pathWatch(subject, "aa.bb[1].cc", function(oldVal, newVal) {
+        strictEqual(oldVal, 11);
+        strictEqual(newVal, 22);
+        start();
+    });
+
+    // act
+    stop();
+    subject.aa.bb[1].cc = 22;        
+});
+
+
+testUtils.testWithUtils("observe", "path, array element changed, has array", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = wo.watch();
+    subject.aa = wo.watch();
+    subject.aa.bb = new wipeout.base.array([{}, wo.watch()]);
+    subject.aa.bb[1].cc = 11;
+
+    var dispose = new pathWatch(subject, "aa.bb[1].cc", function(oldVal, newVal) {
+        strictEqual(oldVal, 11);
+        strictEqual(newVal, 22);
+        start();
+    });
+
+    // act
+    stop();
+    subject.aa.bb.replace(1, { cc: 22 });        
+});
+
+
 testUtils.testWithUtils("observe", "path, last element changed, has non observable in path", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = wo.watch();
@@ -109,7 +147,6 @@ testUtils.testWithUtils("observe", "path, mid element and last element changed",
     stop();
     subject.aa = newVal;
     bb.cc = 33;
-
 });
 
 testUtils.testWithUtils("observe", "path, mid element changed, after disposal", false, function(methods, classes, subject, invoker) {
