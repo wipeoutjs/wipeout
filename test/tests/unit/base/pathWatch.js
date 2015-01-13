@@ -65,6 +65,27 @@ testUtils.testWithUtils("observe", "path, array element changed, has array", fal
 });
 
 
+testUtils.testWithUtils("observe", "path, last element is array", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = wo.watch();
+    subject.aa = wo.watch();
+    subject.aa.bb = new wipeout.base.array([11]);
+
+    var dispose = new pathWatch(subject, "aa.bb", function(removed, added) {
+        strictEqual(removed.length, 0);
+        strictEqual(added.length, 1);
+        
+        strictEqual(added[0], 55);        
+        
+        start();
+    });
+
+    // act
+    stop();
+    subject.aa.bb.push(55);
+});
+
+
 testUtils.testWithUtils("observe", "path, last element changed, has non observable in path", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = wo.watch();
