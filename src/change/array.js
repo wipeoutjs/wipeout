@@ -41,7 +41,6 @@ Class("wipeout.change.array", function () {
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
         if (next === -1) {
             
-            debugger;
             var addedRemoved = this.getAddedAndRemoved();
             var moved = this.processMovedItems(addedRemoved.removedValues, addedRemoved.addedValues); //TODO: only if moved is needed
             
