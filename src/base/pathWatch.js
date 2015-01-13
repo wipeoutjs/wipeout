@@ -73,8 +73,12 @@ Class("wipeout.base.pathWatch", function () {
             current = current[this.path[i]];
         }
         
+        var currentIsArray = (function (i) {
+            return (i != null ? current[this.path[i]] : current) instanceof wipeout.base.array;
+        }).bind(this);
+        
         // get the last item in the path subscribing to changes along the way
-        for (; current && i < this.path.length - 1; i++) {
+        for (; current && i < this.path.length - (currentIsArray(i) ? 0 : 1); i++) {
             if (current.observe /*TODO: better way of telling*/ && current[this.path[i]] && i >= begin) {
                 var args = [(function (i) {
                     return function(oldVal, newVal) {
@@ -91,9 +95,11 @@ Class("wipeout.base.pathWatch", function () {
 
             current = current[this.path[i]];
         }
-
+        
         // observe the last item in the path
-        if (current && current.observe /*TODO: better way of telling*/)
+        if (currentIsArray())
+            this.disposables[i] = current.observe(this.callback, this.context || this.forObject, this.evaluateOnEachChange, this.evaluateIfValueHasNotChanged);
+        else if (current && current.observe /*TODO: better way of telling*/)
             this.disposables[i] = current.observe(this.path[i], function(oldVal, newVal) {
                 this.val = newVal;
             }, this);
