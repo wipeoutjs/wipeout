@@ -166,7 +166,6 @@ Class("wipeout.base.array", function () {
     };
 
     array.prototype.splice = function(index, removeCount, addItems) {
-
         if (!useObjectObserve) {
             var removed = [];
             for(var i = index, ii = removeCount + index > this.length ? this.length : removeCount + index; 

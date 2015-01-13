@@ -31,6 +31,78 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
+//TODO: this is a bug
+testUtils.testWithUtils("observe", "add then remove", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+
+    var val = {};
+    subject.observe(function(removed, added, indexes) {
+        strictEqual(removed.length, 0);
+        strictEqual(added.length, 0);
+        
+        start();
+    });
+
+    // act
+    subject.push(val);
+    subject.length = 0;
+
+    stop();
+});
+
+//TODO: this is a bug
+testUtils.testWithUtils("observe", "add then splice", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+
+    var val0 = {}, val1 = {};
+    subject.observe(function(removed, added, indexes) {
+        strictEqual(added.length, 2);
+        strictEqual(added[0], val0);
+        strictEqual(added[1], val1);
+        
+        strictEqual(indexes.added.length, 2);
+        strictEqual(indexes.added[0].value, val0);
+        strictEqual(indexes.added[0].index, 0);
+        
+        strictEqual(indexes.added[1].value, val1);
+        strictEqual(indexes.added[1].index, 1);
+        
+        start();
+    });
+
+    // act
+    subject.push(val1);
+    subject.splice(0, 0, val0);
+
+    stop();
+});
+
+//TODO: this is a bug
+testUtils.testWithUtils("observe", "add then replace", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+
+    var val0 = {}, val1 = {};
+    subject.observe(function(removed, added, indexes) {
+        strictEqual(added.length, 1);
+        strictEqual(added[0], val0);
+        
+        strictEqual(indexes.added.length, 1);
+        strictEqual(indexes.added[0].value, val0);
+        strictEqual(indexes.added[0].index, 0);
+        
+        start();
+    });
+
+    // act
+    subject.push(val1);
+    subject.splice(0, 1, val0);
+
+    stop();
+});
+
 testUtils.testWithUtils("observe", "length decrease", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array([3, 4, 5]);

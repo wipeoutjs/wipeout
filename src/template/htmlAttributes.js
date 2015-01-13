@@ -20,6 +20,26 @@ Class("wipeout.template.htmlAttributes", function () {
         };
     };
     
+    htmlAttributes.itemscontrol = function (value, element, renderContext) {
+        renderContext.$data.items.observe(function (removed, added, indexes) {
+            debugger;
+          //TODO: bug, this is executed twice  
+        }, renderContext.$data);
+        
+        renderContext.$data.items.push("dd");
+        wipeout.base.watched.afterNextObserveCycle(function() {
+            
+            renderContext.$data.items.push("ee");
+            wipeout.base.watched.afterNextObserveCycle(function() {
+                
+                renderContext.$data.items.splice(1, 0, "ff");
+                wipeout.base.watched.afterNextObserveCycle(function() {
+                    renderContext.$data.items.reverse();
+                });
+            });
+        });
+    };
+    
     htmlAttributes.id = function (value, element, renderContext) {
         renderContext.$data.templateItems[value] = element;
         element.id = value;

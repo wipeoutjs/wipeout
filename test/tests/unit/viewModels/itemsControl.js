@@ -6,7 +6,7 @@ module("wipeout.viewModels.itemsControl", {
 });
 
 var itemsControl = wipeout.viewModels.itemsControl;
-
+/* TODO: test static constructor
 testUtils.testWithUtils("constructor", "static constructor", false, function(methods, classes, subject, invoker) {
     // arrange
     var ex = {};
@@ -25,7 +25,7 @@ testUtils.testWithUtils("constructor", "static constructor", false, function(met
     }
     
     // assert
-});
+});*/
 
 testUtils.testWithUtils("constructor", "", false, function(methods, classes, subject, invoker) {
     // arrange
@@ -41,7 +41,6 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     subject.registerDisposable = methods.method();
     
     subject._removeItem = {};
-    subject.observe = methods.method(["itemTemplateId", subject.reDrawItems, subject]);
     subject.registerRoutedEvent = methods.method([wipeout.viewModels.itemsControl.removeItem, subject._removeItem, subject]);
     
     // act
@@ -220,6 +219,7 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     var itemTemplateId = {};
     var model = {};
     subject.itemTemplateId = itemTemplateId;
+    subject.observe = methods.customMethod(function () { strictEqual("itemTemplateId", arguments[0]); return {dispose: function(){}}});
     
     // act
     var actual = invoker(model);
@@ -228,20 +228,4 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     ok(actual instanceof wipeout.viewModels.view);
     strictEqual(actual.model, model);
     strictEqual(actual.templateId, itemTemplateId);
-});
-
-testUtils.testWithUtils("reDrawItems", "", false, function(methods, classes, subject, invoker) {
-    // arrange
-    var model = {};
-    var viewModel = {};
-    subject.itemSource = [model];
-    subject.items = [];
-    subject._createItem = methods.method([model], viewModel);
-    
-    // act
-    invoker();
-    
-    // assert
-    strictEqual(subject.items.length, 1);
-    strictEqual(subject.items[0], viewModel);
 });

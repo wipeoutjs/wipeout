@@ -33,9 +33,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<Summary type="wo.view">An array of viewmodels, each corresponding to a model in the itemSource property</Summary>
         this.items = new wipeout.base.array();
         this.items.observe(this.onItemsChanged, this);
-        this.registerDisposable(this.items);        
-
-        this.observe("itemTemplateId", this.reDrawItems, this);
+        this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
@@ -174,15 +172,13 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        return new wipeout.viewModels.view(this.itemTemplateId, model);        
-    };
-
-    itemsControl.prototype.reDrawItems = function () {
-        ///<summary>Destroys and re-draws all view models</summary>
+        var vm = new wipeout.viewModels.view(this.itemTemplateId, model);
         
-        this.items.length = 0;
-        for (var i = 0, ii = this.itemSource.length; i < ii; i++)
-            this.items.push(this._createItem(this.itemSource[i]));
+        vm.registerDisposable(this.observe("itemTemplateId", function (oldVal, newVal) {
+            vm.templateId = newVal;
+        }, this));
+        
+        return vm;
     };
 
     return itemsControl;

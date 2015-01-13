@@ -13,7 +13,6 @@ Class("wipeout.change.array", function () {
     array.arrayChangeProperty = {};
     
     array.prototype.go = function(changeHandler) {
-        
         var next = changeHandler.indexOf(this.array, array.arrayChangeProperty);
         
         // if there is another change to this array, sync the removedValues and addedValues objects
