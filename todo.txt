@@ -1,3 +1,6 @@
+watch for changes to an array if array is last item in path
+
+
 Templates:  add template prop to view
             remove content control altogether
             have template accept xml or string
