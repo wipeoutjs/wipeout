@@ -21,9 +21,26 @@ Class("wipeout.template.htmlAttributes", function () {
     };
     
     htmlAttributes.itemscontrol = function (value, element, renderContext) {
+        
+        var viewModelElements = [];
         renderContext.$data.items.observe(function (removed, added, indexes) {
-            debugger;
-          //TODO: bug, this is executed twice  
+                    
+            /*var vme = wipeout.utils.obj.copyArray(viewModelElements);
+            this.items.length = this.itemSource.length;
+
+            enumerateArr(indexes.added, function(item) {
+                
+                viewModelElements[item.index] = item.value;
+                
+                
+                
+                this.items.replace(item.index, this._createItem(item.value));
+            }, this);
+
+            enumerateArr(indexes.moved, function(item) {
+                this.items.replace(item.to, vme[item.from]);
+            }, this);*/
+            
         }, renderContext.$data);
         
         renderContext.$data.items.push("dd");

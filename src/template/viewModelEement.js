@@ -77,6 +77,41 @@ Class("wipeout.template.viewModelElement", function () {
             this.template(tid, tid);
     };
     
+    //TODO: test
+    viewModelElement.prototype.move = function (insertBefore) {
+        
+        if (insertBefore.wipeoutClosing)
+            insertBefore = insertBefore.wipeoutClosing.openingTag;
+        
+        var html = this.allHtml();
+        for (var i = 0, ii = html.length; i < ii; i++)
+            insertBefore.parentElement.insertBefore(html[i], insertBefore);
+    };
+    
+    //TODO: test
+    viewModelElement.prototype.appendTo = function (parent) {
+        
+        if (parent.wipeoutClosing)
+            parent = parent.wipeoutClosing.openingTag;
+        
+        if (parent.wipeoutOpening)
+            return this.move(parent.firstChild || parent.wipeoutOpening.closingTag);
+        
+        var html = this.allHtml();
+        for (var i = html.length - 1; i >= 0; i--)
+            parent.appendChild(html[i]);            
+    };
+    
+    viewModelElement.prototype.allHtml = function() {
+        var output = [this.openingTag], current = this.openingTag;
+        
+        while (current && current !== this.closingTag) {
+            output.push(current = current.nextSibling); 
+        }
+        
+        return output;
+    };
+    
     viewModelElement.prototype.unTemplate = function(leaveDeadChildNodes) {
         ///<summary>Remove a view model's template, leaving it blank</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
