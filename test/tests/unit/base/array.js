@@ -31,7 +31,6 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
-//TODO: this is a bug
 testUtils.testWithUtils("observe", "add then remove", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();
@@ -51,7 +50,6 @@ testUtils.testWithUtils("observe", "add then remove", false, function(methods, c
     stop();
 });
 
-//TODO: this is a bug
 testUtils.testWithUtils("observe", "add then splice", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();
@@ -63,23 +61,22 @@ testUtils.testWithUtils("observe", "add then splice", false, function(methods, c
         strictEqual(added[1], val1);
         
         strictEqual(indexes.added.length, 2);
-        strictEqual(indexes.added[0].value, val0);
+        strictEqual(indexes.added[0].value, val1);
         strictEqual(indexes.added[0].index, 0);
         
-        strictEqual(indexes.added[1].value, val1);
+        strictEqual(indexes.added[1].value, val0);
         strictEqual(indexes.added[1].index, 1);
         
         start();
     });
 
     // act
-    subject.push(val1);
-    subject.splice(0, 0, val0);
+    subject.push(val0);
+    subject.splice(0, 0, val1);
 
     stop();
 });
 
-//TODO: this is a bug
 testUtils.testWithUtils("observe", "add then replace", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();
