@@ -53,6 +53,7 @@ Class("wipeout.base.array", function () {
 
     Object.defineProperty(array.prototype, "length", {
         set: function(v) {
+            debugger;
             v = changeIndex(v);            
             if (v === undefined) 
                 throw RangeError("Invalid array length");
@@ -91,9 +92,11 @@ Class("wipeout.base.array", function () {
         }
     };
 
-    //TODO: test
+    //TODO: old implementation was not updating length.
+    //TODO: use old emeplemntation, there are already tests in place
     array.prototype.replace = function(index, replacement) {
         
+        /*
         if (!useObjectObserve)
             wipeout.change.handler.instance.pushArray(this, {
                 name: index.toString(),
@@ -101,22 +104,27 @@ Class("wipeout.base.array", function () {
                 oldValue: this[index],
                 type: "update"
             }, this.__woBag);
-
-
+        
         return this.alteringLength(function() {
+            if (this.length <= index)
+                this.length = index + 1;
+                
             return this[index] = replacement;
-        });
+        });*/
+        
+        this.splice(index, 0, replacement);
+        return replacement;
     };
 
     array.prototype.pop = function() {
 
         if (!useObjectObserve)
-            if (this.__woBag.length)
+            if (this.length)
                 wipeout.change.handler.instance.pushArray(this, {
                     addedCount: 0,
-                    index: this.__woBag.length - 1,
+                    index: this.length - 1,
                     object: this,
-                    removed: [this[this.__woBag.length - 1]],
+                    removed: [this[this.length - 1]],
                     type: "splice"
                 }, this.__woBag);
 
@@ -128,7 +136,7 @@ Class("wipeout.base.array", function () {
     array.prototype.shift = function() {
 
         if (!useObjectObserve)
-            if (this.__woBag.length)
+            if (this.length)
                 wipeout.change.handler.instance.pushArray(this, {
                     addedCount: 0,
                     index: 0,
@@ -154,7 +162,7 @@ Class("wipeout.base.array", function () {
         if (!useObjectObserve)
             wipeout.change.handler.instance.pushArray(this, {
                 addedCount: 1,
-                index: this.__woBag.length,
+                index: this.length,
                 object: this,
                 removed: [],
                 type: "splice"

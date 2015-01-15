@@ -31,6 +31,48 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
+testUtils.testWithUtils("observe", "replace, length doesn't change", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+
+    var val = {};
+    subject.observe(function(removed, added) {
+        strictEqual(removed.length, 1);
+        strictEqual(removed[0], 2);
+        strictEqual(added.length, 1);
+        strictEqual(added[0], 4);
+        
+        strictEqual(subject.length, 3);        
+        start();
+    });
+
+    // act
+    subject.replace(1, 4);
+
+    stop();
+});
+
+testUtils.testWithUtils("observe", "replace, length changes", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+
+    var val = {};
+    subject.observe(function(removed, added) {
+        debugger;
+        strictEqual(removed.length, 0);
+        strictEqual(added.length, 1);
+        strictEqual(added[0], 4);
+        
+        strictEqual(subject.length, 4);        
+        start();
+    });
+
+    // act
+    subject.replace(3, 4);
+
+    stop();
+});
+
 testUtils.testWithUtils("observe", "add then remove", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();
