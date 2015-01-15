@@ -53,7 +53,6 @@ Class("wipeout.base.array", function () {
 
     Object.defineProperty(array.prototype, "length", {
         set: function(v) {
-            debugger;
             v = changeIndex(v);            
             if (v === undefined) 
                 throw RangeError("Invalid array length");
@@ -92,6 +91,44 @@ Class("wipeout.base.array", function () {
         }
     };
 
+    // used to preserve "undefined" value in a value removed from an array
+    var _undefined = {};
+    array.prototype.bind = function(anotherArray) {
+        
+        var copy = wipeout.utils.obj.copyArray(this);
+        copy.splice(0, 0, 0, anotherArray.length);
+        anotherArray.splice.apply(anotherArray, copy);
+        
+        var replace = anotherArray instanceof array;
+        return this.observe(function (removed, added, indexes) {
+            var rem = {};
+
+            enumerateArr(indexes.added, function(item) {
+                rem[item.index] = anotherArray[item.index] === undefined ? _undefined : anotherArray[item.index];
+                
+                replace ? 
+                    anotherArray.replace(item.index, this[item.index]) : 
+                    anotherArray[item.index] = this[item.index];
+            }, this);
+
+            var movedItem;
+            enumerateArr(indexes.moved, function(item) {
+                rem[item.from] = anotherArray[item.from] === undefined ? _undefined : anotherArray[item.from];
+                
+                movedItem = rem[item.from] ? 
+                    (rem[item.from] === _undefined ? undefined : rem[item.from]) : 
+                    this[item.from];
+                
+                replace ? 
+                    anotherArray.replace(item.to, movedItem) : 
+                    anotherArray[item.to] = movedItem;
+            }, this);
+
+            if (anotherArray.length !== this.length)
+                anotherArray.length = this.length;
+        }, this);
+    }
+    
     //TODO: old implementation was not updating length.
     //TODO: use old emeplemntation, there are already tests in place
     array.prototype.replace = function(index, replacement) {
@@ -112,7 +149,7 @@ Class("wipeout.base.array", function () {
             return this[index] = replacement;
         });*/
         
-        this.splice(index, 0, replacement);
+        this.splice(index, index >= this.length ? 0 : 1, replacement);
         return replacement;
     };
 

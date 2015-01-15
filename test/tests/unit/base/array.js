@@ -58,7 +58,6 @@ testUtils.testWithUtils("observe", "replace, length changes", false, function(me
 
     var val = {};
     subject.observe(function(removed, added) {
-        debugger;
         strictEqual(removed.length, 0);
         strictEqual(added.length, 1);
         strictEqual(added[0], 4);
@@ -402,4 +401,32 @@ testUtils.testWithUtils("remove", null, false, function(methods, classes, subjec
     strictEqual(subject.length, 2);
     strictEqual(subject[0], 3);
     strictEqual(subject[1], 5);
+});
+
+testUtils.testWithUtils("bind", null, false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+    var another = [];
+
+    var val = {};
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 2);
+        assert();
+        start();
+    }, true);
+
+    // act
+    subject.bind(another);
+    
+    // assert
+    function assert() {
+        strictEqual(subject.length, another.length);
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i]);
+    }
+    
+    assert();
+    subject.length = 2;
+    stop();
 });
