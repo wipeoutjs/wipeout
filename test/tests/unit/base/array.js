@@ -430,3 +430,31 @@ testUtils.testWithUtils("bind", null, false, function(methods, classes, subject,
     subject.length = 2;
     stop();
 });
+
+testUtils.testWithUtils("bind", "with filter", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+    var another = [];
+
+    var val = {};
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 2);
+        assert();
+        start();
+    }, true);
+
+    // act
+    subject.bind(another, function (item) { return {item:item}; });
+    
+    // assert
+    function assert() {
+        strictEqual(subject.length, another.length);
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i].item);
+    }
+    
+    assert();
+    subject.length = 2;
+    stop();
+});

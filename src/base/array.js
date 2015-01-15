@@ -91,13 +91,29 @@ Class("wipeout.base.array", function () {
         }
     };
 
+    array.copyAll = function (from, to, createNew) {
+        
+        var args;
+        if (createNew) {
+            args = [];
+            enumerateArr(from, function (item) {
+                args.push(createNew(item));
+            });
+        } else {
+            args = wipeout.utils.obj.copyArray(from);
+        }
+        
+        args.splice(0, 0, 0, to.length);
+        to.splice.apply(to, args);
+    };
+    
     // used to preserve "undefined" value in a value removed from an array
     var _undefined = {};
-    array.prototype.bind = function(anotherArray) {
+    array.prototype.bind = function(anotherArray, createNew) {
         
-        var copy = wipeout.utils.obj.copyArray(this);
-        copy.splice(0, 0, 0, anotherArray.length);
-        anotherArray.splice.apply(anotherArray, copy);
+        array.copyAll(this, anotherArray, createNew);
+        
+        createNew = createNew || function (item) { return item; };
         
         var replace = anotherArray instanceof array;
         return this.observe(function (removed, added, indexes) {
@@ -107,17 +123,17 @@ Class("wipeout.base.array", function () {
                 rem[item.index] = anotherArray[item.index] === undefined ? _undefined : anotherArray[item.index];
                 
                 replace ? 
-                    anotherArray.replace(item.index, this[item.index]) : 
-                    anotherArray[item.index] = this[item.index];
+                    anotherArray.replace(item.index, createNew(this[item.index])) : 
+                    anotherArray[item.index] = createNew(this[item.index]);
             }, this);
 
             var movedItem;
             enumerateArr(indexes.moved, function(item) {
                 rem[item.from] = anotherArray[item.from] === undefined ? _undefined : anotherArray[item.from];
                 
-                movedItem = rem[item.from] ? 
+                movedItem = rem[item.from] !== undefined ? 
                     (rem[item.from] === _undefined ? undefined : rem[item.from]) : 
-                    this[item.from];
+                    anotherArray[item.from];
                 
                 replace ? 
                     anotherArray.replace(item.to, movedItem) : 
