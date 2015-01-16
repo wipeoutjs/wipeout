@@ -18,6 +18,9 @@ Class("wipeout.base.computed", function () {
         this.arguments = [];
         this.disposables = [];        
         this.callback = computed.stripFunction(callback);
+        this.callbackFunction = callback;
+        this.context = context;
+        this.name = name;
                 
         // get all argument names
         var args = this.callback.slice(
@@ -41,10 +44,6 @@ Class("wipeout.base.computed", function () {
                 throw "Argument \"" + arg + "\" must be added as a watch variable";
         });
         
-        this.execute = function() {
-            context[name] = callback.apply(context, this.arguments);
-        };
-        
         this.execute();
         
         // watch each watch variable
@@ -54,6 +53,27 @@ Class("wipeout.base.computed", function () {
                 this.watchVariable(i, watchVariables[i]);
             }
         }
+    };
+        
+    computed.prototype.execute = function() {
+        var val = this.callbackFunction.apply(this.context, this.arguments);
+        if (val === this.context[this.name])
+            return;
+        
+        if (this.arrayDisposeCallback) {
+            this.arrayDisposeCallback.dispose();
+            delete this.arrayDisposeCallback;
+        }            
+        
+        if (!(val instanceof Array) || !(this.context[this.name] instanceof Array)) {
+            this.context[this.name] = val;
+            return;
+        }
+        
+        if (val instanceof wipeout.base.array)
+            this.arrayDisposeCallback = val.bind(this.context[this.name]);
+        else
+            wipeout.base.array.copyAll(this.context[this.name]);
     };
         
     computed.stripFunction = function(input) { //TODO: unit test independantly

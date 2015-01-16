@@ -1,5 +1,7 @@
+
 watch for changes to an array if array is last item in path
 
+<div content--s="hello"></div> doesn't work. Parsers only work with view models
 
 Templates:  add template prop to view
             remove content control altogether

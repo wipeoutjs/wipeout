@@ -6,73 +6,111 @@ Class("wipeout.template.htmlAttributes", function () {
     htmlAttributes.click = function (value, element, renderContext) {
         return function() {
         };
-    };    
+    }; 
+    
+    var defaultVal = {};
+    function contentOrRender (value, onValueChanged, renderContext) { //TODO error handling
+        
+        var context = new wipeout.base.watched({value: defaultVal}), name = "value";
+        context.callback = wipeout.template.compiledInitializer.getAutoParser(value);
+        
+        var observation = context.observe(name, onValueChanged);
+        
+        // order important. Observe before computed execution
+        var computed = new wipeout.base.computed(context, name, context.callback, {renderContext: renderContext, value: value, propertyName: ""});
+        
+        return function() {
+            observation.dispose();
+            computed.dispose();
+        };
+    };  
     
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
-        
-        var context = new wipeout.base.watched(), name = "value";
-        var callback = wipeout.template.compiledInitializer.getAutoParser(value);
-        var disposable1 = new wipeout.base.computed(context, name, callback, {renderContext: renderContext, value: value, propertyName: ""});
-        var disposable2 = context.observe(name, function (oldVal, newVal) {
-            disposable3.render(newVal);
-        });
-        var disposable3 = new wipeout.template.renderedContent(element, value, renderContext);
-        disposable3.render(callback(value, "", renderContext));
+        var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
+        var disposal = contentOrRender(value, function (oldVal, newVal) {
+            htmlContent.render(newVal);
+        }, renderContext);
         
         return function() {
-            disposable1.dispose();
-            disposable2.dispose();
-            disposable3.dispose();
-        }
-    };   
+            disposal();
+            htmlContent.dispose();
+        };
+    };  
     
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
-        var disposable = new wipeout.base.pathWatch(renderContext, value, function (oldVal, newVal) {
+        return contentOrRender(value, function (oldVal, newVal) {
             element.innerHTML = newVal;
-        });
-        
-        element.innerHTML = disposable.execute();
-        
-        return function() {
-            disposable.dispose();
-        };
+        }, renderContext);
     };
     
+    //TODO: dispose function
     htmlAttributes.itemscontrol = function (value, element, renderContext) {
         
-        var viewModelElements = [];
-        renderContext.$data.items.observe(function (removed, added, indexes) {
-                    
-            /*var vme = wipeout.utils.obj.copyArray(viewModelElements);
-            this.items.length = this.itemSource.length;
-
-            enumerateArr(indexes.added, function(item) {
-                
-                viewModelElements[item.index] = item.value;
-                
-                
-                
-                this.items.replace(item.index, this._createItem(item.value));
-            }, this);
-
-            enumerateArr(indexes.moved, function(item) {
-                this.items.replace(item.to, vme[item.from]);
-            }, this);*/
-            
-        }, renderContext.$data);
+        if (renderContext.$data.__woBag.hasItemsControlBinding)
+            throw "This items control already has an items control binding";
         
-        renderContext.$data.items.push("dd");
-        wipeout.base.watched.afterNextObserveCycle(function() {
+        var token = renderContext.$data.__woBag.hasItemsControlBinding = {};
             
-            renderContext.$data.items.push("ee");
-            wipeout.base.watched.afterNextObserveCycle(function() {
+        var renderedItems = [];
+        
+        function onItemsChanged (removed, added, indexes) {
+            var items = wipeout.utils.obj.copyArray(renderedItems);
+            for (var i = renderContext.$data.items.length, ii = renderedItems.length; i < ii; i++)
+                renderedItems[i].dispose();
+
+            renderedItems.length = renderContext.$data.items.length;
+            
+            var removed = {}, added = {}
+            enumerateArr(indexes.added, function(item) {
+                if (renderedItems[item.index])
+                    removed[item.index] = renderedItems[item.index];
                 
-                renderContext.$data.items.splice(1, 0, "ff");
-                wipeout.base.watched.afterNextObserveCycle(function() {
-                    renderContext.$data.items.reverse();
-                });
+                var el = document.createElement("script");
+                if (item.index >= renderedItems.length - 1)
+                    element.appendChild(el);
+                else
+                    renderedItems[item.index + 1].closingTag.parentElement.insertAfter(el, item[item.index + 1].closingTag);
+                    
+                renderedItems[item.index] = new wipeout.template.renderedContent(el, "item: " + item.index, renderContext);
+                renderedItems[item.index].render(item.value);
+            }, this);
+        
+            enumerateArr(indexes.moved, function(item) {
+                removed[item.to] = renderedItems[item.to];
+                added[item.from] = true;
+                
+                renderedItems[item.to] = items[item.from];
+                if (item.to >= renderedItems.length - 1)
+                    renderedItems[item.to].appendTo(element);
+                else
+                    renderedItems[item.to].move(renderedItems[item.to + 1].openingTag);
+            }, this);
+            
+            for (var i in removed)
+                if (!added[i])
+                    removed[i].dispose();
+        }
+        
+        var d1 = renderContext.$data.items.observe(onItemsChanged);
+        
+        var added = [];
+        for (var i = 0, ii = renderContext.$data.items.length; i < ii; i++)
+            added.push({
+                value: renderContext.$data.items[i],
+                index: i
             });
-        });
+            
+        onItemsChanged([],[],{added: added});
+        
+        return function () {
+            d1.dispose();
+            for (var i = 0, ii = renderedItems.length; i < ii; i++)
+                renderedItems[i].dispose();
+                
+            renderedItems.length = 0;
+            if (renderContext.$data.__woBag.hasItemsControlBinding === token)
+                delete renderContext.$data.__woBag.hasItemsControlBinding;
+        }
     };
     
     htmlAttributes.id = function (value, element, renderContext) {

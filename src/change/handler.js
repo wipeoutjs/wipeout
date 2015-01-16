@@ -11,6 +11,7 @@ Class("wipeout.change.handler", function () {
     
     //TODO: test
     handler.prototype.beforeObserveCycle = function(callback) {
+        
         this.preObserveCycles.push(callback);
         
         return {
@@ -24,6 +25,7 @@ Class("wipeout.change.handler", function () {
     
     //TODO: test
     handler.prototype.afterObserveCycle = function(callback) {
+        
         this.apreObserveCycles.push(callback);
         
         return {

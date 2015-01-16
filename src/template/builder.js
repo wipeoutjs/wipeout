@@ -3,7 +3,7 @@ Class("wipeout.template.builder", function () {
         
     // generate unique ids
     var wipeoutPlaceholder = "wipeout_placeholder_id_";
-    var generator = (function() {
+    builder.uniqueIdGenerator = (function() {
         var i = Math.floor(Math.random() * 1000000000);
         return function() {
             return wipeoutPlaceholder + (++i);
@@ -24,7 +24,7 @@ Class("wipeout.template.builder", function () {
                 htmlFragments.push(html);
             } else {
                 // dynamic content. Generate an id to find the html and add actions
-                var id = generator();
+                var id = builder.uniqueIdGenerator();
                 htmlFragments.push(" id=\"" + id + "\"");
                 this.elements.push({
                     id: id,
@@ -44,6 +44,7 @@ Class("wipeout.template.builder", function () {
         enumerateArr(this.elements, function(elementAction) {
             // get the element
             var element = document.getElementById(elementAction.id);
+            element.removeAttribute("id");
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(mod) {

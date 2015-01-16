@@ -48,5 +48,14 @@ Class("wipeout.template.viewModelElement", function () {
         return forHtmlElement.parentElement;
     };
     
+    viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {
+        ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
+        ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
+        
+        this._super(leaveDeadChildNodes);
+        this.viewModel.dispose();
+        delete this.viewModel;
+    };
+    
     return viewModelElement;    
 });

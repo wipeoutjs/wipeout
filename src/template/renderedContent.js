@@ -23,7 +23,69 @@ Class("wipeout.template.renderedContent", function () {
         element.parentElement.removeChild(element);
     });
     
+    renderedContent.prototype.renderArray = function (array) {
+        this.unTemplate();        
+        var children = [];
+        
+        var arrayObserve;
+        var create = (function (item, index) {
+            var placeholder = document.createElement("script");
+            if (index >= children.length)
+                this.closingTag.parentElement.insertBefore(placeholder, this.closingTag);
+            else
+                children[index].openingTag.parentElement.insertBefore(placeholder, children[index].openingTag);
+
+            var output = new renderedContent(placeholder, "item: " + index, this.parentRenderContext);
+            output.render(item);
+            return output;
+        }).bind(this);
+
+        if (array instanceof wipeout.base.array) {
+            var move = (function (item, from, to) {
+                debugger;
+            }).bind(this);
+
+            wipeout.base.watched.afterNextObserveCycle(function() {
+            arrayObserve = array.bind(children, create, move);
+            });
+        } else {
+            wipeout.base.array.copyAll(array, children, create);
+        }
+                         
+        /*
+        var tmp, elements1 = [], elements2 = []; //TODO test efficiency of this vs document.createElement
+        enumerateArr(array, function (item, i) {
+            elements1.push(tmp = wipeout.template.builder.uniqueIdGenerator());
+            elements2.push('<script id="' + tmp + '" type="placeholder"></script>');
+        }, this);
+        
+        this.prependHtml(elements2.join(""));
+        enumerateArr(elements1, function (element, i) {
+            children.push(tmp = new renderedContent(document.getElementById(element), "item: " + i, this.parentRenderContext));
+            tmp.render(array[i]);
+        });*/
+        
+        
+        this.disposeOfBindings = function () {
+            if (arrayObserve) {
+                arrayObserve.dispose();
+                arrayObserve = null;
+            }
+            
+            enumerateArr(children, function (child) {
+                child.dispose();
+            });
+
+            children.length = 0;
+        };
+    };
+    
     renderedContent.prototype.render = function (object) {
+        if (object instanceof Array) {
+            this.renderArray(object);
+            return;
+        }
+        
         this.unTemplate();
         
         if (object == null)
@@ -111,9 +173,7 @@ Class("wipeout.template.renderedContent", function () {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
-        this.unTemplate(leaveDeadChildNodes);        
-        this.viewModel.dispose();
-        delete this.viewModel;
+        this.unTemplate(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes) {
             this.closingTag.parentElement.removeChild(this.closingTag);
@@ -137,8 +197,10 @@ Class("wipeout.template.renderedContent", function () {
             insertBefore = insertBefore.wipeoutClosing.openingTag;
         
         var html = this.allHtml();
-        for (var i = 0, ii = html.length; i < ii; i++)
+        for (var i = 0, ii = html.length; i < ii; i++) {
+            html[i].parentElement.removeChild(html[i]);
             insertBefore.parentElement.insertBefore(html[i], insertBefore);
+        }
     };
     
     //TODO: test
@@ -151,8 +213,10 @@ Class("wipeout.template.renderedContent", function () {
             return this.move(parent.firstChild || parent.wipeoutOpening.closingTag);
         
         var html = this.allHtml();
-        for (var i = html.length - 1; i >= 0; i--)
-            parent.appendChild(html[i]);            
+        for (var i = html.length - 1; i >= 0; i--) {
+            html[i].parentElement.removeChild(html[i]);
+            parent.appendChild(html[i]);
+        }
     };
     
     //TODO: test

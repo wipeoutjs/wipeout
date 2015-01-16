@@ -50,7 +50,7 @@ Class("wipeout.template.compiledTemplate", function () {
 
             // add the id flag and the id generator
             this.html.push([{
-                action: wipeout.template.htmlAttributes.render,
+                action: wipeout.template.htmlAttributes.render, //TODO: ensure this is disposed of
                 value: html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
             }]);
 

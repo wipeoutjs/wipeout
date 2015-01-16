@@ -32,7 +32,7 @@ Class("wipeout.base.watched", function () {
             
             if (property.indexOf(".") !== -1)
                 return new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
-            
+                        
             var disposeOfWatch = (watchFunction || this.watch).call(this, property);
             
             var _woBag = woBag || this.__woBag;
@@ -46,16 +46,16 @@ Class("wipeout.base.watched", function () {
             if (!_woBag.watched.callbacks[property])
                 _woBag.watched.callbacks[property] = [];
 
-            var cb = function (oldVal, newVal) {
+            var cb = function (oldVal, newVal) {                
                 if(evaluateIfValueHasNotChanged || oldVal !== newVal)
                     callback.call(context, oldVal, newVal);
-            }
+            };
             
             cb.evaluateOnEachChange = evaluateOnEachChange;
             _woBag.watched.callbacks[property].push(cb);
             
             return {
-                dispose: function() {
+                dispose: function() {                    
                     var i;
                     if(_woBag.watched.callbacks[property]) {
                         while ((i = _woBag.watched.callbacks[property].indexOf(cb)) !== -1)
@@ -211,6 +211,30 @@ Class("wipeout.base.watched", function () {
         };
     };
     
+    watched.prototype.observeArray = function (property, callback, context, complexCallback /*TODO*/) {
+        var disposeOfArray;
+        var dispose = this.observe(property, function(oldVal, newVal) {
+            if (disposeOfArray)
+                disposeOfArray.dispose();
+            
+            disposeOfArray = newVal instanceof wipeout.base.array ? 
+                newVal.observe(callback, context, complexCallback) : 
+                null;
+        }, this);
+        
+        var v = wipeout.utils.obj.getObject(property, this);
+        if(v instanceof wipeout.base.array) 
+            disposeOfArray = v.observe(callback, context, complexCallback);
+        
+        return {
+            dispose: function() {
+                if (disposeOfArray)
+                    disposeOfArray.dispose();
+                dispose.dispose();
+            }
+        };
+    };
+    
     watched.deleteFunction = function(property) {
         ///<summary>Do "delete obj.prop" functionality</summary>
         ///<param name="property" type="String" optional="false">The property name</param>
@@ -250,11 +274,16 @@ Class("wipeout.base.watched", function () {
         });
     };
     
-    watched.afterNextObserveCycle = function(callback) {
-        var dispose = wipeout.change.handler.instance.afterObserveCycle(function() {
-            dispose.dispose();
-            callback()
-        });
+    watched.afterNextObserveCycle = function(callback, waitForNextCycle) {
+        
+        if (!wipeout.change.handler.instance.__going && !waitForNextCycle) {
+            setTimeout(callback);
+        } else {        
+            var dispose = wipeout.change.handler.instance.afterObserveCycle(function() {
+                dispose.dispose();
+                callback()
+            });
+        }
     };
                                       
     return watched;

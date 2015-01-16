@@ -138,6 +138,68 @@ function testMe (moduleName, buildSubject) {
         ok(disp instanceof wipeout.base.pathWatch);
     });
 
+    testUtils.testWithUtils("observeArray", "reverse", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.aa = new wipeout.base.array([1,2,3]);
+        subject.observeArray("aa", function(removed, added, moved) {
+            strictEqual(removed.length, 0);
+            strictEqual(added.length, 0);
+            strictEqual(moved.moved.length, 2);
+            
+            strictEqual(moved.moved[0].from, 0);
+            strictEqual(moved.moved[0].to, 2);
+            
+            strictEqual(moved.moved[1].from, 2);
+            strictEqual(moved.moved[1].to, 0);
+            start();
+        });
+
+        // act
+        stop();
+        subject.aa.reverse();
+    });
+
+    testUtils.testWithUtils("observeArray", "old array does not trigger change", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        var o = subject.aa = new wipeout.base.array([1,2,3]);
+        
+        subject.observe("aa", function(oldV, newV) {
+            strictEqual(oldV, o);
+            strictEqual(newV, n);
+            
+            // strict equals will make sure "push" will not trigger a subscription
+            wipeout.base.watched.afterNextObserveCycle(function () {
+                o.push(33);
+                wipeout.base.watched.afterNextObserveCycle(function () {
+                    start();
+                });
+            });
+        });
+
+        // act
+        var n = subject.aa = [];
+        stop();
+    });
+
+    testUtils.testWithUtils("observe", "array, re-assign", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        var o = subject.aa = new wipeout.base.array([1,2,3]);
+        var n = [];
+        
+        subject.observe("aa", function(old, newVal) {
+            strictEqual(old, o);
+            strictEqual(newVal, n);
+            start();
+        });
+
+        // act
+        stop();
+        subject.aa = n;
+    });
+
     testUtils.testWithUtils("computed", "simple change, complex functions are in computed.js", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();

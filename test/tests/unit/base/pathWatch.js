@@ -14,7 +14,6 @@ testUtils.testWithUtils("observe", "path, last element changed", false, function
     subject.aa.bb = wo.watch();
     subject.aa.bb.cc = 11;
 
-    //debugger;
     var dispose = new pathWatch(subject, "aa.bb.cc", function(oldVal, newVal) {
         strictEqual(oldVal, 11);
         strictEqual(newVal, 22);
@@ -93,7 +92,6 @@ testUtils.testWithUtils("observe", "path, last element changed, has non observab
     subject.aa.bb = wo.watch();
     subject.aa.bb.cc = 11;
 
-    //debugger;
     var dispose = new pathWatch(subject, "aa.bb.cc", function(oldVal, newVal) {
         strictEqual(oldVal, 11);
         strictEqual(newVal, 22);

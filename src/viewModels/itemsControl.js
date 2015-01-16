@@ -5,7 +5,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     var staticConstructor = function() {
         if(deafaultTemplateId) return;
         
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('<div itemscontrol></div>');
+        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$data.items}}');
     };
     
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
@@ -116,6 +116,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         this._syncModelsAndViewModels();
     };
 
+    //TODO: optimize by putting on itemsControl binding
     itemsControl.prototype.onItemSourceChanged = function (removed, added, indexes) { 
         ///<summary>Adds, removes and moves view models depending on changes to the models array</summary>
         ///<param name="removed" type="Array" generic0="wo.view" optional="false">A list of removed items</param>

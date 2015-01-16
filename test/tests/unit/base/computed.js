@@ -106,7 +106,62 @@ testUtils.testWithUtils("integration test", "complex change", false, function(me
     // act
     stop();
     subject.val1 = {val2: "goodbye"};
+});
 
+testUtils.testWithUtils("integration test", "array", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = wo.watch();
+    var val1 = subject.val1 = new wipeout.base.array([0,1,2]);
+    var comp = subject.comp = [];
+
+    new wipeout.base.computed(subject, "comp", function() {            
+        return this.val1;
+    });
+
+    // act
+    function assert() {        
+        strictEqual(comp, subject.comp);
+        strictEqual(val1, subject.val1);
+        
+        strictEqual(subject.val1.length, subject.comp.length);
+        for(var i = 0, ii = comp.length; i < ii; i++)
+            strictEqual(comp[i], val1[i]);
+    }
+    
+    assert();
+    stop();
+    
+    wipeout.base.watched.afterNextObserveCycle(function() {
+        assert();
+        start();
+    }, true);
+    
+    val1.reverse();
+});
+testUtils.testWithUtils("integration test", "array, changed to object", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = wo.watch();
+    var val1 = subject.val1 = new wipeout.base.array([0,1,2]);
+    var comp = subject.comp = [];
+
+    new wipeout.base.computed(subject, "comp", function() {            
+        return this.val1;
+    });
+
+    // act
+    var val2 = subject.val1 = {};    
+    wipeout.base.watched.afterNextObserveCycle(function() {
+        strictEqual(subject.comp, val2);
+        val1.length = 0;
+        val1.push(33);
+        wipeout.base.watched.afterNextObserveCycle(function() {
+            strictEqual(subject.comp[0], undefined);
+            strictEqual(comp.length, 3);
+            start();
+        });
+    }, true);
+    
+    stop();
 });
 
 testUtils.testWithUtils("integration test", "two changes", false, function(methods, classes, subject, invoker) {
