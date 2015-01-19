@@ -29,7 +29,7 @@ Class("wipeout.change.array", function () {
         }
         
         enumerateArr(this.woBag.watchedArray.complexCallbacks, function(item) {
-            item.callback.call(item.context, this.change);
+            item(this.change);
         }, this);
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
@@ -44,7 +44,7 @@ Class("wipeout.change.array", function () {
             var val;
             enumerateArr(this.woBag.watchedArray.simpleCallbacks, function(item) {
                 val = addedRemoved.value(item) || defaultVal;
-                item.callback.call(item.context, val.removedValues, val.addedValues, val.moved);
+                item(val.removedValues, val.addedValues, val.moved);
             }, this);            
         }
 

@@ -272,10 +272,7 @@ Class("wipeout.base.array", function () {
         
         //TODO replace cb with callback.bind(context)
         //TODO, polyfill bind
-        var cb = {
-            callback: callback, 
-            context: context
-        };
+        var cb = callback.bind(context || this);
 
         var _this = this, tempSubscription = function (changes) {
             Array.unobserve(_this, tempSubscription);
