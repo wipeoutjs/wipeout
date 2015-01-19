@@ -7,14 +7,8 @@ Class("wipeout.change.array", function () {
         this.woBag = woBag;
         
         this.fullChain = [];
-        if (this.change.type === "splice") {
+        if (this.change.type === "splice" || !isNaN(parseInt(this.change.name))) {
             this.fullChain.push(this.change);
-        } else if (!isNaN(tmp = parseInt(this.change.name))) {
-            this.fullChain.push({
-                addedCount: 1,
-                index: parseInt(this.change.name),
-                removed: [this.change.oldValue]
-            });
         } else {
             // if this.change.name === "length" there will be a corresponding splice
             // otherwise, cannot object observe an array (right now)
@@ -63,6 +57,14 @@ Class("wipeout.change.array", function () {
         var array = wipeout.utils.obj.copyArray(this.array), tmp, tmp2, change;
         for (var i = this.fullChain.length - 1; i >= 0; i--) {
             change = this.fullChain[i];
+            
+            if (!isNaN(tmp = parseInt(this.change.name))) {
+                change = {
+                    addedCount: 1,
+                    index: tmp,
+                    removed: change.oldValue
+                };
+            }
             
             tmp2 = 0;
             for (var j = 0; j < change.addedCount; j++) {
