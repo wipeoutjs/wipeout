@@ -33,7 +33,7 @@ Class("wipeout.change.array", function () {
                 delete item.firstChange;
             
             if (!item.firstChange)
-                item(this.change);    // firstChangeFinished flag for future iterations
+                item(this.change);
         }, this);
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
@@ -84,7 +84,7 @@ Class("wipeout.change.array", function () {
                     removed: change.oldValue
                 };
             } else if (change.type !== "splice") {
-                throw "Can only operate in splices";    //TODO
+                throw "Can only operate on splices";    //TODO
             }
             
             tmp2 = 0;
