@@ -53,9 +53,23 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
         start();
     });
     
+    var count1 = 0;
+    subject.observe(function(change) {
+        ok(count1 < 2);
+        count1++;
+        
+        if (count1 == 1)
+            strictEqual(change.index, 1);
+        else
+            strictEqual(change.index, 2);
+        
+        start();
+    }, null, true);
+    
     subject.push(66);
     
     subject.observe(function(removed, added, indexes) {
+        
         strictEqual(added.length, 1);
         strictEqual(added[0], 77);
         
@@ -68,10 +82,19 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
         start();
     });
     
+    var count2 = 0;
+    subject.observe(function(change) {
+        strictEqual(count2, 0);
+        count2++;
+        
+        strictEqual(change.index, 2);
+        start();
+    }, null, true);
+    
     subject.push(77);
 
     // act
-    stop(2);
+    stop(5);
 });
 
 testUtils.testWithUtils("observe", "replace, length doesn't change", false, function(methods, classes, subject, invoker) {

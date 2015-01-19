@@ -29,7 +29,11 @@ Class("wipeout.change.array", function () {
         }
         
         enumerateArr(this.woBag.watchedArray.complexCallbacks, function(item) {
-            item(this.change);
+            if (item.firstChange === this.change)
+                delete item.firstChange;
+            
+            if (!item.firstChange)
+                item(this.change);    // firstChangeFinished flag for future iterations
         }, this);
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
