@@ -20,18 +20,26 @@ Class("wipeout.base.array", function () {
         };
         
         if (initialValues) {
-            for(var i = 0, ii = initialValues.length; i < ii; i++) {
+            for(var i = 0, ii = initialValues.length; i < ii; i++)
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
-                this.__woBag.watchedArray.arrayCopy.push(initialValues[i]);
-            }
+            
+            this.__woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(initialValues);
         }
         
-        if (useObjectObserve)
+        if (useObjectObserve) {
+            this.registeredChanges = [];
+            this.extraCallbacks = 0;
+            
             Array.observe(this, (function(changes) {
+                if (this.extraCallbacks) return;
+                this.registeredChanges.length = 0;
+                                
                 enumerateArr(changes, function(change) {
-                    wipeout.change.handler.instance.pushArray(this, change, this.__woBag);
+                    if (array.isValidArrayChange(change))
+                        wipeout.change.handler.instance.pushArray(this, change, this.__woBag);
                 }, this)
             }).bind(this));
+        }
     });
     
     array.prototype._super = wipeout.base.object.prototype._super;
@@ -256,19 +264,42 @@ Class("wipeout.base.array", function () {
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
     
-    //TODO: simple/complex
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
         var callbacks = complexCallback ? 
             this.__woBag.watchedArray.complexCallbacks : 
             this.__woBag.watchedArray.simpleCallbacks;
         
+        //TODO replace cb with callback.bind(context)
+        //TODO, polyfill bind
         var cb = {
             callback: callback, 
             context: context
         };
-        
-        callbacks.push(cb);
+
+        var _this = this, tempSubscription = function (changes) {
+            Array.unobserve(_this, tempSubscription);
+            _this.extraCallbacks--;
+            
+            if (!d) return;
+            
+            callbacks.push(cb);
+            
+            enumerateArr(changes, function(change) {
+                if (!array.isValidArrayChange(change)) return;                                
+                
+                if (!cb.firstChange)
+                    cb.firstChange = change;
+                
+                if (_this.registeredChanges.indexOf(change) !== -1) return;
+
+                _this.registeredChanges.push(change);
+                wipeout.change.handler.instance.pushArray(_this, change, _this.__woBag);
+            });
+        };
+            
+        Array.observe(this, tempSubscription);        
+        this.extraCallbacks++;
         
         var d = {
             dispose: function () {
@@ -276,16 +307,17 @@ Class("wipeout.base.array", function () {
                 
                 d = undefined;
                 
-                for (var i = 0, ii = callbacks.length; i < ii; i++) {
-                    if(callbacks[i] === cb) {
-                        callbacks.splice(i, 1);
-                        return;
-                    }
-                }
+                var i = callbacks.indexOf(cb);
+                if (i !== -1)
+                    callbacks.splice(i, 1);
             }
         };
         
         return d;
+    };
+    
+    array.isValidArrayChange = function (change) {
+        return change.type === "splice" || (change.type === "update" && !isNaN(parseInt(change.name)));
     };
     
     array.prototype.dispose = function() {

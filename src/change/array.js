@@ -36,11 +36,16 @@ Class("wipeout.change.array", function () {
         if (next === -1) {
             
             var addedRemoved = this.getAddedAndRemoved();
-            var moved = this.processMovedItems(addedRemoved.removedValues, addedRemoved.addedValues); //TODO: only if moved is needed
+            var defaultVal = addedRemoved.value(null);
             
+            // reset woBag.watchedArray.arrayCopy
+            this.woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(this.array);
+            
+            var val;
             enumerateArr(this.woBag.watchedArray.simpleCallbacks, function(item) {
-                item.callback.call(item.context, addedRemoved.removedValues, addedRemoved.addedValues, moved);
-            }, this);
+                val = addedRemoved.value(item) || defaultVal;
+                item.callback.call(item.context, val.removedValues, val.addedValues, val.moved);
+            }, this);            
         }
 
         changeHandler._go();
@@ -49,39 +54,51 @@ Class("wipeout.change.array", function () {
     //TODO: can I add merge this with processMovedItems with performance gains?
     array.prototype.getAddedAndRemoved = function () {
         
-        var output = {
+        // add references to any callbacks which were added later
+        var specialCallbacks = new wipeout.utils.dictionary();
+        enumerateArr(this.woBag.watchedArray.simpleCallbacks, function (callback) {
+            if (callback.firstChange)
+                specialCallbacks.add(callback.firstChange, callback);
+        });                
+        
+        var defaultOutput = {
             removedValues: [],
             addedValues: []
         };
+        
+        var output = new wipeout.utils.dictionary();
+        output.add(null, defaultOutput);
         
         var array = wipeout.utils.obj.copyArray(this.array), tmp, tmp2, change;
         for (var i = this.fullChain.length - 1; i >= 0; i--) {
             change = this.fullChain[i];
             
-            if (!isNaN(tmp = parseInt(this.change.name))) {
+            if (!isNaN(tmp = parseInt(change.name))) {
                 change = {
                     addedCount: 1,
                     index: tmp,
                     removed: change.oldValue
                 };
+            } else if (change.type !== "splice") {
+                throw "Can only operate in splices";    //TODO
             }
             
             tmp2 = 0;
             for (var j = 0; j < change.addedCount; j++) {
-                if ((tmp = output.removedValues.indexOf(array[change.index + j])) !== -1) {
-                    output.removedValues.splice(tmp, 1);
+                if ((tmp = defaultOutput.removedValues.indexOf(array[change.index + j])) !== -1) {
+                    defaultOutput.removedValues.splice(tmp, 1);
                 } else {
-                    output.addedValues.splice(tmp2, 0, array[change.index + j]);
+                    defaultOutput.addedValues.splice(tmp2, 0, array[change.index + j]);
                     tmp2++;
                 }
             }
                  
             tmp2 = 0;       
             for (var j = 0, jj = change.removed.length; j < jj; j++) {
-                if ((tmp = output.addedValues.indexOf(change.removed[j])) !== -1) {
-                    output.addedValues.splice(tmp, 1);
+                if ((tmp = defaultOutput.addedValues.indexOf(change.removed[j])) !== -1) {
+                    defaultOutput.addedValues.splice(tmp, 1);
                 } else {
-                    output.removedValues.splice(tmp2, 0, change.removed[j]);
+                    defaultOutput.removedValues.splice(tmp2, 0, change.removed[j]);
                     tmp2++;
                 }
             }
@@ -89,15 +106,27 @@ Class("wipeout.change.array", function () {
             var args = wipeout.utils.obj.copyArray(change.removed);
             args.splice(0, 0, change.index, change.addedCount);
             array.splice.apply(array, args);
+            
+            // calculate added/removed/moved for any callbacks which were added later
+            if (tmp = specialCallbacks.value(this.fullChain[i])) { // do not use "change" variable, it may have changed                
+                output.add(tmp, {
+                    removedValues: wipeout.utils.obj.copyArray(defaultOutput.removedValues),
+                    addedValues: wipeout.utils.obj.copyArray(defaultOutput.addedValues),
+                    moved: this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array) // TODO, only if moved is needed
+                });
+            }            
         }
+        
+         //TODO: only if moved is needed
+        defaultOutput.moved = this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues);
         
         return output;
     }
     
     //TODO: unit test
     //TODO: a very complex scenario test
-    array.prototype.processMovedItems = function (removedValues, addedValues) {
-        var tmp, tmp2, oldArray = this.woBag.watchedArray.arrayCopy;
+    array.prototype.processMovedItems = function (removedValues, addedValues, oldArray) {
+        var tmp, tmp2;
         
         var movedFrom = [],         // an item which was moved
             movedFromIndex = [],    // it's index
@@ -106,8 +135,7 @@ Class("wipeout.change.array", function () {
             removedIndexes = [],    // indexes of removed items. Corresponds to this.removed
             moved = [];             // moved items
         
-        // reset woBag.watchedArray.arrayCopy
-        this.woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(this.array);
+        oldArray = oldArray || this.woBag.watchedArray.arrayCopy;
         
         // populate addedIndexes and movedTo
         var added = wipeout.utils.obj.copyArray(addedValues);

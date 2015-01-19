@@ -31,6 +31,49 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
+testUtils.testWithUtils("observe", "ensure changes before observe are not noticed", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+    subject.push(55);
+    
+    subject.observe(function(removed, added, indexes) {
+        
+        strictEqual(added.length, 2);
+        strictEqual(added[0], 66);
+        strictEqual(added[1], 77);
+        
+        strictEqual(removed.length, 0);
+        
+        strictEqual(indexes.added.length, 2);
+        strictEqual(indexes.added[0].index, 1);
+        strictEqual(indexes.added[0].value, 66);
+        strictEqual(indexes.added[1].index, 2);
+        strictEqual(indexes.added[1].value, 77);
+        
+        start();
+    });
+    
+    subject.push(66);
+    
+    subject.observe(function(removed, added, indexes) {
+        strictEqual(added.length, 1);
+        strictEqual(added[0], 77);
+        
+        strictEqual(removed.length, 0);
+        
+        strictEqual(indexes.added.length, 1);
+        strictEqual(indexes.added[0].index, 2);
+        strictEqual(indexes.added[0].value, 77);
+        
+        start();
+    });
+    
+    subject.push(77);
+
+    // act
+    stop(2);
+});
+
 testUtils.testWithUtils("observe", "replace, length doesn't change", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array([1,2,3]);
@@ -456,5 +499,67 @@ testUtils.testWithUtils("bind", "with filter", false, function(methods, classes,
     
     assert();
     subject.length = 2;
+    stop();
+});
+
+testUtils.testWithUtils("bind", "with adds on pending queue", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+    subject.push(1);
+    subject.push(2);
+    subject.push(3);
+
+    var another = [];
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 3);
+        assert();
+        start();
+    });
+
+    // act
+    subject.bind(another);
+    
+    // assert
+    var round = 0;
+    function assert() {
+        round++;
+        
+        strictEqual(subject.length, another.length, "round " + round + ", length");
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i], "round " + round + ", index: " + i);
+    }
+    
+    assert();
+    stop();
+});
+
+testUtils.testWithUtils("bind", "with moves on pending queue", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+    subject.reverse();
+
+    var another = [];
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 3);
+        assert();
+        start();
+    });
+
+    // act
+    subject.bind(another);
+    
+    // assert
+    var round = 0;
+    function assert() {
+        round++;
+        
+        strictEqual(subject.length, another.length, "round " + round + ", length");
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i], "round " + round + ", index: " + i);
+    }
+    
+    assert();
     stop();
 });
