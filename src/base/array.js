@@ -104,8 +104,8 @@ Class("wipeout.base.array", function () {
         var args;
         if (convert) {
             args = [];
-            enumerateArr(from, function (item, i) {
-                args.push(convert(item, i));
+            enumerateArr(from, function (item) {
+                args.push(convert(item));
             });
         } else {
             args = wipeout.utils.obj.copyArray(from);
@@ -117,11 +117,11 @@ Class("wipeout.base.array", function () {
     
     // used to preserve "undefined" value in a value removed from an array
     var _undefined = {};
-    array.prototype.bind = function(anotherArray, convert, moveItem) {
+    array.prototype.bind = function(anotherArray, convert, dispose) {
         
         array.copyAll(this, anotherArray, convert);
         
-        convert = convert || function (item) { return item; };
+        convert = convert || function () { return arguments[0]; };
         
         var replace = anotherArray instanceof array;
         return this.observe(function (removed, added, indexes) {
@@ -134,9 +134,6 @@ Class("wipeout.base.array", function () {
                 movedItem = rem[item.from] !== undefined ? 
                     (rem[item.from] === _undefined ? undefined : rem[item.from]) : 
                     anotherArray[item.from];
-                
-                if (moveItem)
-                    moveItem(movedItem, item.from, item.to);
                         
                 replace ? 
                     anotherArray.replace(item.to, movedItem) : 
@@ -145,8 +142,8 @@ Class("wipeout.base.array", function () {
                 
             enumerateArr(indexes.added, function(item) {                
                 replace ? 
-                    anotherArray.replace(item.index, convert(this[item.index], item.index)) : 
-                    anotherArray[item.index] = convert(this[item.index], item.index);
+                    anotherArray.replace(item.index, convert(this[item.index])) : 
+                    anotherArray[item.index] = convert(this[item.index]);
             }, this);
 
             if (anotherArray.length !== this.length)
