@@ -22,9 +22,11 @@ Class("wipeout.change.arrayHandler", function () {
                                 
                 enumerateArr(changes, function(change) {
                     if (arrayHandler.isValidArrayChange(change))
-                        wipeout.change.handler.instance.pushArray(forArray, change, forArray.__woBag);
+                        this.registerChange(forArray, change, forArray.__woBag);
                 }, this)
             }).bind(this));
+        } else {
+            this.pendingOOSubscriptions = [];
         }
     };
     
@@ -32,7 +34,20 @@ Class("wipeout.change.arrayHandler", function () {
         return change.type === "splice" || (change.type === "update" && !isNaN(parseInt(change.name)));
     };
     
-    arrayHandler.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
+    arrayHandler.prototype.registerChange = function (change) {
+        
+        if (this.pendingOOSubscriptions && this.pendingOOSubscriptions.length && arrayHandler.isValidArrayChange(change)) {
+            enumerateArr(this.pendingOOSubscriptions, function (subscription) {
+                subscription.firstChange = change;
+            }, this);
+            
+            this.pendingOOSubscriptions.length = 0;
+        }
+
+        wipeout.change.handler.instance.pushArray(this.forArray, change, this.forArray.__woBag);
+    };
+    
+    arrayHandler.prototype.observeWithObjectObserve = function (callback, context, complexCallback /*TODO*/) {
         
         var callbacks = complexCallback ? 
             this.complexCallbacks : 
@@ -40,7 +55,7 @@ Class("wipeout.change.arrayHandler", function () {
         
         //TODO, polyfill bind
         var cb = callback.bind(context || this);
-
+        
         var forArray = this.forArray, _this = this, tempSubscription = function (changes) {
             Array.unobserve(forArray, tempSubscription);
             _this.extraCallbacks--;
@@ -60,7 +75,7 @@ Class("wipeout.change.arrayHandler", function () {
                 if (_this.registeredChanges.indexOf(change) !== -1) return;
                 _this.registeredChanges.push(change);
                 
-                wipeout.change.handler.instance.pushArray(forArray, change, forArray.__woBag);
+                _this.registerChange(change);
             });
         };
             
@@ -80,6 +95,41 @@ Class("wipeout.change.arrayHandler", function () {
         };
         
         return d;
+    };
+    
+    arrayHandler.prototype.observeNoObjectObserve = function (callback, context, complexCallback /*TODO*/) {
+                
+        var callbacks = complexCallback ? 
+            this.complexCallbacks : 
+            this.simpleCallbacks;
+        
+        //TODO, polyfill bind
+        var cb = callback.bind(context || this);
+        
+        this.pendingOOSubscriptions.push(cb);
+        
+        callbacks.push(cb);
+        
+        var d = {
+            dispose: function () {
+                if(!d) return;
+                
+                d = undefined;
+                
+                var i = callbacks.indexOf(cb);
+                if (i !== -1)
+                    callbacks.splice(i, 1);
+            }
+        };
+        
+        return d;
+    };
+    
+    arrayHandler.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
+        if (useObjectObserve)
+            return this.observeWithObjectObserve.apply(this, arguments);
+        else
+            return this.observeNoObjectObserve.apply(this, arguments);
     };
     
     return arrayHandler;

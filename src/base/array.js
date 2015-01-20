@@ -136,12 +136,12 @@ Class("wipeout.base.array", function () {
         
         /*
         if (!useObjectObserve)
-            wipeout.change.handler.instance.pushArray(this, {
+            this.__woBag.watchedArray.registerChange({
                 name: index.toString(),
                 object: this,
                 oldValue: this[index],
                 type: "update"
-            }, this.__woBag);
+            });
         
         return this.alteringLength(function() {
             if (this.length <= index)
@@ -158,13 +158,13 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.length)
-                wipeout.change.handler.instance.pushArray(this, {
+                this.__woBag.watchedArray.registerChange({
                     addedCount: 0,
                     index: this.length - 1,
                     object: this,
                     removed: [this[this.length - 1]],
                     type: "splice"
-                }, this.__woBag);
+                });
 
         return this.alteringLength(function() {
             return Array.prototype.pop.call(this);
@@ -175,13 +175,13 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.length)
-                wipeout.change.handler.instance.pushArray(this, {
+                this.__woBag.watchedArray.registerChange({
                     addedCount: 0,
                     index: 0,
                     object: this,
                     removed: [this[0]],
                     type: "splice"
-                }, this.__woBag);
+                });
 
         return this.alteringLength(function() {
             return Array.prototype.shift.call(this);
@@ -198,13 +198,13 @@ Class("wipeout.base.array", function () {
     array.prototype.push = function(item) {
 
         if (!useObjectObserve)
-            wipeout.change.handler.instance.pushArray(this, {
+            this.__woBag.watchedArray.registerChange({
                 addedCount: 1,
                 index: this.length,
                 object: this,
                 removed: [],
                 type: "splice"
-            }, this.__woBag);
+            });
 
         return this.alteringLength(function() {
             return Array.prototype.push.call(this, item);
@@ -219,13 +219,13 @@ Class("wipeout.base.array", function () {
                 i++)
                 removed.push(this[i]);
 
-            wipeout.change.handler.instance.pushArray(this, {
+            this.__woBag.watchedArray.registerChange({
                 addedCount: arguments.length - 2,
                 index: index,
                 object: this,
                 removed: removed,
                 type: "splice"
-            }, this.__woBag);
+            });
         }
 
         var args = arguments;
