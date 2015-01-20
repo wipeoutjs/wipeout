@@ -267,7 +267,6 @@ Class("wipeout.base.array", function () {
             this.__woBag.watchedArray.complexCallbacks : 
             this.__woBag.watchedArray.simpleCallbacks;
         
-        //TODO replace cb with callback.bind(context)
         //TODO, polyfill bind
         var cb = callback.bind(context || this);
 
