@@ -18,7 +18,9 @@ Class("wipeout.base.array", function () {
             for(var i = 0, ii = initialValues.length; i < ii; i++)
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
             
-        this.__woBag.watchedArray = new wipeout.change.arrayHandler(this);
+        this.__woBag.watchedArray = useObjectObserve ?
+            new wipeout.change.objectObserveArrayHandler(this) :
+            new wipeout.change.nonObjectObserveArrayHandler(this);
     });
     
     array.prototype._super = wipeout.base.object.prototype._super;
