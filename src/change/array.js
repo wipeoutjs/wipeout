@@ -81,7 +81,7 @@ Class("wipeout.change.array", function () {
                 change = {
                     addedCount: 1,
                     index: tmp,
-                    removed: change.oldValue
+                    removed: [change.oldValue]
                 };
             } else if (change.type !== "splice") {
                 throw "Can only operate on splices";    //TODO
