@@ -11,35 +11,14 @@ Class("wipeout.base.array", function () {
                 throw "The initial values must be an array";
         
         this.__woBag = {
-            length: initialValues ? initialValues.length : 0,
-            watchedArray: {
-                simpleCallbacks: [],    // function (removed, added) { }
-                complexCallbacks: [],   // function (change) { }
-                arrayCopy: []
-            }  
+            length: initialValues ? initialValues.length : 0
         };
         
-        if (initialValues) {
+        if (initialValues)
             for(var i = 0, ii = initialValues.length; i < ii; i++)
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
             
-            this.__woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(initialValues);
-        }
-        
-        if (useObjectObserve) {
-            this.registeredChanges = [];
-            this.extraCallbacks = 0;
-            
-            Array.observe(this, (function(changes) {
-                if (this.extraCallbacks) return;
-                this.registeredChanges.length = 0;
-                                
-                enumerateArr(changes, function(change) {
-                    if (array.isValidArrayChange(change))
-                        wipeout.change.handler.instance.pushArray(this, change, this.__woBag);
-                }, this)
-            }).bind(this));
-        }
+        this.__woBag.watchedArray = new wipeout.change.arrayHandler(this);
     });
     
     array.prototype._super = wipeout.base.object.prototype._super;
@@ -263,54 +242,7 @@ Class("wipeout.base.array", function () {
     
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
-        var callbacks = complexCallback ? 
-            this.__woBag.watchedArray.complexCallbacks : 
-            this.__woBag.watchedArray.simpleCallbacks;
-        
-        //TODO, polyfill bind
-        var cb = callback.bind(context || this);
-
-        var _this = this, tempSubscription = function (changes) {
-            Array.unobserve(_this, tempSubscription);
-            _this.extraCallbacks--;
-            
-            if (!d) return;
-            
-            callbacks.push(cb);
-            
-            enumerateArr(changes, function(change) {
-                if (!array.isValidArrayChange(change)) return;                                
-                
-                if (!cb.firstChange)
-                    cb.firstChange = change;
-                
-                if (_this.registeredChanges.indexOf(change) !== -1) return;
-
-                _this.registeredChanges.push(change);
-                wipeout.change.handler.instance.pushArray(_this, change, _this.__woBag);
-            });
-        };
-            
-        Array.observe(this, tempSubscription);        
-        this.extraCallbacks++;
-        
-        var d = {
-            dispose: function () {
-                if(!d) return;
-                
-                d = undefined;
-                
-                var i = callbacks.indexOf(cb);
-                if (i !== -1)
-                    callbacks.splice(i, 1);
-            }
-        };
-        
-        return d;
-    };
-    
-    array.isValidArrayChange = function (change) {
-        return change.type === "splice" || (change.type === "update" && !isNaN(parseInt(change.name)));
+        return this.__woBag.watchedArray.observe(callback, context, complexCallback);
     };
     
     array.prototype.dispose = function() {
