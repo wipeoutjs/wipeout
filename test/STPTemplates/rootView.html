@@ -11,6 +11,11 @@
     <initialize-view item1--s="ok1">
         <item2 parser="s">ok2</item2>
     </initialize-view>
+    <xxx>
+        <template>
+            Hi shane
+        </template>
+    </xxx>
     <wo.content-control id="listTest">
         <template>
             <div wo-content="$this.model.rootTitle"></div>
@@ -37,16 +42,16 @@
             <wo.content-control model="$parent.model.item">
                 <template>
                     <wo.content-control model="$parent.model.value">
-                        <supplimentaryProp>
+                        <supplimentary-prop>
                             <child-view model-tw="$parent.model" value-tw="model">
                                 <template>
-                                    <input type="text" data-bind="value: value"></input>
+                                    <input type="text" value="$this.value"></input>
                                 </template>
                             </child-view>
-                        </supplimentaryProp>
+                        </supplimentary-prop>
                         <template>
-                            <div data-bind="html: model"></div>
-                            <div data-bind="render: supplimentaryProp"></div>
+                            <div content="$this.model"></div>
+                            <div render="$this.supplimentaryProp"></div>
                         </template>
                     </wo.content-control>
                 </template>

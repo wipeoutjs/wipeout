@@ -6,7 +6,15 @@ Class("wipeout.template.htmlAttributes", function () {
     htmlAttributes.click = function (value, element, renderContext) {
         return function() {
         };
-    }; 
+    };
+    
+    //TODO: types of inputs
+    htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
+        
+        return contentOrRender(value, function (oldVal, newVal) {
+            element.value = newVal;
+        }, renderContext);
+    };   
     
     var defaultVal = {};
     function contentOrRender (value, onValueChanged, renderContext) { //TODO error handling

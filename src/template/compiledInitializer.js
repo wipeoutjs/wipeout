@@ -1,6 +1,52 @@
 
 Class("wipeout.template.compiledInitializer", function () {
     
+    function setter (value, flags) {
+        this.value = value;
+        
+        this.parser = [];
+        this.bindingType = null;
+        
+        // process parseing and binding flags
+        enumerateArr(flags || [], function (flag) {
+            if (compiledInitializer.parsers[flag]) {
+                this.parser.push(compiledInitializer.parsers[flag]);
+            } else if (wipeout.template.bindingTypes[flag]) {
+                if (this.bindingType)
+                    throw "A binding type is already specified for this property.";
+                
+                this.bindingType = flag;
+            }
+        }, this);
+        
+        // if parser has already been processed
+        if (!(this.parser instanceof Array))
+            return;
+        
+        var p = this.parser;
+        
+        if (p.length === 1) {
+            this.parser = p[0];
+        } else if (p.length) {
+            this.parser = function (value, propertyName, renderContext) {
+                for(var i = 0, ii = p.length; i < ii; i++)
+                    value = p[i](value, propertyName, renderContext);
+
+                return value;
+            };
+            
+            this.parser.xmlParserTempName = p[0].xmlParserTempName;
+        } else {
+            this.parser = null;
+        }
+    }
+    
+    setter.prototype.valueAsString = function () {
+        return typeof this._valueAsString === "string" ?
+            this._valueAsString :
+            (this._valueAsString = this.value.serializeContent());
+    };
+    
     compiledInitializer.getPropertyFlags = function(name) {
         
         var flags = name.indexOf("--");
@@ -27,10 +73,7 @@ Class("wipeout.template.compiledInitializer", function () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-            var model = "$parent ? $parent.model : null";
-            this.setters.model = {
-                value: model
-            };
+            this.setters.model = new setter(new wipeout.template.templateAttribute("$parent ? $parent.model : null", null));
         }
     };
     
@@ -48,14 +91,7 @@ Class("wipeout.template.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODO
                 });
                 
-                this.setters[name] = {
-                    parser: [],
-                    bindingType: null,
-                    value: element.attributes[val].value
-                };
-                
-                this.addFlags(this.setters[name], compiledInitializer.getPropertyFlags(val).flags);
-                this.combineParser(name);
+                this.setters[name] = new setter(element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -70,6 +106,7 @@ Class("wipeout.template.compiledInitializer", function () {
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
+                    return;
                     this.setters[name] = {
                         parser: compiledInitializer.parsers.createAndSet,
                         bindingType: "nb",
@@ -83,19 +120,15 @@ Class("wipeout.template.compiledInitializer", function () {
                 }
             }
         }
-        
-        this.setters[name] = {
-            parser: [],
-            bindingType: null,
-            value: element.serializeChildren()
-        };
 
-        if (p && p.constructor === Function)
-            this.setters[name].parser.push(p);
-        else if (p)
-            this.addFlags(this.setters[name], compiledInitializer.getPropertyFlags("--" + p.value).flags);
-        
-        this.combineParser(name);
+        if (p && p.constructor === Function) {
+            this.setters[name] = new setter(element);
+            this.setters[name].parser = p;
+        } else if (p) {
+            this.setters[name] = new setter(element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+        } else {
+            this.setters[name] = new setter(element);
+        }
     };
     
     compiledInitializer.prototype.addAttribute = function (attribute, name) {
@@ -104,51 +137,7 @@ Class("wipeout.template.compiledInitializer", function () {
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = {
-            parser: [],
-            bindingType: null,
-            value: attribute.value
-        };
-
-        // process parseing and binding flags
-        this.addFlags(this.setters[name.name], name.flags);
-        
-        this.combineParser(name.name);
-    };
-    
-    compiledInitializer.prototype.addFlags = function (setter, flags) {
-        // process parseing and binding flags
-        enumerateArr(flags, function (flag) {
-            if (compiledInitializer.parsers[flag]) {
-                setter.parser.push(compiledInitializer.parsers[flag]);
-            } else if (wipeout.template.bindingTypes[flag]) {
-                if (setter.bindingType)
-                    throw "A binding type is already specified for this property.";
-                
-                setter.bindingType = flag;
-            }
-        }, this);
-    };
-    
-    compiledInitializer.prototype.combineParser = function (name) {
-        
-        // if parser has already been processed
-        if (!(this.setters[name].parser instanceof Array))
-            return;
-        
-        var p = this.setters[name].parser;
-        
-        if (p.length === 1)
-            this.setters[name].parser = p[0];
-        else if (p.length)
-            this.setters[name].parser = function (value, propertyName, renderContext) {
-                for(var i = 0, ii = p.length; i < ii; i++)
-                    value = p[i](value, propertyName, renderContext);
-
-                return value;
-            };
-        else 
-            this.setters[name].parser = null;
+        this.setters[name.name] = new setter(attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
@@ -167,7 +156,7 @@ Class("wipeout.template.compiledInitializer", function () {
     };
     
     compiledInitializer.getAutoParser = function (value) {
-        
+                
         //TODO: this is very non standard
         value = "return " + value
             .replace(/\$this/g, "renderContext.$this")
@@ -212,8 +201,14 @@ Class("wipeout.template.compiledInitializer", function () {
         },
         "set": function (value, propertyName, renderContext) {
             return value;
+        },        
+        "template": function (value, propertyName, renderContext) {
+            return value;
         }
     };
+    
+    //TODO: Rename
+    compiledInitializer.parsers.template.xmlParserTempName = true;
     
     compiledInitializer.parsers.j = compiledInitializer.parsers["json"];
     compiledInitializer.parsers.s = compiledInitializer.parsers["string"];

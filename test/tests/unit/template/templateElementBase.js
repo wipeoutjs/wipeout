@@ -69,7 +69,7 @@ testUtils.testWithUtils("push, splice", "ok", false, function(methods, classes, 
     strictEqual(input3.getParentElement(), subject);
 });
 
-testUtils.testWithUtils("serializeChildren", null, false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("serializeContent", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
     var string1 = "LKJBLKJBLKJBLKJBKLJBKJ", string2 = "IP*Y(GP(*G:OPG(:P";

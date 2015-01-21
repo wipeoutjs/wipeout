@@ -41,7 +41,7 @@ testUtils.testWithUtils("serialize", null, false, function(methods, classes, sub
     // arrange
     subject = new templateElement("name", false);
     subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
-    subject.serializeChildren = function() { return "children"; };
+    subject.serializeContent = function() { return "children"; };
     
     // act
     var output = subject.serialize();

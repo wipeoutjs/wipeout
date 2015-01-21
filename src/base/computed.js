@@ -41,7 +41,7 @@ Class("wipeout.base.computed", function () {
         // checking that all args have been set
         enumerateArr(args, function(arg) {
             if (arg !== completeArg)
-                throw "Argument \"" + arg + "\" must be added as a watch variable";
+                throw "Argument \"" + arg + "\" must be added as a watch variable. If you are using a custom parser, the arguments must be as follows: (value, propertyName, renderContext)";
         });
         
         this.execute();

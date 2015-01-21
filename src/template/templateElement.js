@@ -47,7 +47,7 @@ Class("wipeout.template.templateElementBase", function () {
         return output;
     };
     
-    templateElementBase.prototype.serializeChildren = function() {
+    templateElementBase.prototype.serializeContent = function() {
         
         var output = [];        
         wipeout.utils.obj.enumerateArr(this, function(i) {
@@ -93,7 +93,7 @@ Class("wipeout.template.templateElement", function () {
             index+=3;
         }
         
-        var children = this.serializeChildren();
+        var children = this.serializeContent();
         if(!children.length && this.inline) {
             output.push(" />");            
         } else {
@@ -122,7 +122,12 @@ Class("wipeout.template.templateAttribute", function () {
         if (!this.surrounding) return "=" + this.value;
         
         return "=" + this.surrounding + this.value + this.surrounding;
-    };
+    };    
+    
+    templateAttribute.prototype.serializeContent = function() {
+                
+        return this.value;
+    }
     
     return templateAttribute;
 });
