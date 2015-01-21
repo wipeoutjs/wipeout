@@ -39,14 +39,4 @@ cleanup:
 
 there is a lot of camelcasing. Is there a single point of failure I can use here?
 
-observables -
-x    condition
-    elseTemplateId
-    itemTemplateId
-    itemSource
-    items
-    model
-    templateId
-
-
 Alter xml engine to use RegExp(/something/g).lastIndex

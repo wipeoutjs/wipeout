@@ -5,11 +5,11 @@ Class("wipeout.viewModels.itemsControl", function () {
     var staticConstructor = function() {
         if(deafaultTemplateId) return;
         
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$data.itemSource}}');
+        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$data.items}}');
     };
     
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
-        ///<summary>Bind a list of models (itemSource) to a list of view models (items) and render accordingly</summary>
+        ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
@@ -26,8 +26,8 @@ Class("wipeout.viewModels.itemsControl", function () {
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="wipeout.base.array">An array of models to render</Summary>
-        this.itemSource = new wipeout.base.array();
-        this.registerDisposable(this.itemSource);
+        this.items = new wipeout.base.array();
+        this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
@@ -38,7 +38,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>
     
-        if(this.itemSource.indexOf(e.data) !== -1) {
+        if(this.items.indexOf(e.data) !== -1) {
             this.removeItem(e.data);
             e.handled = true;
         }
@@ -48,7 +48,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="item" type="Any" optional="false">The item to remove</param>
     
-        this.itemSource.remove(item);
+        this.items.remove(item);
     };
     
     itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
