@@ -15,7 +15,7 @@ Class("wipeout.change.arrayHandler", function () {
         this.forArray = forArray;
         this.simpleCallbacks = [];    // function (removed, added) { }
         this.complexCallbacks = [];   // function (change) { }
-        this.arrayCopy = wipeout.utils.obj.copyArray(array);
+        this.arrayCopy = wipeout.utils.obj.copyArray(forArray);
     });
     
     arrayHandler.isValidArrayChange = function (change) {
@@ -28,7 +28,7 @@ Class("wipeout.change.arrayHandler", function () {
     };
     
     arrayHandler.prototype._observe = function (callback, callbackList, disposed) {
-        throw "You must implement the _observe method";
+        throw "Abstract methods must be implemented";
     };
     
     arrayHandler.prototype.observe = function (callback, context, complexCallback /*TODO*/) {

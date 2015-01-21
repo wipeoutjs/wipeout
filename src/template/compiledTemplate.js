@@ -37,8 +37,10 @@ Class("wipeout.template.compiledTemplate", function () {
         ///<summary>Add a text node to the html string scanning for dynamic functionality</summary>
         ///<param name="node" type="Object">The node</param>
                 
-        var html = node.serialize();
+        begin.lastIndex = 0;
+        end.lastIndex = 0;
         
+        var html = node.serialize();
         while (begin.exec(html)) {
             this.html.push(html.substring(end.lastIndex, begin.lastIndex - 2)); //TODO: -2 is for {{, what if it changes
             end.lastIndex = begin.lastIndex;

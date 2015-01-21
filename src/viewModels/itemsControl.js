@@ -5,7 +5,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     var staticConstructor = function() {
         if(deafaultTemplateId) return;
         
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$data.items}}');
+        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$data.itemSource}}');
     };
     
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
@@ -27,13 +27,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         
         ///<Summary type="wipeout.base.array">An array of models to render</Summary>
         this.itemSource = new wipeout.base.array();
-        this.itemSource.observe(this.onItemSourceChanged, this);
         this.registerDisposable(this.itemSource);
-        
-        ///<Summary type="wo.view">An array of viewmodels, each corresponding to a model in the itemSource property</Summary>
-        this.items = new wipeout.base.array();
-        this.items.observe(this.onItemsChanged, this);
-        this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
@@ -69,70 +63,6 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
         
         this._super(propertiesXml, parentBindingContext);
-    };
-    
-    itemsControl.prototype._syncModelsAndViewModels = function() {
-        ///<summary>Ensures that the itemsSource array and items array are in sync</summary>
-                        
-        if(this.itemSource.length !== this.items.length) {
-            this.itemSource.length = this.items.length;
-        }
-        
-        for(var i = 0, ii = this.items.length; i < ii; i++) {
-            if(this.items[i].model !== this.itemSource[i]) {
-                this.itemSource.replace(i, this.items[i].model);
-            }
-        }
-    };
-
-    itemsControl.prototype._modelsAndViewModelsAreSynched = function() {
-        ///<summary>Returns whether all models have a corresponding view model at the correct index</summary>
-        ///<returns type="Boolean"></returns>
-        
-        if(this.itemSource.length !== this.items.length)
-            return false;
-        
-        for(var i = 0, ii = this.itemSource.length; i < ii; i++) {
-            if(this.itemSource[i] !== this.items[i].model)
-                return false;
-        }
-        
-        return true;
-    };
-
-    itemsControl.prototype.onItemsChanged = function (removed, added) { 
-        ///<summary>Runs onItemDeleted and onItemRendered on deleted and created items respectively</summary>
-        ///<param name="removed" type="Array" generic0="wo.view" optional="false">A list of removed items</param>
-        ///<param name="added" type="Array" generic0="wo.view" optional="false">A list of added items</param>
-        
-        enumerateArr(removed, function(change) {
-            this.onItemDeleted(change);
-        }, this);
-        
-        enumerateArr(added, function(change) {
-            this.onItemRendered(change);
-        }, this);
-        
-        this._syncModelsAndViewModels();
-    };
-
-    //TODO: optimize by putting on itemsControl binding
-    itemsControl.prototype.onItemSourceChanged = function (removed, added, indexes) { 
-        ///<summary>Adds, removes and moves view models depending on changes to the models array</summary>
-        ///<param name="removed" type="Array" generic0="wo.view" optional="false">A list of removed items</param>
-        ///<param name="added" type="Array" generic0="wo.view" optional="false">A list of added items</param>
-        ///<param name="moved" type="Array" generic0="wo.view" optional="false">The items moved</param>
-        
-        var items = wipeout.utils.obj.copyArray(this.items);
-        this.items.length = this.itemSource.length;
-        
-        enumerateArr(indexes.added, function(item) {
-            this.items.replace(item.index, this._createItem(item.value));
-        }, this);
-        
-        enumerateArr(indexes.moved, function(item) {
-            this.items.replace(item.to, items[item.from]);
-        }, this);
     };
     
     //virtual

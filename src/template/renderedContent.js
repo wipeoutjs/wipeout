@@ -23,9 +23,15 @@ Class("wipeout.template.renderedContent", function () {
         element.parentElement.removeChild(element);
     });
     
+    //TODO: this function is too big
     renderedContent.prototype.renderArray = function (array) {
+                
         this.unTemplate();        
         var children = [];
+        
+        var itemsControl = this.parentRenderContext.$data instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$data.itemSource ?
+            this.parentRenderContext.$data :
+            null;
         
         var arrayObserve;
         var create = (function (item, index) {
@@ -36,35 +42,50 @@ Class("wipeout.template.renderedContent", function () {
                 children[index].openingTag.parentElement.insertBefore(placeholder, children[index].openingTag);
 
             var output = new renderedContent(placeholder, "item: " + index, this.parentRenderContext);
+            item = itemsControl ? itemsControl._createItem(item) : item;
             output.render(item);
+            if (itemsControl) {
+                itemsControl.onItemRendered(item);
+                output.renderedChild = item;
+            }
+                
             return output;
         }).bind(this);
+            
+        var remove = (function (item) {
+            if (itemsControl)
+                itemsControl.onItemDeleted(item.renderedChild);
 
-        if (array instanceof wipeout.base.array) {
-            var move = (function (item, from, to) {
-                debugger;
-            }).bind(this);
-
-            wipeout.base.watched.afterNextObserveCycle(function() {
-            arrayObserve = array.bind(children, create, move);
-            });
-        } else {
-            wipeout.base.array.copyAll(array, children, create);
-        }
-                         
-        /*
-        var tmp, elements1 = [], elements2 = []; //TODO test efficiency of this vs document.createElement
+            item.dispose();
+        }).bind(this);
+        
         enumerateArr(array, function (item, i) {
-            elements1.push(tmp = wipeout.template.builder.uniqueIdGenerator());
-            elements2.push('<script id="' + tmp + '" type="placeholder"></script>');
-        }, this);
+            children.push(create(item, i));            
+        });
         
-        this.prependHtml(elements2.join(""));
-        enumerateArr(elements1, function (element, i) {
-            children.push(tmp = new renderedContent(document.getElementById(element), "item: " + i, this.parentRenderContext));
-            tmp.render(array[i]);
-        });*/
-        
+        if (array instanceof wipeout.base.array) {
+            arrayObserve = array.observe(function (removed, added, indexes) {
+                enumerateArr(indexes.removed, remove);
+                
+                var moved = {};
+                enumerateArr(indexes.moved, function (item) {
+                    moved[item.to] = children[item.to];
+                    
+                    if (item.to >= children.length - 1)
+                        children[item.from].appendTo(this.openingTag);
+                    else
+                        children[item.from].move(children[item.to + 1].openingTag);
+                        
+                    children[item.to] = moved[item.from] || children[item.from];
+                });
+                
+                enumerateArr(indexes.added, function (added) {
+                    children[added.index] = create(added.value, added.index);
+                });
+                
+                children.length = array.length;
+            });
+        }        
         
         this.disposeOfBindings = function () {
             if (arrayObserve) {
@@ -72,9 +93,7 @@ Class("wipeout.template.renderedContent", function () {
                 arrayObserve = null;
             }
             
-            enumerateArr(children, function (child) {
-                child.dispose();
-            });
+            enumerateArr(children, remove);
 
             children.length = 0;
         };
