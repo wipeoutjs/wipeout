@@ -13,7 +13,7 @@
     </initialize-view>
     <wo.content-control id="listTest">
         <template>
-            <div wo-content="$data.model.rootTitle"></div>
+            <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
                 <wo.items-control id="theInnerItemsControl1" items--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="1" />
             </div>
@@ -21,12 +21,12 @@
                 <wo.items-control id="theInnerItemsControl2" items--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="2" />
             </div>
             <div style="clear: both"></div>
-            {{$data.totals}}
+            {{$this.totals}}
         </template>
         <totals>
             <wo.content-control>
                 <template>
-                    <div content="$data.model.totalOfIds"></div>
+                    <div content="$this.model.totalOfIds"></div>
                 </template>
             </wo.content-control>
         </totals>

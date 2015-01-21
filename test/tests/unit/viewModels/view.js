@@ -204,9 +204,9 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     
     // assert
     strictEqual(subject.shareParentScope, false);
-    strictEqual(subject.model, bindingContext.$data.model);
-    strictEqual(subject.twProp(), bindingContext.$data.twProperty());
-    strictEqual(subject.owProp, bindingContext.$data.owProperty);
+    strictEqual(subject.model, bindingContext.$this.model);
+    strictEqual(subject.twProp(), bindingContext.$this.twProperty());
+    strictEqual(subject.owProp, bindingContext.$this.owProperty);
     strictEqual(subject.inlinePropString, "Hello");
     strictEqual(subject.inlinePropParser, 22);
     strictEqual(subject.inlinePropConstructor.constructor, Array);

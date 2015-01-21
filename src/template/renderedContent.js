@@ -29,8 +29,8 @@ Class("wipeout.template.renderedContent", function () {
         this.unTemplate();        
         var children = [];
         
-        var itemsControl = this.parentRenderContext.$data instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$data.items ?
-            this.parentRenderContext.$data :
+        var itemsControl = this.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$this.items ?
+            this.parentRenderContext.$this :
             null;
         
         var arrayObserve;

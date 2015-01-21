@@ -170,7 +170,7 @@ Class("wipeout.template.compiledInitializer", function () {
         
         //TODO: this is very non standard
         value = "return " + value
-            .replace(/\$data/g, "renderContext.$data")
+            .replace(/\$this/g, "renderContext.$this")
             .replace(/\$parent/g, "renderContext.$parent") + ";";
         
         return new Function("value", "propertyName", "renderContext", value);

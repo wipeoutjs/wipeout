@@ -46,19 +46,19 @@ Class("wipeout.template.htmlAttributes", function () {
     //TODO: dispose function
     htmlAttributes.itemscontrol = function (value, element, renderContext) {
         
-        if (renderContext.$data.__woBag.hasItemsControlBinding)
+        if (renderContext.$this.__woBag.hasItemsControlBinding)
             throw "This items control already has an items control binding";
         
-        var token = renderContext.$data.__woBag.hasItemsControlBinding = {};
+        var token = renderContext.$this.__woBag.hasItemsControlBinding = {};
             
         var renderedItems = [];
         
         function onItemsChanged (removed, added, indexes) {
             var items = wipeout.utils.obj.copyArray(renderedItems);
-            for (var i = renderContext.$data.items.length, ii = renderedItems.length; i < ii; i++)
+            for (var i = renderContext.$this.items.length, ii = renderedItems.length; i < ii; i++)
                 renderedItems[i].dispose();
 
-            renderedItems.length = renderContext.$data.items.length;
+            renderedItems.length = renderContext.$this.items.length;
             
             var removed = {}, added = {}
             enumerateArr(indexes.added, function(item) {
@@ -91,12 +91,12 @@ Class("wipeout.template.htmlAttributes", function () {
                     removed[i].dispose();
         }
         
-        var d1 = renderContext.$data.items.observe(onItemsChanged);
+        var d1 = renderContext.$this.items.observe(onItemsChanged);
         
         var added = [];
-        for (var i = 0, ii = renderContext.$data.items.length; i < ii; i++)
+        for (var i = 0, ii = renderContext.$this.items.length; i < ii; i++)
             added.push({
-                value: renderContext.$data.items[i],
+                value: renderContext.$this.items[i],
                 index: i
             });
             
@@ -108,18 +108,18 @@ Class("wipeout.template.htmlAttributes", function () {
                 renderedItems[i].dispose();
                 
             renderedItems.length = 0;
-            if (renderContext.$data.__woBag.hasItemsControlBinding === token)
-                delete renderContext.$data.__woBag.hasItemsControlBinding;
+            if (renderContext.$this.__woBag.hasItemsControlBinding === token)
+                delete renderContext.$this.__woBag.hasItemsControlBinding;
         }
     };
     
     htmlAttributes.id = function (value, element, renderContext) {
-        renderContext.$data.templateItems[value] = element;
+        renderContext.$this.templateItems[value] = element;
         element.id = value;
         
         return function() {
-            if (renderContext.$data.templateItems[value] === element)
-                delete renderContext.$data.templateItems[value]
+            if (renderContext.$this.templateItems[value] === element)
+                delete renderContext.$this.templateItems[value]
         }
     };
     
