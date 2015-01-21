@@ -30,7 +30,8 @@ Class("wipeout.template.viewModelElement", function () {
             .initialize(this.viewModel, this.renderContext);
         
         // run onInitialized after templating is complete
-        wipeout.base.watched.afterNextObserveCycle(this.viewModel.onInitialized.bind(this.viewModel));
+        if (this.viewModel instanceof wipeout.viewModels.view)
+            wipeout.base.watched.afterNextObserveCycle(this.viewModel.onInitialized.bind(this.viewModel));
         
         this.render(this.viewModel);
     });

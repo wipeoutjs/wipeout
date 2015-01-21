@@ -82,7 +82,7 @@ Class("wipeout.template.compiledInitializer", function () {
         if (element.nodeType !== 1) return;
         
         var name = compiledInitializer.getPropertyFlags(element.name).name;
-        if (this.setters[name]) throw "The property \"" + name + "\"has been set more than once.";
+        if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\"has been set more than once.";
         
         for (var val in element.attributes) {
             if (val === "value" || val.indexOf("value--") === 0) {
@@ -99,7 +99,7 @@ Class("wipeout.template.compiledInitializer", function () {
         var p = (element.attributes.parser || element.attributes.parsers);        
         if (!p) {
             var parent = wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element._parentElement.name))
-            if (parent)
+            if (parent && parent.getGlobalParser) //TODO better way
                 p = parent.getGlobalParser(name);
         }
             
@@ -199,9 +199,10 @@ Class("wipeout.template.compiledInitializer", function () {
             
             return output;
         },
+        /* //doesn't seem to be used
         "set": function (value, propertyName, renderContext) {
             return value;
-        },        
+        },*/        
         "template": function (value, propertyName, renderContext) {
             return value;
         }

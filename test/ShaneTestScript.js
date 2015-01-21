@@ -3,15 +3,6 @@
     //wipeout.profile.profile();
     aRoutedEvent = new wo.routedEvent();
     
-    xxx = wipeout.viewModels.contentControl.extend(function initializeView() {
-        this._super();
-        
-        this.observe("template", function (xxx, yyy) {
-            debugger;
-            console.log(yyy);
-        }, null, true);
-    });
-    
     initializeView = wipeout.viewModels.contentControl.extend(function initializeView() {
         this._super();
         

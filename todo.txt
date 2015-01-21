@@ -3,7 +3,7 @@ do not use computeds in bindings.
 remove all array functionality from computeds
 <div content--s="hello"></div> doesn't work. Parsers only work with view models
 
-
+$index
 
 
 

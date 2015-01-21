@@ -26,6 +26,9 @@ Class("wipeout.template.bindingTypes", function () {
     
     bindingTypes.ow = function (viewModel, setter, name, renderContext) {
         
+        if (!(viewModel instanceof wipeout.base.watched))
+            return bindingTypes.nb(viewModel, setter, name, renderContext);
+        
         var parser = getParser(viewModel, name, setter);
         
         viewModel.computed(name, parser, {

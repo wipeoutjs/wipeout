@@ -65,15 +65,14 @@ Class("wipeout.base.computed", function () {
             delete this.arrayDisposeCallback;
         }            
         
-        if (!(val instanceof Array) || !(this.context[this.name] instanceof Array)) {
+        // do not treat xml templates like Arrays
+        if (!(val instanceof Array) || !(this.context[this.name] instanceof Array) || val instanceof wipeout.template.templateElementBase || this.context[this.name] instanceof wipeout.template.templateElementBase) {
             this.context[this.name] = val;
-            return;
-        }
-        
-        if (val instanceof wipeout.base.array)
+        } else if (val instanceof wipeout.base.array) {
             this.arrayDisposeCallback = val.bind(this.context[this.name]);
-        else
+        } else {
             wipeout.base.array.copyAll(this.context[this.name]);
+        }
     };
         
     computed.stripFunction = function(input) { //TODO: unit test independantly
