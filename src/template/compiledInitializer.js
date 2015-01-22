@@ -106,7 +106,6 @@ Class("wipeout.template.compiledInitializer", function () {
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-                    return;
                     this.setters[name] = {
                         parser: compiledInitializer.parsers.createAndSet,
                         bindingType: "nb",
@@ -190,6 +189,7 @@ Class("wipeout.template.compiledInitializer", function () {
             return new Date(trim(value));
         },
         "createAndSet": function (value, propertyName, renderContext) {
+            
             //TODO: dispose
             var output = new value.constructor;
         
@@ -210,6 +210,7 @@ Class("wipeout.template.compiledInitializer", function () {
     
     //TODO: Rename
     compiledInitializer.parsers.template.xmlParserTempName = true;
+    compiledInitializer.parsers.createAndSet.xmlParserTempName = true;
     
     compiledInitializer.parsers.j = compiledInitializer.parsers["json"];
     compiledInitializer.parsers.s = compiledInitializer.parsers["string"];
