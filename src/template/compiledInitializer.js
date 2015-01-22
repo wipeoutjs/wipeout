@@ -156,14 +156,10 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.getAutoParser = function (value) {
                 
-        //TODO: this is very non standard
-        value = "return " + value
-            .replace(/\$this/g, "renderContext.$this")
-            .replace(/\$parent/g, "renderContext.$parent") + ";";
+        value = "with (renderContext) return " + value + ";";
         
         return new Function("value", "propertyName", "renderContext", value);
     };
-    
     
     compiledInitializer.parsers = {
         "json": function (value, propertyName, renderContext) {

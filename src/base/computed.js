@@ -8,7 +8,7 @@ Class("wipeout.base.computed", function () {
     var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
     
     // monitor a function and change the value of a "watched" when it changes
-    function computed(context, name, callback, watchVariables) {
+    function computed(context, name, callback, watchVariables, callbackStringOverride) {
         
         //TODO: if can watch
         
@@ -17,7 +17,7 @@ Class("wipeout.base.computed", function () {
         
         this.arguments = [];
         this.disposables = [];        
-        this.callback = computed.stripFunction(callback);
+        this.callback = computed.stripFunction(callbackStringOverride || callback);
         this.callbackFunction = callback;
         this.context = context;
         this.name = name;

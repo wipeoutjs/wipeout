@@ -34,35 +34,36 @@ Class("wipeout.template.bindingTypes", function () {
         var parser = getParser(viewModel, name, setter);
         
         viewModel.computed(name, parser, {
-            "value": parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
-            "propertyName": name,
-            "renderContext": renderContext
-        });
-    };
-    
-    //TODO: test
-    bindingTypes.isSimpleBindingProperty = function (property) {
-        return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
+            value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
+            propertyName: name,
+            renderContext: renderContext
+        }, wipeout.template.renderContext.addRenderContext(parser));
     };
     
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
         
         var val;
-        if (!bindingTypes.isSimpleBindingProperty(val = setter.valueAsString()))
+        if (!bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 
-        //TODO: this is very non standard
-        val = val
-            .replace(/\$this/g, "renderContext.$this")
-            .replace(/\$parent/g, "renderContext.$parent")
-            .split(".");
-
-        var pn = val[val.length - 1], p = val.splice(1, val.length - 2).join("."), rc = val[0] === "renderContext";
+        var setter = bindingTypes.owts.buildSetter(val);
         viewModel.observe(name, function (oldVal, newVal) {
-            var current = rc ? renderContext : window[val[0]];
-            if(current = wipeout.utils.obj.getObject(p, current))
-                current[pn] = newVal;
+            setter(renderContext, newVal);
         });
+    };
+    
+    //TODO: test
+    bindingTypes.owts.buildSetter = function (property, useEqualityCheck) {
+        useEqualityCheck = useEqualityCheck ?
+            "if (" + property + " !== value) " :
+            "";
+        
+        return new Function("renderContext", "value", "with (renderContext) " + useEqualityCheck + property + " = value;");
+    };
+    
+    //TODO: test
+    bindingTypes.owts.isSimpleBindingProperty = function (property) {
+        return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
     };
     
     bindingTypes.tw = function (viewModel, setter, name, renderContext) {

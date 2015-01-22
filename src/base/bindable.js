@@ -132,7 +132,7 @@ Class("wipeout.base.bindable", function () {
         };
     })();
     
-    bindable.prototype.computed = function(name, callback, watchVariables) {
+    bindable.prototype.computed = function(name, callback, watchVariables, callbackStringOverride) {
         ///<summary>Do "delete obj.prop" functionality</summary>
         ///<param name="property" type="String" optional="false">The property name</param>
         ///<returns type="Boolean">The result of the delete</returns>

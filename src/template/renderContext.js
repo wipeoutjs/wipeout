@@ -20,5 +20,13 @@ Class("wipeout.template.renderContext", function () {
         return new wipeout.template.renderContext(forVm, this);
     };
     
+    renderContext.addRenderContext = function (toFunction) {
+        
+        return toFunction
+            .toString()
+            .replace(/\$this/g, "renderContext.$this")
+            .replace(/\$parent/g, "renderContext.$parent");
+    };
+    
     return renderContext;
 });

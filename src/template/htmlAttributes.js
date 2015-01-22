@@ -1,17 +1,28 @@
 
 Class("wipeout.template.htmlAttributes", function () {
     function htmlAttributes() {
-    }    
+    }  
     
-    htmlAttributes.click = function (value, element, renderContext) {
-        return function() {
-        };
+    var functionReference = /^[\s\.\w\$]*$/;
+    
+    //TODO: types of inputs
+    htmlAttributes.click = function (value, element, renderContext) { //TODO error handling
+        
+        if (functionReference.test(value))
+            value = value + "(e, element);";
+        
+        //TODO non standard (with)
+        var callback = new Function("e", "element", "renderContext", "with (renderContext) " + value);
+        
+        return onElementEvent(element, "click", function (e) {
+            callback(e, element, renderContext);
+        });
     };
     
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
         
-        if (!wipeout.template.bindingTypes.isSimpleBindingProperty(value))
+        if (!wipeout.template.bindingTypes.owts.isSimpleBindingProperty(value))
             throw "Cannot bind to the property \"" + value + "\".";
         
         var d1 = onVmValueChanged(value, function (oldVal, newVal) {
@@ -20,7 +31,7 @@ Class("wipeout.template.htmlAttributes", function () {
         }, renderContext);
         
         //TODO: this is very non standard (the with part)
-        var setter = new Function("rc", "val", "with (rc) if (" + value + " !== val)" + value + " = val;");        
+        var setter = wipeout.template.bindingTypes.owts.buildSetter(value, true);
         var d2 = onElementEvent(element, "change", function () {
             setter(renderContext, element.value);
         });
