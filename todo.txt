@@ -5,7 +5,14 @@ remove all array functionality from computeds
 
 $index
 
+standardise the way things are rendered, between Objects and wo.views
 
+<Array>
+    <value parser="s">A</value>
+    <value parser="s">Random</value>
+    <value parser="s">Object</value>
+    <value parser="s">2</value>
+</Array>
 
 
 watch for changes to an array if array is last item in path

@@ -12,14 +12,8 @@
         <item2 parser="s">ok2</item2>
     </initialize-view>
     <Object>
-        <to-string>function() { return "A random object 1"; }</to-string>
-    </Object>
-    <Array>
-        <0 parser="s">A</0>
-        <1 parser="s">Random</1>
-        <2 parser="s">Object</2>
-        <3 parser="s">2</3>
-    </Array>
+        <to-string>function() { return this.model; }</to-string>
+    </Object>    
     <wo.content-control id="listTest">
         <template>
             <div wo-content="$this.model.rootTitle"></div>

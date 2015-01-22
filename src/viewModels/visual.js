@@ -73,6 +73,10 @@ Class("wipeout.viewModels.visual", function () {
         return output;*/
     };
     
+    visual.prototype.toString = function () {
+        
+    }
+    
     visual.prototype.dispose = function() {
         ///<summary>Dispose of this visual</summary>
 

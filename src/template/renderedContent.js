@@ -164,6 +164,7 @@ Class("wipeout.template.renderedContent", function () {
         this.asynchronous = wipeout.template.engine.instance.compileTemplate(templateId, (function (template) {
             delete this.asynchronous;
             
+            // remove loading placeholder
             if (element) {
                 element.parentElement.removeChild(element);
                 element = null;
