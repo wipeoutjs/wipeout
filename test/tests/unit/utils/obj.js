@@ -94,26 +94,6 @@ testUtils.testWithUtils("getObject", "", true, function(methods, classes, subjec
     strictEqual(invoker("a.b.c.d", ctxt), ctxt.a.b.c.d);
 });
 
-testUtils.testWithUtils("createObject", "invalid function", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var ctxt = {a:{b:{c:{d:{}}}}};
-    
-    // act 
-    // assert    
-    throws(function() {
-        invoker("a.b.c.d", ctxt);
-    });
-});
-
-testUtils.testWithUtils("createObject", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var ctxt = {a:{b:{c:{d:function(){}}}}};
-    
-    // act 
-    // assert
-    ok(invoker("a.b.c.d", ctxt) instanceof ctxt.a.b.c.d);;
-});
-
 testUtils.testWithUtils("copyArray", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var expected = [{}, {}, {}];

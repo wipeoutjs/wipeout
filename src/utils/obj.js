@@ -175,26 +175,6 @@ Class("wipeout.utils.obj", function () {
         
         return context;
     };
-        
-    var createObject = function(constructorString, context) {
-        ///<summary>Create an object from string</summary>
-        ///<param name="constructorString" type="String">A pointer to the object to create</param>
-        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
-        ///<returns type="Any">The created object</returns>
-        
-        var constructor = getObject(constructorString, context);
-        
-        if(constructor instanceof Function) {
-            
-            var object = new constructor();
-            if(object instanceof wipeout.viewModels.view && DEBUG)
-                object.__woBag.constructedViewType = constructorString;
-            
-            return object;
-        }
-        
-        throw constructorString + " is not a valid function.";
-    };
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -246,7 +226,6 @@ Class("wipeout.utils.obj", function () {
     obj.enumerateArr = enumerateArr;
     obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
-    obj.createObject = createObject;
     obj.copyArray = copyArray;
     obj.random = random;
     obj.endsWith = endsWith;
