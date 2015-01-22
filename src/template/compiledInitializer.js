@@ -201,6 +201,12 @@ Class("wipeout.template.compiledInitializer", function () {
         },*/        
         "template": function (value, propertyName, renderContext) {
             return value;
+        },
+        "viewModelId": function (value, propertyName, renderContext) {
+            if (renderContext.$parent instanceof wipeout.viewModels.visual)
+                renderContext.$parent.templateItems[value] = renderContext.$this;
+            
+            return value;
         }
     };
     

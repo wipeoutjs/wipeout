@@ -27,7 +27,7 @@ Class("wipeout.template.renderedContent", function () {
     renderedContent.prototype.renderArray = function (array) {
                 
         this.unTemplate();        
-        var children = [];
+        var children = [], getChild;
         
         var itemsControl = this.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$this.items ?
             this.parentRenderContext.$this :
@@ -63,9 +63,14 @@ Class("wipeout.template.renderedContent", function () {
             children.push(create(item, i));            
         });
         
+        if (itemsControl)
+            itemsControl.__woBag.getChild = getChild = function (i) { return children[i] ? children[i].renderedChild : undefined; };
+        
         if (array instanceof wipeout.base.array) {
             arrayObserve = array.observe(function (removed, added, indexes) {
-                enumerateArr(indexes.removed, remove);
+                enumerateArr(indexes.removed, function (rem) {
+                    remove(children[rem.index]);
+                });
                 
                 var moved = {};
                 enumerateArr(indexes.moved, function (item) {
@@ -85,18 +90,23 @@ Class("wipeout.template.renderedContent", function () {
                 
                 children.length = array.length;
             });
-        }        
+        }
         
-        this.disposeOfBindings = function () {
+        this.disposeOfBindings = (function () {
             if (arrayObserve) {
                 arrayObserve.dispose();
                 arrayObserve = null;
             }
             
+            if (getChild && itemsControl.__woBag.getChild === getChild) {
+                delete itemsControl.__woBag.getChild;
+                getChild = null;
+            }
+            
             enumerateArr(children, remove);
 
             children.length = 0;
-        };
+        }).bind(this);
     };
     
     renderedContent.prototype.render = function (object) {

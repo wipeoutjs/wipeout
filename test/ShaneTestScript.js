@@ -68,7 +68,7 @@
 
 var actions = [
     function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.items[0].triggerRoutedEvent(aRoutedEvent, {});
+        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
         view.templateItems.NestedDiv.innerHTML = "this is the nested div";

@@ -56,7 +56,12 @@ Class("wipeout.template.htmlAttributes", function () {
         var observation = context.observe(name, callback);
         
         // order important. Observe before computed execution
-        var computed = new wipeout.base.computed(context, name, context.callback, {renderContext: renderContext, value: value, propertyName: ""});
+        var computed = new wipeout.base.computed(
+            context, 
+            name, 
+            context.callback, 
+            {renderContext: renderContext, value: value, propertyName: ""},
+            wipeout.template.renderContext.addRenderContext(context.callback));
         
         return function output() {
             observation.dispose();

@@ -44,6 +44,16 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
     };
     
+    // TODO: test
+    itemsControl.prototype.getItemViewModel = function(index) {
+        ///<summary>Get the child view model at a given index</summary>
+        ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+    
+        return this.__woBag.getChild ?
+            this.__woBag.getChild(index) :
+            undefined;
+    };
+    
     itemsControl.prototype.removeItem = function(item) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="item" type="Any" optional="false">The item to remove</param>
