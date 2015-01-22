@@ -11,17 +11,19 @@
     <initialize-view item1--s="ok1">
         <item2 parser="s">ok2</item2>
     </initialize-view>
-    <Object>
-        <to-string>function() { return this.model; }</to-string>
-    </Object>    
+    <div>
+        <Object>
+            <to-string>function() { return "a value"; }</to-string>
+        </Object>
+    </div>
     <wo.content-control id="listTest">
         <template>
             <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
-                <wo.items-control id="theInnerItemsControl1" items--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="1" />
+                <wo.items-control id="theInnerItemsControl1" items--tw="$parent.model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" />
             </div>
             <div style="float: left; margin-left: 20px;">
-                <wo.items-control id="theInnerItemsControl2" items--tw="model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" xxx="2" />
+                <wo.items-control id="theInnerItemsControl2" items--tw="$parent.model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" />
             </div>
             <div style="clear: both"></div>
             {{$this.totals}}
@@ -41,7 +43,7 @@
                 <template>
                     <wo.content-control model="$parent.model.value">
                         <supplimentary-prop>
-                            <child-view model-tw="$parent.model" value-tw="model">
+                            <child-view model-tw="$parent.model" value-tw="$this.model">
                                 <template>
                                     <input type="text" value="$this.value"></input>
                                 </template>
