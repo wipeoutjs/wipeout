@@ -26,7 +26,7 @@ Class("wipeout.template.renderedContent", function () {
     //TODO: this function is too big
     renderedContent.prototype.renderArray = function (array) {
                 
-        this.unTemplate();        
+        this.unRender();        
         var children = [], getChild;
         
         var itemsControl = this.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$this.items ?
@@ -115,7 +115,7 @@ Class("wipeout.template.renderedContent", function () {
             return;
         }
         
-        this.unTemplate();
+        this.unRender();
         
         if (object == null)
             return;
@@ -124,7 +124,8 @@ Class("wipeout.template.renderedContent", function () {
             this.parentRenderContext.childContext(object) :
             new wipeout.template.renderContext(object);
         
-        if (object instanceof wipeout.viewModels.view) {            
+        if (object instanceof wipeout.viewModels.visual) {
+            object.__woBag.domRoot = this;
             object.observe("templateId", this._template, this);
             if (object.templateId)
                 this.template(object.templateId);
@@ -141,6 +142,16 @@ Class("wipeout.template.renderedContent", function () {
         this.template(templateId);
     };
         
+    //TODO: rename to unRender
+    renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
+        this.unTemplate(leaveDeadChildNodes);
+        
+        if (this.renderContext && this.renderContext.$this instanceof wipeout.viewModels.visual) {
+            delete this.renderContext.$this.__woBag.domRoot;
+            delete this.renderContext
+        }
+    };
+    
     //TODO: rename to unRender
     renderedContent.prototype.unTemplate = function(leaveDeadChildNodes) {
         ///<summary>Remove a view model's template, leaving it blank</summary>
@@ -203,7 +214,7 @@ Class("wipeout.template.renderedContent", function () {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
-        this.unTemplate(leaveDeadChildNodes);
+        this.unRender(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes) {
             this.closingTag.parentElement.removeChild(this.closingTag);

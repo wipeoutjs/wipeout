@@ -19,7 +19,6 @@ Class("wipeout.viewModels.visual", function () {
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.__woBag.disposed = wipeout.events.event();
         this.__woBag.createdByWipeout = false;
-        this.__woBag.rootHtmlElement = null;
         this.__woBag.routedEventSubscriptions = [];
         this.__woBag.nodes = [];
     });
@@ -90,9 +89,12 @@ Class("wipeout.viewModels.visual", function () {
         this.__woBag.disposed.trigger();
     };
     
+    //TODO, doesn't work
     visual.prototype.entireViewModelHtml = function() {
         ///<summary>Gets all of the html nodes included in this view model</summary>
         ///<returns type="Array" generic0="Node">The html elements</returns>
+        
+        return [];
         
         if(this.__woBag.rootHtmlElement) {
             if (this.__woBag.rootHtmlElement.nodeType === 1) {
@@ -121,12 +123,6 @@ Class("wipeout.viewModels.visual", function () {
         return [];
     };
     
-    visual.prototype.getRootHtmlElement = function() {
-        ///<summary>Get the root of this view model. Unless rendered manually using the render binding, it will be a knockout virtual element</summary>
-        ///<returns type="Node">The root element</returns>
-        return this.__woBag.rootHtmlElement;
-    };
-    
     visual.prototype.getParents = function(includeSharedParentScopeItems) {
         ///<summary>Gets an array of the entire tree of ancestor visual objects</summary>
         ///<param name="includeSharedParentScopeItems" type="Boolean" optional="true">Set to true if items marked with shareParentScope can be returned</param>
@@ -141,18 +137,14 @@ Class("wipeout.viewModels.visual", function () {
         return parents;
     };
     
-    visual.prototype.getParent = function(includeShareParentScopeItems) {
+    //TODO: include sharedScopeItems
+    visual.prototype.getParent = function() {
         ///<summary>Get the parent visual of this visual</summary> 
-        ///<param name="includeSharedParentScopeItems" type="Boolean" optional="true">Set to true if items marked with shareParentScope can be returned</param>
         ///<returns type="wo.view">The parent view model</returns>
-        var pe;
-        var parent = !this.__woBag.rootHtmlElement || !(pe = wipeout.utils.ko.parentElement(this.__woBag.rootHtmlElement)) ?
-            null :
-            wipeout.utils.html.getViewModel(pe);
-
-        return includeShareParentScopeItems || !parent || !parent.shareParentScope ?
-            parent :
-            parent.getParent(includeShareParentScopeItems);
+        
+        return this.__woBag.domRoot && this.__woBag.domRoot.renderContext ? 
+            this.__woBag.domRoot.renderContext.$parent :
+            null;
     };
     
     visual.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
