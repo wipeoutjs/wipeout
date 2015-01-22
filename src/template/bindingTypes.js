@@ -1,4 +1,6 @@
 
+//TODO: dispose of bindings
+
 //http://www.w3.org/TR/html-markup/syntax.html
 Class("wipeout.template.bindingTypes", function () {  
     
@@ -38,11 +40,15 @@ Class("wipeout.template.bindingTypes", function () {
         });
     };
     
-    var VALID_FOR_OWTS_BINDING = /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/;
+    //TODO: test
+    bindingTypes.isSimpleBindingProperty = function (property) {
+        return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
+    };
+    
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
         
         var val;
-        if (!VALID_FOR_OWTS_BINDING.test(val = setter.valueAsString()))
+        if (!bindingTypes.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 
         //TODO: this is very non standard

@@ -11,31 +11,66 @@ Class("wipeout.template.htmlAttributes", function () {
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
         
-        return contentOrRender(value, function (oldVal, newVal) {
-            element.value = newVal;
+        if (!wipeout.template.bindingTypes.isSimpleBindingProperty(value))
+            throw "Cannot bind to the property \"" + value + "\".";
+        
+        var d1 = onVmValueChanged(value, function (oldVal, newVal) {
+            if (element.value !== newVal)
+                element.value = newVal;
         }, renderContext);
+        
+        //TODO: this is very non standard (the with part)
+        var setter = new Function("rc", "val", "with (rc) if (" + value + " !== val)" + value + " = val;");        
+        var d2 = onElementEvent(element, "change", function () {
+            setter(renderContext, element.value);
+        });
+        
+        return function () {
+            if (d1) {
+                d1();
+                d2();
+                
+                d1 = null;
+                d2 = null;
+            }
+        }
     };   
     
     var defaultVal = {};
-    function contentOrRender (value, onValueChanged, renderContext) { //TODO error handling
+    function onVmValueChanged (value, callback, renderContext) { //TODO error handling
         
         var context = new wipeout.base.watched({value: defaultVal}), name = "value";
         context.callback = wipeout.template.compiledInitializer.getAutoParser(value);
         
-        var observation = context.observe(name, onValueChanged);
+        var observation = context.observe(name, callback);
         
         // order important. Observe before computed execution
         var computed = new wipeout.base.computed(context, name, context.callback, {renderContext: renderContext, value: value, propertyName: ""});
         
-        return function() {
+        return function output() {
             observation.dispose();
             computed.dispose();
         };
-    };  
+    };
+    
+    function onElementEvent (element, event, callback) { //TODO error handling
+        
+        //TODO, third arg (capture)
+        element.addEventListener(event, callback);
+        
+        return function() {
+            if (callback) {
+                //TODO, third arg (capture)
+                element.removeEventListener(event, callback);
+                callback = null;
+            }
+        };
+    };
     
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
+        
         var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
-        var disposal = contentOrRender(value, function (oldVal, newVal) {
+        var disposal = onVmValueChanged(value, function (oldVal, newVal) {
             htmlContent.render(newVal);
         }, renderContext);
         
@@ -46,7 +81,7 @@ Class("wipeout.template.htmlAttributes", function () {
     };  
     
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
-        return contentOrRender(value, function (oldVal, newVal) {
+        return onVmValueChanged(value, function (oldVal, newVal) {
             element.innerHTML = newVal;
         }, renderContext);
     };
