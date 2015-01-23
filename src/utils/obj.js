@@ -148,33 +148,76 @@ Class("wipeout.utils.obj", function () {
     //TODO: merge with path watch
     //TODO: test for array
     var arrayMatch = /\[\s*\d\s*\]$/g;
-    var getObject = function(constructorString, context) {
+    var splitPropertyName = function(propertyName) {
+        propertyName = propertyName.split(".");
+        
+        var tmp;
+        for (var i = 0; i < propertyName.length; i++) {
+            propertyName[i] = wipeout.utils.obj.trim(propertyName[i]);
+            var match = propertyName[i].match(arrayMatch);
+            if (match && match.length) {
+                if (tmp = wipeout.utils.obj.trim(propertyName[i].replace(arrayMatch, ""))) {
+                    propertyName[i] = wipeout.utils.obj.trim(propertyName[i].replace(arrayMatch, ""));
+                } else {
+                    propertyName.splice(i, 1);
+                    i--;
+                }
+                
+                for (var j = 0, jj = match.length; j < jj; j++)
+                    propertyName.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
+            }
+        }
+        
+        return propertyName;
+    };
+    
+    //TODO test
+    var joinPropertyName = function (propertyName) {
+        var output = [];
+        enumerateArr(propertyName, function (item) {
+            if (!isNaN(item))
+                output.push("[" + item + "]");
+            else if (output.length === 0)
+                output.push(item);
+            else
+                output.push("." + item);
+        });
+        
+        return output.join("");
+    }
+    
+    var getObject = function(propertyName, context) {
         ///<summary>Get an object from string</summary>
-        ///<param name="constructorString" type="String">A pointer to the object to create</param>
+        ///<param name="propertyName" type="String">A pointer to the object to get</param>
+        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
+        ///<returns type="Any">The object</returns>
+        
+        return _getObject(splitPropertyName(propertyName), context);
+    };
+    
+    var _getObject = function(splitPropertyName, context) {
+        ///<summary>Get an object from string</summary>
+        ///<param name="splitPropertyName" type="Array">The property name split into parts, including numbers for array parts</param>
         ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
         ///<returns type="Any">The object</returns>
         if(!context) context = window;
         
-        var constructor = constructorString.split(".");
-        for (var i = 0; i < constructor.length; i++) {
-            constructor[i] = wipeout.utils.obj.trim(constructor[i]);
-            var match = constructor[i].match(arrayMatch);
-            if (match) {
-                constructor[i] = wipeout.utils.obj.trim(constructor[i].replace(arrayMatch, ""));
-                
-                for (var j = 0, jj = match.length; j < jj; j++)
-                    constructor.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
-            }
-        }
-        
-        for (var i = 0, ii = constructor.length; i <ii; i++) {
-            context = context[constructor[i]];
+        for (var i = 0, ii = splitPropertyName.length; i <ii; i++) {
+            context = context[splitPropertyName[i]];
             if(context == null)
                 return null;
         }
         
         return context;
     };
+    
+    var setObject = function(propertyName, context, value) {
+        propertyName = splitPropertyName(propertyName);
+        if (propertyName.length > 1)
+            context = _getObject(propertyName.splice(0, propertyName.length -1), context);
+        
+        context[propertyName[0]] = value;
+    };    
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -226,6 +269,9 @@ Class("wipeout.utils.obj", function () {
     obj.enumerateArr = enumerateArr;
     obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
+    obj.setObject = setObject;
+    obj.splitPropertyName = splitPropertyName;
+    obj.joinPropertyName = joinPropertyName;
     obj.copyArray = copyArray;
     obj.random = random;
     obj.endsWith = endsWith;

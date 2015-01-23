@@ -68,6 +68,7 @@ Class("wipeout.template.renderedContent", function () {
         
         if (array instanceof wipeout.base.array) {
             arrayObserve = array.observe(function (removed, added, indexes) {
+                
                 enumerateArr(indexes.removed, function (rem) {
                     remove(children[rem.index]);
                 });
@@ -201,7 +202,9 @@ Class("wipeout.template.renderedContent", function () {
             this.__initialTemplate = true;
 
             // add dynamic functionality and cache dispose function
-            this.disposeOfBindings = template.execute(this.renderContext);            
+            this.disposeOfBindings = template.execute(this.renderContext);
+            
+            this.renderContext.$this.onRendered();
         }).bind(this));
         
         if (this.asynchronous) {            

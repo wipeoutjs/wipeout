@@ -31,7 +31,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
-    
+        
     itemsControl.removeItem = wipeout.events.routedEvent();
     
     itemsControl.prototype._removeItem = function(e) {

@@ -6,12 +6,14 @@
     initializeView = wipeout.viewModels.contentControl.extend(function initializeView() {
         this._super();
         
-        this.template = "<div id='theDiv'>If this text is still here something went wrong</div>";
+        this.template = "<div id='theDiv'>If this text is still here something went wrong</div>\
+<wo.content-control id='theContentControl' template='If this text is still here something went wrong'></wo.content-control>";
     });
     
-    initializeView.prototype.onInitialized = function() {
+    initializeView.prototype.onRendered = function() {
         this._super();
         this.templateItems.theDiv.innerHTML = this.item1 + " " + this.item2;
+        this.templateItems.theContentControl.template = this.item1 + " " + this.item2;
     };
     
     childView = wipeout.viewModels.contentControl.extend(function childView() {
@@ -44,8 +46,8 @@
     rootView.prototype.profile = function() {
         wipeout.profile.profile();
     };
-        
-    model = wo.watch({
+            
+    var model = wo.watch({
         rootTitle: "People",
         items: new wo.array([wo.watch({itemId: 22, itemName: "John"}), wo.watch({itemId: 25, itemName: "Barry"})]),
         deepItem: wo.watch({
@@ -55,19 +57,19 @@
         })
     });
     
+    theModel = model;
+    
     model.computed("totalOfIds", function() {
-        var allIds = model.items;
         var total = 0;
-        for(var i = 0, ii = allIds.length; i < ii; i++) {
-            total += allIds[i].itemId;
-        }
+        for(var i = 0, ii = this.items.length; i < ii; i++)
+            total += this.items[i].itemId;
         
         return total;
     });
 })();
 
 var actions = [
-    function(view) {
+    /*function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
@@ -76,15 +78,15 @@ var actions = [
     }, function(view) {
         view.model.rootTitle = "Persons";
         return "Changed title";
-    }, function(view) {
-        view.model.items.push(wo.watch({itemId: 66, itemName: "Paddy"}));
+    },*/ function(view) {
+        theModel.items.push(wo.watch({itemId: 66, itemName: "Paddy"}));
         return "Added person";
     }, function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
         return "Removed from one item source \"items\". Expect the other to follow suit.";
     }, function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.items[0].templateItems.stampMe.innerHTML = "stamped template";
-        view.templateItems.listTest.templateItems.theInnerItemsControl2.items[0].templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerItemsControl2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         return "Stamp a person view template.";
     }, function(view) {
         view.model.items.reverse()

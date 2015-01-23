@@ -28,6 +28,7 @@ Class("wipeout.change.array", function () {
             changeHandler._changes[next].fullChain = this.fullChain;
         }
         
+        //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
         enumerateArr(this.woBag.watchedArray.complexCallbacks, function(item) {
             if (item.firstChange === this.change)
                 delete item.firstChange;
@@ -46,6 +47,7 @@ Class("wipeout.change.array", function () {
             this.woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(this.array);
             
             var val;
+            //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
             enumerateArr(this.woBag.watchedArray.simpleCallbacks, function(item) {
                 val = addedRemoved.value(item) || defaultVal;
                 item(val.removedValues, val.addedValues, val.moved);

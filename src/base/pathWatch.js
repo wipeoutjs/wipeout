@@ -2,7 +2,6 @@
 
 Class("wipeout.base.pathWatch", function () {
     
-    var arrayMatch = /\[\s*\d\s*\]$/g;
     var pathWatch = wipeout.base.watched.extend(function pathWatch (forObject, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
         ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
         ///<param name="forObject" type="wipeout.base.watched" optional="false">The object to watch</param>
@@ -21,17 +20,7 @@ Class("wipeout.base.pathWatch", function () {
         this.evaluateOnEachChange = evaluateOnEachChange;
         this.evaluateIfValueHasNotChanged = evaluateIfValueHasNotChanged;
         
-        this.path = property.split(".");
-        for (var i = 0; i < this.path.length; i++) {
-            this.path[i] = wipeout.utils.obj.trim(this.path[i]);
-            var match = this.path[i].match(arrayMatch);
-            if (match) {
-                this.path[i] = wipeout.utils.obj.trim(this.path[i].replace(arrayMatch, ""));
-                
-                for (var j = 0, jj = match.length; j < jj; j++)
-                    this.path.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
-            }
-        }
+        this.path = wipeout.utils.obj.splitPropertyName(property);
         
         this.disposables = new Array(this.path.length);
         this.val = wipeout.utils.obj.getObject(property, forObject);
@@ -41,6 +30,24 @@ Class("wipeout.base.pathWatch", function () {
         
         this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
+    
+    //TODO test
+    pathWatch.prototype.onValueChanged = function (callback, evaluateImmediately) {
+        var dispose = this.observe("val", callback);
+        this.disposables.push(dispose);
+        
+        if (evaluateImmediately) callback(undefined, this.val);
+        
+        return (function () {
+            if (dispose) {
+                var i = this.disposables.indexOf(dispose);
+                if(i !== -1)
+                    this.disposables.splice(i, 1);
+                
+                dispose = null;
+            }
+        }).bind(this);
+    }
     
     pathWatch.prototype.execute = function () {
         
@@ -73,12 +80,8 @@ Class("wipeout.base.pathWatch", function () {
             current = current[this.path[i]];
         }
         
-        var currentIsArray = (function (i) {
-            return (i != null ? current[this.path[i]] : current) instanceof wipeout.base.array;
-        }).bind(this);
-        
         // get the last item in the path subscribing to changes along the way
-        for (; current && i < this.path.length - (currentIsArray(i) ? 0 : 1); i++) {
+        for (; current && i < this.path.length - 1; i++) {
             if (current.observe /*TODO: better way of telling*/ && current[this.path[i]] && i >= begin) {
                 var args = [(function (i) {
                     return function(oldVal, newVal) {
@@ -96,25 +99,22 @@ Class("wipeout.base.pathWatch", function () {
             current = current[this.path[i]];
         }
         
-        // observe the last item in the path
-        if (currentIsArray())
-            this.disposables[i] = current.observe(this.callback, this.context || this.forObject, this.evaluateOnEachChange, this.evaluateIfValueHasNotChanged);
-        else if (current && current.observe /*TODO: better way of telling*/)
-            this.disposables[i] = current.observe(this.path[i], function(oldVal, newVal) {
+        // observe last item in path
+        if (current && current.observe /*TODO: better way of telling*/)
+            this.disposables[i] = current.observe(this.path[i], function (oldVal, newVal) {
                 this.val = newVal;
             }, this);
     };
     
     pathWatch.prototype.dispose = function () {
         for (var i = 0, ii = this.disposables.length; i < ii && this.disposables[i]; i++)
-            if (this.disposables[i])
+            if (this.disposables[i]) {
                 this.disposables[i].dispose();
+                this.disposables[i] = null;
+            }
 
         this.disposables.length = 0;
-        this.disp.dispose();        
-        
-        for (var i in this)
-            delete this[i];
+        this.disp.dispose();
     };
                                       
     return pathWatch;

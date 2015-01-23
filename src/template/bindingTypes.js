@@ -41,15 +41,12 @@ Class("wipeout.template.bindingTypes", function () {
     };
     
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
-        
         var val;
         if (!bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
-
-        var setter = bindingTypes.owts.buildSetter(val);
-        viewModel.observe(name, function (oldVal, newVal) {
-            setter(renderContext, newVal);
-        });
+        
+        name = new Function("viewModel", "return viewModel." + name + ";");
+        viewModel.registerDisposable(new wipeout.base.computed(renderContext, val, name, {viewModel: viewModel}));
     };
     
     //TODO: test

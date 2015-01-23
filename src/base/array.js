@@ -244,13 +244,20 @@ Class("wipeout.base.array", function () {
     
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
+        if (typeof arguments[0] === "string")
+            return observeVal.apply(this, arguments);
+        
         return this.__woBag.watchedArray.observe(callback, context, complexCallback);
     };
     
     array.prototype.dispose = function() {
-        this.__woBag.watchedArray.complexCallbacks.length = 0;
-        this.__woBag.watchedArray.simpleCallbacks.length = 0;
-    }
+        this.__woBag.watchedArray.dispose();
+    };
+    
+    //TODO: test
+    var observeVal = wipeout.base.watched.createObserveFunction();
+    array.prototype.watch = wipeout.base.watched.createWatchFunction(null, null, true);
+    array.prototype.del = wipeout.base.watched.deleteFunction;
     
     return array;
 });

@@ -5,15 +5,14 @@ Class("wipeout.base.computed", function () {
     var GET_ARGUMENT_NAMES = /([^\s,]+)/g;
     var STRIP_INLINE_COMMENTS = /\/\/.*$/mg;  
     var STRIP_BLOCK_COMMENTS = /\/\*[\s\S]*?\*\//mg;
-    var GET_ITEMS = "(\\s*\\.\\s*([a-zA-Z_\\$]([\\w\\$]*)))+";
+    var GET_ITEMS = "((\\s*\\.\\s*([\\w\\$]*))|(\\[\\s*\\d\\s*\\]))+";
+    
+    var previousValPlaceholder = {};
     
     // monitor a function and change the value of a "watched" when it changes
     function computed(context, name, callback, watchVariables, callbackStringOverride) {
         
         //TODO: if can watch
-        
-        if (name.indexOf(".") !== -1)
-            throw "Computed variables cannot contain the \".\" character."
         
         this.arguments = [];
         this.disposables = [];        
@@ -21,6 +20,7 @@ Class("wipeout.base.computed", function () {
         this.callbackFunction = callback;
         this.context = context;
         this.name = name;
+        this.previousVal = previousValPlaceholder;
                 
         // get all argument names
         var args = this.callback.slice(
@@ -41,7 +41,7 @@ Class("wipeout.base.computed", function () {
         // checking that all args have been set
         enumerateArr(args, function(arg) {
             if (arg !== completeArg)
-                throw "Argument \"" + arg + "\" must be added as a watch variable. If you are using a custom parser, the arguments must be as follows: (value, propertyName, renderContext)";
+                throw "Argument \"" + arg + "\" must be added as a watch variable.";
         });
         
         this.execute();
@@ -56,9 +56,12 @@ Class("wipeout.base.computed", function () {
     };
         
     computed.prototype.execute = function() {
-        var val = this.callbackFunction.apply(this.context, this.arguments);
-        if (val === this.context[this.name])
+        var newVal = this.callbackFunction.apply(this.context, this.arguments);
+        var existingVal = wipeout.utils.obj.getObject(this.name, this.context);
+        if (newVal === existingVal || (newVal instanceof wipeout.base.array && newVal === this.previousVal))
             return;
+        
+        this.previousVal = newVal;
         
         if (this.arrayDisposeCallback) {
             this.arrayDisposeCallback.dispose();
@@ -66,10 +69,10 @@ Class("wipeout.base.computed", function () {
         }            
         
         // do not treat xml templates like Arrays
-        if (!(val instanceof Array) || !(this.context[this.name] instanceof Array) || val instanceof wipeout.template.templateElementBase || this.context[this.name] instanceof wipeout.template.templateElementBase) {
-            this.context[this.name] = val;
-        } else if (val instanceof wipeout.base.array) {
-            this.arrayDisposeCallback = val.bind(this.context[this.name]);
+        if (!(newVal instanceof Array) || !(existingVal instanceof Array) || newVal instanceof wipeout.template.templateElementBase || existingVal instanceof wipeout.template.templateElementBase) {
+            wipeout.utils.obj.setObject(this.name, this.context, newVal);
+        } else if (newVal instanceof wipeout.base.array) {                                        
+            this.arrayDisposeCallback = newVal.bind(existingVal);
         } else {
             wipeout.base.array.copyAll(this.context[this.name]);
         }
@@ -111,11 +114,15 @@ Class("wipeout.base.computed", function () {
         var match, found = [], regex = new RegExp(variableName + GET_ITEMS, "g"), matches = this.callback.match(regex);
         
         // find all instances of the variableName
+        var tmp1 = [], tmp2;
         while ((match = regex.exec(this.callback)) !== null) {
-            found.push({
-                value: match[0],
-                index: regex.lastIndex - match[0].length
-            });
+            if (tmp1.indexOf(tmp2 = trim(match[0])) === -1) {
+                tmp1.push(tmp2);
+                found.push({
+                    value: match[0],
+                    index: regex.lastIndex - match[0].length
+                });
+            }
         }
 
         enumerateArr(found, function (item) {
@@ -135,20 +142,40 @@ Class("wipeout.base.computed", function () {
                 }
             }
             
-            // find the first observable
-            var current = variable, path = item.value.substr(item.value.indexOf(".") + 1).split(".");
-            while (current && path.length > 1 && !current.observe /*TODO: better way of doing this*/) {
-                current = current[path[0]];
-                path.splice(0, 1);
-            }
+            tmp1 = wipeout.utils.obj.splitPropertyName(item.value);
+            var path = new wipeout.base.pathWatch(
+                    variable, 
+                    wipeout.utils.obj.joinPropertyName(tmp1.slice(1)),
+                    this.throttleExecution, this);
             
-            if (path.length && current && current.observe /*TODO: better way of doing this*/) {
-                // when path item changes, execute
-                this.disposables.push(
-                    current.observe(path.join("."), this.execute, this));
-            }
+            this.disposables.push(path);
+            
+            var dispose;
+            var te = this.throttleExecution.bind(this);
+            this.disposables.push({
+                dispose: path.onValueChanged(function(oldVal, newVal) {
+                    if (dispose) {
+                        dispose.dispose();
+                        dispose = null;
+                    }
+
+                    if (newVal instanceof wipeout.base.array)
+                        dispose = newVal.observe(te);
+                }, true)
+            });
         }, this);
     };    
+    
+    computed.prototype.throttleExecution = function() {
+        if (this.__executePending)
+            return;
+        
+        this.__executePending = true;
+        setTimeout((function () {
+            this.__executePending = false;
+            this.execute();
+        }).bind(this));
+    };
     
     computed.prototype.dispose = function() {
         enumerateArr(this.disposables, function(dispose) {

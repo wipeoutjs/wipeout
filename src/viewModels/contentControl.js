@@ -5,10 +5,10 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<summary>Expands on visual and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
-        this._super(templateId || wipeout.viewModels.visual.getBlankTemplateId(), model);
+        this._super(templateId, model);
 
         ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
-        this.template = "";
+        //this.template = "";
         
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "template");
     });  
@@ -89,7 +89,7 @@ Class("wipeout.viewModels.contentControl", function () {
     };
     
     boundTemplate.prototype.refreshTemplate = function(templateId) {
-        this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
+        this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId || wipeout.viewModels.visual.getBlankTemplateId(), (function (template) {
             this.pendingLoad = null;                
             this.setTemplate = this.owner[this.templateProperty] = template;
         }).bind(this)); 

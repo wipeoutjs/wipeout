@@ -141,17 +141,23 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
         
-        enumerateObj(this.setters, function (setter, name) {
-            
-            // use binding type, globally defined binding type or default binding type
-            var bt = setter.bindingType || 
-                (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
-                "ow";
-            
-            wipeout.template.bindingTypes[bt](viewModel, setter, name, renderContext);
-        });
+        this.set(viewModel, renderContext, this.setters["model"], "model");
+        
+        enumerateObj(this.setters, function (setter, name) {            
+            if (name === "model") return;
+            this.set(viewModel, renderContext, setter, name);
+        }, this);
         
         return viewModel;
+    };
+    
+    compiledInitializer.prototype.set = function (viewModel, renderContext, setter, name) {
+        // use binding type, globally defined binding type or default binding type
+        var bt = setter.bindingType || 
+            (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
+            "ow";
+
+        wipeout.template.bindingTypes[bt](viewModel, setter, name, renderContext);
     };
     
     compiledInitializer.getAutoParser = function (value) {
@@ -199,7 +205,7 @@ Class("wipeout.template.compiledInitializer", function () {
         "set": function (value, propertyName, renderContext) {
             return value;
         },*/        
-        "template": function (value, propertyName, renderContext) {
+        "template": function (value) {
             return value;
         },
         "viewModelId": function (value, propertyName, renderContext) {

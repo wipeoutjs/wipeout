@@ -10,15 +10,17 @@ Class("wipeout.change.objectObserveArrayHandler", function () {
         this.registeredChanges = [];
         this.extraCallbacks = 0;
 
-        Array.observe(this, (function(changes) {
+        this.__subscription = (function(changes) {
             if (this.extraCallbacks) return;
             this.registeredChanges.length = 0;
 
             enumerateArr(changes, function(change) {
                 if (wipeout.change.arrayHandler.isValidArrayChange(change))
-                    this.registerChange(forArray, change, forArray.__woBag);
+                    this.registerChange(change);
             }, this)
-        }).bind(this));
+        }).bind(this);
+        
+        Array.observe(forArray, this.__subscription);
     });
     
     objectObserveArrayHandler.prototype.registerChange = function (change) {
@@ -68,6 +70,16 @@ Class("wipeout.change.objectObserveArrayHandler", function () {
             _this = null;
         };
     };
+    
+    objectObserveArrayHandler.prototype.dispose = function() {
+        
+        this._super();
+        
+        if (this.__subscription) {
+            Array.unobserve(this.forArray, this.__subscription);
+            delete this.__subscription;
+        }
+    }
     
     return objectObserveArrayHandler;
 });

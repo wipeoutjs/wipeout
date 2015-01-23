@@ -57,5 +57,10 @@ Class("wipeout.change.arrayHandler", function () {
         };
     };
     
+    arrayHandler.prototype.dispose = function() {        
+        this.__woBag.watchedArray.complexCallbacks.length = 0;
+        this.__woBag.watchedArray.simpleCallbacks.length = 0;
+    }
+    
     return arrayHandler;
 });

@@ -63,7 +63,7 @@ testUtils.testWithUtils("observe", "path, array element changed, has array", fal
     subject.aa.bb.replace(1, { cc: 22 });        
 });
 
-
+/* not valid casse right now
 testUtils.testWithUtils("observe", "path, last element is array", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = wo.watch();
@@ -82,7 +82,7 @@ testUtils.testWithUtils("observe", "path, last element is array", false, functio
     // act
     stop();
     subject.aa.bb.push(55);
-});
+}); */
 
 
 testUtils.testWithUtils("observe", "path, last element changed, has non observable in path", false, function(methods, classes, subject, invoker) {
