@@ -69,8 +69,9 @@ Class("wipeout.template.renderedContent", function () {
         if (array instanceof wipeout.base.array) {
             arrayObserve = array.observe(function (removed, added, indexes) {
                 
+                removed = [];
                 enumerateArr(indexes.removed, function (rem) {
-                    remove(children[rem.index]);
+                    removed.push(children[rem.index]);
                 });
                 
                 var moved = {};
@@ -80,13 +81,17 @@ Class("wipeout.template.renderedContent", function () {
                     if (item.to >= children.length - 1)
                         children[item.from].appendTo(this.openingTag);
                     else
-                        children[item.from].move(children[item.to + 1].openingTag);
+                        children[item.from].move(children[item.to].openingTag);
                         
                     children[item.to] = moved[item.from] || children[item.from];
                 });
                 
                 enumerateArr(indexes.added, function (added) {
                     children[added.index] = create(added.value, added.index);
+                });
+                
+                enumerateArr(removed, function (rem) {
+                    remove(rem);
                 });
                 
                 children.length = array.length;
