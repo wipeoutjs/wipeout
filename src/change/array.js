@@ -124,7 +124,7 @@ Class("wipeout.change.array", function () {
         }
         
          //TODO: only if moved is needed
-        defaultOutput.moved = this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues);
+        defaultOutput.moved = this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array);
         
         return output;
     }
@@ -140,9 +140,7 @@ Class("wipeout.change.array", function () {
             addedIndexes = [],      // indexes of added items. Corresponds to this.added
             removedIndexes = [],    // indexes of removed items. Corresponds to this.removed
             moved = [];             // moved items
-        
-        oldArray = oldArray || this.woBag.watchedArray.arrayCopy;
-        
+                
         // populate addedIndexes and movedTo
         var added = wipeout.utils.obj.copyArray(addedValues);
         enumerateArr(this.array, function(item, i) {
