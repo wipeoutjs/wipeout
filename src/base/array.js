@@ -254,10 +254,11 @@ Class("wipeout.base.array", function () {
         this.__woBag.watchedArray.dispose();
     };
     
+    /*
     //TODO: test
     var observeVal = wipeout.base.watched.createObserveFunction();
     array.prototype.watch = wipeout.base.watched.createWatchFunction(null, null, true);
-    array.prototype.del = wipeout.base.watched.deleteFunction;
+    array.prototype.del = wipeout.base.watched.deleteFunction;*/
     
     return array;
 });

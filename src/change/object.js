@@ -1,21 +1,26 @@
 
 Class("wipeout.change.object", function () {
     
-    function object(object, property, oldVal, newVal, woBag, originalVal) {
-        this.object = object;
-        this.property = property;
-        this.oldVal = oldVal;
-        this.newVal = newVal;
-        this.woBag = woBag;
-        this.originalVal = originalVal;
+    function object(change, objectHandler) {
+        this.change = change;
+        this.objectHandler = objectHandler;
+        
+        this.oldVal = change.oldValue;
+        this.originalVal = this.oldVal;
+        this.newVal = change.object[change.name];
     }
     
     object.prototype.go = function(changeHandler) {
-        var next = changeHandler.lastIndexOf(this.object, this.property);
+        var next = changeHandler.lastIndexOf(this.change.object, this.change.name);
         if(next !== -1)
             changeHandler._changes[next].originalVal = this.originalVal || this.oldVal;
 
-        enumerateArr(this.woBag.watched.callbacks[this.property], function(callback) {
+        enumerateArr(this.objectHandler.callbacks[this.change.name], function(callback) {
+            if (callback.firstChange === this.change)
+                delete callback.firstChange;
+            else if (callback.firstChange)
+                return;
+            
             if (callback.evaluateOnEachChange)
                 callback(this.oldVal, this.newVal);
             else if (next === -1)

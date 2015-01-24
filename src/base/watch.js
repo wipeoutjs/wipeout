@@ -14,9 +14,11 @@ Class("wipeout.base.watch", function () {
         if (watch.canWatch(object))
             return object;
                 
-        var woBag = new wipeout.base.watched().__woBag;
-        var _watch = wipeout.base.watched.createWatchFunction(woBag, {});
-        var observe = wipeout.base.watched.createObserveFunction(woBag, _watch);
+        var handler = wipeout.base.watched.useObjectObserve ? 
+                new wipeout.change.objectObserveObjectHandler(object) :
+                new wipeout.change.nonObjectObserveObjectHandler(object, false);
+        
+        var observe = wipeout.base.watched.createObserveFunction(handler);
         observe.__token = observeToken;
         
         Object.defineProperty(object, "observe", {
@@ -29,14 +31,14 @@ Class("wipeout.base.watch", function () {
         Object.defineProperty(object, "del", {
             enumerable: false,
             configurable: false,
-            value: wipeout.base.watched.deleteFunction,
+            value: wipeout.base.watched.prototype.del,
             writable: false
         });
         
         Object.defineProperty(object, "computed", {
             enumerable: false,
             configurable: false,
-            value: wipeout.base.watched.computedFunction,
+            value: wipeout.base.watched.prototype.computed,
             writable: false
         });
         

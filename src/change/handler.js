@@ -71,10 +71,15 @@ Class("wipeout.change.handler", function () {
         return -1;
     };
     
-    handler.prototype.pushObj = function(object, property, woBag, oldVal, newVal) {
-        this._objects.push(object);
-        this._properties.push(property);
-        this._changes.push(new wipeout.change.object(object, property, oldVal, newVal, woBag));
+    //handler.prototype.pushObj = function(object, property, woBag, oldVal, newVal, change) {
+    handler.prototype.pushObj = function(change, objectHandler) {
+        var i = this.lastIndexOf(change.object, change.name);
+        if(i !== -1)
+            this._changes[i].newVal = change.oldValue; //TODO, investigate and comment
+        
+        this._objects.push(change.object);
+        this._properties.push(change.name);
+        this._changes.push(new wipeout.change.object(change, objectHandler));
         
         setTimeout(this.go.bind(this));
     };

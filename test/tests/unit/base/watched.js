@@ -29,6 +29,24 @@ function testMe (moduleName, buildSubject) {
         stop();
     });
 
+    testUtils.testWithUtils("observe", "ensure changes before subscribe are not observed", false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.observe("dummy", function() {});    // invoke watch function
+        
+        subject.val = "aaa";
+        subject.observe("val", function(oldVal, newVal) {
+            strictEqual(oldVal, "aaa");
+            strictEqual(newVal, "bbb");
+            start();
+        }, null, true);
+
+        // act
+        subject.val = "bbb";
+
+        stop();
+    });
+
 
     testUtils.testWithUtils("observe", "2 properties", false, function(methods, classes, subject, invoker) {
         // arrange
