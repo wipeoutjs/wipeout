@@ -33,7 +33,7 @@ Class("wipeout.change.objectObserveArrayHandler", function () {
             this.pendingOOSubscriptions.length = 0;
         }
 
-        wipeout.change.handler.instance.pushArray(this.forArray, change, this.forArray.__woBag);
+        this._super(change);
     };
     
     objectObserveArrayHandler.prototype._observe = function (callback, callbackList) {

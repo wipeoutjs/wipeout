@@ -268,11 +268,15 @@ Class("wipeout.base.array", function () {
     
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
-        if (typeof arguments[0] === "string")
-            return observeVal.apply(this, arguments);
+        if (typeof arguments[0] === "string") //TODO: test
+            return wipeout.base.watched.prototype.observe.apply(this, arguments);
         
         return this.__woBag.watchedArray.observe(callback, context, complexCallback);
     };
+    
+    //TODO: test
+    array.prototype.del = wipeout.base.watched.del;
+    array.prototype.computed = wipeout.base.watched.computed;
     
     array.prototype.dispose = function() {
         this.__woBag.watchedArray.dispose();

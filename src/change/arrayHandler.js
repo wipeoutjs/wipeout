@@ -24,7 +24,7 @@ Class("wipeout.change.arrayHandler", function () {
     
     arrayHandler.prototype.registerChange = function (change) {
 
-        wipeout.change.handler.instance.pushArray(this.forArray, change, this.forArray.__woBag);
+        wipeout.change.handler.instance.pushArray(this.forArray, change, this);
     };
     
     arrayHandler.prototype._observe = function (callback, callbackList, disposed) {

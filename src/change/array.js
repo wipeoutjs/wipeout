@@ -1,10 +1,10 @@
 
 Class("wipeout.change.array", function () {
         
-    function array(array, change, woBag) {
+    function array(array, change, changeHandler) {
         this.array = array;
         this.change = change;
-        this.woBag = woBag;
+        this.changeHandler = changeHandler;
         
         this.fullChain = [];
         if (this.change.type === "splice" || !isNaN(parseInt(this.change.name))) {
@@ -29,7 +29,7 @@ Class("wipeout.change.array", function () {
         }
         
         //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(this.woBag.watchedArray.complexCallbacks, function(item) {
+        enumerateArr(this.changeHandler.complexCallbacks, function(item) {
             if (item.firstChange === this.change)
                 delete item.firstChange;
             
@@ -43,12 +43,12 @@ Class("wipeout.change.array", function () {
             var addedRemoved = this.getAddedAndRemoved();
             var defaultVal = addedRemoved.value(null);
             
-            // reset woBag.watchedArray.arrayCopy
-            this.woBag.watchedArray.arrayCopy = wipeout.utils.obj.copyArray(this.array);
+            // reset changeHandler.arrayCopy
+            this.changeHandler.arrayCopy = wipeout.utils.obj.copyArray(this.array);
             
             var val;
             //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-            enumerateArr(this.woBag.watchedArray.simpleCallbacks, function(item) {
+            enumerateArr(this.changeHandler.simpleCallbacks, function(item) {
                 val = addedRemoved.value(item) || defaultVal;
                 item(val.removedValues, val.addedValues, val.moved);
             }, this);            
@@ -62,7 +62,7 @@ Class("wipeout.change.array", function () {
         
         // add references to any callbacks which were added later
         var specialCallbacks = new wipeout.utils.dictionary();
-        enumerateArr(this.woBag.watchedArray.simpleCallbacks, function (callback) {
+        enumerateArr(this.changeHandler.simpleCallbacks, function (callback) {
             if (callback.firstChange)
                 specialCallbacks.add(callback.firstChange, callback);
         });                

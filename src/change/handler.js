@@ -84,10 +84,10 @@ Class("wipeout.change.handler", function () {
         setTimeout(this.go.bind(this));
     };
     
-    handler.prototype.pushArray = function(array, change, woBag) {
+    handler.prototype.pushArray = function(array, change, arrayHandler) {
         this._objects.push(array);
         this._properties.push(wipeout.change.array.arrayChangeProperty);
-        this._changes.push(new wipeout.change.array(array, change, woBag));
+        this._changes.push(new wipeout.change.array(array, change, arrayHandler));
         
         setTimeout(this.go.bind(this));
     };
