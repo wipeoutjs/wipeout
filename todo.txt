@@ -1,5 +1,8 @@
-click next, person only added to second array
-also, id total is not updating
+
+dispose frameworks
+
+
+
 
 
 do not use computeds in bindings.
