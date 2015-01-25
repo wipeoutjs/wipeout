@@ -12,7 +12,9 @@ function testMe (moduleName, buildSubject) {
         }
     });
 
+    
     testUtils.testWithUtils("observe", "multiple changes, 1 registration", false, function(methods, classes, subject, invoker) {
+        
         // arrange
         var subject = buildSubject();
         subject.val = "aaa";
@@ -30,23 +32,23 @@ function testMe (moduleName, buildSubject) {
     });
 
     testUtils.testWithUtils("observe", "ensure changes before subscribe are not observed", false, function(methods, classes, subject, invoker) {
+        
         // arrange
         var subject = buildSubject();
         subject.observe("dummy", function() {});    // invoke watch function
         
-        subject.val = "aaa";
+        subject.val = "xxx";
         subject.observe("val", function(oldVal, newVal) {
-            strictEqual(oldVal, "aaa");
-            strictEqual(newVal, "bbb");
+            strictEqual(oldVal, "xxx");
+            strictEqual(newVal, "yyy");
             start();
         }, null, true);
 
         // act
-        subject.val = "bbb";
+        subject.val = "yyy";
 
         stop();
     });
-
 
     testUtils.testWithUtils("observe", "2 properties", false, function(methods, classes, subject, invoker) {
         // arrange
@@ -155,7 +157,7 @@ function testMe (moduleName, buildSubject) {
         subject.aa.bb.cc = 22;
         ok(disp instanceof wipeout.base.pathWatch);
     });
-
+    
     testUtils.testWithUtils("observeArray", "reverse", false, function(methods, classes, subject, invoker) {
         // arrange
         var subject = buildSubject();

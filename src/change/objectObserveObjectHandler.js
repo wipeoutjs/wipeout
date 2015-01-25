@@ -35,7 +35,7 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
             callbackList.push(callback);
             sortCallback();
             
-            enumerateArr(changes, function(change) {                
+            enumerateArr(changes, function(change) {       
                 if (!callback.firstChange && change.name === property)
                     callback.firstChange = change;
                 

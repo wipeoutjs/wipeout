@@ -24,15 +24,13 @@ Class("wipeout.change.objectHandler", function () {
         var suspended = 0;
         var callbacks = this.callbacks[property] || (this.callbacks[property] = []);
         
-        if (!this.callbacks[property])
-            this.callbacks[property] = [];
-        
         context = context || this;
         var cb = function (oldVal, newVal) {
             if ((evaluateIfValueHasNotChanged || oldVal !== newVal) && !suspended)
                 callback.apply(context, arguments);
         }
         
+        cb.property = property;
         cb.priority = priority || 0;
         cb.evaluateOnEachChange = !!evaluateOnEachChange;
         
