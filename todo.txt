@@ -1,5 +1,5 @@
 
-dispose frameworks
+dispose frameworks (including in wo.watch(...))
 
 
 
