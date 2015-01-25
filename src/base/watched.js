@@ -29,7 +29,7 @@ Class("wipeout.base.watched", function () {
     
     watched.prototype.observe = watched.createObserveFunction();
     
-    /*watched.prototype.observeArray = function (property, callback, context, complexCallback) {
+    watched.prototype.observeArray = function (property, callback, context, complexCallback) {
         var disposeOfArray;
         var dispose = this.observe(property, function(oldVal, newVal) {
             if (disposeOfArray)
@@ -51,7 +51,7 @@ Class("wipeout.base.watched", function () {
                 dispose.dispose();
             }
         };
-    };*/
+    };
     
     watched.prototype.del = function(property) {
         ///<summary>Do "delete obj.prop" functionality</summary>

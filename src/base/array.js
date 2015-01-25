@@ -213,6 +213,31 @@ Class("wipeout.base.array", function () {
         });
     };
 
+    //TODO: test
+    array.prototype.reverse = function(item) {
+
+        if (!useObjectObserve) {
+            var half = this.length / 2;
+            half = half % 1 === 0 ? -1 : half - 0.5;
+            
+            for (var i = 0, ii = this.length; i < ii; i++) {
+                if (i === half)
+                    continue;
+            
+                this.__woBag.watchedArray.registerChange({
+                    name: i.toString(),
+                    object: this,
+                    oldValue: this[i],
+                    type: "update"
+                });
+            }
+        }
+        
+        return this.alteringLength(function() {
+            return Array.prototype.reverse.call(this);
+        });
+    };
+
     array.prototype.splice = function(index, removeCount, addItems) {
         if (!useObjectObserve) {
             var removed = [];
@@ -239,7 +264,6 @@ Class("wipeout.base.array", function () {
     //TODO
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
     
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {

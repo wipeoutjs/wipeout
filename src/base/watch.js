@@ -35,6 +35,13 @@ Class("wipeout.base.watch", function () {
             writable: false
         });
         
+        Object.defineProperty(object, "observeArray", {
+            enumerable: false,
+            configurable: false,
+            value: wipeout.base.watched.prototype.observeArray,
+            writable: false
+        });
+        
         Object.defineProperty(object, "computed", {
             enumerable: false,
             configurable: false,
