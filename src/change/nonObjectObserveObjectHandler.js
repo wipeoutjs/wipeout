@@ -16,7 +16,7 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
     nonObjectObserveObjectHandler.prototype.registerChange = function (change) {
         
         for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--)
-            if (change.property === this.pendingOOSubscriptions[i].property || 
+            if (change.name === this.pendingOOSubscriptions[i].property || 
                 (this.pendingOOSubscriptions[i].property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))
                 this.pendingOOSubscriptions.splice(i, 1)[0].firstChange = change;
 

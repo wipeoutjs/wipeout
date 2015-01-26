@@ -31,6 +31,24 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
+testUtils.testWithUtils("observe", "property change", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+    subject.val = 22;
+    
+    subject.observe("val", function(oldVal, newVal) {
+        strictEqual(oldVal, 22);
+        strictEqual(newVal, 33);
+        
+        start();
+    });
+
+    // act
+    subject.val = 33;;
+
+    stop();
+});
+
 testUtils.testWithUtils("observe", "ensure changes before observe are not noticed. Simple", false, function(methods, classes, subject, invoker) {
     
     // arrange
