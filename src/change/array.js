@@ -50,8 +50,14 @@ Class("wipeout.change.array", function () {
             var val;
             //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
             enumerateArr(callbacks.simpleCallbacks, function(item) {
-                val = addedRemoved.value(item) || defaultVal;
-                item(val.removedValues, val.addedValues, val.moved);
+                val = addedRemoved.value(item);
+                if (val)
+                    delete item.firstChange;
+                else
+                    val = defaultVal;
+                
+                if (!item.firstChange)
+                    item(val.removedValues, val.addedValues, val.moved);
             }, this);            
         }
 
@@ -60,14 +66,7 @@ Class("wipeout.change.array", function () {
     
     //TODO: can I add merge this with processMovedItems with performance gains?
     array.prototype.getAddedAndRemoved = function () {
-        
-        // add references to any callbacks which were added later
-        var specialCallbacks = new wipeout.utils.dictionary();
-        enumerateArr(this.changeHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty].simpleCallbacks, function (callback) {
-            if (callback.firstChange)
-                specialCallbacks.add(callback.firstChange, callback);
-        });                
-        
+                
         var defaultOutput = {
             removedValues: [],
             addedValues: []
@@ -77,6 +76,19 @@ Class("wipeout.change.array", function () {
         output.add(null, defaultOutput);
         
         var array = wipeout.utils.obj.copyArray(this.array), tmp, tmp2, change;
+        
+        // add references to any callbacks which were added later
+        var specialCallbacks = new wipeout.utils.dictionary();
+        enumerateArr(this.changeHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty].simpleCallbacks, function (callback) {
+            if (callback.firstChange) {
+                tmp = specialCallbacks.value(callback.firstChange);
+                if (!tmp)
+                    specialCallbacks.add(callback.firstChange, tmp = []);
+                
+                tmp.push(callback);
+            }
+        });
+        
         for (var i = this.fullChain.length - 1; i >= 0; i--) {
             change = this.fullChain[i];
             
@@ -115,12 +127,14 @@ Class("wipeout.change.array", function () {
             array.splice.apply(array, args);
             
             // calculate added/removed/moved for any callbacks which were added later
-            if (tmp = specialCallbacks.value(this.fullChain[i])) { // do not use "change" variable, it may have changed                
-                output.add(tmp, {
-                    removedValues: wipeout.utils.obj.copyArray(defaultOutput.removedValues),
-                    addedValues: wipeout.utils.obj.copyArray(defaultOutput.addedValues),
-                    moved: this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array) // TODO, only if moved is needed
-                });
+            if (tmp = specialCallbacks.value(this.fullChain[i])) { // do not use "change" variable, it may have changed   
+                enumerateArr(tmp, function (val) {
+                    output.add(val, {
+                        removedValues: wipeout.utils.obj.copyArray(defaultOutput.removedValues),
+                        addedValues: wipeout.utils.obj.copyArray(defaultOutput.addedValues),
+                        moved: this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array) // TODO, only if moved is needed
+                    });
+                }, this);
             }            
         }
         

@@ -54,6 +54,8 @@ Class("wipeout.change.objectHandler", function () {
                 callback.apply(context, arguments);
         };
         
+        cb.property = arrayIndexProperty;
+        
         var output = this.observe(arrayIndexProperty, cb, callbacks);
         return output;
     };

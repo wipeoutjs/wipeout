@@ -217,6 +217,7 @@ Class("wipeout.base.array", function () {
     array.prototype.reverse = function(item) {
 
         if (!useObjectObserve) {
+                
             var half = this.length / 2;
             half = half % 1 === 0 ? -1 : half - 0.5;
             

@@ -15,15 +15,11 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
     
     nonObjectObserveObjectHandler.prototype.registerChange = function (change) {
         
-        for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--) {
-            if (change.property === this.pendingOOSubscriptions[i].property) {
-                this.pendingOOSubscriptions[i].firstChange = change;
-                this.pendingOOSubscriptions[i].splice(i, 1);
-            }
-        }
+        for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--)
+            if (change.property === this.pendingOOSubscriptions[i].property || 
+                (this.pendingOOSubscriptions[i].property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))
+                this.pendingOOSubscriptions.splice(i, 1)[0].firstChange = change;
 
-        this.pendingOOSubscriptions.length = 0;
-        
         this._super(change);
     };
     
@@ -32,8 +28,10 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
     var watchPrefix = "__wo-watch-";  
     nonObjectObserveObjectHandler.prototype._observe = function (property, callback, callbackList, sortCallback) {
         
-        this.watch(property);
+        if (property !== wipeout.change.objectHandler.arrayIndexProperty)
+            this.watch(property);
         
+        callback.firstChange = true;
         this.pendingOOSubscriptions.push(callback);        
         callbackList.push(callback);
         sortCallback();        
@@ -63,12 +61,12 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
             return undefined;
         }).bind(this);
         Object.defineProperty(this.usePrototypeAndWoBag ? Object.getPrototypeOf(this.forObject) : this.forObject, property, {
-            get: function() {
+            get: function() {   //TODO: make this method static
 
                 var handler = getHandler(this);
                 return handler ? handler.oldValues[property] : undefined;
             },
-            set: function (value) {
+            set: function (value) { //TODO: make this method static
                 var _this = getHandler(this);
                 if (!_this) //TODO
                     throw "Invalid object. The object has not been constructoed correctly";
@@ -111,8 +109,12 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         
         for (var i in this.definitionDisposals) {
             this.definitionDisposals.dispose();
-            delete this.definitionDisposals[i];
         }
+        
+        for (var i in this.oldValues)
+            delete this.oldValues;
+            
+        this.pendingOOSubscriptions.length = 0;
     }
     
     return nonObjectObserveObjectHandler;

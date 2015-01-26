@@ -31,7 +31,28 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
-testUtils.testWithUtils("observe", "ensure changes before observe are not noticed", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("observe", "ensure changes before observe are not noticed. Simple", false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var subject = new wipeout.base.array(["aa","bb","cc"]);
+    
+    // act
+    subject.reverse();
+    
+    // assert
+    subject.observe(function() {
+        ok(false);
+    });
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        ok(true);
+        start();
+    }, true);
+    
+    stop();
+});
+
+testUtils.testWithUtils("observe", "ensure changes before observe are not noticed. Complex", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();
     subject.push(55);
@@ -58,10 +79,7 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
         ok(count1 < 2);
         count1++;
         
-        if (count1 == 1)
-            strictEqual(change.index, 1);
-        else
-            strictEqual(change.index, 2);
+        strictEqual(change.index, count1);
         
         start();
     }, null, true);
@@ -557,8 +575,9 @@ testUtils.testWithUtils("bind", "with adds on pending queue", false, function(me
 });
 
 testUtils.testWithUtils("bind", "with moves on pending queue", false, function(methods, classes, subject, invoker) {
+    
     // arrange
-    var subject = new wipeout.base.array([1,2,3]);
+    var subject = new wipeout.base.array(["aa","bb","cc"]);
     subject.reverse();
 
     var another = [];
