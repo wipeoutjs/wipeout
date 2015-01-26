@@ -1,6 +1,7 @@
 
 Class("wipeout.change.objectHandler", function () {
-            
+
+    var arrayIndexProperty = "$wipeout-array-index-property";
     var objectHandler = wipeout.base.object.extend(function objectHandler (forObject) {
         
         if (this.constructor === objectHandler) throw "Cannot create instance of an abstract class";
@@ -9,24 +10,58 @@ Class("wipeout.change.objectHandler", function () {
         
         this.forObject = forObject;
         this.callbacks = {};
+        
+        if (this.forArray = (forObject instanceof wipeout.base.array)) {
+            callbacks[arrayIndexProperty] = {
+                complexCallbacks: [],
+                simpleCallbacks: []
+            };
+            
+            this.arrayCopy = wipeout.utils.obj.copyArray(forObject);
+        }
     });
     
+    objectHandler.prototype.isValidArrayChange = function (change) {
+        return this.forArray && objectHandler.isValidArrayChange(change);
+    };
+    
+    objectHandler.isValidArrayChange = function (change) {
+        return change.type === "splice" || (change.type === "update" && !isNaN(parseInt(change.name)));
+    };
+    
     objectHandler.prototype.registerChange = function (change) {
-        wipeout.change.handler.instance.pushObj(change, this);
+        
+        if (this.isValidArrayChange(change))
+            wipeout.change.handler.instance.pushArray(this.forObject, change, this); //TODO, first arg is not needed
+        else
+            wipeout.change.handler.instance.pushObj(change, this);
     };
     
     objectHandler.prototype._observe = function (callback, callbackList, sortCallback) {
         throw "Abstract methods must be implemented";
     };
-    
-    objectHandler.prototype.observe = function (property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged, priority) {
         
-        var suspended = 0;
+    objectHandler.prototype.observeArray = function (callback, context, complexCallback /*TODO*/) {
+        
+        var callbacks = complexCallback ? 
+            this.callbacks[arrayIndexProperty].complexCallbacks : 
+            this.callbacks[arrayIndexProperty].simpleCallbacks;
+        
+        var cb = function () {
+            if (!output.suspended)
+                callback.apply(context, arguments);
+        };
+        
+        var output = this.observe(arrayIndexProperty, cb, callbacks);
+        return output;
+    };
+    
+    objectHandler.prototype.observeObject = function (property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged, priority) {
+        
         var callbacks = this.callbacks[property] || (this.callbacks[property] = []);
         
-        context = context || this;
         var cb = function (oldVal, newVal) {
-            if ((evaluateIfValueHasNotChanged || oldVal !== newVal) && !suspended)
+            if ((evaluateIfValueHasNotChanged || oldVal !== newVal) && !output.suspended)
                 callback.apply(context, arguments);
         }
         
@@ -34,30 +69,37 @@ Class("wipeout.change.objectHandler", function () {
         cb.priority = priority || 0;
         cb.evaluateOnEachChange = !!evaluateOnEachChange;
         
-        var cancel = this._observe(property, cb, callbacks, function () { callbacks.sort(function (a, b) { return a.priority > b.priority  }) });
+        var output = this.observe(property, cb, callbacks);
+        return output;
+    };
+    
+    objectHandler.prototype.observe = function (property, callback, callbackArray) {
+                
+        var cancel = this._observe(property, callback, callbackArray, function () { callbackArray.sort(function (a, b) { return a.priority > b.priority  }) });
         
         var output = {
+            suspended: 0,
             dispose: function () {
-                if(!callbacks) return;
+                if(!callbackArray) return;
                                 
                 cancel();
                 
-                var i = callbacks.indexOf(cb);
+                var i = callbackArray.indexOf(callback);
                 if (i !== -1)
-                    callbacks.splice(i, 1);
+                    callbackArray.splice(i, 1);
                 
-                callbacks = null;
+                callbackArray = null;
             },
             suspend: function (callback) {
                 //TODO document this
                 if (callback === false) {
                     var dispose = this.observe(property, function () {
                         dispose.dispose();
-                        suspended++;
+                        output.suspended++;
                     }, null, null, Number.MIN_VALUE);
                 } else if (!arguments.length || callback.constructor !== Function) {
-                    if (suspended > 0)
-                        suspended--;
+                    if (output.suspended > 0)
+                        output.suspended--;
                 } else {
                     try {
                         output.suspend();

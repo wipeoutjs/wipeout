@@ -23,7 +23,7 @@ Class("wipeout.base.watched", function () {
             if (property.indexOf(".") !== -1)
                 return new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
 
-            return oh.observe.apply(oh, arguments);
+            return oh.observeObject.apply(oh, arguments);
         };
     };
     
