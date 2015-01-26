@@ -88,18 +88,16 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
 
         if (this.usePrototypeAndWoBag) {
             // modifications to the prototype are permanent
-            return this.definitionDisposals[watchPrefix + property] = {dispose: function(){}};
+            return this.definitionDisposals[watchPrefix + property] = new wipeout.base.disposable;
         } else {
-            return this.definitionDisposals[watchPrefix + property] = {
-                dispose: (function() {
-                    if (delete this.definitionDisposals[watchPrefix + property])
-                        Object.defineProperty(this.forObject, property, {
-                            value: this.forObject[property],
-                            writable: true,
-                            configurable: true
-                        });
-                }).bind(this)
-            };
+            return this.definitionDisposals[watchPrefix + property] = new wipeout.base.disposable((function() {
+                if (delete this.definitionDisposals[watchPrefix + property])
+                    Object.defineProperty(this.forObject, property, {
+                        value: this.forObject[property],
+                        writable: true,
+                        configurable: true
+                    });
+            }).bind(this));
         }
     };
     
@@ -107,9 +105,9 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         
         this._super();
         
-        for (var i in this.definitionDisposals) {
-            this.definitionDisposals.dispose();
-        }
+        if (!this.usePrototypeAndWoBag)
+            for (var i in this.definitionDisposals)
+                this.definitionDisposals[i].dispose();
         
         for (var i in this.oldValues)
             delete this.oldValues;

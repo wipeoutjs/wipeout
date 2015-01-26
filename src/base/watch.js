@@ -38,14 +38,14 @@ Class("wipeout.base.watch", function () {
         Object.defineProperty(object, "observeArray", {
             enumerable: false,
             configurable: false,
-            value: wipeout.base.watched.prototype.observeArray,
+            value: wipeout.base.watched.createObserveArrayFunction(handler),
             writable: false
         });
         
         Object.defineProperty(object, "computed", {
             enumerable: false,
             configurable: false,
-            value: wipeout.base.watched.prototype.computed,
+            value: wipeout.base.watched.createComputedFunction(handler),
             writable: false
         });
         

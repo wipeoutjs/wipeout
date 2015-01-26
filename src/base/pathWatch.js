@@ -28,7 +28,7 @@ Class("wipeout.base.pathWatch", function () {
         this.buildObservableChain();
         this.init = true;
         
-        this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+        this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
     
     //TODO test
@@ -107,6 +107,8 @@ Class("wipeout.base.pathWatch", function () {
     };
     
     pathWatch.prototype.dispose = function () {
+        this._super();
+        
         for (var i = 0, ii = this.disposables.length; i < ii && this.disposables[i]; i++)
             if (this.disposables[i]) {
                 this.disposables[i].dispose();
@@ -114,7 +116,6 @@ Class("wipeout.base.pathWatch", function () {
             }
 
         this.disposables.length = 0;
-        this.disp.dispose();
     };
                                       
     return pathWatch;

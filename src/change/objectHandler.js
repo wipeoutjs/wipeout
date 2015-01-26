@@ -2,7 +2,7 @@
 Class("wipeout.change.objectHandler", function () {
 
     var arrayIndexProperty = "$wipeout-array-index-property";
-    var objectHandler = wipeout.base.object.extend(function objectHandler (forObject) {
+    var objectHandler = wipeout.base.disposable.extend(function objectHandler (forObject) {
         
         if (this.constructor === objectHandler) throw "Cannot create instance of an abstract class";
         
@@ -119,6 +119,8 @@ Class("wipeout.change.objectHandler", function () {
     };
     
     objectHandler.prototype.dispose = function() {
+        this._super();
+        
         for (var i in this.callbacks)
             delete this.callbacks[i];
     }

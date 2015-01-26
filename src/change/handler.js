@@ -14,13 +14,11 @@ Class("wipeout.change.handler", function () {
         
         this.preObserveCycles.push(callback);
         
-        return {
-            dispose: (function () {
-                var i;
-                if ((i = this.preObserveCycles.indexOf(callback)) !== -1)
-                    this.preObserveCycles.splice(i, 1);
-            }).bind(this)
-        };
+        return new wipeout.base.disposable((function () {
+            var i;
+            if ((i = this.preObserveCycles.indexOf(callback)) !== -1)
+                this.preObserveCycles.splice(i, 1);
+        }).bind(this));
     };
     
     //TODO: test
@@ -28,13 +26,11 @@ Class("wipeout.change.handler", function () {
         
         this.apreObserveCycles.push(callback);
         
-        return {
-            dispose: (function () {
-                var i;
-                if ((i = this.apreObserveCycles.indexOf(callback)) !== -1)
-                    this.apreObserveCycles.splice(i, 1);
-            }).bind(this)
-        };
+        return new wipeout.base.disposable((function () {
+            var i;
+            if ((i = this.apreObserveCycles.indexOf(callback)) !== -1)
+                this.apreObserveCycles.splice(i, 1);
+        }).bind(this));
     };
     
     handler.allIndexesOf = function(array, item) {
