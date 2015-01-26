@@ -65,7 +65,7 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
     wipeout.base.watched.afterNextObserveCycle(function () {
         ok(true);
         start();
-    }, true);
+    }, !wipeout.settings.useObjectObserve);
     
     stop();
 });

@@ -27,6 +27,10 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         var _this = this, tempSubscription = function (changes) {
             
             Object.unobserve(_this.forObject, tempSubscription);
+            
+            // was disposed of
+            if (!_this.__subscription) return;
+            
             _this.extraCallbacks--;
             
             // has been disposed of, do nothing

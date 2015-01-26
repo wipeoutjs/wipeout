@@ -244,6 +244,53 @@ function testMe (moduleName, buildSubject) {
         // assert
         ok(disp instanceof wipeout.base.computed);
     });
+
+    testUtils.testWithUtils("various disposals", null, false, function(methods, classes, subject, invoker) {
+        // arrange
+        var subject = buildSubject();
+        subject.val1 = buildSubject();
+        subject.val1.val2 = "hello";
+        subject.val3 = "world";
+        subject.val4 = new wipeout.base.array();
+
+        var isOk = true;
+        subject.computed("comp", function() {
+            ok(isOk);
+            isOk = false;
+            
+            return this.val1.val2 + " " + this.val3;
+        });
+
+        subject.observe("val3", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        subject.observe("val1.val2", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        subject.observe("val1.val2", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        subject.observeArray("val4", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        // act
+        subject.dispose();
+        stop();
+        
+        subject.val3 = "bad";
+        subject.val1.val2 = "bad";
+        subject.val4.push("bad");
+        
+        // assert
+        setTimeout(function () {
+            ok(true);
+            start();
+        }, 100);
+    });
 }
 
 testMe("wipeout.base.watched", function() { return new watched(); });

@@ -45,6 +45,32 @@ Class("wipeout.change.objectHandler", function () {
         
     objectHandler.prototype.observeArray = function (callback, context, complexCallback /*TODO*/) {
         
+        if (typeof arguments[0] === "string") {            
+                      
+            // stagger argument list
+            var property = arguments[0], cb = arguments[1], ctxt = arguments[2], cplx = arguments[3];
+            var disposeKey2;
+            var disposeKey1 = this.registerDisposable(this.forObject.observe(property, function(oldVal, newVal) {
+                if (disposeKey2)
+                    this.disposeOf(disposeKey2);
+
+                disposeKey2 = newVal instanceof wipeout.base.array ? 
+                    this.registerDisposable(newVal.observe(cb, ctxt, cplx)) : 
+                    null;
+            }));
+
+            var v = wipeout.utils.obj.getObject(property, this.forObject);
+            if(v instanceof wipeout.base.array) 
+                disposeKey2 = this.registerDisposable(v.observe(cb, ctxt, cplx));
+
+            return new wipeout.base.disposable(function() {
+                if (disposeKey2)
+                    this.disposeOf(disposeKey2);
+
+                this.disposeOf(disposeKey1);
+            });
+        }
+        
         var callbacks = complexCallback ? 
             this.callbacks[arrayIndexProperty].complexCallbacks : 
             this.callbacks[arrayIndexProperty].simpleCallbacks;
@@ -61,6 +87,12 @@ Class("wipeout.change.objectHandler", function () {
     };
     
     objectHandler.prototype.observeObject = function (property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged, priority) {
+        
+        if (/[\.\[]/.test(property)) {
+            var pw = new wipeout.base.pathWatch(this.forObject, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+            this.registerDisposable(pw);
+            return pw;
+        }
         
         var callbacks = this.callbacks[property] || (this.callbacks[property] = []);
         
@@ -115,14 +147,22 @@ Class("wipeout.change.objectHandler", function () {
             }
         };
         
+        this.registerDisposable(output);
+        
         return output;
     };
     
     objectHandler.prototype.dispose = function() {
         this._super();
         
-        for (var i in this.callbacks)
-            delete this.callbacks[i];
+        for (var i in this.callbacks) {
+            if (i === arrayIndexProperty) {
+                this.callbacks[i].simpleCallbacks.length = 0;
+                this.callbacks[i].complexCallbacks.length = 0;
+            } else {
+                delete this.callbacks[i];
+            }
+        }
     }
     
     return objectHandler;

@@ -18,44 +18,16 @@ Class("wipeout.base.watched", function () {
         return function (property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
             
             var oh = objectHandler || this.__woBag.watched;
-            if (property.indexOf(".") !== -1) {
-                var pw = new wipeout.base.pathWatch(this, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
-                oh.registerDisposable(pw);
-                return pw;
-            }
-
-            var output = oh.observeObject.apply(oh, arguments);
-            oh.registerDisposable(output);
-            return output;
+            return oh.observeObject.apply(oh, arguments);
         };
     };
     
     watched.createObserveArrayFunction = function (objectHandler) {
         
         return function (property, callback, context, complexCallback) {
-            var disposeOfArray;
-            var dispose = this.observe(property, function(oldVal, newVal) {
-                if (disposeOfArray)
-                    disposeOfArray.dispose();
-
-                disposeOfArray = newVal instanceof wipeout.base.array ? 
-                    newVal.observe(callback, context, complexCallback) : 
-                    null;
-            }, this);
-
-            var v = wipeout.utils.obj.getObject(property, this);
-            if(v instanceof wipeout.base.array) 
-                disposeOfArray = v.observe(callback, context, complexCallback);
-
-            var disp = new wipeout.base.disposable(function() {
-                if (disposeOfArray)
-                    disposeOfArray.dispose();
-
-                dispose.dispose();
-            });
-
-            (objectHandler || this.__woBag.watched).registerDisposable(disp);
-            return disp;
+            
+            var oh = objectHandler || this.__woBag.watched;
+            return oh.observeArray.apply(oh, arguments);
         }
     };
     

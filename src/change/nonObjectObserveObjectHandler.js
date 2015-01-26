@@ -108,9 +108,6 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         if (!this.usePrototypeAndWoBag)
             for (var i in this.definitionDisposals)
                 this.definitionDisposals[i].dispose();
-        
-        for (var i in this.oldValues)
-            delete this.oldValues;
             
         this.pendingOOSubscriptions.length = 0;
     }

@@ -49,6 +49,13 @@ Class("wipeout.base.watch", function () {
             writable: false
         });
         
+        Object.defineProperty(object, "dispose", {
+            enumerable: false,
+            configurable: false,
+            value: function () { handler.dispose(); },
+            writable: false
+        });
+        
         return object;
     };
     
