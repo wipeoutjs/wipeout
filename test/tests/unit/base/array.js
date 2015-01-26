@@ -69,7 +69,6 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
     subject.push(66);
     
     subject.observe(function(removed, added, indexes) {
-        
         strictEqual(added.length, 1);
         strictEqual(added[0], 77);
         

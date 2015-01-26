@@ -19,7 +19,7 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
             }, this)
         }).bind(this);
         
-        Object.observe(forObject, this.__subscription);
+        (this.forArray ? Array : Object).observe(forObject, this.__subscription);
     });
     
     objectObserveObjectHandler.prototype._observe = function (property, callback, callbackList, sortCallback) {
@@ -35,8 +35,8 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
             callbackList.push(callback);
             sortCallback();
             
-            enumerateArr(changes, function(change) {       
-                if (!callback.firstChange && change.name === property)
+            enumerateArr(changes, function(change) {  
+                if (!callback.firstChange && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty) && this.isValidArrayChange(change)))
                     callback.firstChange = change;
                 
                 // record change so that another subscription will not act on it
@@ -44,10 +44,10 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
                 _this.registeredChanges.push(change);
                 
                 _this.registerChange(change);
-            });
+            }, _this);
         };
             
-        Object.observe(this.forObject, tempSubscription);        
+        (this.forArray ? Array : Object).observe(this.forObject, tempSubscription);        
         this.extraCallbacks++;
         
         return function () {
@@ -61,7 +61,7 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         this._super();
         
         if (this.__subscription) {
-            Object.unobserve(this.forObject, this.__subscription);
+            (this.forArray ? Array : Object).unobserve(this.forObject, this.__subscription);
             delete this.__subscription;
         }
     }

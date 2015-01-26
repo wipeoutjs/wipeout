@@ -19,6 +19,7 @@ Class("wipeout.change.array", function () {
     
     array.prototype.go = function(changeHandler) {
         var next = changeHandler.indexOf(this.array, array.arrayChangeProperty);
+        var callbacks = this.changeHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty];
         
         // if there is another change to this array, sync the removedValues and addedValues objects
         if(next !== -1) {
@@ -29,7 +30,7 @@ Class("wipeout.change.array", function () {
         }
         
         //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(this.changeHandler.complexCallbacks, function(item) {
+        enumerateArr(callbacks.complexCallbacks, function(item) {
             if (item.firstChange === this.change)
                 delete item.firstChange;
             
@@ -48,7 +49,7 @@ Class("wipeout.change.array", function () {
             
             var val;
             //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-            enumerateArr(this.changeHandler.simpleCallbacks, function(item) {
+            enumerateArr(callbacks.simpleCallbacks, function(item) {
                 val = addedRemoved.value(item) || defaultVal;
                 item(val.removedValues, val.addedValues, val.moved);
             }, this);            
@@ -62,7 +63,7 @@ Class("wipeout.change.array", function () {
         
         // add references to any callbacks which were added later
         var specialCallbacks = new wipeout.utils.dictionary();
-        enumerateArr(this.changeHandler.simpleCallbacks, function (callback) {
+        enumerateArr(this.changeHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty].simpleCallbacks, function (callback) {
             if (callback.firstChange)
                 specialCallbacks.add(callback.firstChange, callback);
         });                

@@ -18,9 +18,9 @@ Class("wipeout.base.array", function () {
             for(var i = 0, ii = initialValues.length; i < ii; i++)
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
             
-        this.__woBag.watchedArray = useObjectObserve ?
-            new wipeout.change.objectObserveArrayHandler(this) :
-            new wipeout.change.nonObjectObserveArrayHandler(this);
+        this.__woBag.watched = useObjectObserve ?
+            new wipeout.change.objectObserveObjectHandler(this) :
+            new wipeout.change.nonObjectObserveObjectHandler(this, true);
     });
     
     array.prototype._super = wipeout.base.object.prototype._super;
@@ -138,7 +138,7 @@ Class("wipeout.base.array", function () {
         
         /*
         if (!useObjectObserve)
-            this.__woBag.watchedArray.registerChange({
+            this.__woBag.watched.registerChange({
                 name: index.toString(),
                 object: this,
                 oldValue: this[index],
@@ -160,7 +160,7 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.length)
-                this.__woBag.watchedArray.registerChange({
+                this.__woBag.watched.registerChange({
                     addedCount: 0,
                     index: this.length - 1,
                     object: this,
@@ -177,7 +177,7 @@ Class("wipeout.base.array", function () {
 
         if (!useObjectObserve)
             if (this.length)
-                this.__woBag.watchedArray.registerChange({
+                this.__woBag.watched.registerChange({
                     addedCount: 0,
                     index: 0,
                     object: this,
@@ -200,7 +200,7 @@ Class("wipeout.base.array", function () {
     array.prototype.push = function(item) {
 
         if (!useObjectObserve)
-            this.__woBag.watchedArray.registerChange({
+            this.__woBag.watched.registerChange({
                 addedCount: 1,
                 index: this.length,
                 object: this,
@@ -224,7 +224,7 @@ Class("wipeout.base.array", function () {
                 if (i === half)
                     continue;
             
-                this.__woBag.watchedArray.registerChange({
+                this.__woBag.watched.registerChange({
                     name: i.toString(),
                     object: this,
                     oldValue: this[i],
@@ -246,7 +246,7 @@ Class("wipeout.base.array", function () {
                 i++)
                 removed.push(this[i]);
 
-            this.__woBag.watchedArray.registerChange({
+            this.__woBag.watched.registerChange({
                 addedCount: arguments.length - 2,
                 index: index,
                 object: this,
@@ -268,10 +268,9 @@ Class("wipeout.base.array", function () {
     
     array.prototype.observe = function (callback, context, complexCallback /*TODO*/) {
         
-        if (typeof arguments[0] === "string") //TODO: test
-            return wipeout.base.watched.prototype.observe.apply(this, arguments);
-        
-        return this.__woBag.watchedArray.observe(callback, context, complexCallback);
+        return (typeof arguments[0] === "string" ?
+            this.__woBag.watched.observeObject :
+            this.__woBag.watched.observeArray).apply(this.__woBag.watched, arguments);
     };
     
     //TODO: test
@@ -279,7 +278,7 @@ Class("wipeout.base.array", function () {
     array.prototype.computed = wipeout.base.watched.computed;
     
     array.prototype.dispose = function() {
-        this.__woBag.watchedArray.dispose();
+        this.__woBag.watched.dispose();
     };
     
     /*

@@ -12,7 +12,7 @@ Class("wipeout.change.objectHandler", function () {
         this.callbacks = {};
         
         if (this.forArray = (forObject instanceof wipeout.base.array)) {
-            callbacks[arrayIndexProperty] = {
+            this.callbacks[arrayIndexProperty] = {
                 complexCallbacks: [],
                 simpleCallbacks: []
             };
@@ -20,6 +20,8 @@ Class("wipeout.change.objectHandler", function () {
             this.arrayCopy = wipeout.utils.obj.copyArray(forObject);
         }
     });
+    
+    var arrayIndexProperty = objectHandler.arrayIndexProperty = "$wipeout-array-index-property";
     
     objectHandler.prototype.isValidArrayChange = function (change) {
         return this.forArray && objectHandler.isValidArrayChange(change);
