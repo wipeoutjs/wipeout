@@ -60,10 +60,17 @@ Class("wipeout.base.array", function () {
                 }
             }
             
+            var oldValue = this.__woBag.length;
             this.__woBag.length = v;
+            this.__woBag.watched.registerChange({
+                name: "length",
+                object: this,
+                oldValue: oldValue,
+                type: "update"
+            });
         },
         get: function() {
-            return this.__woBag.length;
+            return this.__woBag ? this.__woBag.length : undefined;
         }
     });   
     

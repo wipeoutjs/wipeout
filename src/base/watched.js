@@ -37,11 +37,7 @@ Class("wipeout.base.watched", function () {
             ///<param name="property" type="String" optional="false">The property name</param>
             ///<returns type="Boolean">The result of the delete</returns>
 
-            var comp = new wipeout.base.computed(this, name, callback, watchVariables, callbackStringOverride);
-            (objectHandler || this.__woBag.watched).registerDisposable(comp);
-
-            return comp;
-
+            //TODO: disposal
             var comp = new wipeout.base.computed(callback, this, watchVariables, callbackStringOverride);
             comp.bind(this, name);
             (objectHandler || this.__woBag.watched).registerDisposable(comp);

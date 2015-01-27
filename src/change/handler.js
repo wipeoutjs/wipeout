@@ -67,8 +67,8 @@ Class("wipeout.change.handler", function () {
         return -1;
     };
     
-    //handler.prototype.pushObj = function(object, property, woBag, oldVal, newVal, change) {
     handler.prototype.pushObj = function(change, objectHandler) {
+                
         var i = this.lastIndexOf(change.object, change.name);
         if(i !== -1)
             this._changes[i].newVal = change.oldValue; //TODO, investigate and comment

@@ -11,6 +11,10 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         this.definitionDisposals = usePrototypeAndWoBag ? Object.getPrototypeOf(forObject) : {}; 
         this.usePrototypeAndWoBag = usePrototypeAndWoBag;    
         this.pendingOOSubscriptions = [];
+        
+        // length is auto watched
+        if (forObject instanceof wipeout.base.array)
+            this.definitionDisposals[watchPrefix + "length"] = new wipeout.base.disposable;
     });
     
     nonObjectObserveObjectHandler.prototype.registerChange = function (change) {
@@ -60,6 +64,7 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         
             return undefined;
         }).bind(this);
+        
         Object.defineProperty(this.usePrototypeAndWoBag ? Object.getPrototypeOf(this.forObject) : this.forObject, property, {
             get: function() {   //TODO: make this method static
 

@@ -26,22 +26,26 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         
         var _this = this, tempSubscription = function (changes) {
             
-            Object.unobserve(_this.forObject, tempSubscription);
-            
             // was disposed of
-            if (!_this.__subscription) return;
-            
-            _this.extraCallbacks--;
-            
+            if (!_this.__subscription) {
+                Object.unobserve(_this.forObject, tempSubscription);
+                return;
+            }
+                        
             // has been disposed of, do nothing
             if (!_this) return;
-            
-            callbackList.push(callback);
-            sortCallback();
-            
-            enumerateArr(changes, function(change) {  
-                if (!callback.firstChange && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty) && this.isValidArrayChange(change)))
+                        
+            enumerateArr(changes, function(change) {
+                
+                if (callback.firstChange === true && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty) && this.isValidArrayChange(change))) {
+                    Object.unobserve(_this.forObject, tempSubscription);
+                    _this.extraCallbacks--;
+                    firstChangeDone = true;
+                    
                     callback.firstChange = change;
+                    callbackList.push(callback);
+                    sortCallback();
+                }
                 
                 // record change so that another subscription will not act on it
                 if (_this.registeredChanges.indexOf(change) !== -1) return;

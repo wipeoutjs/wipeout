@@ -10,16 +10,15 @@ Class("wipeout.base.computed", function () {
     var previousValPlaceholder = {};
     
     // monitor a function and change the value of a "watched" when it changes
-    function computed(context, name, callback, watchVariables, callbackStringOverride) {
-        
-        //TODO: if can watch
+    var computed = wipeout.base.watched.extend(function computed(callback, context, watchVariables, callbackStringOverride) {
+                
+        this._super();
         
         this.arguments = [];
-        this.disposables = [];        
+        
         this.callback = computed.stripFunction(callbackStringOverride || callback);
         this.callbackFunction = callback;
         this.context = context;
-        this.name = name;
         this.previousVal = previousValPlaceholder;
                 
         // get all argument names
@@ -53,29 +52,41 @@ Class("wipeout.base.computed", function () {
                 this.watchVariable(i, watchVariables[i]);
             }
         }
-    };
+    });
         
     computed.prototype.execute = function() {
-        var newVal = this.callbackFunction.apply(this.context, this.arguments);
-        var existingVal = wipeout.utils.obj.getObject(this.name, this.context);
-        if (newVal === existingVal || (newVal instanceof wipeout.base.array && newVal === this.previousVal))
-            return;
+        this.val = this.callbackFunction.apply(this.context, this.arguments);
+    };
+    
+    computed.prototype.bind = function (object, property) {
+        var arrayDisposeCallback;
         
-        this.previousVal = newVal;
+        var callback = function (oldValue, newValue) {
+            
+            var existingVal = wipeout.utils.obj.getObject(property, object);
+            if (newValue === existingVal)
+                return;
+            
+            if (arrayDisposeCallback) {
+                arrayDisposeCallback.dispose();
+                arrayDisposeCallback = null;
+            }            
+
+            // do not treat xml templates like Arrays
+            if (!(newValue instanceof Array) || !(existingVal instanceof Array) || newValue instanceof wipeout.template.templateElementBase || existingVal instanceof wipeout.template.templateElementBase) {
+                wipeout.utils.obj.setObject(property, object, newValue);
+            } else if (newValue instanceof wipeout.base.array) {                                        
+                arrayDisposeCallback = newValue.bind(existingVal);
+            } else {
+                wipeout.base.array.copyAll(object[property]);
+            }
+        };
         
-        if (this.arrayDisposeCallback) {
-            this.arrayDisposeCallback.dispose();
-            delete this.arrayDisposeCallback;
-        }            
+        //TODO: remove this
+        callback.BINDCALLBACK = true;
         
-        // do not treat xml templates like Arrays
-        if (!(newVal instanceof Array) || !(existingVal instanceof Array) || newVal instanceof wipeout.template.templateElementBase || existingVal instanceof wipeout.template.templateElementBase) {
-            wipeout.utils.obj.setObject(this.name, this.context, newVal);
-        } else if (newVal instanceof wipeout.base.array) {                                        
-            this.arrayDisposeCallback = newVal.bind(existingVal);
-        } else {
-            wipeout.base.array.copyAll(this.context[this.name]);
-        }
+        callback(null, this.val);
+        return this.observe("val", callback);
     };
         
     computed.stripFunction = function(input) { //TODO: unit test independantly
@@ -148,23 +159,21 @@ Class("wipeout.base.computed", function () {
                     wipeout.utils.obj.joinPropertyName(tmp1.slice(1)),
                     this.throttleExecution, this);
             
-            this.disposables.push(path);
+            this.registerDisposable(path);
             
             var dispose;
             var te = this.throttleExecution.bind(this);
-            this.disposables.push({
-                dispose: path.onValueChanged(function(oldVal, newVal) {
-                    if (dispose) {
-                        dispose.dispose();
-                        dispose = null;
-                    }
+            path.onValueChanged(function(oldVal, newVal) {
+                if (dispose) {
+                    dispose.dispose();
+                    dispose = null;
+                }
 
-                    if (newVal instanceof wipeout.base.array)
-                        dispose = newVal.observe(te);
-                }, true)
-            });
+                if (newVal instanceof wipeout.base.array)
+                    dispose = newVal.observe(te);
+            }, true);
         }, this);
-    };    
+    };
     
     computed.prototype.throttleExecution = function() {
         if (this.__executePending)
@@ -175,14 +184,6 @@ Class("wipeout.base.computed", function () {
             this.__executePending = false;
             this.execute();
         }).bind(this));
-    };
-    
-    computed.prototype.dispose = function() {
-        enumerateArr(this.disposables, function(dispose) {
-            dispose.dispose();
-        });
-        
-        this.disposables.length = 0;
     };
     
     return computed;

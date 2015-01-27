@@ -33,20 +33,9 @@ Class("wipeout.base.pathWatch", function () {
     
     //TODO test
     pathWatch.prototype.onValueChanged = function (callback, evaluateImmediately) {
-        var dispose = this.observe("val", callback);
-        this.disposables.push(dispose);
-        
+        var obs = this.observe("val", callback);        
         if (evaluateImmediately) callback(undefined, this.val);
-        
-        return (function () {
-            if (dispose) {
-                var i = this.disposables.indexOf(dispose);
-                if(i !== -1)
-                    this.disposables.splice(i, 1);
-                
-                dispose = null;
-            }
-        }).bind(this);
+        return obs;
     }
     
     pathWatch.prototype.execute = function () {

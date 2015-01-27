@@ -63,6 +63,30 @@ testUtils.testWithUtils("stripFunction", "string '", true, function(methods, cla
     strictEqual(output, begin + "#" + end);
 });
 
+testUtils.testWithUtils("integration test", "very simple change", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = XXX = wo.watch();
+    subject.val3 = "hello world";
+
+    var comp = YYY = new wipeout.base.computed(function() {
+        return this.val3;
+    }, subject);
+    
+    comp.bind(subject, "comp");
+
+    subject.observe("comp", function(oldVal, newVal) {
+        strictEqual(oldVal, "hello world");
+        strictEqual(newVal, "hello shane");
+        
+        comp.dispose();
+        start();
+    });
+
+    // act
+    stop();
+    subject.val3 = "hello shane";
+});
+
 testUtils.testWithUtils("integration test", "simple change", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = wo.watch();
@@ -70,9 +94,9 @@ testUtils.testWithUtils("integration test", "simple change", false, function(met
     subject.val1.val2 = "hello";
     subject.val3 = "world";
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return this.val1.val2 + " " + this.val3;
-    });
+    }, subject).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, "hello world");
@@ -93,9 +117,9 @@ testUtils.testWithUtils("integration test", "multi property change", false, func
     subject.val3 = "world";
     subject.something = wo.watch();
 
-    new wipeout.base.computed(subject, "something.comp", function() {
+    new wipeout.base.computed(function() {
         return this.val1.val2 + " " + this.val3;
-    });
+    }, subject).bind(subject, "something.comp");
 
     subject.something.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, "hello world");
@@ -115,9 +139,9 @@ testUtils.testWithUtils("integration test", "complex change", false, function(me
     subject.val1.val2 = "hello";
     subject.val3 = "world";
 
-    new wipeout.base.computed(subject, "comp", function() {            
+    new wipeout.base.computed(function() {            
         return this.val1.val2 + " " + this.val3;
-    });
+    }, subject).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, "hello world");
@@ -131,14 +155,15 @@ testUtils.testWithUtils("integration test", "complex change", false, function(me
 });
 
 testUtils.testWithUtils("integration test", "array", false, function(methods, classes, subject, invoker) {
+    
     // arrange
     var subject = wo.watch();
     var val1 = subject.val1 = new wipeout.base.array([0,1,2]);
     var comp = subject.comp = [];
 
-    new wipeout.base.computed(subject, "comp", function() { 
+    new wipeout.base.computed(function() { 
         return this.val1;
-    });
+    }, subject).bind(subject, "comp");
 
     // act
     function assert() {        
@@ -166,17 +191,18 @@ testUtils.testWithUtils("integration test", "array", false, function(methods, cl
 });
 
 testUtils.testWithUtils("integration test", "array total", false, function(methods, classes, subject, invoker) {
+    
     // arrange
     var subject = wo.watch();
     subject.val1 = new wipeout.base.array([0,1,2]);
 
-    new wipeout.base.computed(subject, "comp", function() { 
+    new wipeout.base.computed(function() { 
         var tmp = 0;
         for(var i = 0, ii = this.val1.length; i < ii; i++)
             tmp += this.val1[i];
         
         return tmp;
-    });
+    }, subject).bind(subject, "comp");
 
     // act
     function assert() {
@@ -190,43 +216,50 @@ testUtils.testWithUtils("integration test", "array total", false, function(metho
     assert();
     stop();
     
+    subject.val1.push(768);
+    wipeout.base.watched.afterNextObserveCycle(function() {
     wipeout.base.watched.afterNextObserveCycle(function() {
         setTimeout(function() {
             assert();
-            subject.val1.push(345);
+            subject.val1.replace(0, 345);
+            wipeout.base.watched.afterNextObserveCycle(function() {
             wipeout.base.watched.afterNextObserveCycle(function() {
                 assert();
                 start();
             }, true);
+            }, true);
         });
     }, true);
-    
-    subject.val1.push(768);
+    }, true);    
 });
 
 testUtils.testWithUtils("integration test", "array, changed to object", false, function(methods, classes, subject, invoker) {
+    
     // arrange
     var subject = wo.watch();
     var val1 = subject.val1 = new wipeout.base.array([0,1,2]);
     var comp = subject.comp = [];
 
-    new wipeout.base.computed(subject, "comp", function() {            
+    new wipeout.base.computed(function() {            
         return this.val1;
-    });
+    }, subject).bind(subject, "comp");
 
     // act
-    var val2 = subject.val1 = {};    
+    var val2 = subject.val1 = {};
+    wipeout.base.watched.afterNextObserveCycle(function() {
     wipeout.base.watched.afterNextObserveCycle(function() {
         wipeout.base.watched.afterNextObserveCycle(function() {
             strictEqual(subject.comp, val2);
             val1.length = 0;
             val1.push(33);
             wipeout.base.watched.afterNextObserveCycle(function() {
+                strictEqual(subject.comp, val2);
                 strictEqual(subject.comp[0], undefined);
                 strictEqual(comp.length, 3);
                 start();
             });
         }, true);
+    }, true);
     }, true);
     
     stop();
@@ -239,9 +272,9 @@ testUtils.testWithUtils("integration test", "two changes", false, function(metho
     subject.val1.val2 = "hello";
     subject.val3 = "world";
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return this.val1.val2 + " " + this.val3;
-    });
+    }, subject).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, "hello world");
@@ -261,9 +294,9 @@ testUtils.testWithUtils("integration test", "strings", false, function(methods, 
     var subject = wo.watch();
     subject.val1 = 1;
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return "this.val1";
-    });
+    }, subject).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         ok(false);
@@ -285,9 +318,9 @@ testUtils.testWithUtils("integration test", "dispose", false, function(methods, 
     subject.val1.val2 = "hello";
     subject.val3 = "world";
 
-    var disp = new wipeout.base.computed(subject, "comp", function() {
+    var disp = new wipeout.base.computed(function() {
         return this.val1.val2 + " " + this.val3;
-    });
+    }, subject).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         ok(false);
@@ -312,11 +345,11 @@ testUtils.testWithUtils("integration test", "variable change", false, function(m
     var1.val1.val2 = "hello";
     var1.val3 = "world";
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return var1.val1.val2 + " " + var1.val3;
-    }, {
+    }, subject, {
         var1: var1
-    });
+    }).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, "hello world");
@@ -340,12 +373,12 @@ testUtils.testWithUtils("integration test", "variable name vs property name", fa
     
     var var2 = wo.watch();
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return var1.
         var2.var3;
-    }, {
+    }, subject, {
         var2: var2    // watch var2
-    });
+    }).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         ok(false);
@@ -367,11 +400,11 @@ testUtils.testWithUtils("integration test", "variable name with character before
     var var1 = wo.watch({val: 2});    
     var avar1 = wo.watch({val: 3});
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return avar1.val;
-    }, {
+    }, subject, {
         var1: var1
-    });
+    }).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         ok(false);
@@ -393,11 +426,11 @@ testUtils.testWithUtils("integration test", "variable name with character after"
     var var1 = wo.watch({val: 2});    
     var var1a = wo.watch({val: 3});
 
-    new wipeout.base.computed(subject, "comp", function() {
+    new wipeout.base.computed(function() {
         return var1a.val;
     }, {
         var1: var1
-    });
+    }).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         ok(false);
@@ -418,11 +451,11 @@ testUtils.testWithUtils("integration test", "with args", false, function(methods
     subject = wo.watch();
     var var1 = wo.watch({val: 2});  
 
-    new wipeout.base.computed(subject, "comp", function(var1) {
+    new wipeout.base.computed(function(var1) {
         return var1.val;
-    }, {
+    }, subject, {
         var1: var1
-    });
+    }).bind(subject, "comp");
 
     subject.observe("comp", function(oldVal, newVal) {
         strictEqual(oldVal, 2);
@@ -441,8 +474,8 @@ testUtils.testWithUtils("integration test", "with args, arg not added as watched
     var var1 = wo.watch({val: 2});  
 
     throws(function() {
-        new wipeout.base.computed(subject, "comp", function(var1) {
+        new wipeout.base.computed(function(var1) {
             return var1.val;
-        });
+        }, subject).bind(subject, "comp");
     });
 });

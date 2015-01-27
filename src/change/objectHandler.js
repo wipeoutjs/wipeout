@@ -110,7 +110,8 @@ Class("wipeout.change.objectHandler", function () {
     };
     
     objectHandler.prototype.observe = function (property, callback, callbackArray) {
-                
+                        
+        callback.firstChange = true;        
         var cancel = this._observe(property, callback, callbackArray, function () { callbackArray.sort(function (a, b) { return a.priority > b.priority  }) });
         
         var output = {
