@@ -1,5 +1,7 @@
 
-dispose frameworks (including in wo.watch(...))
+suspend tests
+owts binding
+owts is valid regex
 
 
 

@@ -12,6 +12,49 @@ function testMe (moduleName, buildSubject) {
         }
     });
 
+    /*testUtils.testWithUtils("observe", "suspend", false, function(methods, classes, subject, invoker) {
+        
+        // arrange
+        var subject = buildSubject();
+        subject.val = "aaa";
+        var tmp = subject.observe("val", function(oldVal, newVal) {
+            ok(false);
+        });
+
+        // act
+        tmp.suspend(function () {
+            subject.val = "bbb";
+            stop();
+        });
+
+        setTimeout(function() {
+            ok(true);
+            start();
+        }, 100);
+    });
+
+    
+    testUtils.testWithUtils("observe", "suspend, 2 changes. Assert callback only invoked once", false, function(methods, classes, subject, invoker) {
+        
+        // arrange
+        var subject = buildSubject();
+        subject.val = "aaa";
+        var tmp = subject.observe("val", function(oldVal, newVal) {
+            strictEqual(oldVal, "aaa");
+            strictEqual(newVal, "ccc");
+            start();
+        }, null, true);
+
+        // act
+        tmp.suspend(function () {
+            subject.val = "bbb";
+        });
+        
+        subject.val = "ccc";
+
+        stop();
+    });*/
+
     
     testUtils.testWithUtils("observe", "multiple changes, 1 registration", false, function(methods, classes, subject, invoker) {
         
@@ -35,17 +78,44 @@ function testMe (moduleName, buildSubject) {
         
         // arrange
         var subject = buildSubject();
-        subject.observe("dummy", function() {});    // invoke watch function
+        subject.observe("val", function() {});    // invoke watch function
         
+        subject.val = "www";
         subject.val = "xxx";
         subject.observe("val", function(oldVal, newVal) {
             strictEqual(oldVal, "xxx");
             strictEqual(newVal, "yyy");
             start();
         }, null, true);
+        
+        subject.observe("val", function(oldVal, newVal) {
+            strictEqual(oldVal, "xxx");
+            strictEqual(newVal, "yyy");
+            start();
+        });
 
         // act
         subject.val = "yyy";
+
+        stop(2);
+    });
+
+    testUtils.testWithUtils("observe", "ensure changes before dispose are observed", false, function(methods, classes, subject, invoker) {
+        
+        // arrange
+        var subject = buildSubject();
+        subject.val = "xxx";
+        var disp = subject.observe("val", function(oldVal, newVal) {
+            strictEqual(oldVal, "xxx");
+            strictEqual(newVal, "yyy");
+            start();
+        }, null, true);
+        
+        subject.val = "yyy"; 
+        disp.dispose(true);
+
+        // act
+        subject.val = "zzz";
 
         stop();
     });
@@ -255,26 +325,22 @@ function testMe (moduleName, buildSubject) {
 
         var isOk = true;
         subject.computed("comp", function() {
-            ok(isOk);
+            ok(isOk, "computed");
             isOk = false;
             
             return this.val1.val2 + " " + this.val3;
         });
 
         subject.observe("val3", function(oldVal, newVal) {
-            ok(false);
+            ok(false, "observe property");
         });
 
         subject.observe("val1.val2", function(oldVal, newVal) {
-            ok(false);
-        });
-
-        subject.observe("val1.val2", function(oldVal, newVal) {
-            ok(false);
+            ok(false, "observe path");
         });
 
         subject.observeArray("val4", function(oldVal, newVal) {
-            ok(false);
+            ok(false, "observeArray");
         });
 
         // act

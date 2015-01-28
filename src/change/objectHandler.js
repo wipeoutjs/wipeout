@@ -75,10 +75,7 @@ Class("wipeout.change.objectHandler", function () {
             this.callbacks[arrayIndexProperty].complexCallbacks : 
             this.callbacks[arrayIndexProperty].simpleCallbacks;
         
-        var cb = function () {
-            if (!output.suspended)
-                callback.apply(context, arguments);
-        };
+        var cb = callback.bind(context);
         
         cb.property = arrayIndexProperty;
         
@@ -97,7 +94,7 @@ Class("wipeout.change.objectHandler", function () {
         var callbacks = this.callbacks[property] || (this.callbacks[property] = []);
         
         var cb = function (oldVal, newVal) {
-            if ((evaluateIfValueHasNotChanged || oldVal !== newVal) && !output.suspended)
+            if (evaluateIfValueHasNotChanged || oldVal !== newVal)
                 callback.apply(context, arguments);
         }
         
@@ -109,35 +106,45 @@ Class("wipeout.change.objectHandler", function () {
         return output;
     };
     
+    objectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
+        throw "Abstract methods must be implemented";
+    };
+    
     objectHandler.prototype.observe = function (property, callback, callbackArray) {
                         
-        callback.firstChange = true;        
+        callback.changeValidator = new wipeout.change.changeValidation();
         var cancel = this._observe(property, callback, callbackArray, function () { callbackArray.sort(function (a, b) { return a.priority > b.priority  }) });
         
+        function hardDispose () {               
+            if(!callbackArray) return;
+            
+            cancel();
+
+            var i = callbackArray.indexOf(callback);
+            if (i !== -1)
+                callbackArray.splice(i, 1);
+
+            callbackArray = null;
+        }
+        
         var output = {
-            suspended: 0,
-            dispose: function () {
-                if(!callbackArray) return;
-                                
-                cancel();
-                
-                var i = callbackArray.indexOf(callback);
-                if (i !== -1)
-                    callbackArray.splice(i, 1);
-                
-                callbackArray = null;
-            },
-            suspend: function (callback) {
-                //TODO document this
-                if (callback === false) {
-                    var dispose = this.observe(property, function () {
-                        dispose.dispose();
-                        output.suspended++;
-                    }, null, null, Number.MIN_VALUE);
-                } else if (!arguments.length || callback.constructor !== Function) {
-                    if (output.suspended > 0)
-                        output.suspended--;
-                } else {
+            dispose: (function (allowPendingChanges) {   // todo document                             
+                if (!allowPendingChanges)
+                    hardDispose();
+                else
+                    this.disposeOfObserve(property, callback, hardDispose);
+            }).bind(this),
+            suspend: (function (callback) {
+                //TODO document this                
+                if (callback === false) {   // un-suspend
+                    var dispose = this.forObject.observe(property, function () {
+                        this.disposeOf(dispose.disposableKey);
+                        
+                        // remove suspend +++++++++++++++++++
+                    }, this, null, true, Number.MAX_VALUE * -1);
+                } else if (!arguments.length || callback.constructor !== Function) {    // suspend
+                    // add suspend ++++++++++++++++++
+                } else {        // suspend, run callback, unsuspend
                     try {
                         output.suspend();
                         callback();
@@ -145,11 +152,10 @@ Class("wipeout.change.objectHandler", function () {
                         output.suspend(false);
                     }
                 }
-            }
+            }).bind(this)
         };
         
-        this.registerDisposable(output);
-        
+        output.disposableKey = this.registerDisposable(output);        
         return output;
     };
     

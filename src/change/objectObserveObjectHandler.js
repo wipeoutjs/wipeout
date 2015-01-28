@@ -22,6 +22,19 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         (this.forArray ? Array : Object).observe(forObject, this.__subscription);
     });
     
+    objectObserveObjectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
+        var cb = (function (changes) {            
+            for (var i = 0, ii = changes.length; i < ii; i++) {                
+                if (changes[i].name === property || (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(changes[i]))) {                    
+                    Object.unobserve(this.forObject, cb);
+                    observeCallback.changeValidator.afterLastChange(changes[i], disposeCallback);
+                }
+            }            
+        }).bind(this);
+        
+        Object.observe(this.forObject, cb);
+    };
+    
     objectObserveObjectHandler.prototype._observe = function (property, callback, callbackList, sortCallback) {
         
         var _this = this, tempSubscription = function (changes) {
@@ -34,15 +47,16 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
                         
             // has been disposed of, do nothing
             if (!_this) return;
-                        
+                     
+            var firstChangeDone = false;
             enumerateArr(changes, function(change) {
                 
-                if (callback.firstChange === true && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty) && this.isValidArrayChange(change))) {
+                if (!firstChangeDone && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))) {
                     Object.unobserve(_this.forObject, tempSubscription);
                     _this.extraCallbacks--;
                     firstChangeDone = true;
                     
-                    callback.firstChange = change;
+                    callback.changeValidator.registerFirstChange(change);
                     callbackList.push(callback);
                     sortCallback();
                 }

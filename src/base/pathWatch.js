@@ -28,8 +28,12 @@ Class("wipeout.base.pathWatch", function () {
         this.buildObservableChain();
         this.init = true;
         
-        this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+        this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
+    
+    pathWatch.prototype.suspend = function () {
+        return this.disp.apply(this.disp, arguments);
+    };
     
     //TODO test
     pathWatch.prototype.onValueChanged = function (callback, evaluateImmediately) {

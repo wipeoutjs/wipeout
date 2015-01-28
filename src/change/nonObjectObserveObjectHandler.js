@@ -10,7 +10,8 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         this.oldValues = {};
         this.definitionDisposals = usePrototypeAndWoBag ? Object.getPrototypeOf(forObject) : {}; 
         this.usePrototypeAndWoBag = usePrototypeAndWoBag;    
-        this.pendingOOSubscriptions = [];
+        this.pendingOOSubscriptions = [];   
+        this.pendingOOSubscriptionRemovals = [];
         
         // length is auto watched
         if (forObject instanceof wipeout.base.array)
@@ -19,12 +20,29 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
     
     nonObjectObserveObjectHandler.prototype.registerChange = function (change) {
         
-        for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--)
-            if (change.name === this.pendingOOSubscriptions[i].property || 
-                (this.pendingOOSubscriptions[i].property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))
-                this.pendingOOSubscriptions.splice(i, 1)[0].firstChange = change;
-
+        var sub;
+        for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--) {
+            sub = this.pendingOOSubscriptions[i];
+            if (change.name === sub.property || 
+                (sub.property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))
+                this.pendingOOSubscriptions.splice(i, 1)[0].changeValidator.registerFirstChange(change);
+        }
+        
+        for (var i = this.pendingOOSubscriptionRemovals.length - 1; i >= 0; i--) {
+            sub = this.pendingOOSubscriptionRemovals[i];
+            if (change.name === sub.property || 
+                (sub.property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change))) {
+                this.pendingOOSubscriptionRemovals.splice(i, 1)[0].changeValidator.afterLastChange(change, sub.__tempDisposeCallback);
+                delete sub.__tempDisposeCallback;
+            }
+        }
+        
         this._super(change);
+    };
+    
+    nonObjectObserveObjectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
+        observeCallback.__tempDisposeCallback = disposeCallback;
+        this.pendingOOSubscriptionRemovals.push(observeCallback);
     };
     
     function blank(){}
@@ -35,7 +53,6 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         if (property !== wipeout.change.objectHandler.arrayIndexProperty)
             this.watch(property);
         
-        callback.firstChange = true;
         this.pendingOOSubscriptions.push(callback);        
         callbackList.push(callback);
         sortCallback();        
