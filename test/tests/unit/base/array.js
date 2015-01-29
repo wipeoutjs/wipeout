@@ -31,6 +31,24 @@ testUtils.testWithUtils("observe", "add", false, function(methods, classes, subj
     stop();
 });
 
+testUtils.testWithUtils("observe", "subscribe and unsubscribe", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var subject = new wipeout.base.array();
+
+    subject.observe(function(removed, added, indexes) {
+        ok(false);
+    }).dispose(true);
+
+    // act
+    subject.push(1);
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        ok(true);
+        start();
+    }, true);
+
+    stop();
+});
+
 testUtils.testWithUtils("observe", "property change", false, function(methods, classes, subject, invoker) {
     // arrange
     var subject = new wipeout.base.array();

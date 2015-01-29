@@ -26,13 +26,13 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         var cb = (function (changes) {            
             for (var i = 0, ii = changes.length; i < ii; i++) {                
                 if (changes[i].name === property || (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(changes[i]))) {                    
-                    Object.unobserve(this.forObject, cb);
+                    (this.forArray ? Array : Object).unobserve(this.forObject, cb);
                     observeCallback.changeValidator.afterLastChange(changes[i], disposeCallback);
                 }
             }            
         }).bind(this);
         
-        Object.observe(this.forObject, cb);
+        (this.forArray ? Array : Object).observe(this.forObject, cb);
     };
     
     objectObserveObjectHandler.prototype._observe = function (property, callback, callbackList, sortCallback) {

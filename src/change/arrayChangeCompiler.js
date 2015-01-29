@@ -209,7 +209,8 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             // reset change
             change = this.changes[i];
             
-            enumerateArr(this.__callbacks.keys_unsafe(), function (callback) {                
+            enumerateArr(this.__callbacks.keys_unsafe(), function (callback) {
+                
                 if (callback.changeValidator.shouldDispose(change)) {
                     this.__callbacks.add(callback, new changedValues(this.array));
                     callback.changeValidator.dispose();

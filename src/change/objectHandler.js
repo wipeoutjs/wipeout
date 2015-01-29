@@ -26,7 +26,7 @@ Class("wipeout.change.objectHandler", function () {
     };
     
     objectHandler.isValidArrayChange = function (change) {
-        return change.type === "splice" || (change.type === "update" && !isNaN(parseInt(change.name)));
+        return change.type === "splice" || ((change.type === "update" || change.type === "add") && !isNaN(parseInt(change.name)));
     };
     
     objectHandler.prototype.registerChange = function (change) {
