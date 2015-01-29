@@ -16,8 +16,6 @@ Class("wipeout.change.objectHandler", function () {
                 complexCallbacks: [],
                 simpleCallbacks: []
             };
-            
-            this.arrayCopy = wipeout.utils.obj.copyArray(forObject);
         }
     });
     
