@@ -1,26 +1,26 @@
 
 Class("wipeout.change.changeValidation", function () {
-    function firstChange() {
+    function changeValidation() {
     }
     
-    firstChange.prototype.registerFirstChange = function (change) {
+    changeValidation.prototype.registerFirstChange = function (change) {
         this.change = change;
     };
     
-    firstChange.prototype.afterLastChange = function (change, disposeCallback) {
+    changeValidation.prototype.afterLastChange = function (change, disposeCallback) {
         this.lastChange = change;
         this.dispose = disposeCallback;
     };
     
-    firstChange.prototype.shouldDispose = function (change) {
+    changeValidation.prototype.shouldDispose = function (change) {
         return this.lastChange === change;
     };
     
-    firstChange.prototype.originalValue = function (originalValue) {
+    changeValidation.prototype.originalValue = function (originalValue) {
         return this._originalValue ? this._originalValue.val : originalValue;
     };
     
-    firstChange.prototype.isValid = function (change) {
+    changeValidation.prototype.isValid = function (change) {
         if (this.change === false)
             return true;
         
@@ -39,5 +39,5 @@ Class("wipeout.change.changeValidation", function () {
         return !this.change;
     };
     
-    return firstChange;
+    return changeValidation;
 });
