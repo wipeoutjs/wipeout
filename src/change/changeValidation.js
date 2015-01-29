@@ -24,6 +24,9 @@ Class("wipeout.change.changeValidation", function () {
         if (this.change === false)
             return true;
         
+        if (arguments.length === 0) // user has not specified which change they want to test for
+            return false;
+        
         if (this.change === undefined)
             return false;
         

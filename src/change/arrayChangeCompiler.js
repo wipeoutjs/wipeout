@@ -1,122 +1,32 @@
 
 Class("wipeout.change.arrayChangeCompiler", function () {
     
-    function arrayChangeCompiler(changes, array, callbacks) {
+    function changedValues (finalArrayOrBasedOn) {
         
-        this.fullChain = changes;
-        this.array = array;
-        this.callbacks = callbacks;
+        this.removedValues = [];
+        this.addedValues = [];
         
-        this.addedRemoved = this.getAddedAndRemoved(callbacks);
-    }
-    
-    arrayChangeCompiler.prototype.execute = function () {
-        
-        if (this.__executed)
-            return;
-        
-        this.__executed = true;
-        
-        var defaultVal = this.addedRemoved.value(null);
-        
-        var val;
-        //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(this.callbacks, function(item) {
-            val = this.addedRemoved.value(item);
-            if (val)
-                delete item.firstChange;
-            else
-                val = defaultVal;
-
-            if (!item.firstChange)
-                item(val.removedValues, val.addedValues, val.moved);
-        }, this);
-    };
-    
-    
-    //TODO: can I add merge this with processMovedItems with performance gains?
-    arrayChangeCompiler.prototype.getAddedAndRemoved = function (callbacks) {
-                
-        var defaultOutput = {
-            removedValues: [],
-            addedValues: []
-        };
-        
-        var output = new wipeout.utils.dictionary();
-        output.add(null, defaultOutput);
-        
-        var array = wipeout.utils.obj.copyArray(this.array), tmp, tmp2, change;
-        
-        // add references to any callbacks which were added later
-        var specialCallbacks = new wipeout.utils.dictionary();
-        enumerateArr(callbacks, function (callback) {
-            if (callback.firstChange) {
-                tmp = specialCallbacks.value(callback.firstChange);
-                if (!tmp)
-                    specialCallbacks.add(callback.firstChange, tmp = []);
-                
-                tmp.push(callback);
-            }
-        });
-        
-        for (var i = this.fullChain.length - 1; i >= 0; i--) {
-            change = this.fullChain[i];
+        if(finalArrayOrBasedOn instanceof changedValues) {
+            enumerateArr(finalArrayOrBasedOn.removedValues, function (val) {
+                this.removedValues.push(val);
+            }, this);
             
-            if (!isNaN(tmp = parseInt(change.name))) {
-                change = {
-                    addedCount: 1,
-                    index: tmp,
-                    removed: [change.oldValue]
-                };
-            } else if (change.type !== "splice") {
-                throw "Can only operate on splices";    //TODO
-            }
+            enumerateArr(finalArrayOrBasedOn.addedValues, function (val) {
+                this.addedValues.push(val);
+            }, this);
             
-            tmp2 = 0;
-            for (var j = 0; j < change.addedCount; j++) {
-                if ((tmp = defaultOutput.removedValues.indexOf(array[change.index + j])) !== -1) {
-                    defaultOutput.removedValues.splice(tmp, 1);
-                } else {
-                    defaultOutput.addedValues.splice(tmp2, 0, array[change.index + j]);
-                    tmp2++;
-                }
-            }
-                 
-            tmp2 = 0;       
-            for (var j = 0, jj = change.removed.length; j < jj; j++) {
-                if ((tmp = defaultOutput.addedValues.indexOf(change.removed[j])) !== -1) {
-                    defaultOutput.addedValues.splice(tmp, 1);
-                } else {
-                    defaultOutput.removedValues.splice(tmp2, 0, change.removed[j]);
-                    tmp2++;
-                }
-            }
-            
-            var args = wipeout.utils.obj.copyArray(change.removed);
-            args.splice(0, 0, change.index, change.addedCount);
-            array.splice.apply(array, args);
-            
-            // calculate added/removed/moved for any callbacks which were added later
-            if (tmp = specialCallbacks.value(this.fullChain[i])) { // do not use "change" variable, it may have changed   
-                enumerateArr(tmp, function (val) {
-                    output.add(val, {
-                        removedValues: wipeout.utils.obj.copyArray(defaultOutput.removedValues),
-                        addedValues: wipeout.utils.obj.copyArray(defaultOutput.addedValues),
-                        moved: this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array) // TODO, only if moved is needed
-                    });
-                }, this);
-            }            
+            this.finalArray = finalArrayOrBasedOn.finalArray;
+        } else {            
+            this.finalArray = wipeout.utils.obj.copyArray(finalArrayOrBasedOn);
         }
-        
-         //TODO: only if moved is needed
-        defaultOutput.moved = this.processMovedItems(defaultOutput.removedValues, defaultOutput.addedValues, array);
-        
-        return output;
     }
     
     //TODO: unit test
     //TODO: a very complex scenario test
-    arrayChangeCompiler.prototype.processMovedItems = function (removedValues, addedValues, oldArray) {
+    changedValues.prototype.finalizeXXX = function (oldArray) {
+        if (this.moved)
+            return;
+        
         var tmp, tmp2;
         
         var movedFrom = [],         // an item which was moved
@@ -127,8 +37,8 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             moved = [];             // moved items
                 
         // populate addedIndexes and movedTo
-        var added = wipeout.utils.obj.copyArray(addedValues);
-        enumerateArr(this.array, function(item, i) {
+        var added = wipeout.utils.obj.copyArray(this.addedValues);
+        enumerateArr(this.finalArray, function(item, i) {
             if (i >= oldArray.length || item !== oldArray[i]) {                
                 if ((tmp = added.indexOf(item)) !== -1) {
                     addedIndexes.push({
@@ -143,9 +53,9 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         });
         
         // populate removedIndexes and movedFrom and movedFromIndexes
-        var removed = wipeout.utils.obj.copyArray(removedValues);
+        var removed = wipeout.utils.obj.copyArray(this.removedValues);
         enumerateArr(oldArray, function(item, i) {
-            if (i >= this.array.length || item !== this.array[i]) {                
+            if (i >= this.finalArray.length || item !== this.finalArray[i]) {                
                 if ((tmp = removed.indexOf(item)) !== -1) {
                     removedIndexes.push({
                         value: item,
@@ -173,11 +83,155 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             });
         }
         
-        return {
+        this.moved = {
             moved: moved,
             added: addedIndexes,
             removed: removedIndexes
         };
+    };
+    
+    var callbackDictionary = wipeout.utils.dictionary.extend(function callbackDictionary (keys, defaultValue) {
+        this._super();
+        
+        this.activeValues = [];
+        this.unInitializedCallbacks = [];
+        
+        enumerateArr(keys, function(key) {
+            this.add(key, defaultValue);
+        }, this);
+    });
+    
+    callbackDictionary.prototype.add = function (key, value) {
+        this._super(key, value);
+        
+        if (this.activeValues.indexOf(value) === -1)
+            this.activeValues.push(value);
+        
+        if (!key.changeValidator.isValid())
+            this.unInitializedCallbacks.push(key);
+    };
+    
+    callbackDictionary.prototype.finalize = function (array) {
+        
+        for (var i = this.__keyArray.length - 1; i >= 0; i--) {
+            if (this.unInitializedCallbacks.indexOf(this.__keyArray[i]) !== -1)
+                this.remove(this.__keyArray[i]);
+            else                
+                // TODO: only if needed
+                this.__valueArray[i].finalizeXXX(array);            
+        }
+        
+        this.unInitializedCallbacks.length = 0;
+    };
+    
+    callbackDictionary.prototype.removeActiveValue = function (value) {        
+        var tmp
+        if ((tmp = this.activeValues.indexOf(value)) !== -1)
+            this.activeValues.splice(tmp, 1);
+        else
+            throw "test"    //TODO: remove else condition
+    };
+    
+    callbackDictionary.prototype.addItem = function (item) {
+        var tmp;
+        enumerateArr(this.activeValues, function(values) {
+            if ((tmp = values.removedValues.indexOf(item)) !== -1)
+                values.removedValues.splice(tmp, 1);
+            else
+                values.addedValues.push(item);
+        }, this);
+    };
+    
+    callbackDictionary.prototype.removeItem = function (item) {
+        var tmp;
+        enumerateArr(this.activeValues, function(values) {
+            if ((tmp = values.addedValues.indexOf(item)) !== -1)
+                values.addedValues.splice(tmp, 1);
+            else
+                values.removedValues.push(item);
+        }, this);
+    };
+    
+    callbackDictionary.prototype.execute = function () {
+        if (this.__executed)
+            return;
+        
+        this.__executed = true;
+        
+        for (var i = 0, ii = this.__keyArray.length; i < ii; i++) {
+            this.__keyArray[i](this.__valueArray[i].removedValues, this.__valueArray[i].addedValues, this.__valueArray[i].moved);
+        }
+    };
+    
+    function arrayChangeCompiler(changes, array, callbacks) {
+        
+        if (!changes.length || !callbacks.length) {
+            this.__executed = true;
+            return;
+        }            
+        
+        this.changes = changes;
+        this.array = wipeout.utils.obj.copyArray(array);
+        this.__callbacks = new callbackDictionary(callbacks, new changedValues(this.array));
+        
+        this.process();
+    }
+    
+    arrayChangeCompiler.prototype.execute = function () {        
+        this.__callbacks.execute();
+    };
+    
+    //TODO: can I add merge this with processMovedItems with performance gains?
+    arrayChangeCompiler.prototype.process = function () {
+        
+        var tmp, tmp2, change;
+        for (var i = this.changes.length - 1; i >= 0; i--) {
+            change = this.changes[i];
+            
+            if (!isNaN(tmp = parseInt(change.name))) {
+                change = {
+                    addedCount: 1,
+                    index: tmp,
+                    removed: [change.oldValue]
+                };
+            } else if (change.type !== "splice") {
+                throw "Can only operate on splices";    //TODO
+            }
+            
+            for (var j = 0; j < change.addedCount; j++)
+                this.__callbacks.addItem(this.array[change.index + j]);
+                 
+            for (var j = 0, jj = change.removed.length; j < jj; j++)
+                this.__callbacks.removeItem(change.removed[j]);
+            
+            var args = wipeout.utils.obj.copyArray(change.removed);
+            args.splice(0, 0, change.index, change.addedCount);
+            this.array.splice.apply(this.array, args);
+            
+            // reset change
+            change = this.changes[i];
+            
+            enumerateArr(this.__callbacks.keys_unsafe(), function (callback) {                
+                if (callback.changeValidator.shouldDispose(change)) {
+                    this.__callbacks.add(callback, new changedValues(this.array));
+                    callback.changeValidator.dispose();
+                }
+                
+                if ((tmp = this.__callbacks.unInitializedCallbacks.indexOf(callback)) !== -1) {
+                    if (callback.changeValidator.isValid({change:change})) {
+                        this.__callbacks.unInitializedCallbacks.splice(tmp, 1);
+                        tmp = new changedValues(this.__callbacks.value(callback));
+                        this.__callbacks.add(callback, tmp);
+                        
+                        //TODO: only if needed
+                        tmp.finalizeXXX(this.array);
+                        this.__callbacks.removeActiveValue(tmp);
+                    }
+                }
+            }, this);
+        }
+        
+        this.__callbacks.finalize(this.array);
     };
     
     return arrayChangeCompiler;    

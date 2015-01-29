@@ -40,7 +40,6 @@ Class("wipeout.change.array", function () {
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
         if (next === -1) {
-            
             new wipeout.change.arrayChangeCompiler(this.fullChain, this.array, callbacks.simpleCallbacks).execute();
         }
 

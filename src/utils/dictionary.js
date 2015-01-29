@@ -1,14 +1,22 @@
 Class("wipeout.utils.dictionary", function () {
 
-    function dictionary() {
+    var dictionary = wipeout.base.object.extend(function dictionary() {
         this.__keyArray = [], this.__valueArray = [];
-    };
+    });
     
     dictionary.prototype.add = function (key, value) {
         var i = this.__keyArray.indexOf(key);
         i === -1 ? (this.__keyArray.push(key), this.__valueArray.push(value)) : this.__valueArray[i] = value;
 
         return value;
+    };
+    
+    dictionary.prototype.keys = function () {
+        return wipeout.utils.obj.compyArray(this.keys_unsafe());
+    };
+    
+    dictionary.prototype.keys_unsafe = function () {
+        return this.__keyArray;
     };
     
     dictionary.prototype.remove = function (key) {
