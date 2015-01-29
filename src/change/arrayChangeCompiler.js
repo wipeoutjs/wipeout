@@ -2,22 +2,15 @@
 Class("wipeout.change.arrayChangeCompiler", function () {
     
     function changedValues (finalArrayOrBasedOn) {
-        
-        this.removedValues = [];
-        this.addedValues = [];
-        
+                
         if(finalArrayOrBasedOn instanceof changedValues) {
-            enumerateArr(finalArrayOrBasedOn.removedValues, function (val) {
-                this.removedValues.push(val);
-            }, this);
-            
-            enumerateArr(finalArrayOrBasedOn.addedValues, function (val) {
-                this.addedValues.push(val);
-            }, this);
-            
             this.finalArray = finalArrayOrBasedOn.finalArray;
+            this.removedValues = wipeout.utils.obj.copyArray(finalArrayOrBasedOn.removedValues);
+            this.addedValues = wipeout.utils.obj.copyArray(finalArrayOrBasedOn.addedValues);            
         } else {            
-            this.finalArray = wipeout.utils.obj.copyArray(finalArrayOrBasedOn);
+            this.finalArray = wipeout.utils.obj.copyArray(finalArrayOrBasedOn);            
+            this.removedValues = [];
+            this.addedValues = [];
         }
     }
     
@@ -132,23 +125,23 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             throw "test"    //TODO: remove else condition
     };
     
-    callbackDictionary.prototype.addItem = function (item) {
+    callbackDictionary.prototype.addItem = function (item, offset) {
         var tmp;
         enumerateArr(this.activeValues, function(values) {
             if ((tmp = values.removedValues.indexOf(item)) !== -1)
                 values.removedValues.splice(tmp, 1);
             else
-                values.addedValues.push(item);
+                values.addedValues.splice(0 + (offset || 0), 0, item);
         }, this);
     };
     
-    callbackDictionary.prototype.removeItem = function (item) {
+    callbackDictionary.prototype.removeItem = function (item, offset) {
         var tmp;
         enumerateArr(this.activeValues, function(values) {
             if ((tmp = values.addedValues.indexOf(item)) !== -1)
                 values.addedValues.splice(tmp, 1);
             else
-                values.removedValues.push(item);
+                values.removedValues.splice(0 + (offset || 0), 0, item);
         }, this);
     };
     
@@ -177,7 +170,12 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         this.process();
     }
     
-    arrayChangeCompiler.prototype.execute = function () {        
+    arrayChangeCompiler.prototype.execute = function () {   
+        if (this.__executed)
+            return;
+        
+        this.__executed = true;
+        
         this.__callbacks.execute();
     };
     
@@ -199,10 +197,10 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             }
             
             for (var j = 0; j < change.addedCount; j++)
-                this.__callbacks.addItem(this.array[change.index + j]);
+                this.__callbacks.addItem(this.array[change.index + j], j);
                  
             for (var j = 0, jj = change.removed.length; j < jj; j++)
-                this.__callbacks.removeItem(change.removed[j]);
+                this.__callbacks.removeItem(change.removed[j], j);
             
             var args = wipeout.utils.obj.copyArray(change.removed);
             args.splice(0, 0, change.index, change.addedCount);

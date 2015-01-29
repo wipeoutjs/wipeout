@@ -76,7 +76,6 @@ testUtils.testWithUtils("observe", "ensure changes before observe are not notice
     subject.push(55);
     
     subject.observe(function(removed, added, indexes) {
-        
         strictEqual(added.length, 2);
         strictEqual(added[0], 66);
         strictEqual(added[1], 77);
@@ -321,7 +320,7 @@ testUtils.testWithUtils("observe", "splice", false, function(methods, classes, s
     // arrange
     var subject = new wipeout.base.array([1, 2, 3]);
 
-    var val1 = 4, val2 = 5;
+    var val1 = 44, val2 = 55;
     subject.observe(function(removed, added, indexes) {
         strictEqual(removed.length, 1);
         strictEqual(removed[0], 2);
@@ -505,6 +504,7 @@ testUtils.testWithUtils("remove", null, false, function(methods, classes, subjec
 });
 
 testUtils.testWithUtils("bind", null, false, function(methods, classes, subject, invoker) {
+    
     // arrange
     var subject = new wipeout.base.array([1,2,3]);
     var another = [];

@@ -4,7 +4,9 @@ owts binding
 owts is valid regex
 
 
+array change, do not calculate if there are no args
 
+integrate array bind into arrayChangeCompiler.process
 
 
 

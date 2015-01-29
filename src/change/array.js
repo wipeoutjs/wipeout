@@ -30,12 +30,17 @@ Class("wipeout.change.array", function () {
         }
         
         //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(callbacks.complexCallbacks, function(item) {
-            if (item.firstChange === this.change)
-                delete item.firstChange;
+        enumerateArr(callbacks.complexCallbacks, function(callback) {
             
-            if (!item.firstChange)
-                item(this.change);
+            if (!callback.changeValidator.isValid(this))
+                return;
+            
+            if (callback.changeValidator.shouldDispose(this.change)) {
+                callback.changeValidator.dispose();
+                return;
+            }
+            
+            callback(this.change);
         }, this);
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
