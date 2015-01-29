@@ -23,15 +23,13 @@ Class("wipeout.change.nonObjectObserveObjectHandler", function () {
         var sub;
         for (var i = this.pendingOOSubscriptions.length - 1; i >= 0; i--) {
             sub = this.pendingOOSubscriptions[i];
-            if (change.name === sub.property || 
-                (sub.property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))
+            if (wipeout.change.objectHandler.changeIsForThisProperty(sub.property, change))
                 this.pendingOOSubscriptions.splice(i, 1)[0].changeValidator.registerFirstChange(change);
         }
         
         for (var i = this.pendingOOSubscriptionRemovals.length - 1; i >= 0; i--) {
             sub = this.pendingOOSubscriptionRemovals[i];
-            if (change.name === sub.property || 
-                (sub.property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change))) {
+            if (wipeout.change.objectHandler.changeIsForThisProperty(sub.property, change)) {
                 this.pendingOOSubscriptionRemovals.splice(i, 1)[0].changeValidator.afterLastChange(change, sub.__tempDisposeCallback);
                 delete sub.__tempDisposeCallback;
             }

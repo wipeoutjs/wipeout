@@ -11,50 +11,6 @@ function testMe (moduleName, buildSubject) {
         teardown: function() {
         }
     });
-
-    /*testUtils.testWithUtils("observe", "suspend", false, function(methods, classes, subject, invoker) {
-        
-        // arrange
-        var subject = buildSubject();
-        subject.val = "aaa";
-        var tmp = subject.observe("val", function(oldVal, newVal) {
-            ok(false);
-        });
-
-        // act
-        tmp.suspend(function () {
-            subject.val = "bbb";
-            stop();
-        });
-
-        setTimeout(function() {
-            ok(true);
-            start();
-        }, 100);
-    });
-
-    
-    testUtils.testWithUtils("observe", "suspend, 2 changes. Assert callback only invoked once", false, function(methods, classes, subject, invoker) {
-        
-        // arrange
-        var subject = buildSubject();
-        subject.val = "aaa";
-        var tmp = subject.observe("val", function(oldVal, newVal) {
-            strictEqual(oldVal, "aaa");
-            strictEqual(newVal, "ccc");
-            start();
-        }, null, true);
-
-        // act
-        tmp.suspend(function () {
-            subject.val = "bbb";
-        });
-        
-        subject.val = "ccc";
-
-        stop();
-    });*/
-
     
     testUtils.testWithUtils("observe", "multiple changes, 1 registration", false, function(methods, classes, subject, invoker) {
         

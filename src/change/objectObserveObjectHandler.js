@@ -25,7 +25,7 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
     objectObserveObjectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
         var cb = (function (changes) {            
             for (var i = 0, ii = changes.length; i < ii; i++) {                
-                if (changes[i].name === property || (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(changes[i]))) {                    
+                if (wipeout.change.objectHandler.changeIsForThisProperty(property, changes[i])) {                    
                     (this.forArray ? Array : Object).unobserve(this.forObject, cb);
                     observeCallback.changeValidator.afterLastChange(changes[i], disposeCallback);
                 }
@@ -51,7 +51,7 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
             var firstChangeDone = false;
             enumerateArr(changes, function(change) {
                 
-                if (!firstChangeDone && (change.name === property || (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change)))) {
+                if (!firstChangeDone && wipeout.change.objectHandler.changeIsForThisProperty(property, change)) {
                     Object.unobserve(_this.forObject, tempSubscription);
                     _this.extraCallbacks--;
                     firstChangeDone = true;

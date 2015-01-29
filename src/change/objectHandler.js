@@ -113,48 +113,35 @@ Class("wipeout.change.objectHandler", function () {
         callback.changeValidator = new wipeout.change.changeValidation();
         var cancel = this._observe(property, callback, callbackArray, function () { callbackArray.sort(function (a, b) { return a.priority > b.priority  }) });
         
-        function hardDispose () {               
-            if(!callbackArray) return;
+        function hardDispose () {
             
             cancel();
 
             var i = callbackArray.indexOf(callback);
             if (i !== -1)
                 callbackArray.splice(i, 1);
-
-            callbackArray = null;
         }
         
+        var disposing = false;
         var output = {
-            dispose: (function (allowPendingChanges) {   // todo document                             
+            dispose: (function (allowPendingChanges) {   // todo document
+                if(disposing) return;
+                disposing = true;
+                
                 if (!allowPendingChanges)
                     hardDispose();
                 else
                     this.disposeOfObserve(property, callback, hardDispose);
-            }).bind(this),
-            suspend: (function (callback) {
-                //TODO document this                
-                if (callback === false) {   // un-suspend
-                    var dispose = this.forObject.observe(property, function () {
-                        this.disposeOf(dispose.disposableKey);
-                        
-                        // remove suspend +++++++++++++++++++
-                    }, this, null, true, Number.MAX_VALUE * -1);
-                } else if (!arguments.length || callback.constructor !== Function) {    // suspend
-                    // add suspend ++++++++++++++++++
-                } else {        // suspend, run callback, unsuspend
-                    try {
-                        output.suspend();
-                        callback();
-                    } finally {
-                        output.suspend(false);
-                    }
-                }
             }).bind(this)
         };
         
         output.disposableKey = this.registerDisposable(output);        
         return output;
+    };
+    
+    objectHandler.changeIsForThisProperty = function(property, change) {
+        return change.name === property || 
+            (property === wipeout.change.objectHandler.arrayIndexProperty && this.isValidArrayChange(change));
     };
     
     objectHandler.prototype.dispose = function() {

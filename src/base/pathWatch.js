@@ -31,10 +31,6 @@ Class("wipeout.base.pathWatch", function () {
         this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
     
-    pathWatch.prototype.suspend = function () {
-        return this.disp.apply(this.disp, arguments);
-    };
-    
     //TODO test
     pathWatch.prototype.onValueChanged = function (callback, evaluateImmediately) {
         var obs = this.observe("val", callback);        
