@@ -1,21 +1,28 @@
 
 Class("wipeout.change.arrayChangeCompiler", function () {
     
-    function arrayChangeCompiler(changes, array) {
+    function arrayChangeCompiler(changes, array, callbacks) {
         
         this.fullChain = changes;
         this.array = array;
+        this.callbacks = callbacks;
+        
+        this.addedRemoved = this.getAddedAndRemoved(callbacks);
     }
     
-    arrayChangeCompiler.prototype.execute = function (callbacks) {
+    arrayChangeCompiler.prototype.execute = function () {
         
-        var addedRemoved = this.getAddedAndRemoved(callbacks);
-        var defaultVal = addedRemoved.value(null);
-
+        if (this.__executed)
+            return;
+        
+        this.__executed = true;
+        
+        var defaultVal = this.addedRemoved.value(null);
+        
         var val;
         //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(callbacks, function(item) {
-            val = addedRemoved.value(item);
+        enumerateArr(this.callbacks, function(item) {
+            val = this.addedRemoved.value(item);
             if (val)
                 delete item.firstChange;
             else
