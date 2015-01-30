@@ -30,7 +30,7 @@ Class("wipeout.change.array", function () {
         }
         
         //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(callbacks.complexCallbacks, function(callback) {
+        enumerateArr(callbacks.complexCallbacks.slice(), function(callback) {
             
             if (!callback.changeValidator.isValid(this))
                 return;

@@ -114,6 +114,16 @@ Class("wipeout.base.array", function () {
         var replace = anotherArray instanceof array;
         return this.observe(function (removed, added, indexes) {
             var rem = {};
+            
+            var tempSubscription;
+            if (anotherArray instanceof wipeout.base.array) {
+                tempSubscription = anotherArray.observe(function (change) {
+                    tempSubscription.changes.push(change);
+                }, null, true);
+                
+                tempSubscription.fromObject = this;
+                tempSubscription.changes = [];
+            }
 
             var movedItem;
             enumerateArr(indexes.moved, function(item) {
@@ -136,6 +146,9 @@ Class("wipeout.base.array", function () {
 
             if (anotherArray.length !== this.length)
                 anotherArray.length = this.length;
+            
+            if (tempSubscription)
+                tempSubscription.dispose(true);
         }, this);
     }
     
