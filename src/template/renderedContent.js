@@ -127,7 +127,7 @@ Class("wipeout.template.renderedContent", function () {
             return;
         
         this.renderContext = this.parentRenderContext ? 
-            wipeout.template.renderContext.childContext(object, this.parentRenderContext) :
+            this.parentRenderContext.childContext(object) :
             new wipeout.template.renderContext(object);
         
         if (object instanceof wipeout.viewModels.visual) {
