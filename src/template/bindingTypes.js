@@ -26,6 +26,23 @@ Class("wipeout.template.bindingTypes", function () {
         viewModel[name] = parser(parser.xmlParserTempName ? setter.value : setter.valueAsString(), name, renderContext);
     };
     
+    function bindOneWay (bindFrom, bindFromName, bindTo, bindToName) {
+        var callback = wipeout.base.computed.createBindOrSetFunction(bindTo, bindToName);
+        var pw = new wipeout.base.pathWatch(bindFrom, bindFromName, callback);
+        
+        if (bindFrom instanceof wipeout.base.disposable) {
+            bindFrom.registerDisposable(callback);
+            bindFrom.registerDisposable(pw);
+        }
+        
+        if (bindTo instanceof wipeout.base.disposable) {
+            bindTo.registerDisposable(callback);
+            bindTo.registerDisposable(pw);
+        }
+
+        callback(null, wipeout.utils.obj.getObject(bindFromName, bindFrom));
+    }
+    
     bindingTypes.ow = function (viewModel, setter, name, renderContext) {
         
         if (!(viewModel instanceof wipeout.base.watched))
@@ -34,19 +51,10 @@ Class("wipeout.template.bindingTypes", function () {
         var parser = getParser(viewModel, name, setter);
         
         var val;
-        if (bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()) && !parser.xmlParserTempName) {
+        if (parser.wipeoutAutoParser && bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString())) {
             
-            var p = function (value) { return parser(value, name, renderContext); }            
-            var callback = wipeout.base.computed.createBindOrSetFunction(viewModel, name, p);
-            var pw = new wipeout.base.pathWatch(renderContext, val, callback, this);
-            pw.registerDisposable(callback);
-            viewModel.registerDisposable(pw);
-            
-            viewModel[name] = p(setter.valueAsString());
+            bindOneWay(renderContext, val, viewModel, name);
         } else {
-        
-            var parser = getParser(viewModel, name, setter);
-
             viewModel.computed(name, parser, {
                 value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
                 propertyName: name,
@@ -57,13 +65,10 @@ Class("wipeout.template.bindingTypes", function () {
     
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
         var val;
-        if (!bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()))
+        if (!getParser(viewModel, name, setter).wipeoutAutoParser || !bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
         
-        var callback = wipeout.base.computed.createBindOrSetFunction(renderContext, val);
-        var pw = new wipeout.base.pathWatch(viewModel, name, callback, this);
-        pw.registerDisposable(callback);
-        viewModel.registerDisposable(pw);
+        bindOneWay(viewModel, name, renderContext, val);
     };
     
     //TODO: test

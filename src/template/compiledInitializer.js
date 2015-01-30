@@ -164,7 +164,10 @@ Class("wipeout.template.compiledInitializer", function () {
                 
         value = "with (renderContext) return " + value + ";";
         
-        return new Function("value", "propertyName", "renderContext", value);
+        var output = new Function("value", "propertyName", "renderContext", value);
+        output.wipeoutAutoParser = true;
+        
+        return output;
     };
     
     compiledInitializer.parsers = {
