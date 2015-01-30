@@ -14,6 +14,8 @@ Class("wipeout.base.array", function () {
             length: initialValues ? initialValues.length : 0
         };
         
+        this.__bindingChanges = [];
+        
         if (initialValues)
             for(var i = 0, ii = initialValues.length; i < ii; i++)
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
@@ -113,6 +115,12 @@ Class("wipeout.base.array", function () {
         
         var replace = anotherArray instanceof array;
         return this.observe(function (removed, added, indexes) {
+            debugger;
+            for (var i = 0, ii = this.__bindingChanges.length; i < ii; i++) {
+                if (this.__bindingChanges[i].fromArray === anotherArray && wipeout.utils.obj.compareArrays(indexes.changes, this.__bindingChanges[i].changes)) 
+                    return;
+            }
+            
             var rem = {};
             
             var tempSubscription;
@@ -121,7 +129,15 @@ Class("wipeout.base.array", function () {
                     tempSubscription.changes.push(change);
                 }, null, true);
                 
-                tempSubscription.fromObject = this;
+                // add and cleanup. Binding changes are only needed until next update
+                anotherArray.__bindingChanges.push(tempSubscription);
+                setTimeout(function() {
+                    var i = anotherArray.__bindingChanges.indexOf(tempSubscription);
+                    if (i !== -1)
+                        anotherArray.__bindingChanges.splice(i, 1);
+                }, 100);
+                
+                tempSubscription.fromArray = this;
                 tempSubscription.changes = [];
             }
 

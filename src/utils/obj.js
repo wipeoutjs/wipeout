@@ -218,6 +218,17 @@ Class("wipeout.utils.obj", function () {
         
         context[propertyName[0]] = value;
     };    
+    
+    var compareArrays = function (array1, array2) {
+        if (array1.length !== array2.length)
+            return false;
+        
+        for (var i = 0, ii = array1.length; i < ii; i++)
+            if (array1[i] !== array2[i])
+                return false;
+        
+        return true;
+    }
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -273,6 +284,7 @@ Class("wipeout.utils.obj", function () {
     obj.splitPropertyName = splitPropertyName;
     obj.joinPropertyName = joinPropertyName;
     obj.copyArray = copyArray;
+    obj.compareArrays = compareArrays;
     obj.random = random;
     obj.endsWith = endsWith;
     return obj;

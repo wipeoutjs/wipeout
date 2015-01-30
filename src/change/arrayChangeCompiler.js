@@ -3,6 +3,7 @@ Class("wipeout.change.arrayChangeCompiler", function () {
     
     function changedValues (finalArrayOrBasedOn) {
                 
+        this.changes = [];
         if(finalArrayOrBasedOn instanceof changedValues) {
             this.finalArray = finalArrayOrBasedOn.finalArray;
             this.removedValues = wipeout.utils.obj.copyArray(finalArrayOrBasedOn.removedValues);
@@ -79,7 +80,8 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         this.moved = {
             moved: moved,
             added: addedIndexes,
-            removed: removedIndexes
+            removed: removedIndexes,
+            changes: this.changes
         };
     };
     
@@ -145,6 +147,12 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         }, this);
     };
     
+    callbackDictionary.prototype.prependChange = function (change) {
+        enumerateArr(this.activeValues, function(values) {
+            values.changes.splice(0, 0, change);
+        }, this);
+    };
+    
     callbackDictionary.prototype.execute = function () {
         if (this.__executed)
             return;
@@ -201,6 +209,8 @@ Class("wipeout.change.arrayChangeCompiler", function () {
                  
             for (var j = 0, jj = change.removed.length; j < jj; j++)
                 this.__callbacks.removeItem(change.removed[j], j);
+            
+            this.__callbacks.prependChange(change);
             
             var args = wipeout.utils.obj.copyArray(change.removed);
             args.splice(0, 0, change.index, change.addedCount);
