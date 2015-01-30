@@ -17,6 +17,7 @@ Class("wipeout.settings", function() {
     settings.wipeoutAttributes = {
         viewModelName: "wo-view-model"
     };
-    
+	
+	
     return settings;
 });
