@@ -18,6 +18,5 @@ Class("wipeout.settings", function() {
         viewModelName: "wo-view-model"
     };
 	
-	
     return settings;
 });
