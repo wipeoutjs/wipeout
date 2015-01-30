@@ -15,9 +15,12 @@ Class("wipeout.template.renderContext", function () {
         }            
     }
     
-    renderContext.prototype.childContext = function (forVm) {
+    // each render context has access to the global scope
+    renderContext.prototype = window;
+    
+    renderContext.childContext = function (forVm, parentContext) {
         
-        return new wipeout.template.renderContext(forVm, this);
+        return new renderContext(forVm, parentContext);
     };
     
     renderContext.addRenderContext = function (toFunction) {

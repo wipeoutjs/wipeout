@@ -58,35 +58,51 @@ Class("wipeout.base.computed", function () {
         this.val = this.callbackFunction.apply(this.context, this.arguments);
     };
     
-    computed.prototype.bind = function (object, property) {
+    //TODO: this should be in utils
+    computed.createBindOrSetFunction = function (setterObject, setterProperty, parser) {
         var arrayDisposeCallback;
-        
-        var callback = function (oldValue, newValue) {
+        var output = function (oldValue, newValue) {
             
-            var existingVal = wipeout.utils.obj.getObject(property, object);
+            if (parser) newValue = parser(newValue);
+            
+            var existingVal = wipeout.utils.obj.getObject(setterProperty, setterObject);
             if (newValue === existingVal)
                 return;
             
-            if (arrayDisposeCallback) {
-                arrayDisposeCallback.dispose();
-                arrayDisposeCallback = null;
-            }            
+            output.dispose();
 
             // do not treat xml templates like Arrays
             if (!(newValue instanceof Array) || !(existingVal instanceof Array) || newValue instanceof wipeout.template.templateElementBase || existingVal instanceof wipeout.template.templateElementBase) {
-                wipeout.utils.obj.setObject(property, object, newValue);
+                wipeout.utils.obj.setObject(setterProperty, setterObject, newValue);
             } else if (newValue instanceof wipeout.base.array) {                                        
                 arrayDisposeCallback = newValue.bind(existingVal);
             } else {
-                wipeout.base.array.copyAll(object[property]);
+                wipeout.base.array.copyAll(setterObject[setterProperty]);
             }
         };
         
-        //TODO: remove this
-        callback.BINDCALLBACK = true;
+        output.dispose = function () {
+            if (arrayDisposeCallback) {
+                arrayDisposeCallback.dispose();
+                arrayDisposeCallback = null;
+            }
+        };
         
+        return output;
+    };
+    
+    computed.prototype.bind = function (object, property) {
+        var arrayDisposeCallback;
+        
+        var callback = computed.createBindOrSetFunction(object, property);
+        var obs = this.observe("val", callback);
         callback(null, this.val);
-        return this.observe("val", callback);
+        
+        var output = new wipeout.base.disposable();        
+        output.registerDisposable(obs);
+        output.registerDisposable(callback);
+        
+        return output;
     };
         
     computed.stripFunction = function(input) { //TODO: unit test independantly

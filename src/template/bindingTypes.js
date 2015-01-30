@@ -30,14 +30,29 @@ Class("wipeout.template.bindingTypes", function () {
         
         if (!(viewModel instanceof wipeout.base.watched))
             return bindingTypes.nb(viewModel, setter, name, renderContext);
-        
+               
         var parser = getParser(viewModel, name, setter);
         
-        viewModel.computed(name, parser, {
-            value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
-            propertyName: name,
-            renderContext: renderContext
-        }, wipeout.template.renderContext.addRenderContext(parser));
+        var val;
+        if (bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()) && !parser.xmlParserTempName) {
+            
+            var p = function (value) { return parser(value, name, renderContext); }            
+            var callback = wipeout.base.computed.createBindOrSetFunction(viewModel, name, p);
+            var pw = new wipeout.base.pathWatch(renderContext, val, callback, this);
+            pw.registerDisposable(callback);
+            viewModel.registerDisposable(pw);
+            
+            viewModel[name] = p(setter.valueAsString());
+        } else {
+        
+            var parser = getParser(viewModel, name, setter);
+
+            viewModel.computed(name, parser, {
+                value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
+                propertyName: name,
+                renderContext: renderContext
+            }, wipeout.template.renderContext.addRenderContext(parser));
+        }
     };
     
     bindingTypes.owts = function (viewModel, setter, name, renderContext) {
@@ -45,8 +60,10 @@ Class("wipeout.template.bindingTypes", function () {
         if (!bindingTypes.owts.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
         
-        name = new Function("viewModel", "return viewModel." + name + ";");
-        viewModel.registerDisposable(new wipeout.base.computed(renderContext, val, name, {viewModel: viewModel}));
+        var callback = wipeout.base.computed.createBindOrSetFunction(renderContext, val);
+        var pw = new wipeout.base.pathWatch(viewModel, name, callback, this);
+        pw.registerDisposable(callback);
+        viewModel.registerDisposable(pw);
     };
     
     //TODO: test

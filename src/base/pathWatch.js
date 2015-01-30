@@ -33,7 +33,8 @@ Class("wipeout.base.pathWatch", function () {
     
     //TODO test
     pathWatch.prototype.onValueChanged = function (callback, evaluateImmediately) {
-        var obs = this.observe("val", callback);        
+        var obs = this.observe("val", callback); 
+        this.registerDisposable(obs);
         if (evaluateImmediately) callback(undefined, this.val);
         return obs;
     }
