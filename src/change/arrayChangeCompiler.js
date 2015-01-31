@@ -222,18 +222,18 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             
             this.__callbacks.prependChange(change);
             
-            var args = wipeout.utils.obj.copyArray(change.removed);
-            args.splice(0, 0, change.index, change.addedCount);
-            this.array.splice.apply(this.array, args);
-            
             // apply splice to bound arrays
             enumerateArr(this.boundArrays, function (array) {
-                var args = this.array.slice(change.index, change.index - 1 + change.addedCount);
+                var args = this.array.slice(change.index, change.index + change.addedCount);
                 args.splice(0, 0, change.index, change.removed.length);
                 this.boundArrayActions.splice(0, 0, function () {
                     array.splice.apply(array, args);
                 });
             }, this);
+            
+            var args = wipeout.utils.obj.copyArray(change.removed);
+            args.splice(0, 0, change.index, change.addedCount);
+            this.array.splice.apply(this.array, args);
             
             // reset change
             change = this.changes[i];

@@ -521,10 +521,9 @@ testUtils.testWithUtils("remove", null, false, function(methods, classes, subjec
     strictEqual(subject[1], 5);
 });
 
-testUtils.testWithUtils("bind", null, false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("bind", "length change", false, function(methods, classes, subject, invoker) {
     
     //TODO: make this test ore complex,:
-    //    test 1: with more than 1 change
     //    test 2: with 2 way bindings
     
     // arrange
@@ -551,6 +550,37 @@ testUtils.testWithUtils("bind", null, false, function(methods, classes, subject,
     
     assert();
     subject.length = 2;
+    stop();
+});
+
+
+testUtils.testWithUtils("bind", "2 splices", false, function(methods, classes, subject, invoker) {
+        
+    // arrange
+    var subject = new wipeout.base.array([1,2,3,4,5,6,7,8,9]);
+    var another = [];
+
+    var val = {};
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 8);
+        assert();
+        start();
+    }, true);
+
+    // act
+    subject.bind(another);
+    
+    // assert
+    function assert() {
+        strictEqual(subject.length, another.length);
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i]);
+    }
+    
+    assert();
+    subject.splice(3, 3);
+    subject.splice(5, 0, 99, 88);
     stop();
 });
 
