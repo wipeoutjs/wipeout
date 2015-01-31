@@ -104,6 +104,14 @@ Class("wipeout.base.computed", function () {
         
         return output;
     };
+    
+    computed.prototype.onValueChanged = function (callback, executeImmediately) {
+        
+        if (executeImmediately)
+            callback(undefined, this.val);
+            
+        return this.observe("val", callback);
+    };
         
     computed.stripFunction = function(input) { //TODO: unit test independantly
         input = input

@@ -69,7 +69,7 @@
 })();
 
 var actions = [
-    /*function(view) {
+    /**/function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
@@ -78,7 +78,7 @@ var actions = [
     }, function(view) {
         view.model.rootTitle = "Persons";
         return "Changed title";
-    },*/ function(view) {
+    },/**/ function(view) {
         theModel.items.push(wo.watch({itemId: 66, itemName: "Paddy"}));
         return "Added person";
     }, function(view) {
@@ -95,16 +95,16 @@ var actions = [
         view.model.items.splice(1, 1);
         return "Removed person";
     }, function(view) {
-        view.model.items[0].itemId = 55;
+        view.model.items[0].itemId = 78;
         return "Changed first person id, total ids should also be updated";
     }, function(view) {
-        view.model.items.replace(0, wo.watch({itemId: 99, itemName: "LJBLKJB"}));
+        view.model.items.replace(0, wo.watch({itemId: 54, itemName: "LJBLKJB"}));
         return "Changed first person.";
     }, function(view) {
-        view.model.items[0].itemId = 55;
+        view.model.items[0].itemId = 896;
         return "Changed first person id, total ids should also be updated";
     }, function(view) {
-        view.model.items.replace(0, {itemId: 99, itemName: "someone else"});
+        view.model.items.replace(0, {itemId: 434, itemName: "someone else"});
         return "Changed first person, destroyed observables";
     }, function(view) {
         view.model.deepItem.item.value = "value 1";

@@ -124,6 +124,8 @@ Class("wipeout.change.handler", function () {
         }
 
         setTimeout((function() {
+            window.ch = window.ch ||[];
+            ch.push(change.change);
             change.go(this);
         }).bind(this));
     };

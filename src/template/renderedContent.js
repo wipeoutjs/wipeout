@@ -52,6 +52,13 @@ Class("wipeout.template.renderedContent", function () {
             return output;
         }).bind(this);
         
+        var remove = function (item) {                    
+            if (itemsControl)
+                itemsControl.onItemDeleted(item.renderedChild);
+
+            item.dispose();
+        };
+        
         enumerateArr(array, function (item, i) {
             children.push(create(item, i));            
         });
@@ -61,7 +68,7 @@ Class("wipeout.template.renderedContent", function () {
         
         if (array instanceof wipeout.base.array) {
             arrayObserve = array.observe(function (removed, added, indexes) {
-                debugger;
+                
                 removed = [];
                 enumerateArr(indexes.removed, function (rem) {
                     removed.push(children[rem.index]);
@@ -84,12 +91,7 @@ Class("wipeout.template.renderedContent", function () {
                     children[added.index] = create(added.value, added.index);
                 });
                 
-                enumerateArr(removed, function (item) {                    
-                    if (itemsControl)
-                        itemsControl.onItemDeleted(item.renderedChild);
-
-                    item.dispose();
-                });
+                enumerateArr(removed, remove);
                 
                 children.length = array.length;
             }, this);

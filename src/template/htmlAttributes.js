@@ -49,25 +49,19 @@ Class("wipeout.template.htmlAttributes", function () {
     
     var defaultVal = {};
     function onVmValueChanged (value, callback, renderContext) { //TODO error handling
-        
-        var context = new wipeout.base.watched({value: defaultVal}), name = "value";
-        context.callback = wipeout.template.compiledInitializer.getAutoParser(value);
-        
-        var observation = context.observe(name, callback);
+                        
+        var logic = wipeout.template.compiledInitializer.getAutoParser(value);
         
         // order important. Observe before computed execution
         var computed = new wipeout.base.computed(
-            context.callback,
-            context, 
+            logic,
+            null, 
             {renderContext: renderContext, value: value, propertyName: ""},
-            wipeout.template.renderContext.addRenderContext(context.callback));
+            wipeout.template.renderContext.addRenderContext(logic));
         
-        computed.bind(context, name);
+        computed.onValueChanged(callback, true);
         
-        return function output() {
-            observation.dispose();
-            computed.dispose();
-        };
+        return computed.dispose.bind(computed);
     };
     
     function onElementEvent (element, event, callback) { //TODO error handling

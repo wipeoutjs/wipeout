@@ -3,18 +3,29 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
         
     var useObjectObserve = wipeout.base.watched.useObjectObserve;
     
+    var ch = wipeout.change.objectHandler.arrayIndexProperty;
     var objectObserveObjectHandler = wipeout.change.objectHandler.extend(function objectObserveObjectHandler (forObject) {
         
         this._super(forObject);
 
         this.__subscription = (function(changes) {
             enumerateArr(changes, function(change) {
-                this.registerChange(change);
+                if ((change.name && this.callbacks[change.name]) || this.isValidArrayChange(change))
+                    this.registerChange(change);
             }, this)
         }).bind(this);
         
-        (this.forArray ? Array : Object).observe(forObject, this.__subscription);
+        this.__uninitialized = true;
     });
+    
+    objectObserveObjectHandler.prototype.observe = function () {
+        if (this.__uninitialized) {
+            delete this.__uninitialized;
+            (this.forArray ? Array : Object).observe(this.forObject, this.__subscription);
+        }
+        
+        return this._super.apply(this, arguments);
+    };
     
     objectObserveObjectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
         this.onNextPropertyChange(property, function (change) {

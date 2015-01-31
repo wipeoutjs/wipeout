@@ -28,7 +28,7 @@ Class("wipeout.base.pathWatch", function () {
         this.buildObservableChain();
         this.init = true;
         
-        this.disp = this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+        this.observe("val", callback, context || forObject, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     });
     
     //TODO test
