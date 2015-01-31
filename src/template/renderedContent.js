@@ -51,13 +51,6 @@ Class("wipeout.template.renderedContent", function () {
                 
             return output;
         }).bind(this);
-            
-        var remove = (function (item) {
-            if (itemsControl)
-                itemsControl.onItemDeleted(item.renderedChild);
-
-            item.dispose();
-        }).bind(this);
         
         enumerateArr(array, function (item, i) {
             children.push(create(item, i));            
@@ -68,7 +61,7 @@ Class("wipeout.template.renderedContent", function () {
         
         if (array instanceof wipeout.base.array) {
             arrayObserve = array.observe(function (removed, added, indexes) {
-                
+                debugger;
                 removed = [];
                 enumerateArr(indexes.removed, function (rem) {
                     removed.push(children[rem.index]);
@@ -78,24 +71,28 @@ Class("wipeout.template.renderedContent", function () {
                 enumerateArr(indexes.moved, function (item) {
                     moved[item.to] = children[item.to];
                     
+                    var toMove = moved[item.from] || children[item.from];
                     if (item.to >= children.length - 1)
-                        children[item.from].appendTo(this.openingTag);
+                        toMove.appendTo(this.openingTag);
                     else
-                        children[item.from].move(children[item.to].openingTag);
+                        toMove.move(children[item.to].openingTag);
                         
-                    children[item.to] = moved[item.from] || children[item.from];
-                });
+                    children[item.to] = toMove;
+                }, this);
                 
                 enumerateArr(indexes.added, function (added) {
                     children[added.index] = create(added.value, added.index);
                 });
                 
-                enumerateArr(removed, function (rem) {
-                    remove(rem);
+                enumerateArr(removed, function (item) {                    
+                    if (itemsControl)
+                        itemsControl.onItemDeleted(item.renderedChild);
+
+                    item.dispose();
                 });
                 
                 children.length = array.length;
-            });
+            }, this);
         }
         
         this.disposeOfBindings = (function () {
@@ -241,9 +238,6 @@ Class("wipeout.template.renderedContent", function () {
     
     //TODO: test
     renderedContent.prototype.move = function (insertBefore) {
-        
-        if (insertBefore.wipeoutClosing)
-            insertBefore = insertBefore.wipeoutClosing.openingTag;
         
         var html = this.allHtml();
         for (var i = 0, ii = html.length; i < ii; i++) {
