@@ -553,7 +553,6 @@ testUtils.testWithUtils("bind", "length change", false, function(methods, classe
     stop();
 });
 
-
 testUtils.testWithUtils("bind", "2 splices", false, function(methods, classes, subject, invoker) {
         
     // arrange
@@ -570,6 +569,43 @@ testUtils.testWithUtils("bind", "2 splices", false, function(methods, classes, s
 
     // act
     subject.bind(another);
+    
+    // assert
+    function assert() {
+        strictEqual(subject.length, another.length);
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i]);
+    }
+    
+    assert();
+    subject.splice(3, 3);
+    subject.splice(5, 0, 99, 88);
+    stop();
+});
+
+testUtils.testWithUtils("bind", "2 way bindings", false, function(methods, classes, subject, invoker) {
+        
+    // arrange
+    var subject = new wipeout.base.array([1,2,3,4,5,6,7,8,9]);
+    var another = new wipeout.base.array();
+
+    var val = {};
+    
+    wipeout.base.watched.afterNextObserveCycle(function () {
+        strictEqual(subject.length, 8);
+        assert();
+    
+        another.splice(2, 2, 99, 110);
+        wipeout.base.watched.afterNextObserveCycle(function () {
+            strictEqual(another.length, 6);
+            assert();
+            start();
+        }, true);
+    }, true);
+
+    // act
+    subject.bind(another);
+    another.bind(subject);
     
     // assert
     function assert() {
