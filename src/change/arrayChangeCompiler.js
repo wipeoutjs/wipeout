@@ -164,17 +164,18 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         }
     };
     
-    function arrayChangeCompiler(changes, array, callbacks) {
-        
-        if (!changes.length || !callbacks.length) {
+    function arrayChangeCompiler(changes, array, callbacks, boundArrays) {
+        if (!changes.length || (!callbacks.length && !boundArrays.length)) {
             this.__executed = true;
             return;
         }            
         
+        this.boundArrays = boundArrays;
+        this.boundArrayActions = [];
         this.changes = changes;
         this.array = wipeout.utils.obj.copyArray(array);
         this.__callbacks = new callbackDictionary(callbacks, new changedValues(this.array));
-        
+                
         this.process();
     }
     
@@ -185,11 +186,20 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         this.__executed = true;
         
         this.__callbacks.execute();
+        enumerateArr(this.boundArrayActions, function (action) {
+            action();
+        });
+        
+        this.boundArrayActions.length = 0;
     };
     
     //TODO: can I add merge this with processMovedItems with performance gains?
     arrayChangeCompiler.prototype.process = function () {
         
+        if(this.__processed) return;
+        
+        this.__processed = true;
+                
         var tmp, tmp2, change;
         for (var i = this.changes.length - 1; i >= 0; i--) {
             change = this.changes[i];
@@ -215,6 +225,15 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             var args = wipeout.utils.obj.copyArray(change.removed);
             args.splice(0, 0, change.index, change.addedCount);
             this.array.splice.apply(this.array, args);
+            
+            // apply splice to bound arrays
+            enumerateArr(this.boundArrays, function (array) {
+                var args = this.array.slice(change.index, change.index - 1 + change.addedCount);
+                args.splice(0, 0, change.index, change.removed.length);
+                this.boundArrayActions.splice(0, 0, function () {
+                    array.splice.apply(array, args);
+                });
+            }, this);
             
             // reset change
             change = this.changes[i];

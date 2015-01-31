@@ -7,7 +7,12 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
     var objectObserveObjectHandler = wipeout.change.objectHandler.extend(function objectObserveObjectHandler (forObject) {
         
         this._super(forObject);
-
+    });
+    
+    objectObserveObjectHandler.prototype.__init = function () {
+        
+        if (this.__subscription) return;
+        
         this.__subscription = (function(changes) {
             enumerateArr(changes, function(change) {
                 if ((change.name && this.callbacks[change.name]) || this.isValidArrayChange(change))
@@ -15,17 +20,20 @@ Class("wipeout.change.objectObserveObjectHandler", function () {
             }, this)
         }).bind(this);
         
-        this.__uninitialized = true;
-    });
+        (this.forArray ? Array : Object).observe(this.forObject, this.__subscription);        
+    };
     
     objectObserveObjectHandler.prototype.observe = function () {
-        if (this.__uninitialized) {
-            delete this.__uninitialized;
-            (this.forArray ? Array : Object).observe(this.forObject, this.__subscription);
-        }
         
+        this.__init();
         return this._super.apply(this, arguments);
     };
+        
+    objectObserveObjectHandler.prototype.bindArray = function () {
+        
+        this.__init();
+        return this._super.apply(this, arguments);
+    }
     
     objectObserveObjectHandler.prototype.disposeOfObserve = function (property, observeCallback, disposeCallback) {
         this.onNextPropertyChange(property, function (change) {

@@ -16,6 +16,8 @@ Class("wipeout.change.objectHandler", function () {
                 complexCallbacks: [],
                 simpleCallbacks: []
             };
+            
+            this.boundArrays = [];
         }
     });
     
@@ -39,6 +41,14 @@ Class("wipeout.change.objectHandler", function () {
     
     objectHandler.prototype._observe = function (callback, callbackList, sortCallback) {
         throw "Abstract methods must be implemented";
+    };
+        
+    objectHandler.prototype.bindArray = function (otherArray) {
+        if (!this.forArray || !(otherArray instanceof Array)) throw "Cannot bind a non array to an array."
+        
+        this.onNextPropertyChange(arrayIndexProperty, (function () {
+            this.boundArrays.push(otherArray);
+        }).bind(this));        
     };
         
     objectHandler.prototype.observeArray = function (callback, context, complexCallback /*TODO*/) {

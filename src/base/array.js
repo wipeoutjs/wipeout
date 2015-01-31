@@ -107,9 +107,11 @@ Class("wipeout.base.array", function () {
     
     // used to preserve "undefined" value in a value removed from an array
     var _undefined = {};
-    array.prototype.bind = function(anotherArray, convert, dispose) {
+    array.prototype.bind = function(anotherArray) {
         
-        array.copyAll(this, anotherArray, convert);
+        array.copyAll(this, anotherArray);
+        return this.__woBag.watched.bindArray(anotherArray);
+        
         
         convert = convert || function () { return arguments[0]; };
         

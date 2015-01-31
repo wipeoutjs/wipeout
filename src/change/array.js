@@ -1,10 +1,10 @@
 
 Class("wipeout.change.array", function () {
         
-    function array(array, change, changeHandler) {
+    function array(array, change, objectHandler) {
         this.array = array;
         this.change = change;
-        this.changeHandler = changeHandler;
+        this.objectHandler = objectHandler;
         
         this.fullChain = [];
         if (this.change.type === "splice" || !isNaN(parseInt(this.change.name))) {
@@ -19,7 +19,7 @@ Class("wipeout.change.array", function () {
     
     array.prototype.go = function(changeHandler) {
         var next = changeHandler.indexOf(this.array, array.arrayChangeProperty);
-        var callbacks = this.changeHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty];
+        var callbacks = this.objectHandler.callbacks[wipeout.change.objectHandler.arrayIndexProperty];
         
         // if there is another change to this array, sync the removedValues and addedValues objects
         if(next !== -1) {
@@ -45,7 +45,7 @@ Class("wipeout.change.array", function () {
         
         // if this is the last change to this array in the batch, execute the "removed, added" callbacks
         if (next === -1) {
-            new wipeout.change.arrayChangeCompiler(this.fullChain, this.array, callbacks.simpleCallbacks).execute();
+            new wipeout.change.arrayChangeCompiler(this.fullChain, this.array, callbacks.simpleCallbacks, this.objectHandler.boundArrays).execute();
         }
 
         changeHandler._go();
