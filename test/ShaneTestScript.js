@@ -58,7 +58,7 @@
     });
     
     theModel = model;
-    
+        
     model.computed("totalOfIds", function() {
         var total = 0;
         for(var i = 0, ii = this.items.length; i < ii; i++)
@@ -69,7 +69,7 @@
 })();
 
 var actions = [
-    /**/function(view) {
+    /**function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
@@ -78,10 +78,10 @@ var actions = [
     }, function(view) {
         view.model.rootTitle = "Persons";
         return "Changed title";
-    },/**/ function(view) {
+    }, function(view) {
         theModel.items.push(wo.watch({itemId: 66, itemName: "Paddy"}));
         return "Added person";
-    }, function(view) {
+    },/**/ function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
         return "Removed from one item source \"items\". Expect the other to follow suit.";
     }, function(view) {
