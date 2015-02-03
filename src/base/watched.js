@@ -22,6 +22,26 @@ Class("wipeout.base.watched", function () {
         };
     };
     
+    watched.captureChanges = function (toObject, callback, logic) {
+        if (arguments.length < 3) {
+        
+            var o = toObject instanceof Array ? Array : Object;
+            function _do (callbacks) { enumerateArr(callbacks, callback); }
+
+            o.observe(toObject, _do);
+            return new wipeout.base.disposable(function () {
+                o.unobserve(toObject, _do);
+            });
+        } else {
+            var tmp = watched.captureChanges(toObject, callback);
+            try {
+                logic();
+            } finally {
+                tmp.disppose();
+            }   
+        }
+    };
+    
     watched.createObserveArrayFunction = function (objectHandler) {
         
         return function (property, callback, context, complexCallback) {

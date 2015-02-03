@@ -17,7 +17,8 @@ Class("wipeout.change.objectHandler", function () {
                 simpleCallbacks: []
             };
             
-            this.boundArrays = [];
+            this.boundArrays = new wipeout.utils.dictionary();
+            this.changesFromBoundArray = [];
         }
     });
     
@@ -44,11 +45,24 @@ Class("wipeout.change.objectHandler", function () {
     };
         
     objectHandler.prototype.bindArray = function (otherArray) {
-        if (!this.forArray || !(otherArray instanceof Array)) throw "Cannot bind a non array to an array."
+        if (!this.forArray || !(otherArray instanceof Array)) throw "Cannot bind a non array to an array.";
+        if (this.forObject === otherArray) throw "You cannot bind an array to itself";
         
-        this.onNextPropertyChange(arrayIndexProperty, (function () {
-            this.boundArrays.push(otherArray);
-        }).bind(this));        
+        var val = new wipeout.change.changeValidation(), dispose = (function () { this.boundArrays.remove(otherArray); }).bind(this);
+        this.boundArrays.add(otherArray, val);
+        
+        this.onNextPropertyChange(arrayIndexProperty, function (change) {
+            val.registerFirstChange(change);
+        });
+        
+        var output = new wipeout.base.disposable((function () {
+            this.onNextPropertyChange(arrayIndexProperty, function (change) {
+                val.afterLastChange(change, dispose);
+            });
+        }).bind(this));
+        
+        this.registerDisposable(output);
+        return output;
     };
         
     objectHandler.prototype.observeArray = function (callback, context, complexCallback /*TODO*/) {

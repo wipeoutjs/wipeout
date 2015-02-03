@@ -1,6 +1,8 @@
 
 Class("wipeout.change.changeValidation", function () {
-    function changeValidation() {
+    function changeValidation(change) {
+        if (arguments.length > 0)
+            this.change = change;
     }
     
     changeValidation.prototype.registerFirstChange = function (change) {

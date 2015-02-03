@@ -11,6 +11,10 @@ Class("wipeout.utils.dictionary", function () {
         return value;
     };
     
+    dictionary.prototype.length = function () {
+        return this.__keyArray.length;
+    };
+    
     dictionary.prototype.keys = function () {
         return wipeout.utils.obj.compyArray(this.keys_unsafe());
     };

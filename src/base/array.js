@@ -108,66 +108,11 @@ Class("wipeout.base.array", function () {
     // used to preserve "undefined" value in a value removed from an array
     var _undefined = {};
     array.prototype.bind = function(anotherArray) {
+        if (!anotherArray.__woBag.watched.boundArrays.value(this))
+            array.copyAll(this, anotherArray);
         
-        array.copyAll(this, anotherArray);
         return this.__woBag.watched.bindArray(anotherArray);
-        
-        
-        convert = convert || function () { return arguments[0]; };
-        
-        var replace = anotherArray instanceof array;
-        return this.observe(function (removed, added, indexes) {
-            for (var i = 0, ii = this.__bindingChanges.length; i < ii; i++) {
-                if (this.__bindingChanges[i].fromArray === anotherArray && wipeout.utils.obj.compareArrays(indexes.changes, this.__bindingChanges[i].changes)) 
-                    return;
-            }
-            
-            var rem = {};
-            
-            var tempSubscription;
-            if (anotherArray instanceof wipeout.base.array) {
-                tempSubscription = anotherArray.observe(function (change) {
-                    tempSubscription.changes.push(change);
-                }, null, true);
-                
-                // add and cleanup. Binding changes are only needed until next update
-                anotherArray.__bindingChanges.push(tempSubscription);
-                wipeout.base.watched.afterNextObserveCycle(function() {
-                    var i = anotherArray.__bindingChanges.indexOf(tempSubscription);
-                    if (i !== -1)
-                        anotherArray.__bindingChanges.splice(i, 1);
-                });
-                
-                tempSubscription.fromArray = this;
-                tempSubscription.changes = [];
-            }
-
-            var movedItem;
-            enumerateArr(indexes.moved, function(item) {
-                rem[item.to] = anotherArray[item.to] === undefined ? _undefined : anotherArray[item.to];
-                
-                movedItem = rem[item.from] !== undefined ? 
-                    (rem[item.from] === _undefined ? undefined : rem[item.from]) : 
-                    anotherArray[item.from];
-                        
-                replace ? 
-                    anotherArray.replace(item.to, movedItem) : 
-                    anotherArray[item.to] = movedItem;                
-            }, this);
-                
-            enumerateArr(indexes.added, function(item) {                
-                replace ? 
-                    anotherArray.replace(item.index, convert(this[item.index])) : 
-                    anotherArray[item.index] = convert(this[item.index]);
-            }, this);
-
-            if (anotherArray.length !== this.length)
-                anotherArray.length = this.length;
-            
-            if (tempSubscription)
-                tempSubscription.dispose(true);
-        }, this);
-    }
+    };
     
     //TODO: old implementation was not updating length.
     //TODO: use old emeplemntation, there are already tests in place

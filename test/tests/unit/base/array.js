@@ -583,21 +583,56 @@ testUtils.testWithUtils("bind", "2 splices", false, function(methods, classes, s
     stop();
 });
 
-testUtils.testWithUtils("bind", "2 way bindings", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("bind", "2 way, simple", false, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    var subject = new wipeout.base.array([1,2,3]);
+    var another = new wipeout.base.array();
+    subject.name = "subject";
+    another.name = "another";
+    
+    var val = {};
+    
+    setTimeout(function () {
+        strictEqual(subject.length, 2);
+        assert();
+        start();
+    }, 1000);
+
+    // act
+    subject.bind(another);
+    another.bind(subject);
+    
+    // assert
+    function assert() {
+        strictEqual(subject.length, another.length);
+        for(var i = 0, ii = subject.length; i < ii; i++)
+            strictEqual(subject[i], another[i]);
+    }
+    
+    assert();
+    subject.splice(0, 1);
+    stop();
+});
+
+testUtils.testWithUtils("bind", "2 way bindings, complex", false, function(methods, classes, subject, invoker) {
         
+    //TODO: dispose test
     // arrange
     var subject = new wipeout.base.array([1,2,3,4,5,6,7,8,9]);
+    subject.name = "subject";
     var another = new wipeout.base.array();
-
+    another.name = "another";
+    
     var val = {};
     
     wipeout.base.watched.afterNextObserveCycle(function () {
         strictEqual(subject.length, 8);
         assert();
-    
-        another.splice(2, 2, 99, 110);
+    window.ssstttoooppp = true;
+        subject.splice(2, 2, 99, 110);
         wipeout.base.watched.afterNextObserveCycle(function () {
-            strictEqual(another.length, 6);
+            strictEqual(another.length, 8);
             assert();
             start();
         }, true);
@@ -615,8 +650,8 @@ testUtils.testWithUtils("bind", "2 way bindings", false, function(methods, class
     }
     
     assert();
-    subject.splice(3, 3);
-    subject.splice(5, 0, 99, 88);
+    another.splice(3, 3);
+    another.splice(5, 0, 99, 88);
     stop();
 });
 

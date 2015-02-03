@@ -29,8 +29,7 @@ Class("wipeout.change.array", function () {
             changeHandler._changes[next].fullChain = this.fullChain;
         }
         
-        //TODO: copyArray. Don't do it yet however, this code is good for catching other bugs
-        enumerateArr(callbacks.complexCallbacks.slice(), function(callback) {
+        enumerateArr(wipeout.utils.obj.copyArray(callbacks.complexCallbacks), function(callback) {
             
             if (!callback.changeValidator.isValid(this))
                 return;

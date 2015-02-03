@@ -164,8 +164,8 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         }
     };
     
-    function arrayChangeCompiler(changes, array, callbacks, boundArrays) {
-        if (!changes.length || (!callbacks.length && !boundArrays.length)) {
+    function arrayChangeCompiler (changes, array, callbacks, boundArrays) {
+        if (!changes.length || (!callbacks.length && !boundArrays.length())) {
             this.__executed = true;
             return;
         }            
@@ -173,8 +173,9 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         this.boundArrays = boundArrays;
         this.boundArrayActions = [];
         this.changes = changes;
-        this.array = wipeout.utils.obj.copyArray(array);
-        this.__callbacks = new callbackDictionary(callbacks, new changedValues(this.array));
+        this.array = array;
+        this.finalArray = wipeout.utils.obj.copyArray(this.array);
+        this.__callbacks = new callbackDictionary(callbacks, new changedValues(this.finalArray));
                 
         this.process();
     }
@@ -186,11 +187,40 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         this.__executed = true;
         
         this.__callbacks.execute();
-        enumerateArr(this.boundArrayActions, function (action) {
-            action();
-        });
         
-        this.boundArrayActions.length = 0;
+        var stopWatching = [];        
+        try {
+            enumerateArr(this.boundArrays.keys_unsafe(), function (array) {
+                if (!(array instanceof wipeout.base.array)) return;
+                
+                // create array which has reference to the current array and all of the changes it has made to the bound array
+                var bc = [];
+                bc.boundFrom = this.array;
+                
+                // add to the "bound to" array
+                array.__woBag.watched.changesFromBoundArray.push(bc);
+                
+                // cleanup after an observe cycle
+                wipeout.base.watched.afterNextObserveCycle(function () {
+                    array.__woBag.watched.changesFromBoundArray.splice(array.__woBag.watched.changesFromBoundArray.indexOf(bc), 1);
+                });
+                
+                // begin watching
+                stopWatching.push(wipeout.base.watched.captureChanges(array, function (c) { 
+                    debugger;
+                    bc.push(c);
+                }));
+            }, this);
+
+            // execute "bind to" actions
+            enumerateArr(this.boundArrayActions, function (action) {
+                action();
+            });
+        } finally {
+            // stop watching for changes
+            enumerateArr(stopWatching, function(sw) { sw.dispose(); });        
+            this.boundArrayActions.length = 0;
+        }
     };
     
     //TODO: can I add merge this with processMovedItems with performance gains?
@@ -199,6 +229,21 @@ Class("wipeout.change.arrayChangeCompiler", function () {
         if(this.__processed) return;
         
         this.__processed = true;
+        
+        if (window.ssstttoooppp)debugger;
+        
+        // get all changes which should not be applied to specific binding arrays
+        var boundArrayChanges = new wipeout.utils.dictionary();
+        enumerateArr(this.array.__woBag.watched.changesFromBoundArray, function (changes) {
+            debugger;
+            var val = boundArrayChanges.value(changes.boundFrom);
+            if (!val)
+                boundArrayChanges.add(changes.boundFrom, val = []);
+
+            var args = wipeout.utils.obj.copyArray(changes);
+            args.splice(0, 0, val.length, 0);
+            val.splice.apply(val, args);
+        }, this);
                 
         var tmp, tmp2, change;
         for (var i = this.changes.length - 1; i >= 0; i--) {
@@ -215,7 +260,7 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             }
             
             for (var j = 0; j < change.addedCount; j++)
-                this.__callbacks.addItem(this.array[change.index + j], j);
+                this.__callbacks.addItem(this.finalArray[change.index + j], j);
                  
             for (var j = 0, jj = change.removed.length; j < jj; j++)
                 this.__callbacks.removeItem(change.removed[j], j);
@@ -223,17 +268,33 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             this.__callbacks.prependChange(change);
             
             // apply splice to bound arrays
-            enumerateArr(this.boundArrays, function (array) {
-                var args = this.array.slice(change.index, change.index + change.addedCount);
+            enumerateArr(this.boundArrays.keys_unsafe(), function (array) {
+                                
+                // change was as a result of a bind to this array
+                if ((tmp = boundArrayChanges.value(array)) && tmp.indexOf(this.changes[i]) !== -1) return;
+                
+                var args = this.finalArray.slice(change.index, change.index + change.addedCount), _this = this;
                 args.splice(0, 0, change.index, change.removed.length);
-                this.boundArrayActions.splice(0, 0, function () {
-                    array.splice.apply(array, args);
-                });
+                this.boundArrayActions.splice(0, 0, (function (change) {
+                    return function () {
+
+                        // change has not been initialized
+                        tmp = _this.boundArrays.value(array);
+                        if (tmp && tmp.shouldDispose(change)) {
+                            tmp.dispose();
+                            return;
+                        }
+
+                        if (!tmp || !tmp.isValid({ change: change })) return;
+
+                        array.splice.apply(array, args);
+                    }
+                }(change)));
             }, this);
             
             var args = wipeout.utils.obj.copyArray(change.removed);
             args.splice(0, 0, change.index, change.addedCount);
-            this.array.splice.apply(this.array, args);
+            this.finalArray.splice.apply(this.finalArray, args);
             
             // reset change
             change = this.changes[i];
@@ -241,7 +302,7 @@ Class("wipeout.change.arrayChangeCompiler", function () {
             enumerateArr(this.__callbacks.keys_unsafe(), function (callback) {
                 
                 if (callback.changeValidator.shouldDispose(change)) {
-                    this.__callbacks.add(callback, new changedValues(this.array));
+                    this.__callbacks.add(callback, new changedValues(this.finalArray));
                     callback.changeValidator.dispose();
                 }
                 
@@ -252,14 +313,14 @@ Class("wipeout.change.arrayChangeCompiler", function () {
                         this.__callbacks.add(callback, tmp);
                         
                         //TODO: only if needed
-                        tmp.finalizeXXX(this.array);
+                        tmp.finalizeXXX(this.finalArray);
                         this.__callbacks.removeActiveValue(tmp);
                     }
                 }
             }, this);
         }
         
-        this.__callbacks.finalize(this.array);
+        this.__callbacks.finalize(this.finalArray);
     };
     
     return arrayChangeCompiler;    
