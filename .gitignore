@@ -4,6 +4,8 @@
 #################
 
 diff.txt
+node_modules/
+bower_components/
 
 #################
 ## Jekyll
