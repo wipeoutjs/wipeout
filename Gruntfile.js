@@ -63,13 +63,18 @@ module.exports = function(grunt) {
         }
     };
     
-    var dependencies = [ 
-       /* 'src/utils/obj.js', 
-        'src/disposable.js', 
-        'src/observableBase.js', 
-        'src/callbacks/changeCallback.js',
-        'src/callbacks/arrayCallbackBase.js',
-        'src/arrayBase.js'*/];
+    var dependencies = [
+        "src/utils/obj.js",
+        "src/settings.js",
+        "src/template/compiledInitializer.js",
+        "src/utils/dictionary.js",
+        "src/base/bindable.js",
+        "src/template/templatePart.js",
+        "src/viewModels/visual.js",
+        "src/viewModels/view.js",
+        "src/events/routedEvent.js",
+        "src/change/objectHandler.js"
+    ];
     
     var src = [
         'tools/begin.js', 
