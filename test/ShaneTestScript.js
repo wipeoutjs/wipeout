@@ -68,7 +68,7 @@
 })();
 
 var actions = [
-    /**/function(view) {
+    /**sfunction(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
@@ -77,7 +77,7 @@ var actions = [
     }, function(view) {
         view.model.rootTitle = "Persons";
         return "Changed title";
-    },/**/ function(view) {
+    }, function(view) {
         theModel.items.push(obsjs.makeObservable({itemId: 66, itemName: "Mycroft"}));
         return "Added person (Mycroft)";
     }, function(view) {
@@ -87,7 +87,7 @@ var actions = [
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         view.templateItems.listTest.templateItems.theInnerItemsControl2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         return "Stamp a person view template.";
-    }, function(view) {
+    },/**/ function(view) {
         view.model.items.reverse()
         return "Reordered people";
     }, function(view) {

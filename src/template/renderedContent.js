@@ -24,165 +24,11 @@ Class("wipeout.template.renderedContent", function () {
         element.parentElement.insertBefore(this.closingTag, element);
         element.parentElement.removeChild(element);
     });
-    
-    //TODO: this function is too big
-    renderedContent.prototype.renderArray = function (array) {
-                
-        this.unRender();        
-        var children = [], getChild;
-        
-        var itemsControl = this.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$this.items ?
-            this.parentRenderContext.$this :
-            null;
-        
-        var arrayObserve;
-        var create = (function (item, index) {
-            var placeholder = document.createElement("script");
-            if (index >= children.length)
-                this.closingTag.parentElement.insertBefore(placeholder, this.closingTag);
-            else
-                children[index].openingTag.parentElement.insertBefore(placeholder, children[index].openingTag);
-
-            var output = new renderedContent(placeholder, "item: " + index, this.parentRenderContext);
-            item = itemsControl ? itemsControl._createItem(item) : item;
-            output.render(item);
-            if (itemsControl) {
-                itemsControl.onItemRendered(item);
-                output.renderedChild = item;
-            }
-                
-            return output;
-        }).bind(this);
-        
-        var remove = function (item) {                    
-            if (itemsControl)
-                itemsControl.onItemDeleted(item.renderedChild);
-
-            item.dispose();
-        };
-        
-        enumerateArr(array, function (item, i) {
-            children.push(create(item, i));            
-        });
-        
-        if (itemsControl)
-            itemsControl.__woBag.getChild = getChild = function (i) { return children[i] ? children[i].renderedChild : undefined; };
-        
-        if (array instanceof wipeout.base.array) {
-			var changes;			
-            arrayObserve = array.observe(function (change) {
-				if (!changes) {
-					setTimeout(function () {
-						var ch = changes;
-						changes = null;
-						renderedContent.processArrayChanges(changes, children, create, remove);
-					});
-					
-					changes = [];
-				}
-				
-				changes.push(change);
-			}, this, true);
-            /*arrayObserve = array.observe(function (removed, added, indexes) {
-				
-                removed = [];
-                enumerateArr(indexes.removed, function (rem) {
-                    removed.push(children[rem.index]);
-                });
-				
-				var oldChildren = {}, moved = {};
-                enumerateArr(indexes.moved, function (moved) {
-					oldChildren[moved.to] = children[moved.to];
-					oldChildren[moved.to].detatch();
-				
-                    children[moved.to] = oldChildren[moved.from] || children[moved.from];
-					
-					
-					
-					
-                    if (moved.to >= children.length - 1)
-                        move.appendTo(this);
-                    else {
-						var current = moved.to;
-						while (!children[current] && current <= children.length)
-							current++;
-						
-						if (current < children.length)
-                        	move.insertBefore(children[current]);
-						else
-							move.appendTo(this);
-					}
-					
-                    children[moved.to] = move;
-					if (move === children[moved.from])
-                    	children[moved.from] = null;
-                }, this);
-				
-                enumerateArr(indexes.added, function (added) {
-                    children[added.index] = create(added.value, added.index);
-                });
-				
-				if (removed.length > added.length)
-					children.length -= (removed.length - added.length);
-				
-								
-                enumerateArr(removed, remove);
-				return;
-                enumerateArr(indexes.moved, function (moved) {
-                    children[moved.to] = oldChildren[moved.from];					
-                });
-				
-                enumerateArr(indexes.added, function (added) {
-                    children[added.index] = create(added.value, added.index);
-                });
-				
-				
-				
-                removed = [];
-                enumerateArr(indexes.removed, function (rem) {
-                    removed.push(children[rem.index]);
-                });
-                
-                var moved = {}, childrenCopy = children.splice();
-                enumerateArr(indexes.moved, function (item) {
-                    moved[item.to] = children[item.to];
-                    
-                    var toMove = moved[item.from] || children[item.from];
-                    if (item.to >= children.length - 1)
-                        toMove.appendTo(this.openingTag);
-                    else
-                        toMove.move(children[item.to].openingTag);
-                        
-					children.splice(item.from, 1);
-					//children.splice(item.to, 0, );
-                }, this);
-                
-                enumerateArr(indexes.added, function (added) {
-                    children[added.index] = create(added.value, added.index);
-                });
-                
-                enumerateArr(removed, remove);
-                
-                children.length = array.length;
-            }, this);*/
-        }
-        
-        this.disposeOfBindings = (function () {
-            if (arrayObserve) {
-                arrayObserve.dispose();
-                arrayObserve = null;
-            }
-            
-            if (getChild && itemsControl.__woBag.getChild === getChild) {
-                delete itemsControl.__woBag.getChild;
-                getChild = null;
-            }
-            
-            enumerateArr(children, remove);
-
-            children.length = 0;
-        }).bind(this);
-    };
+	
+	renderedContent.prototype.rename = function (name) {
+		this.openingTag.nodeValue = " " + name + " ";
+		this.closingTag.nodeValue = " /" + name + " ";
+	}
 	
 	var mysteryItem = {};
     
@@ -202,6 +48,9 @@ Class("wipeout.template.renderedContent", function () {
         function remove(item) {                    
             if (itemsControl)
                 itemsControl.onItemDeleted(item.renderedChild);
+			
+			delete item.renderedChild;
+			delete item.forItem;
 
             item.dispose();
         };
@@ -235,11 +84,15 @@ Class("wipeout.template.renderedContent", function () {
 				
 				// find if added item had been previously removed
 				for (var k = 0, kk = removed.length; k < kk; k++) {
-					if (removed[k].renderedChild === array[i]) {
+					if (removed[k].forItem === array[i]) {
+						var item = removed.splice(k, 1)[0];
 						if (i === 0)
-							this.prepend(removed.splice(k, 1)[0]);
+							this.prepend(item);
 						else
-							children[i - 1].insertAfter(removed.splice(k, 1)[0]);
+							children[i - 1].insertAfter(item);
+						
+						item.rename("item: " + i);
+						children[i] = item;
 						
 						break;
 					}
@@ -247,7 +100,7 @@ Class("wipeout.template.renderedContent", function () {
 				
 				// item was moved
 				if (k != kk) 
-					break;
+					continue;
 				
 				var placeholder = document.createElement("script");
 				if (i === 0)
@@ -256,11 +109,12 @@ Class("wipeout.template.renderedContent", function () {
 					children[i - 1].insertAfter(placeholder);
 
 				children[i] = new renderedContent(placeholder, "item: " + i, this.parentRenderContext);
-				var item = itemsControl ? itemsControl._createItem(array[i]) : array[i];
-				children[i].render(item);
+				var vm = itemsControl ? itemsControl._createItem(array[i]) : array[i];
+				children[i].render(vm);
+				children[i].forItem = array[i];
 				if (itemsControl) {
-					children[i].renderedChild = item;
-					itemsControl.onItemRendered(item);
+					children[i].renderedChild = vm;
+					itemsControl.onItemRendered(vm);
 				}
 			};
 			
