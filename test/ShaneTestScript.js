@@ -68,7 +68,7 @@
 })();
 
 var actions = [
-    /**sfunction(view) {
+    /**/function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {

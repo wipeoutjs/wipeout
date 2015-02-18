@@ -1,4 +1,8 @@
 
+synchronus rendering if template is defined beforehand (or maybe if not)
+
+
+
 owts binding
 owts is valid regex
 
@@ -10,12 +14,11 @@ integrate array bind into arrayChangeCompiler.process
 replace xml parsing with native
 
 do not use computeds in bindings.
-remove all array functionality from computeds
 <div content--s="hello"></div> doesn't work. Parsers only work with view models
 
 $index
 
-standardise the way things are rendered, between Objects and wo.views
+standardise the way things are rendered, between Objects and wo.views (toString)
 
 <Array>
     <value parser="s">A</value>
@@ -26,12 +29,6 @@ standardise the way things are rendered, between Objects and wo.views
 
 initialization/disposal overrides. Needs complete overhaul
 
-watch for changes to an array if array is last item in path
-        
-Cleanup arrays, observe arrays as objects        
-
-remove hack to add bindingContext to binding strings
-
 bug, handle null template id better
 
 window.requestAnimationFrame
@@ -40,21 +37,6 @@ profiler
 
 TODO:   wipeout.base.watched.prototype.observe, do something with dispose function from watch
         wipeout.base.watched.prototype.observe/watch, unit test dispose functionality
-        
-cleanup:
-            visual.js (added viewModelElement to __woBag, computed and observe functions)
-            compiledInitializer.js
-            builder.js
-            engine.js
-            renderContext.js
-            visual.js (dispose stuff is gone or changed)
-            wo.js
-            view.js (_initialize is gone)
-            bindingTypes.js
-            htmlAttributes.js
-            object.js (see TODO)
-            dictionary.js
-            bindable.js
 
 there is a lot of camelcasing. Is there a single point of failure I can use here?
 
