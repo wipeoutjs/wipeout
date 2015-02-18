@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "obsjs": "ShaneGH/obsjs#v-0.1.1"
+    "obsjs": "ShaneGH/obsjs#in-dev"
   }
 }
