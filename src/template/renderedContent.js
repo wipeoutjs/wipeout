@@ -270,18 +270,7 @@ Class("wipeout.template.renderedContent", function () {
 		
         if (array instanceof wipeout.base.array) {
 			var changes;
-            var arrayObserve = array.observe(function (change) { 
-				if (!changes) {
-					setTimeout(function() {
-						var ch = changes;
-						changes = null;
-						render(ch);
-					});
-					changes = [];
-				}
-				
-				changes.push(change);
-			}, null, true);
+            var arrayObserve = array.observe(render, null, {useRawChanges: true});
 		}
         
         this.disposeOfBindings = (function () {
