@@ -18,7 +18,7 @@ Class("wipeout.viewModels.contentControl", function () {
     
     contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
-        ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
+        ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
                 
@@ -62,7 +62,7 @@ Class("wipeout.viewModels.contentControl", function () {
     
     function boundTemplate (owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
-        ///<param name="owner" type="wipeout.base.watched" optional="false">The owner of the template and template id properties</param>
+        ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
       

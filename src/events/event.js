@@ -1,7 +1,4 @@
 
-var wipeout = wipeout || {};
-wipeout.base = wipeout.base || {};
-
 Class("wipeout.events.eventRegistration", function () {
     
     return wipeout.base.disposable.extend(function eventRegistration(callback, context, dispose) {

@@ -12,7 +12,7 @@ Class("wipeout.template.renderContext", function () {
             this.$parent = parentContext.$this;
             this.$parents.push(this.$parent);
             enumerateArr(parentContext.$parents, this.$parents.push, this.$parents);
-        }            
+        }
     }
     
     // each render context has access to the global scope
@@ -24,6 +24,20 @@ Class("wipeout.template.renderContext", function () {
         
         return new renderContext(forVm, this);
     };
+    
+    renderContext.prototype.variablesForComputed = function (additions) {
+        var output = {};
+        enumerateObj(this, function (property, name) {
+            if (this.hasOwnProperty(name))
+                output[name] = property;
+        }, this);
+        
+        enumerateObj(additions, function (property, name) {
+            output[name] = property;
+        });
+        
+        return output;
+    };  
     
     renderContext.addRenderContext = function (toFunction) {
         

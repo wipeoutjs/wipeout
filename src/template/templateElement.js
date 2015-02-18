@@ -14,6 +14,8 @@ Class("wipeout.template.templateElementBase", function () {
     var templateElementBase = wipeout.base.object.extend.call(Array, function templateElementBase() {
         this._super();
     });
+	
+	obsjs.observeTypes.computed.nonArrayType(templateElementBase);
     
     templateElementBase.extend = wipeout.base.object.extend;
     templateElementBase.prototype._super = wipeout.base.object.prototype._super;

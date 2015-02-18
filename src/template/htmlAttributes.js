@@ -49,15 +49,17 @@ Class("wipeout.template.htmlAttributes", function () {
     
     var defaultVal = {};
     function onVmValueChanged (value, callback, renderContext) { //TODO error handling
-                        
+		
         var logic = wipeout.template.compiledInitializer.getAutoParser(value);
         
         // order important. Observe before computed execution
-        var computed = new wipeout.base.computed(
+        var computed = new obsjs.observeTypes.computed(
             logic,
             null, 
-            {renderContext: renderContext, value: value, propertyName: ""},
-            wipeout.template.renderContext.addRenderContext(logic));
+			{
+				watchVariables: renderContext.variablesForComputed({renderContext: renderContext, value: value, propertyName: ""}), 
+				allowWith: true
+			});
         
         computed.onValueChanged(callback, true);
         
@@ -66,7 +68,7 @@ Class("wipeout.template.htmlAttributes", function () {
     
     function onElementEvent (element, event, callback) { //TODO error handling
         
-        //TODO, third arg (capture)
+        //TODO, third arg in addEventListener (capture)
         element.addEventListener(event, callback);
         
         return function() {
@@ -79,7 +81,7 @@ Class("wipeout.template.htmlAttributes", function () {
     };
     
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
-        
+		
         var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
         var disposal = onVmValueChanged(value, function (oldVal, newVal) {
             htmlContent.render(newVal);
@@ -93,7 +95,7 @@ Class("wipeout.template.htmlAttributes", function () {
     
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
         return onVmValueChanged(value, function (oldVal, newVal) {
-            element.innerHTML = newVal;
+            element.innerHTML = newVal == null ? "" : newVal;
         }, renderContext);
     };
     

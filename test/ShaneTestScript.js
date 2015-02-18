@@ -47,13 +47,12 @@
         wipeout.profile.profile();
     };
             
-    var model = wo.watch({
-        rootTitle: "People",
-        items: new wo.array([wo.watch({itemId: 22, itemName: "John"}), wo.watch({itemId: 25, itemName: "Barry"})]),
-        deepItem: wo.watch({
-            item: wo.watch({
-                value: "the value"
-            })
+    var model = new obsjs.observable();
+    model.rootTitle = "People";
+    model.items = new obsjs.array([obsjs.makeObservable({itemId: 22, itemName: "John"}), obsjs.makeObservable({itemId: 25, itemName: "Barry"})]);
+    model.deepItem = obsjs.makeObservable({
+        item: obsjs.makeObservable({
+            value: "the value"
         })
     });
     
@@ -69,7 +68,7 @@
 })();
 
 var actions = [
-    /**function(view) {
+    /**/function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
@@ -78,12 +77,12 @@ var actions = [
     }, function(view) {
         view.model.rootTitle = "Persons";
         return "Changed title";
-    }, function(view) {
-        theModel.items.push(wo.watch({itemId: 66, itemName: "Paddy"}));
-        return "Added person";
     },/**/ function(view) {
+        theModel.items.push(obsjs.makeObservable({itemId: 66, itemName: "Mycroft"}));
+        return "Added person (Mycroft)";
+    }, function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
-        return "Removed from one item source \"items\". Expect the other to follow suit.";
+        return "Removed from one item source \"items\" (John). Expect the other to follow suit.";
     }, function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         view.templateItems.listTest.templateItems.theInnerItemsControl2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
@@ -98,7 +97,7 @@ var actions = [
         view.model.items[0].itemId = 78;
         return "Changed first person id, total ids should also be updated";
     }, function(view) {
-        view.model.items.replace(0, wo.watch({itemId: 54, itemName: "LJBLKJB"}));
+        view.model.items.replace(0, obsjs.makeObservable({itemId: 54, itemName: "LJBLKJB"}));
         return "Changed first person.";
     }, function(view) {
         view.model.items[0].itemId = 896;
@@ -113,7 +112,7 @@ var actions = [
         view.model.deepItem.item = { value: "value 2" };
         return "Changed value 2";
     }, function(view) {
-        view.model.deepItem = wo.watch({item: wo.watch({ value: "value 3" })});
+        view.model.deepItem = obsjs.makeObservable({item: obsjs.makeObservable({ value: "value 3" })});
         return "Changed value 3";
     }, function(view) {
         view.model.deepItem.item.value = "value 4";

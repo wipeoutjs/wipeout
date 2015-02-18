@@ -20,10 +20,16 @@
         <template>
             <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
-                <wo.items-control id="theInnerItemsControl1" items--tw="$parent.model.items" item-template-id--s="STPTemplates/itemsControlTemplate.html" />
+                <wo.items-control 
+								  id="theInnerItemsControl1" 
+								  items--tw="$parent.model.items" 
+								  item-template-id--s="STPTemplates/itemsControlTemplate.html" />
             </div>
             <div style="float: left; margin-left: 20px;">
-                <wo.items-control id="theInnerItemsControl2" item-template-id--s="STPTemplates/itemsControlTemplate.html" />
+                <wo.items-control 
+								  id="theInnerItemsControl2" 
+								  items--tw="$parent.model.items" 
+								  item-template-id--s="STPTemplates/itemsControlTemplate.html" />
             </div>
             <div style="clear: both"></div>
             {{$this.totals}}

@@ -7,6 +7,8 @@ Class("wipeout.template.renderedContent", function () {
         ///<param name="name" type="String">The content of the rendered comment tags</param>
         ///<param name="parentRenderContext" type="wipeout.template.renderContext" optional="true">The render context of the parent view model</param>
                         
+		this._super();
+		
         name = wipeout.utils.obj.trim(name);
         
         this.parentRenderContext = parentRenderContext;
@@ -67,14 +69,81 @@ Class("wipeout.template.renderedContent", function () {
             itemsControl.__woBag.getChild = getChild = function (i) { return children[i] ? children[i].renderedChild : undefined; };
         
         if (array instanceof wipeout.base.array) {
-            arrayObserve = array.observe(function (removed, added, indexes) {
-                
+			var changes;			
+            arrayObserve = array.observe(function (change) {
+				if (!changes) {
+					setTimeout(function () {
+						var ch = changes;
+						changes = null;
+						renderedContent.processArrayChanges(changes, children, create, remove);
+					});
+					
+					changes = [];
+				}
+				
+				changes.push(change);
+			}, this, true);
+            /*arrayObserve = array.observe(function (removed, added, indexes) {
+				
+                removed = [];
+                enumerateArr(indexes.removed, function (rem) {
+                    removed.push(children[rem.index]);
+                });
+				
+				var oldChildren = {}, moved = {};
+                enumerateArr(indexes.moved, function (moved) {
+					oldChildren[moved.to] = children[moved.to];
+					oldChildren[moved.to].detatch();
+				
+                    children[moved.to] = oldChildren[moved.from] || children[moved.from];
+					
+					
+					
+					
+                    if (moved.to >= children.length - 1)
+                        move.appendTo(this);
+                    else {
+						var current = moved.to;
+						while (!children[current] && current <= children.length)
+							current++;
+						
+						if (current < children.length)
+                        	move.insertBefore(children[current]);
+						else
+							move.appendTo(this);
+					}
+					
+                    children[moved.to] = move;
+					if (move === children[moved.from])
+                    	children[moved.from] = null;
+                }, this);
+				
+                enumerateArr(indexes.added, function (added) {
+                    children[added.index] = create(added.value, added.index);
+                });
+				
+				if (removed.length > added.length)
+					children.length -= (removed.length - added.length);
+				
+								
+                enumerateArr(removed, remove);
+				return;
+                enumerateArr(indexes.moved, function (moved) {
+                    children[moved.to] = oldChildren[moved.from];					
+                });
+				
+                enumerateArr(indexes.added, function (added) {
+                    children[added.index] = create(added.value, added.index);
+                });
+				
+				
+				
                 removed = [];
                 enumerateArr(indexes.removed, function (rem) {
                     removed.push(children[rem.index]);
                 });
                 
-                var moved = {};
+                var moved = {}, childrenCopy = children.splice();
                 enumerateArr(indexes.moved, function (item) {
                     moved[item.to] = children[item.to];
                     
@@ -84,7 +153,8 @@ Class("wipeout.template.renderedContent", function () {
                     else
                         toMove.move(children[item.to].openingTag);
                         
-                    children[item.to] = toMove;
+					children.splice(item.from, 1);
+					//children.splice(item.to, 0, );
                 }, this);
                 
                 enumerateArr(indexes.added, function (added) {
@@ -94,7 +164,7 @@ Class("wipeout.template.renderedContent", function () {
                 enumerateArr(removed, remove);
                 
                 children.length = array.length;
-            }, this);
+            }, this);*/
         }
         
         this.disposeOfBindings = (function () {
@@ -113,7 +183,130 @@ Class("wipeout.template.renderedContent", function () {
             children.length = 0;
         }).bind(this);
     };
+	
+	var mysteryItem = {};
     
+    //TODO: this function is too big
+    renderedContent.prototype.renderArray = function (array) {
+                
+        this.unRender();        
+        var children = [], getChild;
+        
+        var itemsControl = this.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parentRenderContext.$this.items ?
+            this.parentRenderContext.$this :
+            null;
+        
+        if (itemsControl)
+            itemsControl.__woBag.getChild = getChild = function (i) { return children[i] ? children[i].renderedChild : undefined; };
+        
+        function remove(item) {                    
+            if (itemsControl)
+                itemsControl.onItemDeleted(item.renderedChild);
+
+            item.dispose();
+        };
+		
+		var render = (function (changes) {
+			
+			var removed = [];
+			enumerateArr(changes, function (change) {
+				if (change.type === "splice") {
+					var args = new Array(change.addedCount);
+					for (var i = 0; i < change.addedCount; i++) args[i] = mysteryItem;
+					args.splice(0, 0, change.index, change.removed.length);
+					
+					removed.push.apply(removed, children.slice(change.index, change.index + change.removed.length));
+					children.splice.apply(children, args);
+				} else if (!isNaN(parseInt(change.name))) {
+					if (children[change.name] !== mysteryItem)
+						removed.push(children[change.name]);
+					
+					children[change.name] = mysteryItem;
+				}
+			});
+			
+			for (var k = removed.length - 1; k >= 0; k--)
+				if (removed[k] === mysteryItem)
+					removed.splice(1, k);
+			
+			// find added items
+			for (var i = 0, ii = children.length; i < ii; i++) {
+				if (children[i] !== mysteryItem) continue;
+				
+				// find if added item had been previously removed
+				for (var k = 0, kk = removed.length; k < kk; k++) {
+					if (removed[k].renderedChild === array[i]) {
+						if (i === 0)
+							this.prepend(removed.splice(k, 1)[0]);
+						else
+							children[i - 1].insertAfter(removed.splice(k, 1)[0]);
+						
+						break;
+					}
+				}
+				
+				// item was moved
+				if (k != kk) 
+					break;
+				
+				var placeholder = document.createElement("script");
+				if (i === 0)
+					this.prepend(placeholder);
+				else
+					children[i - 1].insertAfter(placeholder);
+
+				children[i] = new renderedContent(placeholder, "item: " + i, this.parentRenderContext);
+				var item = itemsControl ? itemsControl._createItem(array[i]) : array[i];
+				children[i].render(item);
+				if (itemsControl) {
+					children[i].renderedChild = item;
+					itemsControl.onItemRendered(item);
+				}
+			};
+			
+			enumerateArr(removed, remove);
+			
+		}).bind(this);
+		
+        if (array instanceof wipeout.base.array) {
+			var changes;
+            var arrayObserve = array.observe(function (change) { 
+				if (!changes) {
+					setTimeout(function() {
+						var ch = changes;
+						changes = null;
+						render(ch);
+					});
+					changes = [];
+				}
+				
+				changes.push(change);
+			}, null, true);
+		}
+        
+        this.disposeOfBindings = (function () {
+            if (arrayObserve) {
+                arrayObserve.dispose();
+                arrayObserve = null;
+			}
+			
+            if (getChild && itemsControl.__woBag.getChild === getChild) {
+                delete itemsControl.__woBag.getChild;
+                getChild = null;
+            }
+			
+			enumerateArr(children, remove);
+			children.length = 0;
+        }).bind(this);
+		
+		render([{
+			type: "splice",
+			addedCount: array.length,
+			removed: [],
+			index: 0
+		}]);
+	};
+	
     renderedContent.prototype.render = function (object) {
         if (object instanceof Array) {
             this.renderArray(object);
@@ -236,43 +429,6 @@ Class("wipeout.template.renderedContent", function () {
         this.closingTag.parentElement.insertBefore(scr, this.closingTag);
         scr.insertAdjacentHTML('afterend', html);
         scr.parentElement.removeChild(scr);
-    }
-    
-    //TODO: test
-    renderedContent.prototype.move = function (insertBefore) {
-        
-        var html = this.allHtml();
-        for (var i = 0, ii = html.length; i < ii; i++) {
-            html[i].parentElement.removeChild(html[i]);
-            insertBefore.parentElement.insertBefore(html[i], insertBefore);
-        }
-    };
-    
-    //TODO: test
-    renderedContent.prototype.appendTo = function (parent) {
-        
-        if (parent.wipeoutClosing)
-            parent = parent.wipeoutClosing.openingTag;
-        
-        if (parent.wipeoutOpening)
-            return this.move(parent.firstChild || parent.wipeoutOpening.closingTag);
-        
-        var html = this.allHtml();
-        for (var i = html.length - 1; i >= 0; i--) {
-            html[i].parentElement.removeChild(html[i]);
-            parent.appendChild(html[i]);
-        }
-    };
-    
-    //TODO: test
-    renderedContent.prototype.allHtml = function() {
-        var output = [this.openingTag], current = this.openingTag;
-        
-        while (current && current !== this.closingTag) {
-            output.push(current = current.nextSibling); 
-        }
-        
-        return output;
     };
     
     return renderedContent;    

@@ -17,10 +17,12 @@ Class("wipeout.viewModels.visual", function () {
 
         //TODO: most of this is to do with old templating
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.__woBag.disposed = wipeout.events.event();
-        this.__woBag.createdByWipeout = false;
-        this.__woBag.routedEventSubscriptions = [];
-        this.__woBag.nodes = [];
+        this.__woBag = {
+            disposed: wipeout.events.event(), //TODO: remove
+            createdByWipeout: false,
+            routedEventSubscriptions: [],
+            nodes: [] //TODO: remove
+        };
     });
     
     visual.getDefaultTemplateId = (function () {

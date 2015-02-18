@@ -3,7 +3,7 @@
 //TODO: rename
 Class("wipeout.base.bindable", function () {
     
-    var bindable = wipeout.base.watched.extend(function bindable() {
+    var bindable = wipeout.base.observable.extend(function bindable() {
         ///<summary>An object whose properties can be bound to</summary>
         
         this._super();

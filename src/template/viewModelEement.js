@@ -54,7 +54,11 @@ Class("wipeout.template.viewModelElement", function () {
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
         this._super(leaveDeadChildNodes);
-        this.viewModel.dispose();
+		if (this.viewModel instanceof wipeout.viewModels.visual)
+        	this.viewModel.dispose();
+		else
+			obsjs.dispose(this.viewModel);
+			
         delete this.viewModel;
     };
     

@@ -1,5 +1,5 @@
 Class("wipeout.profile.profile", function () { 
-    
+    return function(){}
     var doRendering, _initialize, rewriteTemplate, profileState;
     var profile = function profile(profile) {
         ///<summary>Profile this application.</summary>

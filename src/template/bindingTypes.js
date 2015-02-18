@@ -27,8 +27,9 @@ Class("wipeout.template.bindingTypes", function () {
     };
     
     function bindOneWay (bindFrom, bindFromName, bindTo, bindToName) {
-        var callback = wipeout.base.computed.createBindOrSetFunction(bindTo, bindToName);
-        var pw = new wipeout.base.pathWatch(bindFrom, bindFromName, callback);
+        //TODO: it doesn't make sense to call out to another lib for this
+        var callback = obsjs.observeTypes.computed.createBindFunction(bindTo, bindToName);
+        var pw = new obsjs.observeTypes.pathObserver(bindFrom, bindFromName, callback);
         
         if (bindFrom instanceof wipeout.base.disposable) {
             bindFrom.registerDisposable(callback);
@@ -45,7 +46,7 @@ Class("wipeout.template.bindingTypes", function () {
     
     bindingTypes.ow = function (viewModel, setter, name, renderContext) {
         
-        if (!(viewModel instanceof wipeout.base.watched))
+        if (!(viewModel instanceof wipeout.base.observable))
             return bindingTypes.nb(viewModel, setter, name, renderContext);
                
         var parser = getParser(viewModel, name, setter);
@@ -56,10 +57,13 @@ Class("wipeout.template.bindingTypes", function () {
             bindOneWay(renderContext, val, viewModel, name);
         } else {
             viewModel.computed(name, parser, {
-                value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
-                propertyName: name,
-                renderContext: renderContext
-            }, wipeout.template.renderContext.addRenderContext(parser));
+				watchVariables: renderContext.variablesForComputed({
+					value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
+					propertyName: name,
+					renderContext: renderContext
+				}),
+				allowWith: true
+            });
         }
     };
     

@@ -1,6 +1,5 @@
 
 //"use strict"; - cannot use strict right now. any functions defined in strict mode are not accesable via arguments.callee.caller, which is used by _super
-var wipeout = {};
 
 var ajax = function (options) {
     ///<summary>Perform an ajax request</summary>
