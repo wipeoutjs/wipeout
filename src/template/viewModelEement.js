@@ -33,19 +33,6 @@ Class("wipeout.template.viewModelElement", function () {
         this.render(this.viewModel);
     });
     
-    //TODO: move to parent
-    viewModelElement.getParentElement = function(forHtmlElement) {
-        var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
-        while (current = current.previousSibling) {
-            if (current.wipeoutClosing)
-                current = current.wipeoutClosing.openingTag;
-            else if (current.wipeoutOpening)
-                return current;
-        }
-        
-        return forHtmlElement.parentElement;
-    };
-    
     viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>

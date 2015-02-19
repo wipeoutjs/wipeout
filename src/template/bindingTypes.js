@@ -28,7 +28,7 @@ Class("wipeout.template.bindingTypes", function () {
     
     function bindOneWay (bindFrom, bindFromName, bindTo, bindToName) {
         //TODO: it doesn't make sense to call out to another lib for this
-        var callback = obsjs.observeTypes.computed.createBindFunction(bindTo, bindToName);
+        var callback = obsjs.utils.obj.createBindFunction(bindTo, bindToName);
         var pw = new obsjs.observeTypes.pathObserver(bindFrom, bindFromName, callback);
         
         if (bindFrom instanceof wipeout.base.disposable) {

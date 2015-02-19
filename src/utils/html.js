@@ -131,7 +131,7 @@ Class("wipeout.utils.html", function () {
         ///<returns type="wo.view">The view model associated with this node, or null</returns>
         
         if (!forHtmlNode.wipeoutOpening)
-            forHtmlNode = wipeout.template.viewModelElement.getParentElement(forHtmlNode);
+            forHtmlNode = wipeout.template.renderedContent.getParentElement(forHtmlNode);
         
         return forHtmlNode ?
             forHtmlNode.wipeoutOpening.viewModel :

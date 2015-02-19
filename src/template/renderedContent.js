@@ -177,7 +177,7 @@ Class("wipeout.template.renderedContent", function () {
     
     renderedContent.prototype._template = function(oldTemplateId, templateId) {
         ///<summary>Render the view model with the given template</summary>
-        ///<param name="oldTemplateId" type="String">The previous value</param>
+        ///<param name="oldTemplateId" type="String">The previous value (unused)</param>
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
         
         this.template(templateId);
@@ -237,6 +237,7 @@ Class("wipeout.template.renderedContent", function () {
             template = template.getBuilder();
             
             // add builder html
+			debugger;
             this.prependHtml(template.html);
             
             this.__initialTemplate = true;
@@ -272,6 +273,18 @@ Class("wipeout.template.renderedContent", function () {
         this.closingTag.parentElement.insertBefore(scr, this.closingTag);
         scr.insertAdjacentHTML('afterend', html);
         scr.parentElement.removeChild(scr);
+    };
+    
+    renderedContent.getParentElement = function(forHtmlElement) {
+        var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
+        while (current = current.previousSibling) {
+            if (current.wipeoutClosing)
+                current = current.wipeoutClosing.openingTag;
+            else if (current.wipeoutOpening)
+                return current;
+        }
+        
+        return forHtmlElement.parentElement;
     };
     
     return renderedContent;    

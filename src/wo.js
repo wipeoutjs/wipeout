@@ -21,7 +21,7 @@ window.wo = function (model, htmlElement) {
 wo.getViewModel = function (viewModelName, skipCamelCase) {
 	
 	//TODO: document
-	if (viewModelName.indexOf("js-") === 0)
+	if (!skipCamelCase && wipeout.utils.obj.trimToLower(viewModelName).indexOf("js-") === 0)
 		viewModelName = viewModelName.substring(2);
 	
 	var tmp1 = skipCamelCase ? 
@@ -40,7 +40,7 @@ window.addEventListener("load", function () {
 });
 
 function getMeAViewModel(element) {   
-    
+    	
 	var tmp1, tmp2;
 	if (tmp1 = wo.getViewModel(element.tagName))
 		return tmp1;
