@@ -16,28 +16,42 @@ window.wo = function (model, htmlElement) {
         if (htmlElement.contains(element) && getMeAViewModel(element))
             new wipeout.template.viewModelElement(element);
     });        
-}
+};
+
+wo.getViewModel = function (viewModelName, skipCamelCase) {
+	
+	//TODO: document
+	if (viewModelName.indexOf("js-") === 0)
+		viewModelName = viewModelName.substring(2);
+	
+	var tmp1 = skipCamelCase ? 
+		wipeout.utils.obj.trim(viewModelName) : 
+		wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(viewModelName));
+	var tmp2;
+	if (tmp2 = wipeout.utils.obj.getObject(tmp1))
+		return {
+			name: tmp1,
+			constructor: tmp2
+		};
+};
 
 window.addEventListener("load", function () {
     window.wo(null); //TODO: model
 });
 
-var getMeAViewModel = function(element) {   
+function getMeAViewModel(element) {   
     
-    var vmName = wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(element.tagName));
-    var vmConstructor = wipeout.utils.obj.getObject(vmName);
-    if (!vmConstructor && element.attributes[wipeout.settings.wipeoutAttributes.viewModelName])
-        vmConstructor = wipeout.utils.obj.getObject(vmName = element.attributes[wipeout.settings.wipeoutAttributes.viewModelName].value);
-    
-    var dataViewModel = "data-" + wipeout.settings.wipeoutAttributes.viewModelName;
-    if (!vmConstructor && element.attributes[dataViewModel])
-        vmConstructor = wipeout.utils.obj.getObject(vmName = element.attributes[dataViewModel].value);
-
-    if(!vmConstructor)
-        return;
-    
-    return {
-        name: vmName,
-        constructor: vmConstructor
-    };
+	var tmp1, tmp2;
+	if (tmp1 = wo.getViewModel(element.tagName))
+		return tmp1;
+	
+	tmp2 = wipeout.settings.wipeoutAttributes.viewModelName;
+	if (element.attributes[tmp2] && 
+		(tmp1 = wo.getViewModel(element.attributes[tmp2].value, true)))
+		return tmp1;
+	
+	tmp2 = "data-" + wipeout.settings.wipeoutAttributes.viewModelName;
+	if (element.attributes[tmp2] && 
+		(tmp1 = wo.getViewModel(element.attributes[tmp2].value, true)))
+		return tmp1;
 }

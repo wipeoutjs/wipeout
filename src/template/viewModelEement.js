@@ -7,10 +7,7 @@ Class("wipeout.template.viewModelElement", function () {
         ///<param name="xmlOverride" type="wipeout.template.templateElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
         ///<param name="parentRenderContext" type="wipeout.template.renderContext" optional="true">The render context of the parent view model</param>
         
-        var vm = xmlOverride ? {
-            constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(xmlOverride.name)),
-            name: xmlOverride.name
-        } : getMeAViewModel(element);
+        var vm = xmlOverride ? wo.getViewModel(xmlOverride.name) : getMeAViewModel(element);
         
         if(!vm)
             throw "Invalid view model";
