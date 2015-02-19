@@ -237,7 +237,6 @@ Class("wipeout.template.renderedContent", function () {
             template = template.getBuilder();
             
             // add builder html
-			debugger;
             this.prependHtml(template.html);
             
             this.__initialTemplate = true;
