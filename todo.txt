@@ -1,7 +1,7 @@
 
 synchronus rendering if template is defined beforehand (or maybe if not)
 
-
+events and routed events. make strings?
 
 owts binding
 owts is valid regex
