@@ -1,6 +1,3 @@
-
-//TODO: dispose of bindings
-
 Class("wipeout.htmlBindingTypes.nb", function () {  
     
     //TODO: remove global setter: get it from view model

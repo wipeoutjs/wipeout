@@ -96,7 +96,7 @@ Class("wipeout.template.compiledInitializer", function () {
             }
         }
         
-        var p = (element.attributes.parser || element.attributes.parsers);        
+        var p = element.attributes.parser || element.attributes.parsers;
         if (!p) {
             var parent = wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element._parentElement.name))
             if (parent && parent.getGlobalParser) //TODO better way
@@ -141,14 +141,19 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
         
-        this.set(viewModel, renderContext, this.setters["model"], "model");
+        var disposal = [this.set(viewModel, renderContext, this.setters["model"], "model")];
         
         enumerateObj(this.setters, function (setter, name) {            
             if (name === "model") return;
-            this.set(viewModel, renderContext, setter, name);
+            disposal.push(this.set(viewModel, renderContext, setter, name));
         }, this);
-        
-        return viewModel;
+		
+		return function () {
+			enumerateArr(disposal.splice(0, disposal.length), function (d) {
+				if (d)
+					d.dispose();
+			});
+		}
     };
     
     compiledInitializer.prototype.set = function (viewModel, renderContext, setter, name) {
@@ -157,7 +162,7 @@ Class("wipeout.template.compiledInitializer", function () {
             (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
             "ow";
 
-        wipeout.htmlBindingTypes[bt](viewModel, setter, name, renderContext);
+        return wipeout.htmlBindingTypes[bt](viewModel, setter, name, renderContext);
     };
     
     compiledInitializer.getAutoParser = function (value) {

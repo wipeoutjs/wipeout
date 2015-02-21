@@ -13,9 +13,9 @@ Class("wipeout.htmlBindingTypes.ow", function () {
         var val;
         if (parser.wipeoutAutoParser && wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.valueAsString())) {
             
-            wipeout.utils.htmlBindingTypes.bindOneWay(renderContext, val, viewModel, name);
+            return wipeout.utils.htmlBindingTypes.bindOneWay(renderContext, val, viewModel, name);
         } else {
-            viewModel.computed(name, parser, {
+            return viewModel.computed(name, parser, {
 				watchVariables: renderContext.variablesForComputed({
 					value: parser.xmlParserTempName ? setter.value : setter.valueAsString(), 
 					propertyName: name,

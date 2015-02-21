@@ -22,7 +22,7 @@ Class("wipeout.template.viewModelElement", function () {
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parentRenderContext);
         
         // initialize the view model
-        wipeout.template.engine.instance
+        this.bindings = wipeout.template.engine.instance
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
@@ -38,6 +38,10 @@ Class("wipeout.template.viewModelElement", function () {
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
         this._super(leaveDeadChildNodes);
+		
+		debugger;
+		this.bindings();
+		
 		if (this.viewModel instanceof wipeout.viewModels.visual)
         	this.viewModel.dispose();
 		else

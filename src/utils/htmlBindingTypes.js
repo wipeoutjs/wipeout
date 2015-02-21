@@ -10,18 +10,17 @@ Class("wipeout.utils.htmlBindingTypes", function () {
         //TODO: it doesn't make sense to call out to another lib for this
         var callback = obsjs.utils.obj.createBindFunction(bindTo, bindToName);
         var pw = new obsjs.observeTypes.pathObserver(bindFrom, bindFromName, callback);
-        
-        if (bindFrom instanceof wipeout.base.disposable) {
-            bindFrom.registerDisposable(callback);
+        pw.registerDisposable(callback);
+		
+        if (bindFrom instanceof wipeout.base.disposable)
             bindFrom.registerDisposable(pw);
-        }
         
-        if (bindTo instanceof wipeout.base.disposable) {
-            bindTo.registerDisposable(callback);
+        if (bindTo instanceof wipeout.base.disposable)
             bindTo.registerDisposable(pw);
-        }
 
         callback(null, wipeout.utils.obj.getObject(bindFromName, bindFrom));
+		
+		return pw;
     }
     
     utils.getParser = function(forViewModel, propertyName, setter) {

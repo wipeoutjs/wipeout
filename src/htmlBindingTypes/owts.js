@@ -9,6 +9,6 @@ Class("wipeout.htmlBindingTypes.owts", function () {
 			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
         
-        wipeout.utils.htmlBindingTypes.bindOneWay(viewModel, name, renderContext, val);
+        return wipeout.utils.htmlBindingTypes.bindOneWay(viewModel, name, renderContext, val);
     };
 });
