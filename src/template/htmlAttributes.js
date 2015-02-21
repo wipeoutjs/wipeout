@@ -22,7 +22,7 @@ Class("wipeout.template.htmlAttributes", function () {
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
         
-        if (!wipeout.template.bindingTypes.owts.isSimpleBindingProperty(value))
+        if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value))
             throw "Cannot bind to the property \"" + value + "\".";
         
         var d1 = onVmValueChanged(value, function (oldVal, newVal) {
@@ -50,7 +50,7 @@ Class("wipeout.template.htmlAttributes", function () {
 		
         var logic = wipeout.template.compiledInitializer.getAutoParser(value);
         
-        // order important. Observe before computed execution
+		//TODO: this is very similar to one way bindings
         var computed = new obsjs.observeTypes.computed(
             logic,
             null, 

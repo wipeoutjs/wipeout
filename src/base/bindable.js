@@ -69,7 +69,7 @@ Class("wipeout.base.bindable", function () {
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
         
-        if (typeof bindingType !== "string" || !wipeout.template.bindingTypes[bindingType])
+        if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODO
             throw "Invalid binding type. Binding types must be either a string which points to wipeout binding type, or a function which will parse the data";
              

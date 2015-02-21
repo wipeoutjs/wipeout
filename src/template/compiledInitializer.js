@@ -11,7 +11,7 @@ Class("wipeout.template.compiledInitializer", function () {
         enumerateArr(flags || [], function (flag) {
             if (compiledInitializer.parsers[flag]) {
                 this.parser.push(compiledInitializer.parsers[flag]);
-            } else if (wipeout.template.bindingTypes[flag]) {
+            } else if (wipeout.htmlBindingTypes[flag]) {
                 if (this.bindingType)
                     throw "A binding type is already specified for this property.";
                 
@@ -157,14 +157,12 @@ Class("wipeout.template.compiledInitializer", function () {
             (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
             "ow";
 
-        wipeout.template.bindingTypes[bt](viewModel, setter, name, renderContext);
+        wipeout.htmlBindingTypes[bt](viewModel, setter, name, renderContext);
     };
     
     compiledInitializer.getAutoParser = function (value) {
-                
-        value = "with (renderContext) return " + value + ";";
-        
-        var output = new Function("value", "propertyName", "renderContext", value);
+		
+        var output = new Function("value", "propertyName", "renderContext", "with (renderContext) return " + value + ";");
         output.wipeoutAutoParser = true;
         
         return output;
