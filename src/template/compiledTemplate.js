@@ -1,8 +1,6 @@
 
 Class("wipeout.template.compiledTemplate", function () {
-    
-    var string = "string", idString = "id";
-    
+        
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
         
@@ -14,7 +12,7 @@ Class("wipeout.template.compiledTemplate", function () {
             
         // concat successive strings
         for (var i = this.html.length - 1; i > 0; i--) {
-            if (typeof this.html[i] === string && typeof this.html[i - 1] === string)
+            if (typeof this.html[i] === "string" && typeof this.html[i - 1] === "string")
                 this.html[i - 1] += this.html.splice(i, 1)[0];
         }
         
@@ -94,7 +92,7 @@ Class("wipeout.template.compiledTemplate", function () {
                     this.html.push(modifications = []);
 
                 // ensure the "id" modification is the first to be done
-                name === idString ?
+                name === "id" ?
                     modifications.splice(0, 0, {
                         action: wipeout.template.htmlAttributes[name],
                         value: attribute.value

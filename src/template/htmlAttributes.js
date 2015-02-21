@@ -3,12 +3,12 @@ Class("wipeout.template.htmlAttributes", function () {
     function htmlAttributes() {
     }  
     
-    var functionReference = /^[\s\.\w\$]*$/;
+    var functionCall = /^\)[\s;]*$/;
     
     //TODO: types of inputs
     htmlAttributes.click = function (value, element, renderContext) { //TODO error handling
         
-        if (functionReference.test(value))
+        if (!functionCall.test(value))
             value = value + "(e, element);";
         
         //TODO non standard (with)
@@ -18,14 +18,6 @@ Class("wipeout.template.htmlAttributes", function () {
             callback(e, element, renderContext);
         });
     };
-	
-	function bs(property, useEqualityCheck) {
-        useEqualityCheck = useEqualityCheck ?
-            "if (" + property + " !== value) " :
-            "";
-        
-        return new Function("renderContext", "value", "with (renderContext) " + useEqualityCheck + property + " = value;");
-	}
     
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
