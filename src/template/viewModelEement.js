@@ -39,7 +39,6 @@ Class("wipeout.template.viewModelElement", function () {
         
         this._super(leaveDeadChildNodes);
 		
-		debugger;
 		this.bindings();
 		
 		if (this.viewModel instanceof wipeout.viewModels.visual)

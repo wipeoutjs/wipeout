@@ -107,8 +107,7 @@ Class("wipeout.template.compiledInitializer", function () {
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
                     this.setters[name] = {
-                        parser: compiledInitializer.parsers.createAndSet,
-                        bindingType: "nb",
+                        bindingType: "templateSetter",
                         value: {
                             xml: element[i],
                             constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
@@ -196,21 +195,6 @@ Class("wipeout.template.compiledInitializer", function () {
         "date": function (value, propertyName, renderContext) {
             return new Date(trim(value));
         },
-        "createAndSet": function (value, propertyName, renderContext) {
-            
-            //TODO: dispose
-            var output = new value.constructor;
-        
-            wipeout.template.engine.instance
-                .getVmInitializer(value.xml)
-                .initialize(output, renderContext);
-            
-            return output;
-        },
-        /* //doesn't seem to be used
-        "set": function (value, propertyName, renderContext) {
-            return value;
-        },*/        
         "template": function (value) {
             return value;
         },
@@ -224,7 +208,6 @@ Class("wipeout.template.compiledInitializer", function () {
     
     //TODO: Rename
     compiledInitializer.parsers.template.xmlParserTempName = true;
-    compiledInitializer.parsers.createAndSet.xmlParserTempName = true;
     
     compiledInitializer.parsers.j = compiledInitializer.parsers["json"];
     compiledInitializer.parsers.s = compiledInitializer.parsers["string"];
