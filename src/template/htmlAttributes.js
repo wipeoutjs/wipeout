@@ -18,6 +18,14 @@ Class("wipeout.template.htmlAttributes", function () {
             callback(e, element, renderContext);
         });
     };
+	
+	function bs(property, useEqualityCheck) {
+        useEqualityCheck = useEqualityCheck ?
+            "if (" + property + " !== value) " :
+            "";
+        
+        return new Function("renderContext", "value", "with (renderContext) " + useEqualityCheck + property + " = value;");
+	}
     
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
@@ -30,10 +38,8 @@ Class("wipeout.template.htmlAttributes", function () {
                 element.value = newVal;
         }, renderContext);
         
-        //TODO: this is very non standard (the with part)
-        var setter = wipeout.template.bindingTypes.owts.buildSetter(value, true);
         var d2 = onElementEvent(element, "change", function () {
-            setter(renderContext, element.value);
+			wipeout.utils.obj.setObject(value, renderContext, element.value);
         });
         
         return function () {

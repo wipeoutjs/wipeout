@@ -76,15 +76,6 @@ Class("wipeout.template.bindingTypes", function () {
     };
     
     //TODO: test
-    bindingTypes.owts.buildSetter = function (property, useEqualityCheck) {
-        useEqualityCheck = useEqualityCheck ?
-            "if (" + property + " !== value) " :
-            "";
-        
-        return new Function("renderContext", "value", "with (renderContext) " + useEqualityCheck + property + " = value;");
-    };
-    
-    //TODO: test
     bindingTypes.owts.isSimpleBindingProperty = function (property) {
         return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
     };

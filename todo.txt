@@ -1,3 +1,5 @@
+REMOVE WITH. It is incredibly slow
+
 
 synchronus rendering if template is defined beforehand (or maybe if not)
 
