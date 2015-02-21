@@ -232,17 +232,9 @@ Class("wipeout.template.renderedContent", function () {
                 element = null;
             }
             
-            // get template builder. This generates a html string and a function to
-            // add dynamic functionality after it is added to the DOM
-            template = template.getBuilder();
-            
-            // add builder html
-            this.prependHtml(template.html);
-            
+			// add html and execute to add dynamic content
+            this.disposeOfBindings = template.quickBuild(this.prependHtml.bind(this), this.renderContext);
             this.__initialTemplate = true;
-
-            // add dynamic functionality and cache dispose function
-            this.disposeOfBindings = template.execute(this.renderContext);
             
             this.renderContext.$this.onRendered();
         }).bind(this));

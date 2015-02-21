@@ -148,17 +148,21 @@ Class("wipeout.template.compiledTemplate", function () {
             this.addViewModel(node);
         else
             this.addElement(node);
+    };
+    
+    compiledTemplate.prototype.quickBuild = function(htmlAddCallback, renderContext) {
+        ///<summary>Add html and execute dynamic content. Ensures synchronocity so reuses the same builder</summary>
         
+        var builder = this._builder || (this._builder = this.getBuilder());
+		
+		htmlAddCallback(builder.html);
+		return builder.execute(renderContext);
     };
     
     compiledTemplate.prototype.getBuilder = function() {
         ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
         
-        // This only works if builder is gaurenteed to work synchronusly.
-        // If not, create a new builder each time:
-        //return new wipeout.template.builder(this);
-        
-        return this._builder || (this._builder = new wipeout.template.builder(this));        
+        return new wipeout.template.builder(this);
     };
         
     return compiledTemplate;
