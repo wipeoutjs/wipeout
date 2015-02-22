@@ -1,29 +1,49 @@
 Class("wipeout.utils.htmlBindingTypes", function () {  
         
-    function utils() {
+    function htmlBindingTypes() {
     }
 	
-    utils.bindOneWay = function(bindFrom, bindFromName, bindTo, bindToName) {
+    htmlBindingTypes.onPropertyChange = function(object, propertyPath, callback, allowComplexProperties) {
+		
+		var simple = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath), watcher;
+		if (simple) {
+			watcher = new obsjs.observeTypes.pathObserver(object, propertyPath);
+		} else {
+			if (!allowComplexProperties)
+				throw "The property " + propertyPath + 
+					" is not valid for this binding. Only simple paths (e.g. \"$this.prop1.prop2\" are allowed";
+			
+			var watchVariables = {
+				value: propertyPath, 
+				propertyName: "",
+				renderContext: object
+			};
+			
+			if (object instanceof wipeout.template.renderContext)
+				watchVariables = object.variablesForComputed(watchVariables);
+			
+			watcher = new obsjs.observeTypes.computed(wipeout.template.compiledInitializer.getAutoParser(propertyPath), null, {
+				watchVariables: watchVariables,
+				allowWith: true
+			});
+		}
+		
+		watcher.onValueChanged(callback, true);
+		return watcher;
+    };  
+	
+    htmlBindingTypes.bindOneWay = function(bindFrom, bindFromName, bindTo, bindToName, allowComplexProperties) {
         //TODO: it doesn't make sense to call out to another lib for this
         var callback = obsjs.utils.obj.createBindFunction(bindTo, bindToName);
-        var pw = new obsjs.observeTypes.pathObserver(bindFrom, bindFromName, callback);
-        pw.registerDisposable(callback);
-		
-        if (bindFrom instanceof wipeout.base.disposable)
-            bindFrom.registerDisposable(pw);
-        
-        if (bindTo instanceof wipeout.base.disposable)
-            bindTo.registerDisposable(pw);
-
-        callback(null, wipeout.utils.obj.getObject(bindFromName, bindFrom));
-		
-		return pw;
+		var watcher = htmlBindingTypes.onPropertyChange(bindFrom, bindFromName, callback, allowComplexProperties);
+		watcher.registerDisposable(callback);
+		return watcher;
     };    
     
     //TODO: test
-    utils.isSimpleBindingProperty = function (property) {
+    htmlBindingTypes.isSimpleBindingProperty = function (property) {
         return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
     };
     
-    return utils;
+    return htmlBindingTypes;
 });
