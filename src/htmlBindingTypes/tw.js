@@ -1,6 +1,3 @@
-
-//TODO: dispose of bindings
-
 Class("wipeout.htmlBindingTypes.tw", function () {  
     
     return function tw(viewModel, setter, name, renderContext) {		

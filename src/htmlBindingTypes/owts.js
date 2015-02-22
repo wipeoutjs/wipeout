@@ -1,6 +1,3 @@
-
-//TODO: dispose of bindings
-
 Class("wipeout.htmlBindingTypes.owts", function () {  
     
     return function owts (viewModel, setter, name, renderContext) {

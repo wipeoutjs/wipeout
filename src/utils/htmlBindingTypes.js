@@ -1,6 +1,3 @@
-
-//TODO: dispose of bindings
-
 Class("wipeout.utils.htmlBindingTypes", function () {  
         
     function utils() {
