@@ -1,7 +1,7 @@
 
 Class("wipeout.template.htmlAttributes", function () {
     function htmlAttributes() {
-    }  
+    }   
     
     var functionCall = /^\)[\s;]*$/;
     
@@ -21,45 +21,25 @@ Class("wipeout.template.htmlAttributes", function () {
     
     //TODO: types of inputs
     htmlAttributes.value = function (value, element, renderContext) { //TODO error handling
-        
+		
         if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value))
             throw "Cannot bind to the property \"" + value + "\".";
         
-        var d1 = onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
+        var d1 = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
             if (element.value !== newVal)
                 element.value = newVal;
-        });
+        }, true);
         
-        var d2 = onElementEvent(element, "change", function () {
+        d1.registerDisposeCallback(onElementEvent(element, "change", function () {
 			wipeout.utils.obj.setObject(value, renderContext, element.value);
-        });
+        }));
         
         return function () {
             if (d1) {
-                d1();
-                d2();
-                
+                d1.dispose();                
                 d1 = null;
-                d2 = null;
             }
         }
-    };   
-    
-    function onRenderContextPropertyChanged (renderContext, propertyPath, callback) { //TODO error handling
-		
-		var watcher = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath) ?
-			new obsjs.observeTypes.pathObserver(renderContext, propertyPath) :
-			new obsjs.observeTypes.computed(wipeout.template.compiledInitializer.getAutoParser(propertyPath), null, {
-				watchVariables: renderContext.variablesForComputed({
-					value: propertyPath, 
-					propertyName: "",
-					renderContext: renderContext
-				}),
-				allowWith: true
-			});
-		
-		watcher.onValueChanged(callback, true);
-		return watcher.dispose.bind(watcher);
     };
     
     function onElementEvent (element, event, callback) { //TODO error handling
@@ -79,20 +59,27 @@ Class("wipeout.template.htmlAttributes", function () {
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
 		
         var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
-        var disposal = onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
+        var disposal = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
             htmlContent.render(newVal);
-        });
+        }, true);
         
         return function() {
-            disposal();
-            htmlContent.dispose();
+			if (disposal) {
+				disposal.dispose();
+				htmlContent.dispose();
+				
+				disposal = null;
+				htmlContent = null;
+			}
         };
     };  
     
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
-        return onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
+        var disp = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
-        });
+        }, true);
+		
+		return disp.dispose.bind(disp);
     };
     
     htmlAttributes.id = function (value, element, renderContext) {

@@ -1,6 +1,7 @@
 
 Class("wipeout.template.compiledInitializer", function () {
 	
+	//TODO: this needs its own file
     function setter (value, flags) {
         this.value = value;
         
