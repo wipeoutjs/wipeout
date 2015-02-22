@@ -45,7 +45,6 @@ Class("wipeout.template.htmlAttributes", function () {
         }
     };   
     
-    var defaultVal = {};
     function onVmValueChanged (value, callback, renderContext) { //TODO error handling
 		
         var logic = wipeout.template.compiledInitializer.getAutoParser(value);
