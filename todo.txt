@@ -1,3 +1,13 @@
+1. Look at getAutoParser, its usages and "wipeoutAutoParser = true"
+2. Try to amalgamate onVmValueChanged and the one way binding type (they do the same thing)
+
+
+
+
+
+
+
+
 REMOVE WITH. It is incredibly slow
 
 
