@@ -22,7 +22,7 @@ Class("wipeout.template.viewModelElement", function () {
         this.renderContext = new wipeout.template.renderContext(this.viewModel, parentRenderContext);
         
         // initialize the view model
-        this.bindings = wipeout.template.engine.instance
+        this.disposeOfBindings = wipeout.template.engine.instance
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
@@ -39,7 +39,7 @@ Class("wipeout.template.viewModelElement", function () {
         
         this._super(leaveDeadChildNodes);
 		
-		this.bindings();
+		this.disposeOfBindings();
 		
 		if (this.viewModel instanceof wipeout.viewModels.visual)
         	this.viewModel.dispose();
