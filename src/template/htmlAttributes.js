@@ -25,10 +25,10 @@ Class("wipeout.template.htmlAttributes", function () {
         if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value))
             throw "Cannot bind to the property \"" + value + "\".";
         
-        var d1 = onVmValueChanged(value, function (oldVal, newVal) {
+        var d1 = onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
             if (element.value !== newVal)
                 element.value = newVal;
-        }, renderContext);
+        });
         
         var d2 = onElementEvent(element, "change", function () {
 			wipeout.utils.obj.setObject(value, renderContext, element.value);
@@ -45,13 +45,13 @@ Class("wipeout.template.htmlAttributes", function () {
         }
     };   
     
-    function onVmValueChanged (value, callback, renderContext) { //TODO error handling
+    function onRenderContextPropertyChanged (renderContext, propertyPath, callback) { //TODO error handling
 		
-		var watcher = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value) ?
-			new obsjs.observeTypes.pathObserver(renderContext, value) :
-			new obsjs.observeTypes.computed(wipeout.template.compiledInitializer.getAutoParser(value), null, {
+		var watcher = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath) ?
+			new obsjs.observeTypes.pathObserver(renderContext, propertyPath) :
+			new obsjs.observeTypes.computed(wipeout.template.compiledInitializer.getAutoParser(propertyPath), null, {
 				watchVariables: renderContext.variablesForComputed({
-					value: value, 
+					value: propertyPath, 
 					propertyName: "",
 					renderContext: renderContext
 				}),
@@ -79,9 +79,9 @@ Class("wipeout.template.htmlAttributes", function () {
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
 		
         var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
-        var disposal = onVmValueChanged(value, function (oldVal, newVal) {
+        var disposal = onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
             htmlContent.render(newVal);
-        }, renderContext);
+        });
         
         return function() {
             disposal();
@@ -90,9 +90,9 @@ Class("wipeout.template.htmlAttributes", function () {
     };  
     
     htmlAttributes.content = function (value, element, renderContext) { //TODO error handling
-        return onVmValueChanged(value, function (oldVal, newVal) {
+        return onRenderContextPropertyChanged(renderContext, value, function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
-        }, renderContext);
+        });
     };
     
     htmlAttributes.id = function (value, element, renderContext) {
