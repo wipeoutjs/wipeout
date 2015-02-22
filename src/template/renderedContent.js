@@ -34,6 +34,12 @@ Class("wipeout.template.renderedContent", function () {
     
     //TODO: this function is too big
     renderedContent.prototype.renderArray = function (array) {
+        
+        // if a previous request is pending, cancel it
+        if (this.asynchronous) {
+            this.asynchronous.cancel();
+			delete this.asynchronous;
+		}
                 
         this.unRender();        
         var children = [], getChild;
