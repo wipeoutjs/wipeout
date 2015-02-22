@@ -1,64 +1,6 @@
 
 Class("wipeout.template.compiledInitializer", function () {
-	
-	//TODO: this needs its own file
-    function setter (value, flags) {
-        this.value = value;
-        
-        this.parser = [];
-        this.bindingType = null;
-        
-        // process parseing and binding flags
-        enumerateArr(flags || [], function (flag) {
-            if (compiledInitializer.parsers[flag]) {
-                this.parser.push(compiledInitializer.parsers[flag]);
-            } else if (wipeout.htmlBindingTypes[flag]) {
-                if (this.bindingType)
-                    throw "A binding type is already specified for this property.";
-                
-                this.bindingType = flag;
-            }
-        }, this);
-        
-        // if parser has already been processed
-        if (!(this.parser instanceof Array))
-            return;
-        
-        var p = this.parser;
-        
-        if (p.length === 1) {
-            this.parser = p[0];
-        } else if (p.length) {
-            this.parser = function (value, propertyName, renderContext) {
-                for(var i = 0, ii = p.length; i < ii; i++)
-                    value = p[i](value, propertyName, renderContext);
-
-                return value;
-            };
-            
-            this.parser.xmlParserTempName = p[0].xmlParserTempName;
-        } else {
-            this.parser = null;
-        }
-    }
-	
-	setter.prototype.getParser = function(forViewModel, propertyName) {
-        var globalParser = forViewModel instanceof wipeout.base.bindable ?
-            forViewModel.getGlobalParser(propertyName) :
-            null;
-        
-        // use parser, global parser or lazy create auto parser
-        return this.parser || 
-            globalParser ||
-            (this.parser = wipeout.template.compiledInitializer.getAutoParser(this.valueAsString()));
-    };
-    
-    setter.prototype.valueAsString = function () {
-        return typeof this._valueAsString === "string" ?
-            this._valueAsString :
-            (this._valueAsString = this.value.serializeContent());
-    };
-    
+	    
     compiledInitializer.getPropertyFlags = function(name) {
         
         var flags = name.indexOf("--");
@@ -85,7 +27,7 @@ Class("wipeout.template.compiledInitializer", function () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-            this.setters.model = new setter(new wipeout.template.templateAttribute("$parent ? $parent.model : null", null));
+            this.setters.model = new wipeout.template.propertySetter(new wipeout.template.templateAttribute("$parent ? $parent.model : null", null));
         }
     };
     
@@ -103,7 +45,7 @@ Class("wipeout.template.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODO
                 });
                 
-                this.setters[name] = new setter(element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
+                this.setters[name] = new wipeout.template.propertySetter(element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -132,12 +74,12 @@ Class("wipeout.template.compiledInitializer", function () {
         }
 
         if (p && p.constructor === Function) {
-            this.setters[name] = new setter(element);
+            this.setters[name] = new wipeout.template.propertySetter(element);
             this.setters[name].parser = p;
         } else if (p) {
-            this.setters[name] = new setter(element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+            this.setters[name] = new wipeout.template.propertySetter(element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
         } else {
-            this.setters[name] = new setter(element);
+            this.setters[name] = new wipeout.template.propertySetter(element);
         }
     };
     
@@ -147,7 +89,7 @@ Class("wipeout.template.compiledInitializer", function () {
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = new setter(attribute, name.flags);
+        this.setters[name.name] = new wipeout.template.propertySetter(attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
