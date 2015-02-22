@@ -26,7 +26,7 @@ Class("wipeout.template.viewModelElement", function () {
             .getVmInitializer(this.initialization)
             .initialize(this.viewModel, this.renderContext);
         
-        // run onInitialized after templating is complete
+        // run onInitialized after value initialization is complete
         if (this.viewModel instanceof wipeout.viewModels.view)
             this.viewModel.onInitialized();
         
