@@ -18,19 +18,7 @@ Class("wipeout.utils.htmlBindingTypes", function () {
         callback(null, wipeout.utils.obj.getObject(bindFromName, bindFrom));
 		
 		return pw;
-    }
-    
- /*   utils.getParser = function(forViewModel, propertyName, setter) {
-        var globalParser = forViewModel instanceof wipeout.base.bindable ?
-            forViewModel.getGlobalParser(propertyName) :
-            null;
-        
-        // use parser, global parser or lazy create auto parser
-        return setter.parser || 
-            globalParser ||
-            (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.valueAsString()));
-    }*/
-    
+    };    
     
     //TODO: test
     utils.isSimpleBindingProperty = function (property) {
