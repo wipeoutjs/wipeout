@@ -2,7 +2,7 @@ Class("wipeout.htmlBindingTypes.nb", function () {
     
     return function nb(viewModel, setter, name, renderContext) {
         
-        var parser = wipeout.utils.htmlBindingTypes.getParser(viewModel, name, setter);
+        var parser = setter.getParser(viewModel, name);
         viewModel[name] = parser(parser.xmlParserTempName ? setter.value : setter.valueAsString(), name, renderContext);
     }
 });

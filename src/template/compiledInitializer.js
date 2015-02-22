@@ -40,6 +40,17 @@ Class("wipeout.template.compiledInitializer", function () {
             this.parser = null;
         }
     }
+	
+	setter.prototype.getParser = function(forViewModel, propertyName) {
+        var globalParser = forViewModel instanceof wipeout.base.bindable ?
+            forViewModel.getGlobalParser(propertyName) :
+            null;
+        
+        // use parser, global parser or lazy create auto parser
+        return this.parser || 
+            globalParser ||
+            (this.parser = wipeout.template.compiledInitializer.getAutoParser(this.valueAsString()));
+    };
     
     setter.prototype.valueAsString = function () {
         return typeof this._valueAsString === "string" ?

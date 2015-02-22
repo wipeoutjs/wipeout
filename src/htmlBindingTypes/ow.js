@@ -2,7 +2,7 @@ Class("wipeout.htmlBindingTypes.ow", function () {
 	
     return function ow (viewModel, setter, name, renderContext) {
 		
-        var parser = wipeout.utils.htmlBindingTypes.getParser(viewModel, name, setter);
+        var parser = setter.getParser(viewModel, name);
 		
 		// cannot bind to xml definition or a parsed value
 		if (parser.xmlParserTempName || !parser.wipeoutAutoParser)

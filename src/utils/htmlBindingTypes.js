@@ -20,7 +20,7 @@ Class("wipeout.utils.htmlBindingTypes", function () {
 		return pw;
     }
     
-    utils.getParser = function(forViewModel, propertyName, setter) {
+ /*   utils.getParser = function(forViewModel, propertyName, setter) {
         var globalParser = forViewModel instanceof wipeout.base.bindable ?
             forViewModel.getGlobalParser(propertyName) :
             null;
@@ -29,7 +29,7 @@ Class("wipeout.utils.htmlBindingTypes", function () {
         return setter.parser || 
             globalParser ||
             (setter.parser = wipeout.template.compiledInitializer.getAutoParser(setter.valueAsString()));
-    }
+    }*/
     
     
     //TODO: test
