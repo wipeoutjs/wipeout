@@ -1,6 +1,6 @@
 
 Class("wipeout.template.compiledInitializer", function () {
-    
+	
     function setter (value, flags) {
         this.value = value;
         

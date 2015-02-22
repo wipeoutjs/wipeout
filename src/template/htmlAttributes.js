@@ -47,20 +47,19 @@ Class("wipeout.template.htmlAttributes", function () {
     
     function onVmValueChanged (value, callback, renderContext) { //TODO error handling
 		
-        var logic = wipeout.template.compiledInitializer.getAutoParser(value);
-        
-		//TODO: this is very similar to one way bindings
-        var computed = new obsjs.observeTypes.computed(
-            logic,
-            null, 
-			{
-				watchVariables: renderContext.variablesForComputed({renderContext: renderContext, value: value, propertyName: ""}), 
+		var watcher = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value) ?
+			new obsjs.observeTypes.pathObserver(renderContext, value) :
+			new obsjs.observeTypes.computed(wipeout.template.compiledInitializer.getAutoParser(value), null, {
+				watchVariables: renderContext.variablesForComputed({
+					value: value, 
+					propertyName: "",
+					renderContext: renderContext
+				}),
 				allowWith: true
 			});
-        
-        computed.onValueChanged(callback, true);
-        
-        return computed.dispose.bind(computed);
+		
+		watcher.onValueChanged(callback, true);
+		return watcher.dispose.bind(watcher);
     };
     
     function onElementEvent (element, event, callback) { //TODO error handling
