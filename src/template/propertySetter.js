@@ -22,12 +22,11 @@ Class("wipeout.template.propertySetter", function () {
         // if parser has already been processed
         if (!(this.parser instanceof Array))
             return;
-        
-        var p = this.parser;
-        
-        if (p.length === 1) {
-            this.parser = p[0];
-        } else if (p.length) {
+                
+        if (this.parser.length === 1) {
+            this.parser = this.parser[0];
+        } else if (this.parser.length) {
+        	var p = this.parser;
             this.parser = function (value, propertyName, renderContext) {
                 for(var i = 0, ii = p.length; i < ii; i++)
                     value = p[i](value, propertyName, renderContext);
