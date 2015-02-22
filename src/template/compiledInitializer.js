@@ -60,13 +60,10 @@ Class("wipeout.template.compiledInitializer", function () {
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-                    this.setters[name] = {
-                        bindingType: "templateSetter",
-                        value: {
-                            xml: element[i],
-                            constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
-                        }
-                    };
+                    this.setters[name] = new wipeout.template.propertySetter({
+						xml: element[i],
+						constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
+                    }, ["templateSetter"]);
 
                     return;
                 }
