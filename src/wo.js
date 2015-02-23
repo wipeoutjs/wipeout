@@ -10,12 +10,15 @@ window.wo = function (model, htmlElement) {
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
 
-    enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
+	if (getMeAViewModel(htmlElement))
+		new wipeout.template.viewModelElement(htmlElement);
+	else
+		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
-        // element may have been removed since get all elements
-        if (htmlElement.contains(element) && getMeAViewModel(element))
-            new wipeout.template.viewModelElement(element);
-    });        
+			// element may have been removed since get all elements
+			if (htmlElement.contains(element) && getMeAViewModel(element))
+				new wipeout.template.viewModelElement(element);
+		});        
 };
 
 wo.getViewModel = function (viewModelName, skipCamelCase) {
