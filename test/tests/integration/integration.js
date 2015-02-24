@@ -5,7 +5,7 @@ var node;
 module("wipeout.tests.integration.integration", {
     setup: function() {
         $fixture = $("#qunit-fixture");
-        $fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='wo.contentControl' application--b='true'></div>");
+        $fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='wo.contentControl' application='true'></div>");
         wo(null, $fixture.children()[0]);
         application = wipeout.utils.html.getViewModel(node = $fixture[0].firstChild);
         application.application = true;
@@ -26,11 +26,11 @@ test("camel casing and synchronus rendering of <template>", function() {
     
     // arrange
     // act
-    application.template = '<wo.content-control a-property-1--b="true" id="item" >\
-        <a-property-2 parser="b">true</a-property-2>\
+    application.template = '<wo.content-control a-property-1="true" id="item" >\
+        <a-property-2>true</a-property-2>\
 		<template>\
-			<wo.content-control a-property-1--b="true" id="item" >\
-				<a-property-2 parser="b">true</a-property-2>\
+			<wo.content-control a-property-1="true" id="item" >\
+				<a-property-2>true</a-property-2>\
 			</wo.content-control>\
 		</template>\
     </wo.content-control>';
