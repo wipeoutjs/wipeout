@@ -26,19 +26,17 @@ test("camel casing and reserved property behavior", function() {
     
     // arrange
     // act
-    application.template = '<wo.content-control a-property-1="true" id="i2" >\
+    application.template = '<wo.content-control a-property-1="true" id="item" >\
         <a-property-2>true</a-property-2>\
     </wo.content-control>';
     
     // assert
-	obsjs.observe(application.templateItems, "i2", function () {
-		obsjs.observe(application.templateItems.i2, "aProperty1", function () {
+	application.onRendered = function () {
 		debugger;
-		ok(application.templateItems.i2.aProperty1);
-		ok(application.templateItems.i2.aProperty2);
+		ok(application.templateItems.item.aProperty1);
+		ok(application.templateItems.item.aProperty2);
 		start();
-		});
-	});
+	};
 	
 	stop();
 });
