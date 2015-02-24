@@ -4,6 +4,8 @@ Class("wipeout.htmlBindingTypes.ow", function () {
 		
         var parser = setter.getParser(viewModel, name);
 		
+		//TODO: if setter.valueAsString() === true || setter.valueAsString() === 345 || setter.valueAsString() === /^hello$/, this does not work properly
+		
 		// cannot bind to xml definition or a parsed value
 		if (parser.xmlParserTempName || !parser.wipeoutAutoParser)
             return wipeout.htmlBindingTypes.nb(viewModel, setter, name, renderContext);

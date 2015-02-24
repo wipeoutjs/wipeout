@@ -63,7 +63,7 @@ Class("wipeout.template.compiledInitializer", function () {
                     this.setters[name] = new wipeout.template.propertySetter({
 						xml: element[i],
 						constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
-                    }, ["templateSetter"]);
+                    }, ["templateElementSetter"]);
 
                     return;
                 }

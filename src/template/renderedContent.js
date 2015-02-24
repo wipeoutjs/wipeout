@@ -31,6 +31,7 @@ Class("wipeout.template.renderedContent", function () {
 	};
 	
     renderedContent.prototype.render = function (object) {
+		
         if (object instanceof Array) {
             this.renderArray(object);
             return;

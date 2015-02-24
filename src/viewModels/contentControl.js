@@ -15,6 +15,7 @@ Class("wipeout.viewModels.contentControl", function () {
     
     //TODO: benchmark test
     contentControl.addGlobalParser("template", "template");
+    contentControl.addGlobalBindingType("template", "setTemplateProperty");
     
     contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>

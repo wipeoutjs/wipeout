@@ -1,7 +1,7 @@
-Class("wipeout.htmlBindingTypes.templateSetter", function () {  
+Class("wipeout.htmlBindingTypes.templateElementSetter", function () {  
     
-    return function templateSetter(viewModel, setter, name, renderContext) {
-        
+    return function templateElementSetter(viewModel, setter, name, renderContext) {
+		
 		viewModel[name] = new setter.value.constructor;
 
 		return new obsjs.disposable(wipeout.template.engine.instance
