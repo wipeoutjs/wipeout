@@ -8,17 +8,6 @@ Class("wipeout.base.bindable", function () {
         
         this._super();
     });
-        
-    var getGlobalProperty = function (forClass, forProperty) {
-        
-        bindable.globalSettings = bindable.globalSettings || new wipeout.base.utils.globalSettingsDictionary();
-    
-        var output;
-        if (!(output = bindable.globalSettings.value(forClass)))
-            bindable.globalSettings.add(forClass, output = {});
-        
-        return output[forProperty] || (output[forProperty] = {});
-    };
     
     var parserPrefix = "__wipeoutGlobalParser_";
     
@@ -71,7 +60,7 @@ Class("wipeout.base.bindable", function () {
         
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODO
-            throw "Invalid binding type. Binding types must be either a string which points to wipeout binding type, or a function which will parse the data";
+            throw "Invalid binding type. Binding types must be a string which points to wipeout binding type";
              
         var bindingName = bindingPrefix + forProperty;
         if (this.prototype.hasOwnProperty(bindingName))
@@ -85,7 +74,7 @@ Class("wipeout.base.bindable", function () {
         return this[parserPrefix + forProperty];
     };
     
-    bindable.prototype.getGlobalBinding = function (forProperty) {
+    bindable.prototype.getGlobalBindingType = function (forProperty) {
         
         return this[bindingPrefix + forProperty];
     };
@@ -95,7 +84,7 @@ Class("wipeout.base.bindable", function () {
         return this.prototype[parserPrefix + forProperty];
     };
     
-    bindable.getGlobalBinding = function (forProperty) {
+    bindable.getGlobalBindingType = function (forProperty) {
         
         return this.prototype[bindingPrefix + forProperty];
     };

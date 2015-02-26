@@ -109,7 +109,7 @@ Class("wipeout.template.compiledInitializer", function () {
     compiledInitializer.prototype.set = function (viewModel, renderContext, setter, name) {
         // use binding type, globally defined binding type or default binding type
         var bt = setter.bindingType || 
-            (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBinding(name)) || 
+            (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(name)) || 
             "ow";
 
         return wipeout.htmlBindingTypes[bt](viewModel, setter, name, renderContext);
