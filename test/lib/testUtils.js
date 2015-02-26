@@ -163,15 +163,6 @@ $.extend(testUtils, (function() {
       testUtils.currentModule = details.name;
     });
     
-    ko.bindingHandlers.debug = {
-        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            debugger;
-        },
-        update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            debugger;
-        }
-    };
-    
     return {
         html: html,
         testWithUtils: testWithUtils,

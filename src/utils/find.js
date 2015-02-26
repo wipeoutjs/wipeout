@@ -188,7 +188,7 @@ Class("wipeout.utils.find", function () {
             if (i[0] === "$") {
                 if(!wipeout.utils.find[i](item, filters[i], index))
                     return false;
-            } else if (ko.utils.unwrapObservable(filters[i]) !== ko.utils.unwrapObservable(item[i])) {
+            } else if (filters[i] !== item[i]) {
                 return false;
             }
         }
