@@ -64,6 +64,8 @@ Class("wipeout.template.engine", function () {
     engine.prototype.setTemplate = function (templateId, template) {
         if (typeof template === "string")
             template = wipeout.template.templateParser(template);
+		else if (template.nodeType === 2)
+            template = wipeout.template.templateParser(template.value);
         
         return this.templates[templateId] = new wipeout.template.compiledTemplate(template);
     };
