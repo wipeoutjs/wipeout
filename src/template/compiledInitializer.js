@@ -51,7 +51,7 @@ Class("wipeout.template.compiledInitializer", function () {
         }
         
         var p = element.attributes.parser || element.attributes.parsers;
-        if (!p) {
+        if (!p && element._parentElement && element._parentElement.name) {
             var parent = wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element._parentElement.name))
             if (parent && parent.getGlobalParser) //TODO better way
                 p = parent.getGlobalParser(name);

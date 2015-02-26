@@ -8,6 +8,26 @@ window.asyncAssert = function(callback, context) {
     }, 50);
 };
 
+window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
+window.integrationTestSetup = function () {
+	window.$fixture = $("#qunit-fixture");
+	$fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='testApp' model='obsjs.makeObservable()' application='true'></div>");
+	wo(null, $fixture.children()[0]);
+	window.application = wipeout.utils.html.getViewModel(window.node = $fixture[0].firstChild);
+	application.application = true;
+
+	window.views = {};
+};
+
+window.integrationTestTeardown = function () {
+	delete window.views;
+	node.wipeoutOpening.dispose();
+	$fixture.html("");
+	delete window.$fixture;
+	delete window.node;
+	delete window.application;
+};
+
 $.extend(testUtils, (function() {
     
     var cached = [];
