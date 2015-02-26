@@ -2,6 +2,7 @@
 Class("wipeout.template.propertySetter", function () {
 	
     function propertySetter (value, flags) {
+		
         this.value = value;
         
         this.parser = [];

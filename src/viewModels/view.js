@@ -49,7 +49,7 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Called when the model has changed</summary>
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
-        
+		
         if(oldValue !== newValue) {
             this.disposeOf(this.__woBag[modelRoutedEventKey]);
             delete this.__woBag[modelRoutedEventKey];

@@ -31,6 +31,10 @@ Class("wipeout.viewModels.itemsControl", function () {
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
     });
+    
+    //TODO: benchmark test
+    itemsControl.addGlobalParser("itemTemplate", "template");
+    itemsControl.addGlobalBindingType("itemTemplate", "setTemplateProperty");
         
     itemsControl.removeItem = wipeout.events.routedEvent();
     

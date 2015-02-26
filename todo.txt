@@ -6,7 +6,7 @@
 
 
 
-
+Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 
 REMOVE WITH. It is incredibly slow
 

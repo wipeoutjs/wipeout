@@ -2,10 +2,12 @@ var $fixture;
 var application;
 var node;
 
+window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
+
 module("wipeout.tests.integration.integration", {
     setup: function() {
         $fixture = $("#qunit-fixture");
-        $fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='wo.contentControl' application='true'></div>");
+        $fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='testApp' model='obsjs.makeObservable()' application='true'></div>");
         wo(null, $fixture.children()[0]);
         application = wipeout.utils.html.getViewModel(node = $fixture[0].firstChild);
         application.application = true;
@@ -162,24 +164,32 @@ test("wipeout.utils.find", function() {
 	
 	stop();
 });
-	
-	return;
 
 test("removeItem routed event", function() {
     
     // arrange    
     var item = {};
-    application.items = ko.observableArray([{}, item]);
-    application.template('<wo.items-control id="cc" item-source-tw="$parent.items"></wo.items-control>');
+    application.items = new obsjs.array([{}, item]);
+    application.template = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
     
     // act
-    application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
+	application.onRendered = function () {
+		
+    	application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
+		
+		application.items.observe(function () {
+    		strictEqual(application.items.indexOf(item), -1);
+			start();
+		});
+	};
     
     // assert
-    strictEqual(application.items().indexOf(item), -1);
+	stop();
 });
 
 test("shareParentScope", function() {
+	
+	return "share parent scope";
     
     // arrange
     var container = "LKHLHKLH", val = "LKJGB*(PYGUBOPY", child = "LKGKJHFF";
@@ -205,23 +215,35 @@ test("shareParentScope", function() {
 
 test("wipeout.viewModels.if", function() {
     // arrange
-    application.hello = ko.observable({hello: "xxx"});
-    application.template('<wo.if share-parent-scope="false" condition="$parent.hello">\
+    application.hello = obsjs.observe(obsjs.observe({hello: "xxx"}));
+    application.template = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
     <template>\
         <div id="myDiv" data-bind="html: $parent.hello().hello"></div>\
     </template>\
-</wo.if>');
+</wo.if>';
     
-    ok(document.getElementById("myDiv"));
-    
-    // act
-    application.hello(null);
-    
-    // assert
-    ok(!document.getElementById("myDiv"));
+	application.onRendered = function () {
+		ok(document.getElementById("myDiv"));
+
+		// act
+		application.hello = null;
+
+		// assert
+		application.templateItems.target.onRendered = function () {
+			ok(!document.getElementById("myDiv"));
+
+			delete application.templateItems.target.onRendered;
+			
+			start();
+		};
+	}
+	
+	stop();
 });
 
 test("wipeout.viewModels.if, shareParentScope", function() {
+	return "share parent scope";
+	
     // arrange
     application.hello = ko.observable({hello: "xxx"});
     application.template('<wo.if condition="hello">\
@@ -244,109 +266,189 @@ test("templateItems", function() {
     var id = "IBYIBOIYHOUUBOH";
     
     // act
-    application.template("<div id='" + id + "'></div>");
+    application.template = "<div id='" + id + "'></div>";
     
-    // assert
-    var item = $("#" + id);
-    strictEqual(item.length, 1);
-    strictEqual(application.templateItems[id], item[0]);
+	application.onRendered = function () {
+		// assert
+		var item = $("#" + id);
+		strictEqual(item.length, 1);
+		strictEqual(application.templateItems[id], item[0]);
+		start();
+	};
+	
+	stop();
 });
-
+	
 test("routed event", function() {
     // arrange
     var aRoutedEvent = new wo.routedEvent();
     var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
-    application.template(open + open + open + "<div>hi</div>" + close + close + close);
-    application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
-    application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application.templateItems.item);
+    application.template = open + open + open + "<div>hi</div>" + close + close + close;
     
-    // act
-    application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
-    
-    // assert
-    ok(application.__caught);
-    ok(application.templateItems.item.__caught);
-});
+	application.onRendered = function () {
+		// arrange
+		application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
+		application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application.templateItems.item);
+		
+		// act
+		application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
 
+		// assert
+		ok(application.__caught);
+		ok(application.templateItems.item.__caught);
+		
+		start();
+	};
+	
+	stop();
+});
+	
 test("routed event, handled", function() {
     // arrange
     var aRoutedEvent = new wo.routedEvent();
     var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
-    application.template(open + open + open + "<div>hi</div>" + close + close + close);
-    application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
-    application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { 
-        this.__caught = true; 
-        arguments[0].handled = true;
-    }, application.templateItems.item);
-    
-    // act
-    application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
-    
-    // assert
-    ok(!application.__caught);
-    ok(application.templateItems.item.__caught);
+    application.template = open + open + open + "<div>hi</div>" + close + close + close;
+	
+	application.onRendered = function () {
+	
+		// arrange
+		application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
+		application.templateItems.item.registerRoutedEvent(aRoutedEvent, function() { 
+			this.__caught = true; 
+			arguments[0].handled = true;
+		}, application.templateItems.item);
+
+		// act
+		application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
+
+		// assert
+		ok(!application.__caught);
+		ok(application.templateItems.item.__caught);
+		
+		start();
+	};
+	
+	stop();
 });
 
 test("routed event, from model", function() {
     // arrange
     var eventArgs = {}, triggered1 = false, triggered2 = false;
     var aRoutedEvent = new wo.routedEvent();
-    application.model({child:{child:{child:new wo.routedEventModel()}}})
-    var open = "<wo.content-control id='item' model='$parent.model().child'><template>", close = "</template></wo.content-control>";
-    application.template(open + open + open + "<div>hi</div>" + close + close + close);
-    var secondDeepest = application.templateItems.item.templateItems.item;
-    var deepest = secondDeepest.templateItems.item;
-    
-    ok(deepest);
-    strictEqual(deepest.model().constructor, wo.routedEventModel);
-    
-    deepest.registerRoutedEvent(aRoutedEvent, function() {
-        triggered1 = true;
-    });
-    
-    secondDeepest.registerRoutedEvent(aRoutedEvent, function() {
-        triggered2 = true;
-    });
-    
-    // act
-    deepest.model().triggerRoutedEvent(aRoutedEvent, eventArgs);
-    
-    // assert
-    ok(triggered2);
-    ok(triggered1);
+    application.model = {child:{child:{child:new wipeout.events.routedEventModel()}}};
+    var open = "<wo.content-control id='item' model='$parent.model.child'><template>", close = "</template></wo.content-control>";
+    application.template = open + open + open + "<div>hi</div>" + close + close + close;
+	
+	application.onRendered = function () {
+
+		// arrange
+		var secondDeepest = application.templateItems.item.templateItems.item;
+		var deepest = secondDeepest.templateItems.item;
+
+		ok(deepest);
+		strictEqual(deepest.model.constructor, wipeout.events.routedEventModel);
+
+		deepest.registerRoutedEvent(aRoutedEvent, function() {
+			triggered1 = true;
+		});
+
+		secondDeepest.registerRoutedEvent(aRoutedEvent, function() {
+			triggered2 = true;
+		});
+
+		// act
+		deepest.onModelChanged = function () {
+			deepest.model.triggerRoutedEvent(aRoutedEvent, eventArgs);
+
+			// assert
+			ok(triggered2);
+			ok(triggered1);
+
+			start();
+		};
+	};
+	
+	stop();
 });
 
 test("routed event, to model", function() {
     // arrange
-    var model = new wo.routedEventModel();
+    var model = new wipeout.events.routedEventModel();
     var aRoutedEvent = new wo.routedEvent();
     var open = "<wo.content-control id='item'><template>", close = "</template></wo.content-control>";
-    application.template(open + open + open + "<div>hi</div>" + close + close + close);
-    application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
-    model.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, model);
-    application.templateItems.item.model(model);
-    
-    // act
-    application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
-    
-    // assert
-    ok(application.__caught);
-    ok(model.__caught);
+    application.template = open + open + open + "<div>hi</div>" + close + close + close;
+	
+	application.onRendered = function () {
+	
+		application.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, application);
+		model.registerRoutedEvent(aRoutedEvent, function() { this.__caught = true; }, model);
+		application.templateItems.item.model = model;
+
+		// act
+		application.templateItems.item.templateItems.item.templateItems.item.triggerRoutedEvent(aRoutedEvent, {});
+
+		// assert
+		ok(application.__caught);
+		ok(model.__caught);
+		
+		start();
+	};
+	
+	stop();
 });
 
-test("basic knockout binding, non observable", function() {
+test("basic html binding, non observable", function() {
     // arrange
     var val = "LIB:OIPHJKB:OIYHJB";
     var id = "dsfbisdfb";
-    application.model().value = val;
+    application.model.value = val;
     
     // act
-    application.template("<div id='" + id + "' data-bind='html: model().value'></div>");
+    application.template = "<div id='" + id + "' content='$this.model.value'></div>";
     
     // assert
-    strictEqual($("#" + id).html(), val);
+	application.onRendered = function () {
+    	strictEqual($("#" + id).html(), val);
+		start();
+	};
+	
+	stop();
 });
 
+test("basic html binding", function() {
+    // arrange
+    var val = "LIB:OIPHJKB:OIYHJB";
+    var id = "dsfbisdfb";
+    obsjs.makeObservable(application.model);
+	application.model.value = val;
+    
+    // act
+    application.template = "<div id='" + id + "' content='$this.model.value'></div>";
+    
+	application.onRendered = function () {
+			
+		// assert
+		strictEqual($("#" + id).html(), val);
+
+
+		// re-act
+		var val2 = "NP(UNN{  JPIUNIIN";
+
+		obsjs.observe(application.model, "value", function () {
+			// re-assert
+			setTimeout(function () {
+				strictEqual($("#" + id).html(), val2);
+				start();
+			});
+		});
+		
+		application.model.value = val2;
+	};
+	
+	stop();
+		
+});
+	
 test("un render", function() {
     // arrange
     
@@ -354,68 +456,54 @@ test("un render", function() {
     
     application.hello = vms[1];
     application.hello.helloAgain = vms[2];
-    application.hello.helloAgain.template(
+    application.hello.helloAgain.template = 
 "<wo.content-control id=\"cc1\">\
-</wo.content-control>\
-<div>Hi</div>\
-<wo.content-control id=\"cc2\">\
-</wo.content-control>");
-    application.hello.template("<!-- ko render: helloAgain--><!-- /ko -->");
+	</wo.content-control>\
+		<div>Hi</div>\
+	<wo.content-control id=\"cc2\">\
+</wo.content-control>";
+    application.hello.template = "<div render='$this.helloAgain'></div>";
     
-    application.template("<!-- ko render: hello--><!-- /ko -->");
-    vms.push(application.hello.helloAgain.templateItems.cc1);
-    vms.push(application.hello.helloAgain.templateItems.cc2);
-        
-    wo.obj.enumerateArr(vms, function(item) {
-        ok(item.__woBag.rootHtmlElement);
-    });
-    
-    // act
-    wo.domData.get($application[0], wipeout.bindings.bindingBase.dataKey)[0].unRender();
-    
-    // assert
-    wo.obj.enumerateArr(vms, function(item) {
-        ok(!item.__woBag.rootHtmlElement);
-    });
-});
+    application.template = "<div render='$this.hello'></div>";
+	
+	application.onRendered = function () {
+		vms.push(application.hello.helloAgain.templateItems.cc1);
+		vms.push(application.hello.helloAgain.templateItems.cc2);
 
-test("basic knockout binding", function() {
-    // arrange
-    var val = "LIB:OIPHJKB:OIYHJB";
-    var id = "dsfbisdfb";
-    application.model().value = ko.observable(val);
-    
-    // act
-    application.template("<div id='" + id + "' data-bind='html: model().value'></div>");
-    
-    // assert
-    strictEqual($("#" + id).html(), val);
-        
-    
-    // re-act
-    var val2 = "NP(UNN{  JPIUNIIN";
-    application.model().value(val2);
-    
-    // re-assert
-    strictEqual($("#" + id).html(), val2);
+		// act
+		wipeout.utils.obj.enumerateArr(vms, function(item) {
+			ok(item.__woBag.domRoot);
+		});
+		
+		application.__woBag.domRoot.unRender();
+
+		// assert
+		wipeout.utils.obj.enumerateArr(vms, function(item) {
+			ok(!item.__woBag.domRoot);
+		});
+		
+		start();
+	};
+	
+	stop();
 });
 
 test("basic items control. initial, add, remove, re-arrange", function() {
     // arrange
     var id1 = "JBKJBLKJBKJLBLKJB";
     var id2 = "oidshfp9usodnf";
-    var item1 = "item-1", item2 = "item-2", item3 = "item-3";
-    application.model().items = ko.observableArray([item1, item2, item3]);
+    var item1 = "item1", item2 = "item2", item3 = "item3";
+    application.model.items = new obsjs.array([item1, item2, item3]);
     
     var bound = {};
     var assert = function() {
         var reBound = {};
         var $items = $("." + id2);
         strictEqual($items.length, arguments.length, "html length");
-        strictEqual(application.templateItems[id1].items().length, arguments.length, "items length");
+        strictEqual(application.templateItems[id1].items.length, arguments.length, "items length");
         for(var i = 0, ii = arguments.length; i < ii; i++) {            
             strictEqual($items[i].innerHTML, arguments[i], "html value");           
-            strictEqual(application.templateItems[id1].items()[i].model(), arguments[i], "item model value");
+            strictEqual(application.templateItems[id1].getItemViewModel(i).model, arguments[i], "item model value");
             reBound[arguments[i]] = $items[i];
             
             if(bound[arguments[i]])
@@ -433,43 +521,56 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     }
     
     // act
-    application.template(
-"<wo.items-control item-source='model().items' id='" + id1 + "'>\
-    <itemTemplate>\
-        <div class='" + id2 + "' data-bind='html: model()'></div>\
-    </itemTemplate>\
-</wo.items-control>");
+    application.template =
+"<wo.items-control items='$this.model.items' id='" + id1 + "'>\
+    <item-template>\
+        <div class='" + id2 + "' content='$this.model'></div>\
+    </item-template>\
+</wo.items-control>";
+	
+	application.onRendered = function () {
     
-    // assert
-    assert(item1, item2, item3);
-        
-    
-    // re-act
-    var item4  = "item-4";
-    application.model().items.push(item4);
-    
-    // re-assert
-    ok(true, "added item");
-    assert(item1, item2, item3, item4);
-        
-    
-    // re-act
-    application.model().items().splice(1, 1);
-    application.model().items.valueHasMutated();
-    
-    // re-assert
-    ok(true, "removed item");
-    assert(item1, item3, item4);
-        
-    
-    // re-act
-    application.model().items().reverse();
-    application.model().items.valueHasMutated();
-    
-    // re-assert
-    ok(true, "reversed items");
-    assert(item4, item3, item1);
+		// assert
+		assert(item1, item2, item3);
+
+		// re-act
+		var item4  = "item4";
+		application.model.items.push(item4);
+		var destroy = application.templateItems[id1].items.observe(function () {
+			destroy.dispose();
+					
+			// re-assert
+			ok(true, "added item");
+			assert(item1, item2, item3, item4);
+			
+			
+			// re-act
+			application.model.items.splice(1, 1);
+			destroy = application.templateItems[id1].items.observe(function () {
+				destroy.dispose();
+
+				// re-assert
+				ok(true, "removed item");
+				assert(item1, item3, item4);
+				
+				
+				// re-act
+				application.model.items.reverse();
+				destroy = application.templateItems[id1].items.observe(function () {
+					destroy.dispose();
+					
+					ok(true, "reversed items");
+					assert(item4, item3, item1);
+									
+					start();
+				});
+			});
+		});
+	};
+	
+	stop();
 });
+return;
 
 test("advanced items control, creating/destroying", function() {
     // arrange
