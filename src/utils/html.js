@@ -19,40 +19,6 @@ Class("wipeout.utils.html", function () {
         
         return div.innerHTML;        
     };  
-    
-    var validHtmlCharacter = /[a-zA-Z0-9]/;
-    var getTagName = function(openingTag) {
-        ///<summary>Get the tag name of the first element in the string</summary>
-        ///<param name="openingTag" type="String">A string of html</param>
-        ///<returns type="String">The name of the first tag</returns>
-        
-        openingTag = openingTag.replace(/^\s+|\s+$/g, "");
-        if(!openingTag || openingTag[0] !== "<")
-            throw "Invalid html tag";
-        
-        openingTag = openingTag.substring(1).replace(/^\s+|\s+$/g, "");
-        
-        for(var i = 0, ii = openingTag.length; i < ii; i++) {
-            if(!validHtmlCharacter.test(openingTag[i]))
-                break;
-        }
-        
-        return openingTag.substring(0, i);
-    };
-    
-    var stripHtmlComments = /<\!--[^>]*-->/g;
-    var getFirstTagName = function(htmlContent) {
-        ///<summary>Get the tag name of the first element in the string</summary>
-        ///<param name="htmlContent" type="String">A string of html</param>
-        ///<returns type="String">The name of the first tag</returns>
-        
-        htmlContent = htmlContent.replace(stripHtmlComments, "").replace(/^\s+|\s+$/g, "");
-        var i = 0;
-        if((i = htmlContent.indexOf("<")) === -1)
-            return null;
-        
-        return getTagName(htmlContent.substring(i));
-    };
         
     // tags which cannot go into a <div /> tag, along with the tag they should go into
     var specialTags = {
@@ -80,51 +46,6 @@ Class("wipeout.utils.html", function () {
         th: "tr",
         thead: "table",
         tr: "tbody"
-    };
-    
-    // tags which, if the root, wipeout will refuse to create
-    var cannotCreateTags = {
-        html:true,
-        basefont: true,
-        base: true,
-        body: true,
-        frame: true,
-        frameset: true,
-        head: true
-    };
-    
-    function firstChildOfType(parentElement, childType) {
-        for(var i = 0, ii = parentElement.childNodes.length; i < ii; i++) {
-            var child = parentElement.childNodes[i];
-            if (child.nodeType === 1 && wipeout.utils.obj.trimToLower(child.tagName) === wipeout.utils.obj.trimToLower(childType)) {
-                return child;
-            }
-        }
-    }
-    
-    // tags which are readonly once created in IE
-    var ieReadonlyElements = {
-        audio: true,
-        col: true, 
-        colgroup: true,
-        frameset: true,
-        head: true,
-        rp: true,
-        rt: true,
-        ruby: true,
-        select: true,
-        style: true,
-        table: true,
-        tbody: true,
-        tfooy: true,
-        thead: true,
-        title: true,
-        tr: true
-    };
-    
-    // firefox replaces some tags with others
-    var replaceTags = {
-        keygen: "select"
     };
     
     var getViewModel = function(forHtmlNode) {
@@ -157,11 +78,8 @@ Class("wipeout.utils.html", function () {
     function html() {
     };
     
-    html.cannotCreateTags = cannotCreateTags;
     html.createTemplatePlaceholder = createTemplatePlaceholder;
     html.specialTags = specialTags;
-    html.getFirstTagName = getFirstTagName;
-    html.getTagName = getTagName;
     html.outerHTML = outerHTML;
     html.getViewModel = getViewModel
     

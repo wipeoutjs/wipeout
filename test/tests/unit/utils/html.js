@@ -17,25 +17,6 @@ test("outerHTML", function() {
     });    
 });
 
-testUtils.testWithUtils("getTagName", "", true, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act    
-    // assert    
-    throws(function() { invoker("SAHDAHSVD"); });
-    strictEqual(invoker("<asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-    strictEqual(invoker("    <asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-});
-
-testUtils.testWithUtils("getFirstTagName", "", true, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act
-    // assert     
-    strictEqual(invoker("SAHDAHSVD"), null);
-    strictEqual(invoker("<asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-    strictEqual(invoker("    <asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-    strictEqual(invoker(" sadsad   <asuhdvjauhsvdjhv "), "asuhdvjauhsvdjhv");
-});
-
 testUtils.testWithUtils("getViewModel", "", true, function(methods, classes, subject, invoker) {
     // arrange
 	var rc = {viewModel: {}};
