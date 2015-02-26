@@ -46,6 +46,25 @@ test("camel casing and synchronus rendering of <template>", function() {
 	
 	stop();
 });
+test("setting template inline", function() {
+    
+    // arrange
+    // act
+    application.template = '<wo.content-control id="item" template="<wo.content-control xxx=\\"true\\" a-property=\\"true\\" id=\\"item\\" >\
+			</wo.content-control>" >\
+    </wo.content-control>';
+    
+    // assert
+	application.onRendered = function () {
+		window.app = application;
+		obsjs.observe(application.templateItems.item, "templateItems.item", function () {
+			ok(application.templateItems.item.templateItems.item.aProperty);		
+			start();
+		});
+	};
+	
+	stop();
+});
 return;
 test("parent child views", function() {
     

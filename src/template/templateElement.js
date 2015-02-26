@@ -66,6 +66,8 @@ Class("wipeout.template.rootTemplateElement", function () {
     
     var rootTemplateElement = wipeout.template.templateElementBase.extend(function rootTemplateElement() {
         this._super();
+		
+		this.nodeType = 9;
     });
     
     return rootTemplateElement;
@@ -129,7 +131,7 @@ Class("wipeout.template.templateAttribute", function () {
     templateAttribute.prototype.serializeContent = function() {
                 
         return this.value;
-    }
+    };
     
     return templateAttribute;
 });
