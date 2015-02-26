@@ -10,7 +10,7 @@ Class("wipeout.template.builder", function () {
         }
     }());
     
-    function builder(template) {
+    function builder(compiledTemplate) {
         ///<summary>Build html and execute logic giving the html functionality</summary>
         ///<param name="template" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
         
@@ -18,7 +18,7 @@ Class("wipeout.template.builder", function () {
         
         var htmlFragments = [];
         
-        enumerateArr(template.html, function(html) {
+        enumerateArr(compiledTemplate.html, function(html) {
             if (typeof html === "string") {
                 // static html, add to output
                 htmlFragments.push(html);
