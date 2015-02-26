@@ -46,6 +46,7 @@ test("camel casing and synchronus rendering of <template>", function() {
 	
 	stop();
 });
+	
 test("setting template inline", function() {
     
     // arrange
@@ -61,9 +62,10 @@ test("setting template inline", function() {
 	
 	stop();
 });
-return;
+	
 test("parent child views", function() {
-    
+    return "share parent scope";
+	
     // arrange
     var parent1 = "p1", child1 = "c1", child2 = "c2";
     var parent2 = "p2", child3 = "c3", child4 = "c4";
@@ -71,7 +73,7 @@ test("parent child views", function() {
     
     
     // act
-    application.template('<wo.content-control share-parent-scope="true" id="' + parent1 + '">\
+    application.template = '<wo.content-control share-parent-scope="true" id="' + parent1 + '">\
         <template>\
             <wo.view share-parent-scope="true" id="' + child1 + '" />\
             <wo.view id="' + child2 + '" />\
@@ -84,148 +86,42 @@ test("parent child views", function() {
         </template>\
     </wo.content-control>\
     <wo.items-control item-source="[{},{}]" id="' + parent3 + '">\
-    </wo.items-control>');
+    </wo.items-control>';
+	
+	application.onRendered = function () {
     
-    ok(parent1 = application.templateItems[parent1]);
-    ok(child1 = application.templateItems[child1]);
-    ok(child2 = application.templateItems[child2]);
-    
-    ok(parent2 = application.templateItems[parent2]);
-    ok(child3 = parent2.templateItems[child3]);
-    ok(child4 = parent2.templateItems[child4]);
-    
-    ok(parent3 = application.templateItems[parent3]);
-    ok(child5 = parent3.items()[0]);
-    ok(child6 = parent3.items()[1]);
-    
-    // assert
-    strictEqual(child1.getParent(), application);
-    strictEqual(child2.getParent(), application);
-    strictEqual(child1.getParent(true), parent1);
-    strictEqual(child2.getParent(true), parent1);
-    strictEqual(child3.getParent(), parent2);
-    strictEqual(child4.getParent(), parent2);
-    strictEqual(child5.getParent(), parent3);
-    strictEqual(child6.getParent(), parent3);    
-});
+		ok(parent1 = application.templateItems[parent1]);
+		ok(child1 = application.templateItems[child1]);
+		ok(child2 = application.templateItems[child2]);
 
-test("call", function() {
-    
-    // arrange        
-    application.id = "ASDASDASDSADASD";
-    var mocks = new testUtils.methodMock();
-    application.myVal = ko.observable({
-        myFunction: mocks.customMethod(function() {
-            strictEqual(this, application.myVal());
-            
-            strictEqual(arguments[0], "aaa");
-            strictEqual(arguments[1], application.templateItems.content);
-            ok(arguments[2]);
-        })
-    });
-    
-    application.template('<wo.content-control id="content">\
-    <template>\
-        <button id="myButton" data-bind="click: $call($parents[0]).dot(\'myVal\').dot(\'myFunction\').args(\'aaa\')">\
-        </button>\
-    </template>\
-</wo.content-control>');    
-    
-    // act
-    document.getElementById('myButton').click();
-    
-    // assert
-    mocks.verifyAllExpectations();
-});
+		ok(parent2 = application.templateItems[parent2]);
+		ok(child3 = parent2.templateItems[child3]);
+		ok(child4 = parent2.templateItems[child4]);
 
-test("call with args", function() {
-    
-    // arrange
-    var arg1 = 234234234, arg2 = 4353453;
-        
-    application.id = "ASDASDASDSADASD";
-    var mocks = new testUtils.methodMock();
-    application.myFunction = mocks.customMethod(function() {
-        strictEqual(arguments[0], arg1);
-        strictEqual(arguments[1], arg2);
-        strictEqual(arguments[2], application.templateItems.content);
-        ok(arguments[3]);
-    });
-    
-    application.template('<wo.content-control id="content">\
-    <template>\
-        <button id="myButton" data-bind="click: $call($parents[0]).dot(\'myFunction\').args(' + arg1 + ', ' + arg2 + ')">\
-        </button>\
-    </template>\
-</wo.content-control>');    
-    
-    // act
-    document.getElementById('myButton').click();
-    
-    // assert
-    mocks.verifyAllExpectations();
-});
+		ok(parent3 = application.templateItems[parent3]);
+		ok(child5 = parent3.getItemViewModels()[0]);
+		ok(child6 = parent3.getItemViewModels()[1]);
 
-test("findAndCall", function() {
-    
-    // arrange        
-    application.id = "ASDASDASDSADASD";
-    var mocks = new testUtils.methodMock();
-    application.myVal = ko.observable({
-        myFunction: mocks.customMethod(function() {
-            strictEqual(this, application.myVal());
-            
-            strictEqual(arguments[0], "aaa");
-            strictEqual(arguments[1], application.templateItems.content);
-            ok(arguments[2]);
-        })
-    });
-    
-    application.template('<wo.content-control id="content">\
-    <template>\
-        <button id="myButton" data-bind="click: $findAndCall({ id: \'' + application.id + '\' }).dot(\'myVal\').dot(\'myFunction\').args(\'aaa\')">\
-        </button>\
-    </template>\
-</wo.content-control>');    
-    
-    // act
-    document.getElementById('myButton').click();
-    
-    // assert
-    mocks.verifyAllExpectations();
-});
-
-test("findAndCall with args", function() {
-    
-    // arrange
-    var arg1 = 234234234, arg2 = 4353453;
-        
-    application.id = "ASDASDASDSADASD";
-    var mocks = new testUtils.methodMock();
-    application.myFunction = mocks.customMethod(function() {
-        strictEqual(arguments[0], arg1);
-        strictEqual(arguments[1], arg2);
-        strictEqual(arguments[2], application.templateItems.content);
-        ok(arguments[3]);
-    });
-    
-    application.template('<wo.content-control id="content">\
-    <template>\
-        <button id="myButton" data-bind="click: $findAndCall({ id: \'' + application.id + '\' }).dot(\'myFunction\').args(' + arg1 + ', ' + arg2 + ')">\
-        </button>\
-    </template>\
-</wo.content-control>');    
-    
-    // act
-    document.getElementById('myButton').click();
-    
-    // assert
-    mocks.verifyAllExpectations();
+		// assert
+		strictEqual(child1.getParent(), application);
+		strictEqual(child2.getParent(), application);
+		strictEqual(child1.getParent(true), parent1);
+		strictEqual(child2.getParent(true), parent1);
+		strictEqual(child3.getParent(), parent2);
+		strictEqual(child4.getParent(), parent2);
+		strictEqual(child5.getParent(), parent3);
+		strictEqual(child6.getParent(), parent3);
+		
+		start();
+	};
+	
+	stop();
 });
 
 test("wipeout.utils.find", function() {
+	
     // arrange
-    application.template('<wo.content-control id="me1">\
+    application.template = '<wo.content-control id="me1">\
     <template>\
         <wo.content-control id="me2">\
             <template>\
@@ -238,27 +134,36 @@ test("wipeout.utils.find", function() {
             </template>\
         </wo.content-control>\
     </template>\
-</wo.content-control>');
+</wo.content-control>';
+	
+	application.onRendered = function () {
     
-    var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
-    ok(me);
-    
-    // act    
-    // assert
-    strictEqual(me.parent, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.grandParent, application.templateItems.me1);
-    strictEqual(me.greatGrandParent, application);
-    
-    strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.cc1, application.templateItems.me1);
-    
-    strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.v1, application.templateItems.me1);
-    
-    strictEqual(me.f0, application.templateItems.me1);
-    strictEqual(me.fX, null);
-    strictEqual(me.fY, null);
+		var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
+		ok(me);
+		
+		// act    
+		// assert
+		strictEqual(me.parent, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.grandParent, application.templateItems.me1);
+		strictEqual(me.greatGrandParent, application);
+
+		//strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
+		//strictEqual(me.cc1, application.templateItems.me1);
+
+		strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.v1, application.templateItems.me1);
+
+		strictEqual(me.f0, application.templateItems.me1);
+		strictEqual(me.fX, null);
+		strictEqual(me.fY, null);
+		
+		start();
+	};
+	
+	stop();
 });
+	
+	return;
 
 test("removeItem routed event", function() {
     

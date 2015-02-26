@@ -204,7 +204,7 @@ Class("wipeout.utils.obj", function () {
         for (var i = 0, ii = splitPropertyName.length; i <ii; i++) {
             context = context[splitPropertyName[i]];
             if(context == null)
-                return null;
+                return i === ii - 1 ? context : null;
         }
         
         return context;

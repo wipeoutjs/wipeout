@@ -7,11 +7,13 @@ Class("wipeout.template.renderContext", function () {
         this.$this = forVm;
         this.$parents = [];
         this.$parent = null;
+        this.$parentContext = null;
         
         if (parentContext) {
+            this.$parentContext = parentContext;
             this.$parent = parentContext.$this;
             this.$parents.push(this.$parent);
-            enumerateArr(parentContext.$parents, this.$parents.push, this.$parents);
+            this.$parents.push.apply(this.$parents, parentContext.$parents);
         }
     }
     
@@ -19,6 +21,11 @@ Class("wipeout.template.renderContext", function () {
     function renderContextPrototype () {}    
     renderContextPrototype.prototype = window;
     renderContext.prototype = new renderContextPrototype();
+    
+    renderContext.prototype.$find = function (searchTermOrFilters, filters) {
+        
+		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
+    };
     
     renderContext.prototype.childContext = function (forVm) {
         
@@ -28,7 +35,7 @@ Class("wipeout.template.renderContext", function () {
     renderContext.prototype.variablesForComputed = function (additions) {
         var output = {};
         enumerateObj(this, function (property, name) {
-            if (this.hasOwnProperty(name))
+            if (this.hasOwnProperty(name) && name[0] === "$")
                 output[name] = property;
         }, this);
         

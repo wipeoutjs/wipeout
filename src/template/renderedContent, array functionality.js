@@ -22,7 +22,12 @@
             null;
         
         if (itemsControl)
-            itemsControl.__woBag.getChild = getChild = function (i) { return children[i] ? children[i].renderedChild : undefined; };
+            itemsControl.__woBag.getChild = getChild = function (i) { 
+				if (arguments.length === 0)
+					return children.slice();
+				
+				return children[i] ? children[i].renderedChild : undefined; 
+			};
         
         function remove(item) {                    
             if (itemsControl)

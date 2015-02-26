@@ -1,12 +1,14 @@
 Class("wipeout.utils.find", function () {
     
-    var find = wipeout.base.object.extend(function find(bindingContext) {
+	//TODO: cache results?
+	
+    var find = wipeout.base.object.extend(function find(renderContext) {
         ///<summary>Find an ancestor from the binding context</summary>
-        ///<param name="bindingContext" type="ko.bindingContext" optional="false">The ancestor chain</param>
+        ///<param name="renderContext" type="ko.renderContext" optional="false">The ancestor chain</param>
         this._super();
 
-        ///<Summary type="ko.bindingContext">the binding context to use when finding objects</Summary>
-        this.bindingContext = bindingContext;
+        ///<Summary type="ko.renderContext">the binding context to use when finding objects</Summary>
+        this.renderContext = renderContext;
     });
     
     find.prototype.find = function(searchTermOrFilters, filters) {
@@ -77,19 +79,19 @@ Class("wipeout.utils.find", function () {
         ///<param name="filters" type="Object" optional="false">Items to filter the output by</param>
         ///<param name="getModel" type="Boolean" optional="true">Specify that models are to be searched</param>
         ///<returns type="Any">The search result</returns>
-            
-        if(!this.bindingContext ||!this.bindingContext.$parentContext)
+		
+        if(!this.renderContext ||!this.renderContext.$parentContext)
             return null;
         
         var getItem = getModel ? 
             function(item) {
-                return item && item.$data instanceof wo.view ? item.$data.model() : null;
+                return item && item.$this instanceof wo.view ? item.$this.model() : null;
             } : 
             function(item) { 
-                return item ? item.$data : null;
+                return item ? item.$this : null;
             };
 
-        var currentItem, currentContext = this.bindingContext;
+        var currentItem, currentContext = this.renderContext;
         for (var index = filters.$number; index >= 0 && currentContext; index--) {
             var i = 0;
 
@@ -105,12 +107,12 @@ Class("wipeout.utils.find", function () {
         return currentItem;
     };
     
-    find.create = function(bindingContext) {
+    find.create = function(renderContext) {
         ///<summary>Get a function wich points directly to (new wo.find(..)).find(...)</summary>
-        ///<param name="bindingContext" type="ko.bindingContext" optional="false">The find functionality</param>
+        ///<param name="renderContext" type="ko.renderContext" optional="false">The find functionality</param>
         ///<returns type="Function">The find function</returns>
         
-        var f = new wipeout.utils.find(bindingContext);
+        var f = new wipeout.utils.find(renderContext);
 
         return function(searchTerm, filters) {
             return f.find(searchTerm, filters);
