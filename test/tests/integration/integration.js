@@ -23,7 +23,7 @@ module("wipeout.tests.integration.integration", {
         application = null;
     }
 });
-(function(){
+
 test("camel casing and synchronus rendering of <template>", function() {
     
     // arrange
@@ -570,9 +570,10 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 	
 	stop();
 });
-return;
 
 test("advanced items control, creating/destroying", function() {
+	return "Needs more advanced html attributes";
+	
     // arrange
     var templateId = wo.contentControl.createAnonymousTemplate('<!-- ko itemsControl: null --><!-- /ko -->');
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model }"></div>');
@@ -604,6 +605,8 @@ test("advanced items control, creating/destroying", function() {
 });
 
 test("items control, $index", function() {
+	return "Needs more advanced html attributes";
+	
     // arrange
     var templateId = wo.contentControl.createAnonymousTemplate('<!-- ko itemsControl: null --><!-- /ko -->');
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model, \'data-index\': $index }"></div><wo.view id="item" index="$parentContext.$index" />');
@@ -628,6 +631,8 @@ test("items control, $index", function() {
 });
 
 test("items control, $index, shareParentScope", function() {
+	return "Needs more advanced html attributes";
+	
     // arrange
     var templateId = wo.contentControl.createAnonymousTemplate('<!-- ko itemsControl: null --><!-- /ko -->');
     var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div data-bind="attr: { id: model, \'data-index\': $index }"></div>');
@@ -702,7 +707,7 @@ test("items control, $index, shareParentScope", function() {
 
 function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
-    application.template('<wo.view id="i0" />\
+    application.template = '<wo.view id="i0" />\
 <div id="a" something something1=\'aaa\' something2=wer345>\
     <wo.content-control id="i1">\
         <template>\
@@ -715,104 +720,132 @@ function disposeTest (act) {
     </wo.content-control>\
     <div id="d">\
         <div id="e">\
-            <wo.items-control id="i3" item-source="[{},{}]">\
+            <wo.items-control id="i3" items="[{},{}]">\
                 <template>\
                     <div id="f">\
-                        <!-- ko itemsControl: null --><!-- /ko -->\
+						{{$this.items}}\
                     </div>\
                 </template>\
             </wo.items-control>\
         </div\>\
     </div\>\
-</div>');
+</div>';
     
-    var i0, i1, i2, i3, i4, i5;
-    ok(i0 = application.templateItems.i0);
-    ok(i1 = application.templateItems.i1);
-    ok(i2 = i1.templateItems.i2);
-    ok(i3 = application.templateItems.i3);
-    ok(i4 = i3.items()[0]);
-    ok(i5 = i3.items()[1]);
-    
-    i0.dispose = disposeFunc;
-    i1.dispose = disposeFunc;
-    i2.dispose = disposeFunc;
-    i3.dispose = disposeFunc;
-    i4.dispose = disposeFunc;
-    i5.dispose = disposeFunc;
-    
-    // act
-    act();
-    stop();
-    
-    // assert
-    setTimeout(function() {
-        ok(i0.isDisposed);
-        ok(i1.isDisposed);
-        ok(i2.isDisposed);
-        ok(i3.isDisposed);
-        ok(i4.isDisposed);
-        ok(i5.isDisposed);
-        start();
-    }, 150);    
+	application.onRendered  = function () {
+		var i0, i1, i2, i3, i4, i5;
+		ok(i0 = application.templateItems.i0);
+		ok(i1 = application.templateItems.i1);
+		ok(i2 = i1.templateItems.i2);
+		ok(i3 = application.templateItems.i3);
+		ok(i4 = i3.getItemViewModel(0));
+		ok(i5 = i3.getItemViewModel(1));
+
+		i0.dispose = disposeFunc;
+		i1.dispose = disposeFunc;
+		i2.dispose = disposeFunc;
+		i3.dispose = disposeFunc;
+		i4.dispose = disposeFunc;
+		i5.dispose = disposeFunc;
+
+		// act
+		act();
+
+		// assert
+		setTimeout(function() {
+			ok(i0.isDisposed);
+			ok(i1.isDisposed);
+			ok(i2.isDisposed);
+			ok(i3.isDisposed);
+			ok(i4.isDisposed);
+			ok(i5.isDisposed);
+			start();
+		}, 150);
+	};
+	
+	stop();
 }
 
 test("dispose", function() {
     disposeTest(function() { 
-        application.dispose();
+        application.__woBag.domRoot.dispose();
     });
 });
-
+/*
 test("remove view model from dom", function() {
     disposeTest(function() {  
         wo.html(function() {
             $("#qunit-fixture").html("");
         });
     });  
-});
+});*/
 
 test("multi-dimentional binding", function() {
     // arrange
-    var val = "KJBIUPJKKJGVLHJVMGJ";
-    var model = { inner: ko.observable({ inner: ko.observable({ inner: ko.observable({ val: ko.observable("") }) }) }) };
+    var val;
+    var model = obsjs.makeObservable({ inner: obsjs.makeObservable({ inner: obsjs.makeObservable({ inner: obsjs.makeObservable({ val: "" }) }) }) });
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
-    var open = "<wo.content-control id='" + id1 + "' model='$parent.model().inner'><template>", close = "</template></wo.content-control>";
-    application.model(model);
-    application.template(open + open + open + "<div id='" + id2 + "' data-bind='html: model().val'></div>" + close + close + close);
+    var open = "<wo.content-control id='" + id1 + "' model='$parent.model.inner'><template>", close = "</template></wo.content-control>";
+    application.model = model;
+    application.template = open + open + open + "<div id='" + id2 + "' content='$this.model.val'></div>" + close + close + close;
     
     // act
-    model.inner().inner().inner().val(val);
-    
-    // assert
-    strictEqual($("#" + id2).html(), val);
-    
-    
-    // re-act
-    model.inner().inner().inner({val: val});
-    
-    // re-assert
-    strictEqual($("#" + id2).html(), val);
-    
-    
-    // re-act
-    model.inner().inner({inner: {val: val}});
-    
-    // re-assert
-    strictEqual($("#" + id2).html(), val);
-    
-    
-    // re-act
-    model.inner({inner:{inner: {val: val}}});
-    
-    // re-assert
-    strictEqual($("#" + id2).html(), val);
-    
-    
-    // re-act
-    application.model({inner:{inner:{inner: {val: val}}}});
-    
-    // re-assert
-    strictEqual($("#" + id2).html(), val);
+	application.onRendered = function () {
+		
+		var i1, i2, i3;
+		ok(i1 = application.templateItems[id1]);
+		ok(i2 = i1.templateItems[id1]);
+		ok(i3 = i2.templateItems[id1]);
+		
+		model.inner.inner.inner.val = val = "KVKJGVMNGMV";
+		obsjs.observable.afterNextObserveCycle(function () {
+		obsjs.observable.afterNextObserveCycle(function () {
+		obsjs.observable.afterNextObserveCycle(function () {
+			strictEqual($("#" + id2).html(), val);
+			
+			model.inner.inner.inner = {val: val = "asdasdasd" };
+			obsjs.observable.afterNextObserveCycle(function () {
+			obsjs.observable.afterNextObserveCycle(function () {
+				strictEqual($("#" + id2).html(), val);
+				
+				model.inner.inner = {inner: {val: val = "fghgfhgfh" } };
+				obsjs.observable.afterNextObserveCycle(function () {
+				obsjs.observable.afterNextObserveCycle(function () {
+				obsjs.observable.afterNextObserveCycle(function () {
+					strictEqual($("#" + id2).html(), val);
+					
+					model.inner = {inner: {inner: {val: val = "q3w34" } } };
+					obsjs.observable.afterNextObserveCycle(function () {
+					obsjs.observable.afterNextObserveCycle(function () {
+					obsjs.observable.afterNextObserveCycle(function () {
+					obsjs.observable.afterNextObserveCycle(function () {
+						strictEqual($("#" + id2).html(), val);
+					
+						application.model = {inner: {inner: {inner: {val: val = "KJBKJGKJKJB" } } } };
+						obsjs.observable.afterNextObserveCycle(function () {
+						obsjs.observable.afterNextObserveCycle(function () {
+						obsjs.observable.afterNextObserveCycle(function () {
+						obsjs.observable.afterNextObserveCycle(function () {
+							strictEqual($("#" + id2).html(), val);
+							start();
+						}, true);
+						}, true);
+						}, true);
+						}, true);
+					}, true);
+					}, true);
+					}, true);
+					}, true);
+				}, true);
+				}, true);
+				}, true);
+			}, true);
+			}, true);
+		}, true);
+		}, true);
+		}, true);
+	};
+	
+	stop();
 });
 
 test("binding subscriptions one way", function() {
@@ -820,39 +853,53 @@ test("binding subscriptions one way", function() {
     var id = "KJKHFGGGH";
     views.view = wo.view.extend(function() {
         this._super();
+    });
         
-        this.property = ko.observable();
-    });
+    application.template = "<views.view property='$parent.property' id='" + id + "'></views.view>";
     
-    application.property = ko.observable();
-        
-    application.template("<views.view property='$parent.property' id='" + id + "'></views.view>");
-    
-    var view = application.templateItems[id];
-    
-    var v = [];
-    view.property.subscribe(function() {
-        v.push(arguments[0]);
-    });
-    
-    var a = [];
-    application.property.subscribe(function() {
-        a.push(arguments[0]);
-    });
-    
-    
-    // act
-    view.property(1);
-    application.property(2);
-    view.property(3);
-    application.property(4);
-    view.property(5);
-    application.property(6);
-    view.property(7);
-    
-    // assert
-    deepEqual(v, [1, 2, 3, 4, 5, 6, 7]);
-    deepEqual(a, [2, 4, 6]);
+	application.onRendered = function () {
+	
+		var view = application.templateItems[id];
+
+		var v = [], i = 0;
+		view.observe("property", function() {
+			v.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+		var a = [];
+		application.observe("property", function() {
+			a.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+
+		// act
+		view.property = 1;
+		application.property = 2;
+		view.property = 3;
+		application.property = 4;
+		view.property = 5;
+		application.property = 6;
+		view.property = 7;
+
+		// assert
+		function assert () {
+			deepEqual(v, [1, 3, 5, 7, 6]);
+			deepEqual(a, [2, 4, 6]);
+			start();
+		}		
+	};
+	
+	stop();
 });
 
 test("binding subscriptions two way", function() {
@@ -868,36 +915,53 @@ test("binding subscriptions two way", function() {
         
         m.push(newVal);
     };
-    
-    application.property = ko.observable();
         
-    application.template("<views.view model-tw='$parent.property' id='" + id + "'></views.view>");
+    application.template = "<views.view model--tw='$parent.property' id='" + id + "'></views.view>";
     
-    var view = application.templateItems[id];
-    
-    var v = [];
-    view.model.subscribe(function() {
-        v.push(arguments[0]);
-    });
-    
-    var a = [];
-    application.property.subscribe(function() {
-        a.push(arguments[0]);
-    });
-    
-    // act
-    m.length = 0;
-    view.model(1);
-    application.property(2);
-    view.model(3);
-    application.property(4);
-    view.model(5);
-    application.property(6);
-    view.model(7);
-    
-    // assert
-    deepEqual(m, [1, 2, 3, 4, 5, 6, 7]);
-    deepEqual(v, [1, 2, 3, 4, 5, 6, 7]);
-    deepEqual(a, [1, 2, 3, 4, 5, 6, 7]);
+	application.onRendered = function () {
+	
+		var view = application.templateItems[id];
+
+		var v = [], i = 0;
+		view.observe("model", function() {
+			v.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+		var a = [];
+		application.observe("property", function() {
+			a.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+		// act
+		m.length = 0;
+		view.model = (1);
+		application.property = (2);
+		view.model = (3);
+		application.property = (4);
+		view.model = (5);
+		application.property = (6);
+		view.model = (7);
+
+		// assert
+		function assert() {
+			obsjs.observable.afterNextObserveCycle(function () {
+				deepEqual(m, [7, 6]);
+				deepEqual(v, [1, 3, 5, 7, 6]);
+				deepEqual(a, [2, 4, 6]);
+				start();
+			});
+		}
+	};
+	
+	stop();
 });
-}());

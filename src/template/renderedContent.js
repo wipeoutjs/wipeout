@@ -130,11 +130,16 @@ Class("wipeout.template.renderedContent", function () {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
+		if (!this.closingTag) return;
+		
         this.unRender(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes) {
             this.closingTag.parentElement.removeChild(this.closingTag);
             this.openingTag.parentElement.removeChild(this.openingTag);
+			
+			delete this.closingTag;
+			delete this.openingTag;
         }        
     };
         
