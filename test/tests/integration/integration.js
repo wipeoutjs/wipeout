@@ -147,8 +147,8 @@ test("wipeout.utils.find", function() {
 		strictEqual(me.grandParent, application.templateItems.me1);
 		strictEqual(me.greatGrandParent, application);
 
-		//strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
-		//strictEqual(me.cc1, application.templateItems.me1);
+		strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.cc1, application.templateItems.me1);
 
 		strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
 		strictEqual(me.v1, application.templateItems.me1);

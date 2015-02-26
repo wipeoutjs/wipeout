@@ -23,7 +23,7 @@ Class("wipeout.template.renderContext", function () {
     renderContext.prototype = new renderContextPrototype();
     
     renderContext.prototype.$find = function (searchTermOrFilters, filters) {
-        
+		
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     

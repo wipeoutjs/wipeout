@@ -42,7 +42,7 @@ Class("wipeout.utils.htmlBindingTypes", function () {
     
     //TODO: test
     htmlBindingTypes.isSimpleBindingProperty = function (property) {
-        return /^\s*[\$\w\((\s*)\.(\s*))]+\s*$/.test(property);
+        return /^\s*[\$\w\s\.]+\s*$/.test(property);
     };
     
     return htmlBindingTypes;

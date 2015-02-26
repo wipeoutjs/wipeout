@@ -16,7 +16,7 @@ Class("wipeout.utils.find", function () {
         ///<param name="searchTermOrFilters" type="Any" optional="false">If an object, will be used as extra filters. If a function, will be used as an $instanceof filter. If a String will be used as an $ancestory filter</param>
         ///<param name="filters" type="Object" optional="false">Items to filter the output by</param>
         ///<returns type="Any">The search result</returns>
-        
+		
         var temp = {};
 
         if(filters) {
