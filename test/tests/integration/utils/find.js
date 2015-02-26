@@ -1,4 +1,4 @@
-module("wipeout.tests.integration.utils.find", {
+module("wipeout.utils.find, integration", {
     setup: function() {
     },
     teardown: function() {
@@ -160,7 +160,7 @@ testUtils.testWithUtils("find", "instanceof and model", false, function(methods,
         }
     };
     
-    bc.$parentContext.$parentContext.$this.model(model);    
+    bc.$parentContext.$parentContext.$this.model = model;    
     subject = new find(bc);
     
     // act
@@ -169,26 +169,3 @@ testUtils.testWithUtils("find", "instanceof and model", false, function(methods,
     // assert
     strictEqual(actual, model);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

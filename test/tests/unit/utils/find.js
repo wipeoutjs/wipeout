@@ -16,7 +16,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     invoker(ctxt);
     
     // assert    
-    strictEqual(ctxt, subject.bindingContext);
+    strictEqual(ctxt, subject.renderContext);
 });
 
 testUtils.testWithUtils("find", "no filters", false, function(methods, classes, subject, invoker) {

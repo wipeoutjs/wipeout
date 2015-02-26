@@ -130,12 +130,16 @@ Class("wipeout.utils.html", function () {
         ///<param name="forHtmlNode" type="HTMLNode">The element which is the root node of a wo.view</param>
         ///<returns type="wo.view">The view model associated with this node, or null</returns>
         
-        if (!forHtmlNode.wipeoutOpening)
-            forHtmlNode = wipeout.template.renderedContent.getParentElement(forHtmlNode);
-        
-        return forHtmlNode ?
-            forHtmlNode.wipeoutOpening.viewModel :
-            null;
+		if (!forHtmlNode)
+			return null;
+				
+        if (forHtmlNode.wipeoutOpening)
+			return forHtmlNode.wipeoutOpening.viewModel;
+		
+		if (forHtmlNode.wipeoutClosing)
+			return forHtmlNode.wipeoutClosing.viewModel;
+		
+		return getViewModel(wipeout.template.renderedContent.getParentElement(forHtmlNode));
     };
     
     var createTemplatePlaceholder = function(forViewModel) {

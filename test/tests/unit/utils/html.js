@@ -21,11 +21,11 @@ test("outerHTML", function() {
     // arrange    
     // act    
     //assert
-    wo.obj.enumerateObj(wo.visual.reservedTags, function(tag) {
+    wipeout.utils.obj.enumerateObj(wo.visual.reservedTags, function(tag) {
         if(tag === "html")
-            throws(function() { wo.html.outerHTML(document.createElement(tag)); }, tag);
+            throws(function() { wipeout.utils.html.outerHTML(document.createElement(tag)); }, tag);
         else
-            ok(wo.html.outerHTML(document.createElement(tag)), tag);        
+            ok(wipeout.utils.html.outerHTML(document.createElement(tag)), tag);        
     });    
 });
 
@@ -50,15 +50,12 @@ testUtils.testWithUtils("getFirstTagName", "", true, function(methods, classes, 
 
 testUtils.testWithUtils("getViewModel", "", true, function(methods, classes, subject, invoker) {
     // arrange
-    var input = {}, output = {wipeoutOpening:{viewModel:{}}};
-    classes.mock("wipeout.template.viewModelElement.getParentElement", function() {
-        strictEqual(arguments[0], input);
-        return output;
-    });
+	var rc = {viewModel: {}};
     
     // act
-    var vm = invoker(input);
-    
-    // assert
-    strictEqual(vm, output.wipeoutOpening.viewModel);
+	// assert
+	strictEqual(invoker(null), null);
+	strictEqual(invoker({wipeoutOpening: rc}), rc.viewModel);
+	strictEqual(invoker({wipeoutClosing: rc}), rc.viewModel);
+	strictEqual(invoker({parentElement: {wipeoutClosing: rc}}), rc.viewModel);
 });
