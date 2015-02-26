@@ -5,13 +5,13 @@ Class("wipeout.utils.htmlBindingTypes", function () {
 	
     htmlBindingTypes.onPropertyChange = function(object, propertyPath, callback, allowComplexProperties) {
 		
-		var simple = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath), watcher;
-		if (simple) {
+		var watcher;
+		if (wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath)) {
 			watcher = new obsjs.observeTypes.pathObserver(object, propertyPath);
+		} else if (!allowComplexProperties) {
+			throw "The property " + propertyPath + 
+				" is not valid for this binding. Only simple paths (e.g. \"$this.prop1.prop2\" are allowed";
 		} else {
-			if (!allowComplexProperties)
-				throw "The property " + propertyPath + 
-					" is not valid for this binding. Only simple paths (e.g. \"$this.prop1.prop2\" are allowed";
 			
 			var watchVariables = {
 				value: propertyPath, 
@@ -40,9 +40,8 @@ Class("wipeout.utils.htmlBindingTypes", function () {
 		return watcher;
     };    
     
-    //TODO: test
     htmlBindingTypes.isSimpleBindingProperty = function (property) {
-        return /^\s*[\$\w\s\.]+\s*$/.test(property);
+        return /^[\$\w\s\.\[\]]+$/.test(property);
     };
     
     return htmlBindingTypes;

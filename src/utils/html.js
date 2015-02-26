@@ -2,6 +2,8 @@
 
 Class("wipeout.utils.html", function () { 
         
+	//TODO: clean up unused code
+	
     var outerHTML = function(element) {
         ///<summary>Browser agnostic outerHTML function</summary>
         ///<param name="element" type="HTMLElement">The elemet to get the outer html</param>

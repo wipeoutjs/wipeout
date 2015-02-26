@@ -144,8 +144,6 @@ var camelCase = function(input) {
 
 Class("wipeout.utils.obj", function () {
         
-    //TODO: merge with path watch
-    //TODO: test for array
     var arrayMatch = /\[\s*\d\s*\]$/g;
     var splitPropertyName = function(propertyName) {
         propertyName = propertyName.split(".");
@@ -170,7 +168,6 @@ Class("wipeout.utils.obj", function () {
         return propertyName;
     };
     
-    //TODO test
     var joinPropertyName = function (propertyName) {
         var output = [];
         enumerateArr(propertyName, function (item) {
@@ -216,18 +213,7 @@ Class("wipeout.utils.obj", function () {
             context = _getObject(propertyName.splice(0, propertyName.length -1), context);
         
         context[propertyName[0]] = value;
-    };    
-    
-    var compareArrays = function (array1, array2) {
-        if (array1.length !== array2.length)
-            return false;
-        
-        for (var i = 0, ii = array1.length; i < ii; i++)
-            if (array1[i] !== array2[i])
-                return false;
-        
-        return true;
-    }
+    };   
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -243,15 +229,6 @@ Class("wipeout.utils.obj", function () {
         }
         
         return output;
-    };
-    
-    var endsWith = function(string, endsWith) {
-        ///<summary>Determine whether a string ends with another string</summary>
-        ///<param name="string" type="String">The container string</param>
-        ///<param name="endsWith" type="String">The contained string</param>
-        ///<returns type="Boolean"></returns>
-        
-        return string.indexOf(endsWith, string.length - endsWith.length) !== -1;
     };
     
     var random = function(max) {
@@ -283,8 +260,6 @@ Class("wipeout.utils.obj", function () {
     obj.splitPropertyName = splitPropertyName;
     obj.joinPropertyName = joinPropertyName;
     obj.copyArray = copyArray;
-    obj.compareArrays = compareArrays;
     obj.random = random;
-    obj.endsWith = endsWith;
     return obj;
 });

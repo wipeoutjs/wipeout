@@ -94,6 +94,31 @@ testUtils.testWithUtils("getObject", "", true, function(methods, classes, subjec
     strictEqual(invoker("a.b.c.d", ctxt), ctxt.a.b.c.d);
 });
 
+testUtils.testWithUtils("setObject", "", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var ctxt = {a:{b:{c:{d:{}}}}}, obj = {};
+    
+    // act
+	invoker("a.b.c.d", ctxt, obj);
+	
+    // assert    
+    strictEqual(obj, ctxt.a.b.c.d);
+});
+
+testUtils.testWithUtils("splitPropertyName", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act	
+    // assert    
+    deepEqual(invoker("a.b.c[3].t"), ["a", "b", "c", 3, "t"]);
+});
+
+testUtils.testWithUtils("joinPropertyName", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act	
+    // assert    
+    deepEqual(invoker(["a", "b", "c", 3, "t"]), "a.b.c[3].t");
+});
+
 testUtils.testWithUtils("copyArray", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var expected = [{}, {}, {}];
@@ -105,16 +130,6 @@ testUtils.testWithUtils("copyArray", "", true, function(methods, classes, subjec
     strictEqual(actual.length, expected.length);
     for(var i = 0, ii = actual.length; i < ii; i++)
         strictEqual(actual[i], expected[i]);        
-});
-
-testUtils.testWithUtils("endsWith", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var end = "LKJBKJB";
-    
-    // act    
-    // assert    
-    ok(invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end, end));
-    ok(!invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end + " ", end));
 });
 
 testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, invoker) {
