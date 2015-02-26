@@ -30,7 +30,7 @@ Class("wipeout.template.renderedContent", function () {
 		this.closingTag.nodeValue = " /" + name + " ";
 	};
 	
-    renderedContent.prototype.render = function (object) {
+    renderedContent.prototype.render = function (object, arrayIndex) {
 		
         if (object instanceof Array) {
             this.renderArray(object);
@@ -43,8 +43,8 @@ Class("wipeout.template.renderedContent", function () {
             return;
         
         this.renderContext = this.parentRenderContext ? 
-            this.parentRenderContext.childContext(object) :
-            new wipeout.template.renderContext(object);
+            this.parentRenderContext.childContext(object, arrayIndex) :
+            new wipeout.template.renderContext(object, arrayIndex);
         
         if (object instanceof wipeout.viewModels.visual) {
             object.__woBag.domRoot = this;

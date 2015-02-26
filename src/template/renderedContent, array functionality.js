@@ -75,6 +75,7 @@
 						else
 							children[i - 1].insertAfter(item);
 						
+						item.renderContext.$index.value = i;
 						item.rename("item: " + i);
 						children[i] = item;
 						
@@ -94,7 +95,7 @@
 
 				children[i] = new renderedContent(placeholder, "item: " + i, this.parentRenderContext);
 				var vm = itemsControl ? itemsControl._createItem(array[i]) : array[i];
-				children[i].render(vm);
+				children[i].render(vm, i);
 				children[i].forItem = array[i];
 				if (itemsControl) {
 					children[i].renderedChild = vm;

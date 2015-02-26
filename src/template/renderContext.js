@@ -2,7 +2,7 @@
 Class("wipeout.template.renderContext", function () {
     
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
-    function renderContext (forVm, parentContext) {
+    function renderContext (forVm, parentContext, arrayIndex) {
         
         this.$this = forVm;
         this.$parents = [];
@@ -15,6 +15,9 @@ Class("wipeout.template.renderContext", function () {
             this.$parents.push(this.$parent);
             this.$parents.push.apply(this.$parents, parentContext.$parents);
         }
+		
+		if (arrayIndex != null)
+			this.$index = obsjs.makeObservable({value: arrayIndex});
     }
     
     // each render context has access to the global scope
@@ -27,9 +30,9 @@ Class("wipeout.template.renderContext", function () {
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     
-    renderContext.prototype.childContext = function (forVm) {
+    renderContext.prototype.childContext = function (forVm, arrayIndex) {
         
-        return new renderContext(forVm, this);
+        return new renderContext(forVm, this, arrayIndex);
     };
     
     renderContext.prototype.variablesForComputed = function (additions) {
