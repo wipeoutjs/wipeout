@@ -152,14 +152,7 @@ Class("wipeout.utils.html", function () {
         return el;
     };
     
-    var html = function html(htmlManipulationLogic) {
-        ///<summary>If html elements are to be moved or deleted, wrap the move logic in a call to this function to ensure disposal of unused view models</summary> 
-        ///<param name="htmlManipulationLogic" type="Function" optional="false">A callback to manipulate html</param>
-        
-        wipeout.utils.htmlAsync(function(cleanupCallback) {
-            htmlManipulationLogic();
-            cleanupCallback();
-        });
+    function html() {
     };
     
     html.cannotCreateTags = cannotCreateTags;
