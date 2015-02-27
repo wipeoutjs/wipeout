@@ -66,6 +66,7 @@ module.exports = function(grunt) {
     var dependencies = [
         "src/utils/obj.js",
         "src/settings.js",
+        "src/template/parsers.js",
         "src/template/compiledInitializer.js",
         "src/utils/dictionary.js",
         "src/base/bindable.js",
@@ -75,7 +76,7 @@ module.exports = function(grunt) {
         "src/events/routedEvent.js",
         "src/template/renderedContent.js"
     ];
-    
+	
     var src = [
         'tools/begin.js', 
         'src/**/*.js', 

@@ -21,9 +21,9 @@ test("addGlobalParser, simple, string", function() {
 	
 	// assert
 	ok(!parser1);
-	strictEqual(parser2, wipeout.template.compiledInitializer.parsers["regexp"]);
+	strictEqual(parser2, wipeout.template.parsers["regexp"]);
 	ok(!parser3);
-	strictEqual(parser4, wipeout.template.compiledInitializer.parsers["regexp"]);
+	strictEqual(parser4, wipeout.template.parsers["regexp"]);
 });
 
 test("addGlobalParser, simple, function", function() {
@@ -55,10 +55,10 @@ test("addGlobalParser, inheritance", function() {
 	var parser4 = class2.getGlobalParser("prop");
 	
 	// assert
-	strictEqual(parser1, wipeout.template.compiledInitializer.parsers["regexp"]);
-	strictEqual(parser2, wipeout.template.compiledInitializer.parsers["regexp"]);
-	strictEqual(parser3, wipeout.template.compiledInitializer.parsers["regexp"]);
-	strictEqual(parser4, wipeout.template.compiledInitializer.parsers["regexp"]);
+	strictEqual(parser1, wipeout.template.parsers["regexp"]);
+	strictEqual(parser2, wipeout.template.parsers["regexp"]);
+	strictEqual(parser3, wipeout.template.parsers["regexp"]);
+	strictEqual(parser4, wipeout.template.parsers["regexp"]);
 });
 
 test("addGlobalParser, invalid parser", function() {

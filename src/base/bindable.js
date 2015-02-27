@@ -17,8 +17,8 @@ Class("wipeout.base.bindable", function () {
         if (typeof parser === "string") {
             var parsers = [];  
             enumerateArr(parser.split("-"), function(parser) {                
-                if (wipeout.template.compiledInitializer.parsers[parser])
-                    parsers.push(wipeout.template.compiledInitializer.parsers[parser]);
+                if (wipeout.template.parsers[parser])
+                    parsers.push(wipeout.template.parsers[parser]);
                 else
                     //TODO
                     throw "Invalid parser. Parsers must be either a string which points to wipeout parser, or a function which will parse the data";

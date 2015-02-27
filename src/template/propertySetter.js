@@ -10,8 +10,8 @@ Class("wipeout.template.propertySetter", function () {
         
         // process parseing and binding flags
         enumerateArr(flags || [], function (flag) {
-            if (wipeout.template.compiledInitializer.parsers[flag]) {
-                this.parser.push(wipeout.template.compiledInitializer.parsers[flag]);
+            if (wipeout.template.parsers[flag]) {
+                this.parser.push(wipeout.template.parsers[flag]);
             } else if (wipeout.htmlBindingTypes[flag]) {
                 if (this.bindingType)
                     throw "A binding type is already specified for this property.";

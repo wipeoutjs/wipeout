@@ -122,51 +122,6 @@ Class("wipeout.template.compiledInitializer", function () {
         
         return output;
     };
-    
-    compiledInitializer.parsers = {
-        "json": function (value, propertyName, renderContext) {
-            return JSON.parse(value);
-        },
-        "string": function (value, propertyName, renderContext) {
-            return value;
-        },
-        "bool": function (value, propertyName, renderContext) {
-            var tmp = trimToLower(value);
-            return tmp ? tmp !== "false" && tmp !== "0" : false;
-        },
-        "int": function (value, propertyName, renderContext) {
-            return parseInt(trim(value));
-        },
-        "float": function (value, propertyName, renderContext) {
-            return parseFloat(trim(value));
-        },
-        "regexp": function (value, propertyName, renderContext) {
-            return new RegExp(trim(value));
-        },
-        "date": function (value, propertyName, renderContext) {
-            return new Date(trim(value));
-        },
-        "template": function (value) {
-            return value;
-        },
-        "viewModelId": function (value, propertyName, renderContext) {
-            if (renderContext.$parent instanceof wipeout.viewModels.visual)
-                renderContext.$parent.templateItems[value] = renderContext.$this;
-            
-            return value;
-        }
-    };
-    
-    //TODO: Rename
-    compiledInitializer.parsers.template.xmlParserTempName = true;
-    
-    compiledInitializer.parsers.j = compiledInitializer.parsers["json"];
-    compiledInitializer.parsers.s = compiledInitializer.parsers["string"];
-    compiledInitializer.parsers.b = compiledInitializer.parsers["bool"];
-    compiledInitializer.parsers.i = compiledInitializer.parsers["int"];
-    compiledInitializer.parsers.f = compiledInitializer.parsers["float"];
-    compiledInitializer.parsers.r = compiledInitializer.parsers["regexp"];
-    compiledInitializer.parsers.d = compiledInitializer.parsers["date"];
         
     return compiledInitializer;
 });
