@@ -381,28 +381,19 @@ testUtils.testWithUtils("set", "default to one way binding", false, function(met
 	strictEqual(op, output);
 });
 
-function aa() {
-    
-    compiledInitializer.prototype.set = function (viewModel, renderContext, name) {
-		if (!this.setters[name]) return;
-			
-        // use binding type, globally defined binding type or default binding type
-        var bt = this.setters[name].bindingType || 
-            (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(name)) || 
-            "ow";
+testUtils.testWithUtils("getAutoParser", null, true, function(methods, classes, subject, invoker) {
 		
-		if (!wipeout.htmlBindingTypes[bt]) throw "Invalid binding type \"" + bt + "\".";
-
-        return wipeout.htmlBindingTypes[bt](viewModel, this.setters[name], name, renderContext);
-    };
-    
-    compiledInitializer.getAutoParser = function (value) {
-		
-        var output = new Function("value", "propertyName", "renderContext", "with (renderContext) return " + value + ";");
-        output.wipeoutAutoParser = true;
-        
-        return output;
-    };
-        
-    return compiledInitializer;
-}
+    // arrange
+	var value = "val1 + value + propertyName + renderContext.val2",
+		propertyName = "KJBKJBJKB",
+		renderContext = {
+			val1: "LKNLKNLKN",
+			val2: "324234ws"
+		};
+	
+    // act
+	var output = invoker(value)(value, propertyName, renderContext);
+	
+    // assert
+	strictEqual(renderContext.val1 + value + propertyName + renderContext.val2, output);
+});
