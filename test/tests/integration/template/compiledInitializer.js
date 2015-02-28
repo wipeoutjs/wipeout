@@ -1,5 +1,48 @@
+module("wipeout.template.compiledInitializer, integration", {
+    setup: function() {
+    },
+    teardown: function() {
+    }
+});
 
-Class("wipeout.template.compiledInitializer", function () {
+test("success", function() {
+	// arrange
+	var template = wipeout.template.templateParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
+	<val3 value="true" />\
+	<val4 value--s="true" />\
+	<val5>true</val5>\
+	<val6 parser="s">true</val6>\
+	<val7>\
+		<js-object>\
+			<val1 value="55" />\
+			<val2 value="$parent.theValue" />\
+		</js-object>\
+	</val7>\
+<object>')[0];
+	
+	var theValue = {}, theVm = {};
+	var rc = new wipeout.template.renderContext({theValue: theValue}).childContext(theVm);
+	
+	// act
+	new wipeout.template.compiledInitializer(template).initialize(theVm, rc);
+	
+	// assert
+	strictEqual(theVm.val0, theValue);
+	strictEqual(theVm.val1, true);
+	strictEqual(theVm.val2, "true");
+	strictEqual(theVm.val3, true);
+	strictEqual(theVm.val4, "true");
+	strictEqual(theVm.val5, true);
+	strictEqual(theVm.val6, "true");
+	
+	strictEqual(theVm.val7.val1, 55);
+	strictEqual(theVm.val7.val2, theValue);
+});
+
+
+
+
+function aa () {
 	    
     compiledInitializer.getPropertyFlags = function(name) {
         
@@ -60,13 +103,9 @@ Class("wipeout.template.compiledInitializer", function () {
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-					var vm = wo.getViewModel(element[i].name); 	//TODO: temp solution
-					if (!vm)
-						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
-					
                     this.setters[name] = new wipeout.template.propertySetter({
 						xml: element[i],
-						constructor: vm.constructor
+						constructor: wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element[i].name)),
                     }, ["templateElementSetter"]);
 
                     return;
@@ -131,4 +170,4 @@ Class("wipeout.template.compiledInitializer", function () {
     };
         
     return compiledInitializer;
-});
+}
