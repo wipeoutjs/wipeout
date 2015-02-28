@@ -1,34 +1,15 @@
-1. Look at getAutoParser, its usages and "wipeoutAutoParser = true"
-2. Try to amalgamate onVmValueChanged and the one way binding type (they do the same thing)
-
-
-
-
 
 
 Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 
 REMOVE WITH. It is incredibly slow
 
-
-synchronus rendering if template is defined beforehand (or maybe if not)
-
-events and routed events. make strings?
-
-owts binding
-owts is valid regex
-
-
-array change, do not calculate if there are no args
-
-integrate array bind into arrayChangeCompiler.process
+events and routed events. make strings?s
 
 replace xml parsing with native
 
-do not use computeds in bindings.
 <div content--s="hello"></div> doesn't work. Parsers only work with view models
 
-$index
 
 standardise the way things are rendered, between Objects and wo.views (toString)
 
@@ -53,3 +34,6 @@ TODO:   wipeout.base.watched.prototype.observe, do something with dispose functi
 there is a lot of camelcasing. Is there a single point of failure I can use here?
 
 Alter xml engine to use RegExp(/something/g).lastIndex
+
+html events
+filters

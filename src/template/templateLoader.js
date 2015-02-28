@@ -18,8 +18,10 @@ Class("wipeout.template.templateLoader", function () {
                 this._success = true;
                 var callbacks = this._callbacks;
                 delete this._callbacks;
+				
+				this.templateValue = result.responseText;
                 for(var i = 0, ii = callbacks.length; i < ii; i++)
-                    callbacks[i](result.responseText);
+                    callbacks[i](this.templateValue);
             }).bind(this),
             error: (function() {
                 delete this._callbacks;
@@ -47,7 +49,7 @@ Class("wipeout.template.templateLoader", function () {
         }
         
         if (this._success) {
-            success();
+            success(this.templateValue);
             return null;
         }
         
