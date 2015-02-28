@@ -91,12 +91,11 @@ Class("wipeout.template.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
         
-        var disposal = [this.set(viewModel, renderContext, this.setters["model"], "model")];
+        var disposal = [this.set(viewModel, renderContext, "model")];
         
-        enumerateObj(this.setters, function (setter, name) {            
-            if (name === "model") return;
-            disposal.push(this.set(viewModel, renderContext, setter, name));
-        }, this);
+		for (var name in this.setters)
+            if (name !== "model")
+            	disposal.push(this.set(viewModel, renderContext, name));
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -106,13 +105,17 @@ Class("wipeout.template.compiledInitializer", function () {
 		}
     };
     
-    compiledInitializer.prototype.set = function (viewModel, renderContext, setter, name) {
+    compiledInitializer.prototype.set = function (viewModel, renderContext, name) {
+		if (!this.setters[name]) return;
+		
         // use binding type, globally defined binding type or default binding type
-        var bt = setter.bindingType || 
+        var bt = this.setters[name].bindingType || 
             (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(name)) || 
             "ow";
+		
+		if (!wipeout.htmlBindingTypes[bt]) throw "Invalid binding type :\"" + bt + "\" for property: \"" + name + "\".";
 
-        return wipeout.htmlBindingTypes[bt](viewModel, setter, name, renderContext);
+        return wipeout.htmlBindingTypes[bt](viewModel, this.setters[name], name, renderContext);
     };
     
     compiledInitializer.getAutoParser = function (value) {
