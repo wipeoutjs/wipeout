@@ -62,7 +62,7 @@ Class("wipeout.utils.html", function () {
 		if (forHtmlNode.wipeoutClosing)
 			return forHtmlNode.wipeoutClosing.viewModel;
 		
-		return getViewModel(wipeout.template.renderedContent.getParentElement(forHtmlNode));
+		return getViewModel(wipeout.template.rendering.renderedContent.getParentElement(forHtmlNode));
     };
     
     var createTemplatePlaceholder = function(forViewModel) {

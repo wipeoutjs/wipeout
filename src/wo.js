@@ -11,13 +11,13 @@ window.wo = function (model, htmlElement) {
         htmlElement = document.getElementById(htmlElement);
 
 	if (getMeAViewModel(htmlElement))
-		new wipeout.template.viewModelElement(htmlElement);
+		new wipeout.template.rendering.viewModelElement(htmlElement);
 	else
 		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
 			// element may have been removed since get all elements
 			if (htmlElement.contains(element) && getMeAViewModel(element))
-				new wipeout.template.viewModelElement(element);
+				new wipeout.template.rendering.viewModelElement(element);
 		});        
 };
 

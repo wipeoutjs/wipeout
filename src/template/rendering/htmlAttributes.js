@@ -58,7 +58,7 @@ Class("wipeout.template.rendering.htmlAttributes", function () {
     
     htmlAttributes.render = function (value, element, renderContext) { //TODO error handling
 		
-        var htmlContent = new wipeout.template.renderedContent(element, value, renderContext);
+        var htmlContent = new wipeout.template.rendering.renderedContent(element, value, renderContext);
         var disposal = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
             htmlContent.render(newVal);
         }, true);
@@ -93,7 +93,7 @@ Class("wipeout.template.rendering.htmlAttributes", function () {
     };
     
     htmlAttributes.wipeoutCreateViewModel = function (value, element, renderContext) {
-        var op = new wipeout.template.viewModelElement(element, value, renderContext);
+        var op = new wipeout.template.rendering.viewModelElement(element, value, renderContext);
         
         return function () {
             op.dispose(true);

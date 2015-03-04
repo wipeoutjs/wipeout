@@ -1,5 +1,5 @@
 
-Class("wipeout.template.renderedContent", function () {
+Class("wipeout.template.rendering.renderedContent", function () {
     
     var renderedContent = wipeout.base.object.extend(function renderedContent (element, name, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>

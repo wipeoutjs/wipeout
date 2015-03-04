@@ -12,7 +12,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     subject.constructor = {viewModelName: "a name"}
     var templateId = {}, vme;
     subject._super = methods.method();
-    classes.mock("wipeout.template.viewModelElement", function() {
+    classes.mock("wipeout.template.rendering.viewModelElement", function() {
         strictEqual(arguments[0], "a name");
         vme = this;
     }, 1);

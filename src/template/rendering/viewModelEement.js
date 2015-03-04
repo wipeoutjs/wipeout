@@ -1,7 +1,7 @@
 
-Class("wipeout.template.viewModelElement", function () {
+Class("wipeout.template.rendering.viewModelElement", function () {
     
-    var viewModelElement = wipeout.template.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext) {
+    var viewModelElement = wipeout.template.rendering.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="xmlOverride" type="wipeout.wml.wmlElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>

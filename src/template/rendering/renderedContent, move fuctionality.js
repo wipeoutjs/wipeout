@@ -1,7 +1,7 @@
 
 (function () {
     
-	var renderedContent = wipeout.template.renderedContent;
+	var renderedContent = wipeout.template.rendering.renderedContent;
 	
 	function getNodesAndRemoveDetatched(renderedContentOrHtml) {
               

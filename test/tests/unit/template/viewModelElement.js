@@ -1,11 +1,11 @@
-module("wipeout.template.viewModelElement", {
+module("wipeout.template.rendering.viewModelElement", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var viewModelElement = wipeout.template.viewModelElement;
+var viewModelElement = wipeout.template.rendering.viewModelElement;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
