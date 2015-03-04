@@ -1,11 +1,54 @@
 module("wipeout.utils.find, integration", {
-    setup: function() {
-    },
-    teardown: function() {
-    }
+    setup: integrationTestSetup,
+    teardown: integrationTestTeardown
 });
 
 var find = wipeout.utils.find;
+
+test("wipeout.utils.find", function() {
+	
+    // arrange
+    application.template = '<wo.content-control id="me1">\
+    <template>\
+        <wo.content-control id="me2">\
+            <template>\
+                <wo.content-control id="me3"\
+                    parent="$find(\'parent\')" grandParent="$find({$a:\'grandParent\'})" greatGrandParent="$find({$a:\'greatGrandParent\'})"\
+                    cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
+                    v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
+                    f0="$find({id: \'me1\'})" fY="$find({id: \'me1\'}, {$n:1})" fX="$find({id: \'me3\'})">\
+                </wo.content-control>\
+            </template>\
+        </wo.content-control>\
+    </template>\
+</wo.content-control>';
+	
+	application.onRendered = function () {
+    
+		var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
+		ok(me);
+		
+		// act    
+		// assert
+		strictEqual(me.parent, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.grandParent, application.templateItems.me1);
+		strictEqual(me.greatGrandParent, application);
+
+		strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.cc1, application.templateItems.me1);
+
+		strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
+		strictEqual(me.v1, application.templateItems.me1);
+
+		strictEqual(me.f0, application.templateItems.me1);
+		strictEqual(me.fX, null);
+		strictEqual(me.fY, null);
+		
+		start();
+	};
+	
+	stop();
+});
 
 testUtils.testWithUtils("find", "index only", false, function(methods, classes, subject, invoker) {
     

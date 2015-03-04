@@ -46,13 +46,66 @@ test("binding", function () {
 	stop();
 });
 
-function a () {  
+test("integration", function() {
+    // arrange
+    var id = "KJKHFGGGH";
+    views.view = wo.view.extend(function() {
+        this._super();
+    });
     
-    return function tw(viewModel, setter, name, renderContext) {		
-		var disposable = new obsjs.disposable();
-		disposable.registerDisposable(wipeout.htmlBindingTypes.ow(viewModel, setter, name, renderContext));
-		disposable.registerDisposable(wipeout.htmlBindingTypes.owts(viewModel, setter, name, renderContext));
-		
-		return disposable;
-    }
-};
+    var m = [];
+    views.view.prototype.onModelChanged = function(oldVal, newVal) {
+        this._super(oldVal, newVal);
+        
+        m.push(newVal);
+    };
+        
+    application.template = "<views.view model--tw='$parent.property' id='" + id + "'></views.view>";
+    
+	application.onRendered = function () {
+	
+		var view = application.templateItems[id];
+
+		var v = [], i = 0;
+		view.observe("model", function() {
+			v.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+		var a = [];
+		application.observe("property", function() {
+			a.push(arguments[1]);
+			
+			if (i === 7)
+				assert();
+			
+			i++;
+		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+
+		// act
+		m.length = 0;
+		view.model = (1);
+		application.property = (2);
+		view.model = (3);
+		application.property = (4);
+		view.model = (5);
+		application.property = (6);
+		view.model = (7);
+
+		// assert
+		function assert() {
+			obsjs.observable.afterNextObserveCycle(function () {
+				deepEqual(m, [7, 6]);
+				deepEqual(v, [1, 3, 5, 7, 6]);
+				deepEqual(a, [2, 4, 6]);
+				start();
+			});
+		}
+	};
+	
+	stop();
+});
