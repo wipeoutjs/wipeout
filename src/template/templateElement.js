@@ -112,15 +112,15 @@ Class("wipeout.template.wmlElement", function () {
     return wmlElement;
 });
 
-Class("wipeout.template.templateAttribute", function () {
+Class("wipeout.template.wmlAttribute", function () {
     
-    function templateAttribute(value, surrounding) {
+    function wmlAttribute(value, surrounding) {
         this.value = value;
         this.surrounding = surrounding;
         this.nodeType = 2;
     };
     
-    templateAttribute.prototype.serializeValue = function() {
+    wmlAttribute.prototype.serializeValue = function() {
         if (!this.value && !this.surrounding) return "";
         
         if (!this.surrounding) return "=" + this.value;
@@ -128,12 +128,12 @@ Class("wipeout.template.templateAttribute", function () {
         return "=" + this.surrounding + this.value + this.surrounding;
     };    
     
-    templateAttribute.prototype.serializeContent = function() {
+    wmlAttribute.prototype.serializeContent = function() {
                 
         return this.value;
     };
     
-    return templateAttribute;
+    return wmlAttribute;
 });
 
 Class("wipeout.template.templateComment", function () {

@@ -27,7 +27,7 @@ Class("wipeout.template.compiledInitializer", function () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-            this.setters.model = new wipeout.template.propertySetter(new wipeout.template.templateAttribute("$parent ? $parent.model : null", null));
+            this.setters.model = new wipeout.template.propertySetter(new wipeout.template.wmlAttribute("$parent ? $parent.model : null", null));
         }
     };
     

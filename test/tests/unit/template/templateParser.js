@@ -341,23 +341,23 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     strictEqual(output[0][3].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3].name, tagName2);
     
-    strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.template.wmlAttribute);
     strictEqual(output[0][3].attributes[sAttrName].surrounding, "'");
     strictEqual(output[0][3].attributes[sAttrName].value, sAttrText);
     
-    strictEqual(output[0][3].attributes[dAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[dAttrName].constructor, wipeout.template.wmlAttribute);
     strictEqual(output[0][3].attributes[dAttrName].surrounding, '"');
     strictEqual(output[0][3].attributes[dAttrName].value, dAttrText);
     
-    strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.template.wmlAttribute);
     strictEqual(output[0][3].attributes[emptyAttrName].surrounding, "'");
     strictEqual(output[0][3].attributes[emptyAttrName].value, "");
     
-    strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.template.wmlAttribute);
     strictEqual(output[0][3].attributes[noEqualsAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[noEqualsAttrName].value, null);
     
-    strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.template.templateAttribute);
+    strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.template.wmlAttribute);
     strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[quotelessValAttrName].value, quotelessValAttrText);
     

@@ -145,7 +145,7 @@ Class("wipeout.template.templateParser", function () {
             return {
                 index: i,
                 name: name,
-                value: new wipeout.template.templateAttribute(null, null)
+                value: new wipeout.template.wmlAttribute(null, null)
             }; // <tag attr />
         
         if (preParsed[i] === equals) {
@@ -154,7 +154,7 @@ Class("wipeout.template.templateParser", function () {
                 return {
                     index: i + 1,
                     name: name,
-                    value: new wipeout.template.templateAttribute(preParsed[i], null)
+                    value: new wipeout.template.wmlAttribute(preParsed[i], null)
                 }; // <tag attr=something />
             
             if (preParsed[i] === openDQuote || preParsed[i] === openSQuote) {
@@ -164,14 +164,14 @@ Class("wipeout.template.templateParser", function () {
                     return {
                         index: i + 2,
                         name: name,
-                        value: new wipeout.template.templateAttribute(preParsed[i], preParsed[i + 1] === closeDQuote ? '"' : "'")
+                        value: new wipeout.template.wmlAttribute(preParsed[i], preParsed[i + 1] === closeDQuote ? '"' : "'")
                     };// <tag attr="something" attr='something' />
                 
                 if (preParsed[i] === closeDQuote || preParsed[i] === closeSQuote)
                     return {
                         index: i + 1,
                         name: name,
-                        value: new wipeout.template.templateAttribute("", preParsed[i] === closeDQuote ? '"' : "'")
+                        value: new wipeout.template.wmlAttribute("", preParsed[i] === closeDQuote ? '"' : "'")
                     };// <tag attr="something" attr='something' />
             }
         } 
