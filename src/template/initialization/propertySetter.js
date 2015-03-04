@@ -1,5 +1,5 @@
 
-Class("wipeout.template.propertySetter", function () {
+Class("wipeout.template.initialization.propertySetter", function () {
 	
     function propertySetter (value, flags) {
 		

@@ -36,7 +36,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     
     // assert
 	strictEqual(subject.setters.constructor, Object);
-	ok(subject.setters.model instanceof wipeout.template.propertySetter);
+	ok(subject.setters.model instanceof wipeout.template.initialization.propertySetter);
 	strictEqual(subject.setters.model.value.value,  "$parent ? $parent.model : null");
 });
 
@@ -70,7 +70,7 @@ testUtils.testWithUtils("addElement", "has attribute value with flags", false, f
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0], attr);
 		strictEqual(arguments[1][0], "f1");
 		strictEqual(arguments[1][1], "f2");
@@ -121,7 +121,7 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0].xml, element[0]);
 		strictEqual(arguments[0].constructor, Array);
 		strictEqual(arguments[1][0], "templateElementSetter");
@@ -146,7 +146,7 @@ testUtils.testWithUtils("addElement", "no parser, text setter", false, function(
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0], element);
 		
 		setter = this;
@@ -170,7 +170,7 @@ testUtils.testWithUtils("addElement", "with parser function", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0], element);
 		
 		setter = this;
@@ -202,7 +202,7 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0], element);
 		
 		setter = this;
@@ -239,7 +239,7 @@ testUtils.testWithUtils("addAttribute", "with global parser", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
 		strictEqual(arguments[0], attr);
 		strictEqual(arguments[1][0], "f1");
 		strictEqual(arguments[1][1], "f2");
