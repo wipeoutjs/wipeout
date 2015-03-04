@@ -1,17 +1,17 @@
-module("wipeout.template.templateElementBase", {
+module("wipeout.template.wmlElementBase", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var templateElementBase = wipeout.template.templateElementBase;
+var wmlElementBase = wipeout.template.wmlElementBase;
 var getParentElement = wipeout.template.templateElement.prototype.getParentElement;
 
 testUtils.testWithUtils("push, splice", "no getParentElement", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new templateElementBase();
+    var subject = new wmlElementBase();
     
     // act    
     //assert
@@ -27,7 +27,7 @@ testUtils.testWithUtils("push, splice", "no getParentElement", false, function(m
 testUtils.testWithUtils("push, splice", "has parent element", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new templateElementBase();
+    var subject = new wmlElementBase();
     var input = {
         getParentElement: getParentElement
     };
@@ -46,7 +46,7 @@ testUtils.testWithUtils("push, splice", "has parent element", false, function(me
 testUtils.testWithUtils("push, splice", "ok", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new templateElementBase();
+    var subject = new wmlElementBase();
     var input1 = {
         getParentElement: getParentElement
     }, input2 = {

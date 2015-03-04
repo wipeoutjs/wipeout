@@ -9,18 +9,18 @@ var getParentElement = function() {
     return this._parentElement;
 };
 
-Class("wipeout.template.templateElementBase", function () {
+Class("wipeout.template.wmlElementBase", function () {
     
-    var templateElementBase = wipeout.base.object.extend.call(Array, function templateElementBase() {
+    var wmlElementBase = wipeout.base.object.extend.call(Array, function wmlElementBase() {
         this._super();
     });
 	
-	obsjs.observeTypes.computed.nonArrayType(templateElementBase);
+	obsjs.observeTypes.computed.nonArrayType(wmlElementBase);
     
-    templateElementBase.extend = wipeout.base.object.extend;
-    templateElementBase.prototype._super = wipeout.base.object.prototype._super;
+    wmlElementBase.extend = wipeout.base.object.extend;
+    wmlElementBase.prototype._super = wipeout.base.object.prototype._super;
     
-    templateElementBase.prototype.push = function(obj) {
+    wmlElementBase.prototype.push = function(obj) {
         if(obj.getParentElement !== getParentElement)
             throw "Invalid template node";
         if(obj.getParentElement())
@@ -31,7 +31,7 @@ Class("wipeout.template.templateElementBase", function () {
         return output;
     };
     
-    templateElementBase.prototype.splice = function() {
+    wmlElementBase.prototype.splice = function() {
         
         for(var i = 2, ii = arguments.length; i < ii; i++) {
             if(!arguments[i].getParentElement)
@@ -49,7 +49,7 @@ Class("wipeout.template.templateElementBase", function () {
         return output;
     };
     
-    templateElementBase.prototype.serializeContent = function() {
+    wmlElementBase.prototype.serializeContent = function() {
         
         var output = [];        
         wipeout.utils.obj.enumerateArr(this, function(i) {
@@ -59,12 +59,12 @@ Class("wipeout.template.templateElementBase", function () {
         return output.join("");
     }
     
-    return templateElementBase;
+    return wmlElementBase;
 });
 
 Class("wipeout.template.rootTemplateElement", function () {
     
-    var rootTemplateElement = wipeout.template.templateElementBase.extend(function rootTemplateElement() {
+    var rootTemplateElement = wipeout.template.wmlElementBase.extend(function rootTemplateElement() {
         this._super();
 		
 		this.nodeType = 9;
@@ -75,7 +75,7 @@ Class("wipeout.template.rootTemplateElement", function () {
 
 Class("wipeout.template.templateElement", function () {
     
-    var templateElement = wipeout.template.templateElementBase.extend(function templateElement(name, inline /*optional*/) {
+    var templateElement = wipeout.template.wmlElementBase.extend(function templateElement(name, inline /*optional*/) {
         this._super();
         
         this.name = name;
