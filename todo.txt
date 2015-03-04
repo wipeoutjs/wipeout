@@ -11,6 +11,7 @@ replace xml parsing with native
 
 <div content--s="hello"></div> doesn't work. Parsers only work with view models
 
+Test renderedContent and viewModelElement
 
 standardise the way things are rendered, between Objects and wo.views (toString)
 
