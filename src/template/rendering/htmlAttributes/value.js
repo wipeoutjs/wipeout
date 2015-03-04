@@ -11,7 +11,7 @@ HtmlAttr("value", function () {
                 element.value = newVal;
         }, true);
         
-        d1.registerDisposeCallback(onElementEvent(element, "change", function () {
+        d1.registerDisposeCallback(wipeout.utils.htmlAttributes.onElementEvent(element, "change", function () {
 			wipeout.utils.obj.setObject(value, renderContext, element.value);
         }));
         

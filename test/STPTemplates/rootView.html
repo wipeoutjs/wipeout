@@ -37,7 +37,7 @@
         <totals>
             <wo.content-control>
                 <template>
-                    <div content="$this.model.totalOfIds"></div>
+                    <div wo-content="$this.model.totalOfIds"></div>
                 </template>
             </wo.content-control>
         </totals>
@@ -51,13 +51,13 @@
                         <supplimentary-prop>
                             <child-view model--tw="$parent.model" value--tw="$this.model">
                                 <template>
-                                    <input type="text" value="$this.value"></input>
+                                    <input type="text" data-wo-value="$this.value"></input>
                                 </template>
                             </child-view>
                         </supplimentary-prop>
                         <template>
-                            <div content="$this.model"></div>
-                            <div render="$this.supplimentaryProp"></div>
+                            <div wo-content="$this.model"></div>
+                            <div wo-render="$this.supplimentaryProp"></div>
                         </template>
                     </wo.content-control>
                 </template>
@@ -67,7 +67,7 @@
     <br/>
     <br/>
 </div>
-<button click="$this.next">next</button>
+<button data-wo-click="$this.next">next</button>
 <h3>action:</h3>
-<div content="$this.justDone"></div>
+<div wo-content="$this.justDone"></div>
 <button data-bind="click: profile">profile</button>   

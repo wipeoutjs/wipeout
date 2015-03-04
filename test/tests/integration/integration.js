@@ -266,7 +266,7 @@ test("basic html binding, non observable", function() {
     application.model.value = val;
     
     // act
-    application.template = "<div id='" + id + "' content='$this.model.value'></div>";
+    application.template = "<div id='" + id + "' wo-content='$this.model.value'></div>";
     
     // assert
 	application.onRendered = function () {
@@ -285,7 +285,7 @@ test("basic html binding", function() {
 	application.model.value = val;
     
     // act
-    application.template = "<div id='" + id + "' content='$this.model.value'></div>";
+    application.template = "<div id='" + id + "' wo-content='$this.model.value'></div>";
     
 	application.onRendered = function () {
 			
@@ -324,9 +324,9 @@ test("un render", function() {
 		<div>Hi</div>\
 	<wo.content-control id=\"cc2\">\
 </wo.content-control>";
-    application.hello.template = "<div render='$this.helloAgain'></div>";
+    application.hello.template = "<div wo-render='$this.helloAgain'></div>";
     
-    application.template = "<div render='$this.hello'></div>";
+    application.template = "<div wo-render='$this.hello'></div>";
 	
 	application.onRendered = function () {
 		vms.push(application.hello.helloAgain.templateItems.cc1);
@@ -386,7 +386,7 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     application.template =
 "<wo.items-control items='$this.model.items' id='" + id1 + "'>\
     <item-template>\
-        <div class='" + id2 + "' content='$this.model'></div>\
+        <div class='" + id2 + "' wo-content='$this.model'></div>\
     </item-template>\
 </wo.items-control>";
 	
@@ -648,7 +648,7 @@ test("multi-dimentional binding", function() {
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
     var open = "<wo.content-control id='" + id1 + "' model='$parent.model.inner'><template>", close = "</template></wo.content-control>";
     application.model = model;
-    application.template = open + open + open + "<div id='" + id2 + "' content='$this.model.val'></div>" + close + close + close;
+    application.template = open + open + open + "<div id='" + id2 + "' wo-content='$this.model.val'></div>" + close + close + close;
     
     // act
 	application.onRendered = function () {
