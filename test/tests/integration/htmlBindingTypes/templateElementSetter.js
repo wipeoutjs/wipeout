@@ -15,7 +15,7 @@ test("binding", function () {
 			xml: xml,
 			constructor: Object
 		}),
-		renderContext = new wipeout.template.renderContext(new obsjs.observable()).childContext(viewModel);
+		renderContext = new wipeout.template.context(new obsjs.observable()).childContext(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	

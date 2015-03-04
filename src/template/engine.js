@@ -31,9 +31,9 @@ Class("wipeout.template.engine", function () {
         }
         
         // if the template is in the middle of an async load
-        if (this.templates[templateId] instanceof wipeout.template.templateLoader) {
+        if (this.templates[templateId] instanceof wipeout.template.loader) {
             return this.templates[templateId].add((function (template) {
-                if (this.templates[templateId] instanceof wipeout.template.templateLoader)
+                if (this.templates[templateId] instanceof wipeout.template.loader)
                     this.setTemplate(templateId, template);
                 
                 this.compileTemplate(templateId, callback);
@@ -51,7 +51,7 @@ Class("wipeout.template.engine", function () {
 
             // if an async process has not been kicked off yet
             if (wipeout.settings.asynchronousTemplates) {                
-                this.templates[templateId] = new wipeout.template.templateLoader(templateId);
+                this.templates[templateId] = new wipeout.template.loader(templateId);
                 return this.compileTemplate(templateId, callback);
             }
         }

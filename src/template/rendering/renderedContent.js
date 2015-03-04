@@ -5,7 +5,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>
-        ///<param name="parentRenderContext" type="wipeout.template.renderContext" optional="true">The render context of the parent view model</param>
+        ///<param name="parentRenderContext" type="wipeout.template.context" optional="true">The render context of the parent view model</param>
                         
 		this._super();
 		
@@ -44,7 +44,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         this.renderContext = this.parentRenderContext ? 
             this.parentRenderContext.childContext(object, arrayIndex) :
-            new wipeout.template.renderContext(object, arrayIndex);
+            new wipeout.template.context(object, arrayIndex);
         
         if (object instanceof wipeout.viewModels.visual) {
             object.__woBag.domRoot = this;

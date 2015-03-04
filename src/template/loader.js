@@ -1,7 +1,7 @@
 
-Class("wipeout.template.templateLoader", function () {
+Class("wipeout.template.loader", function () {
     
-    function templateLoader(templateName) {
+    function loader(templateName) {
         ///<summary>Private class for loading templates asynchronously</summary>
         ///<param name="templateName" type="string" optional="false">The name and url of this template</param>
         
@@ -31,7 +31,7 @@ Class("wipeout.template.templateLoader", function () {
         });
     }
     
-    templateLoader.prototype.add = function(success) {
+    loader.prototype.add = function(success) {
         ///<summary>Call success when this template is loaded</summary>
         ///<param name="success" type="Function" optional="false">The callback</param>
         ///<returns type="Boolean">True if the template is available, false if the template must be loaded</returns>
@@ -56,5 +56,5 @@ Class("wipeout.template.templateLoader", function () {
         throw "Could not load template \"" + this.templateName + "\"";
     }
 	
-	return templateLoader;
+	return loader;
 });

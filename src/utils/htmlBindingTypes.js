@@ -19,7 +19,7 @@ Class("wipeout.utils.htmlBindingTypes", function () {
 				renderContext: object
 			};
 			
-			if (object instanceof wipeout.template.renderContext)
+			if (object instanceof wipeout.template.context)
 				watchVariables = object.variablesForComputed(watchVariables);
 			
 			watcher = new obsjs.observeTypes.computed(wipeout.template.initialization.compiledInitializer.getAutoParser(propertyPath), null, {

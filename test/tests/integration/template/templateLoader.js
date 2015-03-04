@@ -1,4 +1,4 @@
-module("wipeout.template.templateLoader, integration", {
+module("wipeout.template.loader, integration", {
     setup: function() {
     },
     teardown: function() {
@@ -25,7 +25,7 @@ test("success", function() {
 	
 	// act
 	// assert
-	var subject = new wipeout.template.templateLoader(name);
+	var subject = new wipeout.template.loader(name);
 	subject.add(methods.method([template]));
 	subject.add(function () { ok(false) }).cancel();
 	stop();
@@ -52,6 +52,6 @@ test("failure", function() {
 	
 	// act
 	// assert
-	var subject = new wipeout.template.templateLoader(name);
+	var subject = new wipeout.template.loader(name);
 	stop();
 });

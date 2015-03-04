@@ -42,7 +42,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.closingTag.wipeoutClosing, subject);
     
     strictEqual(subject.viewModel.constructor, constructor);
-    strictEqual(subject.renderContext.constructor, wipeout.template.renderContext);
+    strictEqual(subject.renderContext.constructor, wipeout.template.context);
     
     equal(element.parentElement, undefined);
     strictEqual(subject.openingTag.parentElement, document.getElementById("qunit-fixture"));

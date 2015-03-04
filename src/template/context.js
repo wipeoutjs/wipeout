@@ -1,8 +1,8 @@
 
-Class("wipeout.template.renderContext", function () {
+Class("wipeout.template.context", function () {
     
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
-    function renderContext (forVm, parentContext, arrayIndex) {
+    function context (forVm, parentContext, arrayIndex) {
         
         this.$this = forVm;
         this.$parents = [];
@@ -23,19 +23,19 @@ Class("wipeout.template.renderContext", function () {
     // each render context has access to the global scope
     function renderContextPrototype () {}    
     renderContextPrototype.prototype = window;
-    renderContext.prototype = new renderContextPrototype();
+    context.prototype = new renderContextPrototype();
     
-    renderContext.prototype.$find = function (searchTermOrFilters, filters) {
+    context.prototype.$find = function (searchTermOrFilters, filters) {
 		
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     
-    renderContext.prototype.childContext = function (forVm, arrayIndex) {
+    context.prototype.childContext = function (forVm, arrayIndex) {
         
-        return new renderContext(forVm, this, arrayIndex);
+        return new context(forVm, this, arrayIndex);
     };
     
-    renderContext.prototype.variablesForComputed = function (additions) {
+    context.prototype.variablesForComputed = function (additions) {
         var output = {};
         enumerateObj(this, function (property, name) {
             if (this.hasOwnProperty(name) && name[0] === "$")
@@ -49,7 +49,7 @@ Class("wipeout.template.renderContext", function () {
         return output;
     };  
     
-    renderContext.addRenderContext = function (toFunction) {
+    context.addRenderContext = function (toFunction) {
         
         return toFunction
             .toString()
@@ -57,5 +57,5 @@ Class("wipeout.template.renderContext", function () {
             .replace(/\$parent/g, "renderContext.$parent");
     };
     
-    return renderContext;
+    return context;
 });
