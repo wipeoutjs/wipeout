@@ -147,29 +147,6 @@ testUtils.testWithUtils("addElement", "no parser, text setter", false, function(
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.propertySetter", function () {
-		strictEqual(arguments[0].xml, element[0]);
-		
-		setter = this;
-	}, 1);
-	
-    // act
-	invoker(element);
-    
-    // assert
-	strictEqual(subject.setters.something, setter);
-});
-
-testUtils.testWithUtils("addElement", "no parser, text setter", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var element = {
-		attributes: {},
-		nodeType: 1,
-		name: "something"
-	}, setter;
-	
-	subject.setters = {};
-	
-	classes.mock("wipeout.template.propertySetter", function () {
 		strictEqual(arguments[0], element);
 		
 		setter = this;
