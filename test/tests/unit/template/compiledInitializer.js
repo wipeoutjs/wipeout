@@ -164,7 +164,6 @@ testUtils.testWithUtils("addElement", "with parser function", false, function(me
     // arrange
 	var element = {
 		attributes: { parser: function () {} },
-		attributes: {},
 		nodeType: 1,
 		name: "something"
 	}, setter;
