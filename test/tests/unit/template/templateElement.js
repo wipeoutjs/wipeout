@@ -1,11 +1,11 @@
-module("wipeout.template.templateElement", {
+module("wipeout.template.wmlElement", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var templateElement = wipeout.template.templateElement;
+var wmlElement = wipeout.template.wmlElement;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
@@ -26,7 +26,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
 testUtils.testWithUtils("serialize", "inline", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    subject = new templateElement("name", true);
+    subject = new wmlElement("name", true);
     subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     
     // act
@@ -39,7 +39,7 @@ testUtils.testWithUtils("serialize", "inline", false, function(methods, classes,
 testUtils.testWithUtils("serialize", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    subject = new templateElement("name", false);
+    subject = new wmlElement("name", false);
     subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     subject.serializeContent = function() { return "children"; };
     

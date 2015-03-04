@@ -63,7 +63,7 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.prototype.addViewModel = function(vmNode) {
         ///<summary>Add a node which will be scanned and converted to a view model at a later stage</summary>
-        ///<param name="node" type="wipeout.template.templateElement">The node</param>
+        ///<param name="node" type="wipeout.template.wmlElement">The node</param>
         
         // add the beginning of a placeholder
         this.html.push("<script");
@@ -110,7 +110,7 @@ Class("wipeout.template.compiledTemplate", function () {
     
     compiledTemplate.prototype.addElement = function(element) {
         ///<summary>Add an element which will be scanned for functionality and added to the dom</summary>
-        ///<param name="node" type="wipeout.template.templateElement">The node</param>
+        ///<param name="node" type="wipeout.template.wmlElement">The node</param>
         
         // add the element beginning
         this.html.push("<" + element.name);

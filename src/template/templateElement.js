@@ -73,9 +73,9 @@ Class("wipeout.template.rootWmlElement", function () {
     return rootWmlElement;
 });
 
-Class("wipeout.template.templateElement", function () {
+Class("wipeout.template.wmlElement", function () {
     
-    var templateElement = wipeout.template.wmlElementBase.extend(function templateElement(name, inline /*optional*/) {
+    var wmlElement = wipeout.template.wmlElementBase.extend(function wmlElement(name, inline /*optional*/) {
         this._super();
         
         this.name = name;
@@ -85,9 +85,9 @@ Class("wipeout.template.templateElement", function () {
         this.nodeType = 1;
     });
     
-    templateElement.prototype.getParentElement = getParentElement;
+    wmlElement.prototype.getParentElement = getParentElement;
     
-    templateElement.prototype.serialize = function() {
+    wmlElement.prototype.serialize = function() {
         var output = [];
         
         output.splice(0, 0, "<", this.name);
@@ -109,7 +109,7 @@ Class("wipeout.template.templateElement", function () {
         return output.join("");
     }
     
-    return templateElement;
+    return wmlElement;
 });
 
 Class("wipeout.template.templateAttribute", function () {

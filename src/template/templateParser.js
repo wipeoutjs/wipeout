@@ -205,7 +205,7 @@ Class("wipeout.template.templateParser", function () {
             };
         
         // create element
-        var element = new wipeout.template.templateElement(preParsed[i], parentElement);
+        var element = new wipeout.template.wmlElement(preParsed[i], parentElement);
         parentElement.push(element);
         i++;
         

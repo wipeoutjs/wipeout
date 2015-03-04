@@ -338,7 +338,7 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     
     strictEqual(output[0][2].constructor, wipeout.template.templateString);
     
-    strictEqual(output[0][3].constructor, wipeout.template.templateElement);
+    strictEqual(output[0][3].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3].name, tagName2);
     
     strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.template.templateAttribute);
@@ -363,7 +363,7 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     
     strictEqual(output[0][3][0].constructor, wipeout.template.templateString);
     
-    strictEqual(output[0][3][1].constructor, wipeout.template.templateElement);
+    strictEqual(output[0][3][1].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][1].name, tagName3);
     
     strictEqual(output[0][3][1][0].constructor, wipeout.template.templateString);
@@ -371,12 +371,12 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     
     strictEqual(output[0][3][2].constructor, wipeout.template.templateString);
     
-    strictEqual(output[0][3][3].constructor, wipeout.template.templateElement);
+    strictEqual(output[0][3][3].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][3].name, tagName4);
     
     strictEqual(output[0][3][4].constructor, wipeout.template.templateString);
     
-    strictEqual(output[0][3][5].constructor, wipeout.template.templateElement);
+    strictEqual(output[0][3][5].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][5].name, tagName5);
     
     strictEqual(output[0][3][6].constructor, wipeout.template.templateString);

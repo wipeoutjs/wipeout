@@ -6,7 +6,7 @@ module("wipeout.template.wmlElementBase", {
 });
 
 var wmlElementBase = wipeout.template.wmlElementBase;
-var getParentElement = wipeout.template.templateElement.prototype.getParentElement;
+var getParentElement = wipeout.template.wmlElement.prototype.getParentElement;
 
 testUtils.testWithUtils("push, splice", "no getParentElement", false, function(methods, classes, subject, invoker) {
     
