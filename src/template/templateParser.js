@@ -5,7 +5,7 @@ Class("wipeout.template.templateParser", function () {
     function templateParser(templateString) {
                 
         var preParsed = templateParser.preParse(templateString);
-        var root = new wipeout.template.rootTemplateElement();        
+        var root = new wipeout.template.rootWmlElement();        
         templateParser._parseTheEther(preParsed, root, 0);
         return root;
     }

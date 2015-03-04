@@ -62,15 +62,15 @@ Class("wipeout.template.wmlElementBase", function () {
     return wmlElementBase;
 });
 
-Class("wipeout.template.rootTemplateElement", function () {
+Class("wipeout.template.rootWmlElement", function () {
     
-    var rootTemplateElement = wipeout.template.wmlElementBase.extend(function rootTemplateElement() {
+    var rootWmlElement = wipeout.template.wmlElementBase.extend(function rootWmlElement() {
         this._super();
 		
 		this.nodeType = 9;
     });
     
-    return rootTemplateElement;
+    return rootWmlElement;
 });
 
 Class("wipeout.template.templateElement", function () {
