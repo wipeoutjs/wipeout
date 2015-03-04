@@ -136,34 +136,34 @@ Class("wipeout.template.wmlAttribute", function () {
     return wmlAttribute;
 });
 
-Class("wipeout.template.templateComment", function () {
+Class("wipeout.template.wmlComment", function () {
     
-    var templateComment = function templateComment(commentText) {        
+    var wmlComment = function wmlComment(commentText) {        
         this.commentText = commentText;
         this.nodeType = 8;
     };
     
-    templateComment.prototype.serialize = function() {
+    wmlComment.prototype.serialize = function() {
         return "<!--" + this.commentText + "-->";
     };
     
-    templateComment.prototype.getParentElement = getParentElement;
+    wmlComment.prototype.getParentElement = getParentElement;
     
-    return templateComment;
+    return wmlComment;
 });
 
-Class("wipeout.template.templateString", function () {
+Class("wipeout.template.wmlString", function () {
     
-    var templateString = function templateString(text) {
+    var wmlString = function wmlString(text) {
         this.text = text;
         this.nodeType = 3;
     };
     
-    templateString.prototype.serialize = function() {
+    wmlString.prototype.serialize = function() {
         return this.text;
     }
     
-    templateString.prototype.getParentElement = getParentElement;
+    wmlString.prototype.getParentElement = getParentElement;
     
-    return templateString;
+    return wmlString;
 });

@@ -331,12 +331,12 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     
     strictEqual(output[0].name, tagName1);
     
-    strictEqual(output[0][0].constructor, wipeout.template.templateString);
+    strictEqual(output[0][0].constructor, wipeout.template.wmlString);
     
-    strictEqual(output[0][1].constructor, wipeout.template.templateComment);
+    strictEqual(output[0][1].constructor, wipeout.template.wmlComment);
     strictEqual(output[0][1].commentText, commentText);
     
-    strictEqual(output[0][2].constructor, wipeout.template.templateString);
+    strictEqual(output[0][2].constructor, wipeout.template.wmlString);
     
     strictEqual(output[0][3].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3].name, tagName2);
@@ -361,25 +361,25 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[quotelessValAttrName].value, quotelessValAttrText);
     
-    strictEqual(output[0][3][0].constructor, wipeout.template.templateString);
+    strictEqual(output[0][3][0].constructor, wipeout.template.wmlString);
     
     strictEqual(output[0][3][1].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][1].name, tagName3);
     
-    strictEqual(output[0][3][1][0].constructor, wipeout.template.templateString);
+    strictEqual(output[0][3][1][0].constructor, wipeout.template.wmlString);
     strictEqual(output[0][3][1][0].text, text);
     
-    strictEqual(output[0][3][2].constructor, wipeout.template.templateString);
+    strictEqual(output[0][3][2].constructor, wipeout.template.wmlString);
     
     strictEqual(output[0][3][3].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][3].name, tagName4);
     
-    strictEqual(output[0][3][4].constructor, wipeout.template.templateString);
+    strictEqual(output[0][3][4].constructor, wipeout.template.wmlString);
     
     strictEqual(output[0][3][5].constructor, wipeout.template.wmlElement);
     strictEqual(output[0][3][5].name, tagName5);
     
-    strictEqual(output[0][3][6].constructor, wipeout.template.templateString);
+    strictEqual(output[0][3][6].constructor, wipeout.template.wmlString);
 });
 
 testUtils.testWithUtils("speed test", null, true, function(methods, classes, subject, invoker) {

@@ -2,9 +2,9 @@
 //http://www.w3.org/TR/html-markup/syntax.html
 Class("wipeout.template.templateParser", function () {  
     
-    function templateParser(templateString) {
+    function templateParser(wmlString) {
                 
-        var preParsed = templateParser.preParse(templateString);
+        var preParsed = templateParser.preParse(wmlString);
         var root = new wipeout.template.rootWmlElement();        
         templateParser._parseTheEther(preParsed, root, 0);
         return root;
@@ -242,14 +242,14 @@ Class("wipeout.template.templateParser", function () {
         for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
             if (typeof preParsed[i] === "string") {
                 
-                rootElement.push(new wipeout.template.templateString(preParsed[i]));
+                rootElement.push(new wipeout.template.wmlString(preParsed[i]));
             } else if(preParsed[i] === openComment) {
                 
                 if (preParsed[i + 1] === closeComment) {
-                    rootElement.push(new wipeout.template.templateComment(""));
+                    rootElement.push(new wipeout.template.wmlComment(""));
                     i++;
                 } else if (typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeComment) {
-                    rootElement.push(new wipeout.template.templateComment(preParsed[i + 1]));
+                    rootElement.push(new wipeout.template.wmlComment(preParsed[i + 1]));
                     i+=2;
                 } else {
                     //TODO
