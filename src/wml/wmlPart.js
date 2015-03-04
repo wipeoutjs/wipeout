@@ -1,6 +1,6 @@
-Class("wipeout.template.templatePart", function () {  
+Class("wipeout.wml.wmlPart", function () {  
         //TODO: move to seperate file
-    function templatePart(value, escaped) {
+    function wmlPart(value, escaped) {
         
         this.value = value;        
         this.escaped = escaped;
@@ -8,7 +8,7 @@ Class("wipeout.template.templatePart", function () {
         this.nextChars = [];
     }
     
-    templatePart.prototype.indexOf = function(string, startingPosition) {
+    wmlPart.prototype.indexOf = function(string, startingPosition) {
         if (this.value instanceof RegExp) {
             //TODO: efficiencies
             if(startingPosition)
@@ -33,5 +33,5 @@ Class("wipeout.template.templatePart", function () {
         }
     };
     
-    return templatePart;
+    return wmlPart;
 });

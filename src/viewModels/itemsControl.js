@@ -78,7 +78,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     
     itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="wipeout.template.wmlElement" optional="false">An XML element containing property setters for the view</param>
+        ///<param name="propertiesXml" type="wipeout.wml.wmlElement" optional="false">An XML element containing property setters for the view</param>
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
     
         if(propertiesXml) {        

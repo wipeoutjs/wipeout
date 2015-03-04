@@ -7,7 +7,7 @@ module("wipeout.template.compiledInitializer, integration", {
 
 test("success", function() {
 	// arrange
-	var template = wipeout.template.templateParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
+	var template = wipeout.wml.wmlParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
 	<val3 value="true" />\
 	<val4 value--s="true" />\
 	<val5>true</val5>\
@@ -70,7 +70,7 @@ function aa () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-            this.setters.model = new wipeout.template.propertySetter(new wipeout.template.wmlAttribute("$parent ? $parent.model : null", null));
+            this.setters.model = new wipeout.template.propertySetter(new wipeout.wml.wmlAttribute("$parent ? $parent.model : null", null));
         }
     };
     

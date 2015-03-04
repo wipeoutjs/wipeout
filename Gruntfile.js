@@ -70,7 +70,7 @@ module.exports = function(grunt) {
         "src/template/compiledInitializer.js",
         "src/utils/dictionary.js",
         "src/base/bindable.js",
-        "src/template/templatePart.js",
+        "src/wml/wmlPart.js",
         "src/viewModels/visual.js",
         "src/viewModels/view.js",
         "src/events/routedEvent.js",

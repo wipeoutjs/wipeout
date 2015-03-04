@@ -150,7 +150,7 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
 
 testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = wipeout.template.templateParser("<root></root>", "application/xml")[0];
+    var element = wipeout.wml.wmlParser("<root></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -161,7 +161,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(me
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = wipeout.template.templateParser("<root model='asdsad'></root>", "application/xml")[0];
+    var element = wipeout.wml.wmlParser("<root model='asdsad'></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -172,7 +172,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, f
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as element", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = wipeout.template.templateParser("<root><model /></root>", "application/xml")[0];
+    var element = wipeout.wml.wmlParser("<root><model /></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -192,7 +192,7 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     var subject = new wo.view();
     subject.twProp = ko.observable();
     
-    var element = wipeout.template.templateParser(
+    var element = wipeout.wml.wmlParser(
 '<root shareParentScope="false" twProp-tw="$parent.twProperty" owProp="$parent.owProperty">\
     <inlinePropString>Hello</inlinePropString>\
     <inlinePropParser constructor="int">22</inlinePropParser>\

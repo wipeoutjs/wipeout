@@ -9,7 +9,7 @@ test("binding", function () {
 	views.setView = obsjs.observable.extend(function aaa () {this._super(); });
 	
 	var name = "daasdasd";
-	var xml = wipeout.template.templateParser('<val><views.set-view val1="$parent.val"><val2>3</val2></views.set-view></val>');
+	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$parent.val"><val2>3</val2></views.set-view></val>');
 	var viewModel = new obsjs.observable(),
 		setter = new wipeout.template.propertySetter({
 			xml: xml,

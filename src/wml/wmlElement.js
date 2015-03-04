@@ -9,7 +9,7 @@ var getParentElement = function() {
     return this._parentElement;
 };
 
-Class("wipeout.template.wmlElementBase", function () {
+Class("wipeout.wml.wmlElementBase", function () {
     
     var wmlElementBase = wipeout.base.object.extend.call(Array, function wmlElementBase() {
         this._super();
@@ -62,9 +62,9 @@ Class("wipeout.template.wmlElementBase", function () {
     return wmlElementBase;
 });
 
-Class("wipeout.template.rootWmlElement", function () {
+Class("wipeout.wml.rootWmlElement", function () {
     
-    var rootWmlElement = wipeout.template.wmlElementBase.extend(function rootWmlElement() {
+    var rootWmlElement = wipeout.wml.wmlElementBase.extend(function rootWmlElement() {
         this._super();
 		
 		this.nodeType = 9;
@@ -73,9 +73,9 @@ Class("wipeout.template.rootWmlElement", function () {
     return rootWmlElement;
 });
 
-Class("wipeout.template.wmlElement", function () {
+Class("wipeout.wml.wmlElement", function () {
     
-    var wmlElement = wipeout.template.wmlElementBase.extend(function wmlElement(name, inline /*optional*/) {
+    var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline /*optional*/) {
         this._super();
         
         this.name = name;
@@ -112,7 +112,7 @@ Class("wipeout.template.wmlElement", function () {
     return wmlElement;
 });
 
-Class("wipeout.template.wmlAttribute", function () {
+Class("wipeout.wml.wmlAttribute", function () {
     
     function wmlAttribute(value, surrounding) {
         this.value = value;
@@ -136,7 +136,7 @@ Class("wipeout.template.wmlAttribute", function () {
     return wmlAttribute;
 });
 
-Class("wipeout.template.wmlComment", function () {
+Class("wipeout.wml.wmlComment", function () {
     
     var wmlComment = function wmlComment(commentText) {        
         this.commentText = commentText;
@@ -152,7 +152,7 @@ Class("wipeout.template.wmlComment", function () {
     return wmlComment;
 });
 
-Class("wipeout.template.wmlString", function () {
+Class("wipeout.wml.wmlString", function () {
     
     var wmlString = function wmlString(text) {
         this.text = text;

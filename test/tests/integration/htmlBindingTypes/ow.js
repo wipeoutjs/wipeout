@@ -7,7 +7,7 @@ module("wipeout.htmlBindingTypes.ow, integration", {
 test("binding, nb", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
-		setter = new wipeout.template.propertySetter(new wipeout.template.wmlAttribute("true", null)),
+		setter = new wipeout.template.propertySetter(new wipeout.wml.wmlAttribute("true", null)),
 		name = "KJBKJBKJB",
 		renderContext = new wipeout.template.renderContext(new obsjs.observable()).childContext(viewModel);
 	
@@ -24,7 +24,7 @@ test("binding, nb", function () {
 test("binding, bindOneWay", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
-		setter = new wipeout.template.propertySetter(new wipeout.template.wmlAttribute("$parent.val", null)),
+		setter = new wipeout.template.propertySetter(new wipeout.wml.wmlAttribute("$parent.val", null)),
 		name = "KJBKJBKJB",
 		renderContext = new wipeout.template.renderContext(new obsjs.observable()).childContext(viewModel);
 	

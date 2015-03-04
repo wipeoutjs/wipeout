@@ -4,7 +4,7 @@ Class("wipeout.template.viewModelElement", function () {
     var viewModelElement = wipeout.template.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
-        ///<param name="xmlOverride" type="wipeout.template.wmlElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
+        ///<param name="xmlOverride" type="wipeout.wml.wmlElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
         ///<param name="parentRenderContext" type="wipeout.template.renderContext" optional="true">The render context of the parent view model</param>
         
         var vm = xmlOverride ? wo.getViewModel(xmlOverride.name) : getMeAViewModel(element);
@@ -15,7 +15,7 @@ Class("wipeout.template.viewModelElement", function () {
         this._super(element, wipeout.utils.obj.trim(vm.name), parentRenderContext);
         
         // create initialization xml
-        this.initialization = xmlOverride || wipeout.template.templateParser(wipeout.utils.html.outerHTML(element))[0];
+        this.initialization = xmlOverride || wipeout.wml.wmlParser(wipeout.utils.html.outerHTML(element))[0];
         
         // create actual view model
         this.viewModel = new vm.constructor();

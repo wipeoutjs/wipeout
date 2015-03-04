@@ -1,12 +1,12 @@
-module("wipeout.template.templateParser", {
+module("wipeout.wml.wmlParser", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var templateParser = wipeout.template.templateParser;
-var templatePart = wipeout.template.templatePart;
+var wmlParser = wipeout.wml.wmlParser;
+var wmlPart = wipeout.wml.wmlPart;
 
 testUtils.testWithUtils("findFirstInstance", "char 1", true, function(methods, classes, subject, invoker) {
     
@@ -14,8 +14,8 @@ testUtils.testWithUtils("findFirstInstance", "char 1", true, function(methods, c
     var part1 = "LKJBLKJBLKJBLKJB", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + char1 + part2 + char2 + part3;
     
-    char1 = new templatePart(char1);
-    char2 = new templatePart(char2);    
+    char1 = new wmlPart(char1);
+    char2 = new wmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -31,8 +31,8 @@ testUtils.testWithUtils("findFirstInstance", "char 2", true, function(methods, c
     var part1 = "LKJBLKJBLKJBLKJB", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + char1 + part2 + char2 + part3;
     
-    char1 = new templatePart(char1);
-    char2 = new templatePart(char2);    
+    char1 = new wmlPart(char1);
+    char2 = new wmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char2, char1]);
@@ -49,8 +49,8 @@ testUtils.testWithUtils("findFirstInstance", "escaped char", true, function(meth
     var temp = part1 + escaped + char1 + part2;
     var input = temp + char2 + part3;
     
-    char1 = new templatePart(char1, escaped);
-    char2 = new templatePart(char2);    
+    char1 = new wmlPart(char1, escaped);
+    char2 = new wmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -66,8 +66,8 @@ testUtils.testWithUtils("findFirstInstance", "double escaped char", true, functi
     var part1 = "LKJBLKJBLKJBLKJB", escape = "-%-", char1 = "!a!", part2 = "jljhlkjhljkhljhljh", char2 = "^6^", part3 = "IUOYUIOYOIUYOUIYOUIY";
     var input = part1 + escape + escape + char1 + part2 + char2 + part3;
     
-    char1 = new templatePart(char1, escape);
-    char2 = new templatePart(char2);    
+    char1 = new wmlPart(char1, escape);
+    char2 = new wmlPart(char2);    
     
     // act
     var output = invoker(input, 0, [char1, char2]);
@@ -84,8 +84,8 @@ testUtils.testWithUtils("findFirstInstance", "escaped char then non escaped", tr
     var temp = part1 + escaped + char1 + part2;
     var input = temp + char1 + part3 + charX;
     
-    char1 = new templatePart(char1, escaped);
-    charX = new templatePart(charX, escaped);
+    char1 = new wmlPart(char1, escaped);
+    charX = new wmlPart(charX, escaped);
     
     // act
     // want to find char 2 first then go through the char 1 escape rigamarole
@@ -110,9 +110,9 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     
     // enclosed in comment
     tmp = 'bbb"bbb\'bbb';
-    test.push(templateParser.specialTags.openComment);
+    test.push(wmlParser.specialTags.openComment);
     test.push(tmp);
-    test.push(templateParser.specialTags.closeComment);
+    test.push(wmlParser.specialTags.closeComment);
     input += "<!--" + tmp + "-->";
     
     // filler with both kinds of quotes
@@ -122,56 +122,56 @@ testUtils.testWithUtils("preParse", null, true, function(methods, classes, subje
     
     // open xml tag with ignorable characters
     tmp = "ddd<ddd<!--ddd";
-    test.push(templateParser.specialTags.openTag1);
+    test.push(wmlParser.specialTags.openTag1);
     test.push(tmp);
     input += "<" + tmp;
     
     // s quote with ignorable and escaped chars
     tmp = "eee<eee<!--eee\"eee\\'eee\\\\";
-    test.push(templateParser.specialTags.openSQuote);
+    test.push(wmlParser.specialTags.openSQuote);
     test.push(tmp);
-    test.push(templateParser.specialTags.closeSQuote);
+    test.push(wmlParser.specialTags.closeSQuote);
     input += "'" + tmp + "'";
     
     // equals
-    test.push(templateParser.specialTags.equals);
+    test.push(wmlParser.specialTags.equals);
     input += "      =     ";
     
     // d quote with ignorable and escaped chars
     tmp = 'fff<fff<!--fff\'fff\\"fff\\\\';
-    test.push(templateParser.specialTags.openDQuote);
+    test.push(wmlParser.specialTags.openDQuote);
     test.push(tmp);
-    test.push(templateParser.specialTags.closeDQuote);
+    test.push(wmlParser.specialTags.closeDQuote);
     input += '"' + tmp + '"';
     
     // space
     tmp = " \t\r\n ";
-    test.push(templateParser.specialTags.whiteSpace);
+    test.push(wmlParser.specialTags.whiteSpace);
     input += tmp;
     
     // close xml tag with space before >
     tmp = "ggg\"ggg'ggg";
-    test.push(templateParser.specialTags.closeTag1);
+    test.push(wmlParser.specialTags.closeTag1);
     test.push(tmp);
     input += ' >' + tmp;
     
     // open close element
     tmp = "hhh\"hhh'hhh<!--hhh<hhh</hhh";
-    test.push(templateParser.specialTags.openTag2);
+    test.push(wmlParser.specialTags.openTag2);
     test.push(tmp);
     input += '</' + tmp;
     
     // close close element
     tmp = "iii\"iii'iii";
-    test.push(templateParser.specialTags.closeTag1);
+    test.push(wmlParser.specialTags.closeTag1);
     test.push(tmp);
     input += '>' + tmp;
     
     // open and close element
     tmp = "jjj";
-    test.push(templateParser.specialTags.openTag1);
+    test.push(wmlParser.specialTags.openTag1);
     test.push(tmp);
-    test.push(templateParser.specialTags.closeTag2);
+    test.push(wmlParser.specialTags.closeTag2);
     input += '<' + tmp + '/>';
     
     // filler with both kinds of quotes
@@ -190,7 +190,7 @@ testUtils.testWithUtils("_createAttribute", "no val, empty space next", true, fu
     
     // arrange
     var name = "LKjhblkjhlkjh";
-    var input = [name, templateParser.specialTags.whiteSpace];
+    var input = [name, wmlParser.specialTags.whiteSpace];
     
     // act
     var output = invoker(input, 0);
@@ -206,7 +206,7 @@ testUtils.testWithUtils("_createAttribute", "no val, close tag 1 next", true, fu
     
     // arrange
     var name = "LKjhblkjhlkjh";
-    var input = [name, templateParser.specialTags.closeTag1];
+    var input = [name, wmlParser.specialTags.closeTag1];
     
     // act
     var output = invoker(input, 0);
@@ -222,7 +222,7 @@ testUtils.testWithUtils("_createAttribute", "no val, close tag 2 next", true, fu
     
     // arrange
     var name = "LKjhblkjhlkjh";
-    var input = [name, templateParser.specialTags.closeTag2];
+    var input = [name, wmlParser.specialTags.closeTag2];
     
     // act
     var output = invoker(input, 0);
@@ -238,7 +238,7 @@ testUtils.testWithUtils("_createAttribute", "no quotes", true, function(methods,
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "asdsdgsd";
-    var input = [name, templateParser.specialTags.equals, value];
+    var input = [name, wmlParser.specialTags.equals, value];
     
     // act
     var output = invoker(input, 0);
@@ -254,7 +254,7 @@ testUtils.testWithUtils("_createAttribute", "single quotes", true, function(meth
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "asdsdgsd";
-    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openSQuote, value, templateParser.specialTags.closeSQuote];
+    var input = [name, wmlParser.specialTags.equals, wmlParser.specialTags.openSQuote, value, wmlParser.specialTags.closeSQuote];
     
     // act
     var output = invoker(input, 0);
@@ -270,7 +270,7 @@ testUtils.testWithUtils("_createAttribute", "double quotes", true, function(meth
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "asdsdgsd";
-    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
+    var input = [name, wmlParser.specialTags.equals, wmlParser.specialTags.openDQuote, value, wmlParser.specialTags.closeDQuote];
     
     // act
     var output = invoker(input, 0);
@@ -286,7 +286,7 @@ testUtils.testWithUtils("_createAttribute", "double empty", true, function(metho
     
     // arrange
     var name = "LKjhblkjhlkjh", value = "";
-    var input = [name, templateParser.specialTags.equals, templateParser.specialTags.openDQuote, value, templateParser.specialTags.closeDQuote];
+    var input = [name, wmlParser.specialTags.equals, wmlParser.specialTags.openDQuote, value, wmlParser.specialTags.closeDQuote];
     
     // act
     var output = invoker(input, 0);
@@ -327,59 +327,59 @@ testUtils.testWithUtils("constructor", "integration test", true, function(method
     </ " + tagName2 + " ></" + tagName1 + ">".replace(/\*/g, "\\").replace(/&/g, "\"");
     
     // act
-    var output = templateParser(val);
+    var output = wmlParser(val);
     
     strictEqual(output[0].name, tagName1);
     
-    strictEqual(output[0][0].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][0].constructor, wipeout.wml.wmlString);
     
-    strictEqual(output[0][1].constructor, wipeout.template.wmlComment);
+    strictEqual(output[0][1].constructor, wipeout.wml.wmlComment);
     strictEqual(output[0][1].commentText, commentText);
     
-    strictEqual(output[0][2].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][2].constructor, wipeout.wml.wmlString);
     
-    strictEqual(output[0][3].constructor, wipeout.template.wmlElement);
+    strictEqual(output[0][3].constructor, wipeout.wml.wmlElement);
     strictEqual(output[0][3].name, tagName2);
     
-    strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.template.wmlAttribute);
+    strictEqual(output[0][3].attributes[sAttrName].constructor, wipeout.wml.wmlAttribute);
     strictEqual(output[0][3].attributes[sAttrName].surrounding, "'");
     strictEqual(output[0][3].attributes[sAttrName].value, sAttrText);
     
-    strictEqual(output[0][3].attributes[dAttrName].constructor, wipeout.template.wmlAttribute);
+    strictEqual(output[0][3].attributes[dAttrName].constructor, wipeout.wml.wmlAttribute);
     strictEqual(output[0][3].attributes[dAttrName].surrounding, '"');
     strictEqual(output[0][3].attributes[dAttrName].value, dAttrText);
     
-    strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.template.wmlAttribute);
+    strictEqual(output[0][3].attributes[emptyAttrName].constructor, wipeout.wml.wmlAttribute);
     strictEqual(output[0][3].attributes[emptyAttrName].surrounding, "'");
     strictEqual(output[0][3].attributes[emptyAttrName].value, "");
     
-    strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.template.wmlAttribute);
+    strictEqual(output[0][3].attributes[noEqualsAttrName].constructor, wipeout.wml.wmlAttribute);
     strictEqual(output[0][3].attributes[noEqualsAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[noEqualsAttrName].value, null);
     
-    strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.template.wmlAttribute);
+    strictEqual(output[0][3].attributes[quotelessValAttrName].constructor, wipeout.wml.wmlAttribute);
     strictEqual(output[0][3].attributes[quotelessValAttrName].surrounding, null);
     strictEqual(output[0][3].attributes[quotelessValAttrName].value, quotelessValAttrText);
     
-    strictEqual(output[0][3][0].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][3][0].constructor, wipeout.wml.wmlString);
     
-    strictEqual(output[0][3][1].constructor, wipeout.template.wmlElement);
+    strictEqual(output[0][3][1].constructor, wipeout.wml.wmlElement);
     strictEqual(output[0][3][1].name, tagName3);
     
-    strictEqual(output[0][3][1][0].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][3][1][0].constructor, wipeout.wml.wmlString);
     strictEqual(output[0][3][1][0].text, text);
     
-    strictEqual(output[0][3][2].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][3][2].constructor, wipeout.wml.wmlString);
     
-    strictEqual(output[0][3][3].constructor, wipeout.template.wmlElement);
+    strictEqual(output[0][3][3].constructor, wipeout.wml.wmlElement);
     strictEqual(output[0][3][3].name, tagName4);
     
-    strictEqual(output[0][3][4].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][3][4].constructor, wipeout.wml.wmlString);
     
-    strictEqual(output[0][3][5].constructor, wipeout.template.wmlElement);
+    strictEqual(output[0][3][5].constructor, wipeout.wml.wmlElement);
     strictEqual(output[0][3][5].name, tagName5);
     
-    strictEqual(output[0][3][6].constructor, wipeout.template.wmlString);
+    strictEqual(output[0][3][6].constructor, wipeout.wml.wmlString);
 });
 
 testUtils.testWithUtils("speed test", null, true, function(methods, classes, subject, invoker) {
@@ -417,12 +417,12 @@ testUtils.testWithUtils("speed test", null, true, function(methods, classes, sub
     var begin = new Date();
     
     // act
-    var output = templateParser(input);
+    var output = wmlParser(input);
     var time1 = new Date() - begin;
     
     begin = new Date();
     new DOMParser().parseFromString("<root>" + input + "</root>", "application/xml");
     var time2 = new Date() - begin;
         
-    ok(true, "templateParser: " + time1 + ", DOMParser: " + time2);
+    ok(true, "wmlParser: " + time1 + ", DOMParser: " + time2);
 });

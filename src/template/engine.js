@@ -9,9 +9,9 @@ Class("wipeout.template.engine", function () {
     
     engine.prototype.setTemplate = function (templateId, template) {
         if (typeof template === "string")
-            template = wipeout.template.templateParser(template);
+            template = wipeout.wml.wmlParser(template);
 		else if (template.nodeType === 2)
-            template = wipeout.template.templateParser(template.value);
+            template = wipeout.wml.wmlParser(template.value);
         
         return this.templates[templateId] = new wipeout.template.compiledTemplate(template);
     };

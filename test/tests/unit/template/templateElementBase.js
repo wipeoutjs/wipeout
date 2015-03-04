@@ -1,12 +1,12 @@
-module("wipeout.template.wmlElementBase", {
+module("wipeout.wml.wmlElementBase", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var wmlElementBase = wipeout.template.wmlElementBase;
-var getParentElement = wipeout.template.wmlElement.prototype.getParentElement;
+var wmlElementBase = wipeout.wml.wmlElementBase;
+var getParentElement = wipeout.wml.wmlElement.prototype.getParentElement;
 
 testUtils.testWithUtils("push, splice", "no getParentElement", false, function(methods, classes, subject, invoker) {
     

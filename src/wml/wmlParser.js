@@ -1,29 +1,29 @@
 
 //http://www.w3.org/TR/html-markup/syntax.html
-Class("wipeout.template.templateParser", function () {  
+Class("wipeout.wml.wmlParser", function () {  
     
-    function templateParser(wmlString) {
+    function wmlParser(wmlString) {
                 
-        var preParsed = templateParser.preParse(wmlString);
-        var root = new wipeout.template.rootWmlElement();        
-        templateParser._parseTheEther(preParsed, root, 0);
+        var preParsed = wmlParser.preParse(wmlString);
+        var root = new wipeout.wml.rootWmlElement();        
+        wmlParser._parseTheEther(preParsed, root, 0);
         return root;
     }
     
     // for unit testing
-    templateParser.specialTags = {};
-    var whiteSpace = templateParser.specialTags.whiteSpace = new wipeout.template.templatePart(/\s+/, false); //NOTE: \s includes newlines
-    var equals = templateParser.specialTags.equals = new wipeout.template.templatePart(/\s*=\s*/, false);
-    var openSQuote = templateParser.specialTags.openSQuote = new wipeout.template.templatePart("'", false);
-    var closeSQuote = templateParser.specialTags.closeSQuote = new wipeout.template.templatePart("'", "\\");
-    var openDQuote = templateParser.specialTags.openDQuote = new wipeout.template.templatePart('"', false);
-    var closeDQuote = templateParser.specialTags.closeDQuote = new wipeout.template.templatePart('"', "\\");
-    var openTag1 = templateParser.specialTags.openTag1 = new wipeout.template.templatePart("<", false);
-    var openTag2 = templateParser.specialTags.openTag2 = new wipeout.template.templatePart("</", false);
-    var closeTag1 = templateParser.specialTags.closeTag1 = new wipeout.template.templatePart(">", false);
-    var closeTag2 = templateParser.specialTags.closeTag2 = new wipeout.template.templatePart("/>", false);
-    var openComment = templateParser.specialTags.openComment = new wipeout.template.templatePart("<!--", false);
-    var closeComment = templateParser.specialTags.closeComment = new wipeout.template.templatePart("-->", false);
+    wmlParser.specialTags = {};
+    var whiteSpace = wmlParser.specialTags.whiteSpace = new wipeout.wml.wmlPart(/\s+/, false); //NOTE: \s includes newlines
+    var equals = wmlParser.specialTags.equals = new wipeout.wml.wmlPart(/\s*=\s*/, false);
+    var openSQuote = wmlParser.specialTags.openSQuote = new wipeout.wml.wmlPart("'", false);
+    var closeSQuote = wmlParser.specialTags.closeSQuote = new wipeout.wml.wmlPart("'", "\\");
+    var openDQuote = wmlParser.specialTags.openDQuote = new wipeout.wml.wmlPart('"', false);
+    var closeDQuote = wmlParser.specialTags.closeDQuote = new wipeout.wml.wmlPart('"', "\\");
+    var openTag1 = wmlParser.specialTags.openTag1 = new wipeout.wml.wmlPart("<", false);
+    var openTag2 = wmlParser.specialTags.openTag2 = new wipeout.wml.wmlPart("</", false);
+    var closeTag1 = wmlParser.specialTags.closeTag1 = new wipeout.wml.wmlPart(">", false);
+    var closeTag2 = wmlParser.specialTags.closeTag2 = new wipeout.wml.wmlPart("/>", false);
+    var openComment = wmlParser.specialTags.openComment = new wipeout.wml.wmlPart("<!--", false);
+    var closeComment = wmlParser.specialTags.closeComment = new wipeout.wml.wmlPart("-->", false);
     
     // order is important
     var insideTag = [openSQuote, openDQuote, closeTag1, closeTag2, equals, whiteSpace];
@@ -69,7 +69,7 @@ Class("wipeout.template.templateParser", function () {
         closeComment.nextChars.push(item);
     }); 
     
-    templateParser.findFirstInstance = function(input, startingPosition, items) {
+    wmlParser.findFirstInstance = function(input, startingPosition, items) {
         
         var position, output, i, count;
         wipeout.utils.obj.enumerateArr(items, function(item) {
@@ -87,7 +87,7 @@ Class("wipeout.template.templateParser", function () {
                     
                     // try find next
                     if(count % 2 != 0) {
-                        var o = templateParser.findFirstInstance(input, position.index + 1, [item]);
+                        var o = wmlParser.findFirstInstance(input, position.index + 1, [item]);
                         if (o && (!output || o.index < output.index))
                             output = o;
                         
@@ -106,12 +106,12 @@ Class("wipeout.template.templateParser", function () {
         return output;
     };
     
-    templateParser.preParse = function(input) {
+    wmlParser.preParse = function(input) {
         
         // begin in the ether
         var item = {type: {nextChars: inTheEther}}, i = 0, output = [];        
         while (true) {
-            item = templateParser.findFirstInstance(input, i, item.type.nextChars);
+            item = wmlParser.findFirstInstance(input, i, item.type.nextChars);
             
             if(!item) {
                 if(input.length > i)
@@ -131,7 +131,7 @@ Class("wipeout.template.templateParser", function () {
         return output;
     };
     
-    templateParser._createAttribute = function(preParsed, startAt) {
+    wmlParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;
         if(typeof preParsed[i] !== "string")
             //TODO
@@ -145,7 +145,7 @@ Class("wipeout.template.templateParser", function () {
             return {
                 index: i,
                 name: name,
-                value: new wipeout.template.wmlAttribute(null, null)
+                value: new wipeout.wml.wmlAttribute(null, null)
             }; // <tag attr />
         
         if (preParsed[i] === equals) {
@@ -154,7 +154,7 @@ Class("wipeout.template.templateParser", function () {
                 return {
                     index: i + 1,
                     name: name,
-                    value: new wipeout.template.wmlAttribute(preParsed[i], null)
+                    value: new wipeout.wml.wmlAttribute(preParsed[i], null)
                 }; // <tag attr=something />
             
             if (preParsed[i] === openDQuote || preParsed[i] === openSQuote) {
@@ -164,14 +164,14 @@ Class("wipeout.template.templateParser", function () {
                     return {
                         index: i + 2,
                         name: name,
-                        value: new wipeout.template.wmlAttribute(preParsed[i], preParsed[i + 1] === closeDQuote ? '"' : "'")
+                        value: new wipeout.wml.wmlAttribute(preParsed[i], preParsed[i + 1] === closeDQuote ? '"' : "'")
                     };// <tag attr="something" attr='something' />
                 
                 if (preParsed[i] === closeDQuote || preParsed[i] === closeSQuote)
                     return {
                         index: i + 1,
                         name: name,
-                        value: new wipeout.template.wmlAttribute("", preParsed[i] === closeDQuote ? '"' : "'")
+                        value: new wipeout.wml.wmlAttribute("", preParsed[i] === closeDQuote ? '"' : "'")
                     };// <tag attr="something" attr='something' />
             }
         } 
@@ -182,7 +182,7 @@ Class("wipeout.template.templateParser", function () {
         };
     };
         
-    templateParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
+    wmlParser._createHtmlElement = function(preParsed, startIndex, parentElement) {
         
         var i = startIndex;
         if (preParsed[i] !== openTag1)
@@ -205,7 +205,7 @@ Class("wipeout.template.templateParser", function () {
             };
         
         // create element
-        var element = new wipeout.template.wmlElement(preParsed[i], parentElement);
+        var element = new wipeout.wml.wmlElement(preParsed[i], parentElement);
         parentElement.push(element);
         i++;
         
@@ -219,7 +219,7 @@ Class("wipeout.template.templateParser", function () {
                 element.inline = preParsed[i] === closeTag2;
                 i++;
                 
-                return element.inline ? i : templateParser._parseTheEther(preParsed, element, i);
+                return element.inline ? i : wmlParser._parseTheEther(preParsed, element, i);
             }
             
             if(preParsed[i] !== whiteSpace) {
@@ -229,7 +229,7 @@ Class("wipeout.template.templateParser", function () {
                 };
             }
             
-            var attr = templateParser._createAttribute(preParsed, i + 1);
+            var attr = wmlParser._createAttribute(preParsed, i + 1);
             i = attr.index - 1; // -1 for loop++
             element.attributes[attr.name] = attr.value;
         }
@@ -237,19 +237,19 @@ Class("wipeout.template.templateParser", function () {
         return i;
     };
     
-    templateParser._parseTheEther = function(preParsed, rootElement, startIndex) {
+    wmlParser._parseTheEther = function(preParsed, rootElement, startIndex) {
         
         for(var i = startIndex, ii = preParsed.length; i < ii; i++) {
             if (typeof preParsed[i] === "string") {
                 
-                rootElement.push(new wipeout.template.wmlString(preParsed[i]));
+                rootElement.push(new wipeout.wml.wmlString(preParsed[i]));
             } else if(preParsed[i] === openComment) {
                 
                 if (preParsed[i + 1] === closeComment) {
-                    rootElement.push(new wipeout.template.wmlComment(""));
+                    rootElement.push(new wipeout.wml.wmlComment(""));
                     i++;
                 } else if (typeof preParsed[i + 1] === "string" && preParsed[i + 2] === closeComment) {
-                    rootElement.push(new wipeout.template.wmlComment(preParsed[i + 1]));
+                    rootElement.push(new wipeout.wml.wmlComment(preParsed[i + 1]));
                     i+=2;
                 } else {
                     //TODO
@@ -259,7 +259,7 @@ Class("wipeout.template.templateParser", function () {
                 }
             } else if (preParsed[i] === openTag1) {
                 
-                i = templateParser._createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
+                i = wmlParser._createHtmlElement(preParsed, i, rootElement) - 1; // -1 to compensate for loop++
             } else if (preParsed[i] === openTag2) {
                 
                 // there won't be any whitespace special characters in a closing tag                
@@ -288,5 +288,5 @@ Class("wipeout.template.templateParser", function () {
         return i;
     };
     
-    return templateParser;
+    return wmlParser;
 });

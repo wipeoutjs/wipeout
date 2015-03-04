@@ -1,11 +1,11 @@
-module("wipeout.template.wmlElement", {
+module("wipeout.wml.wmlElement", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var wmlElement = wipeout.template.wmlElement;
+var wmlElement = wipeout.wml.wmlElement;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
