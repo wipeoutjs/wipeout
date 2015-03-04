@@ -1,5 +1,5 @@
 
-Class("wipeout.template.compiledInitializer", function () {
+Class("wipeout.template.initialization.compiledInitializer", function () {
 	    
     compiledInitializer.getPropertyFlags = function(name) {
         

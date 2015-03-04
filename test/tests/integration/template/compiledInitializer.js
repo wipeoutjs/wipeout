@@ -1,4 +1,4 @@
-module("wipeout.template.compiledInitializer, integration", {
+module("wipeout.template.initialization.compiledInitializer, integration", {
     setup: function() {
     },
     teardown: function() {
@@ -24,7 +24,7 @@ test("success", function() {
 	var rc = new wipeout.template.renderContext({theValue: theValue}).childContext(theVm);
 	
 	// act
-	new wipeout.template.compiledInitializer(template).initialize(theVm, rc);
+	new wipeout.template.initialization.compiledInitializer(template).initialize(theVm, rc);
 	
 	// assert
 	strictEqual(theVm.val0, theValue);

@@ -64,7 +64,7 @@ Class("wipeout.template.engine", function () {
         var tmp;
         return (tmp = this.xmlIntializers.value(xmlInitializer)) ?
             tmp :
-            this.xmlIntializers.add(xmlInitializer, new wipeout.template.compiledInitializer(xmlInitializer));
+            this.xmlIntializers.add(xmlInitializer, new wipeout.template.initialization.compiledInitializer(xmlInitializer));
     };
     
     engine.instance = new engine();

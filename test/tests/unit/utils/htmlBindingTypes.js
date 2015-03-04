@@ -37,9 +37,9 @@ testUtils.testWithUtils("onPropertyChange", "complex", true, function(methods, c
     // arrange
 	var obj = {}, path = "this.aa + this.bb", cb = {}, parser = {};
 	
-	//wipeout.template.compiledInitializer.getAutoParser(propertyPath)
+	//wipeout.template.initialization.compiledInitializer.getAutoParser(propertyPath)
 	
-	classes.mock("wipeout.template.compiledInitializer.getAutoParser", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.getAutoParser", function () {
 		strictEqual(arguments[0], path);
 		return parser;
 	}, 1);

@@ -10,8 +10,8 @@ Class("wipeout.template.propertySetter", function () {
         
         // process parseing and binding flags
         enumerateArr(flags || [], function (flag) {
-            if (wipeout.template.parsers[flag]) {
-                this.parser.push(wipeout.template.parsers[flag]);
+            if (wipeout.template.initialization.parsers[flag]) {
+                this.parser.push(wipeout.template.initialization.parsers[flag]);
             } else if (wipeout.htmlBindingTypes[flag]) {
                 if (this.bindingType)
                     throw "A binding type is already specified for this property.";
@@ -49,7 +49,7 @@ Class("wipeout.template.propertySetter", function () {
         // use parser, global parser or lazy create auto parser
         return this.parser || 
             globalParser ||
-            (this.parser = wipeout.template.compiledInitializer.getAutoParser(this.valueAsString()));
+            (this.parser = wipeout.template.initialization.compiledInitializer.getAutoParser(this.valueAsString()));
     };
     
     propertySetter.prototype.valueAsString = function () {

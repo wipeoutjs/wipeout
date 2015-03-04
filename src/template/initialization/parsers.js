@@ -1,5 +1,5 @@
 
-Class("wipeout.template.parsers", function () {
+Class("wipeout.template.initialization.parsers", function () {
     
 	function parsers () { }
 	
