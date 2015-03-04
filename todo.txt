@@ -1,6 +1,4 @@
 
-Force all attributes to start with "wo-" (like wo-click=...)
-
 Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 
 REMOVE WITH. It is incredibly slow
@@ -9,9 +7,8 @@ events and routed events. make strings?s
 
 replace xml parsing with native
 
-<div content--s="hello"></div> doesn't work. Parsers only work with view models
-
-Test renderedContent and viewModelElement
+Test template engine, render context, renderedContent and viewModelElement
+View model namespace overhaul and tests
 
 standardise the way things are rendered, between Objects and wo.views (toString)
 
@@ -29,9 +26,6 @@ bug, handle null template id better
 window.requestAnimationFrame
 
 profiler
-
-TODO:   wipeout.base.watched.prototype.observe, do something with dispose function from watch
-        wipeout.base.watched.prototype.observe/watch, unit test dispose functionality
 
 there is a lot of camelcasing. Is there a single point of failure I can use here?
 
