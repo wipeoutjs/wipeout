@@ -1,7 +1,7 @@
 
 HtmlAttr("click", function () {
 	
-    var functionCall = /^\)[\s;]*$/;
+    var functionCall = /\)[\s;]*$/;
     
     return function click (value, element, renderContext) { //TODO error handling
         if (!functionCall.test(value))

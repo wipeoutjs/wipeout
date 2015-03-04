@@ -1,7 +1,9 @@
 
 Class("wipeout.template.rendering.htmlAttributes.id", function () {
 	return function id (value, element, renderContext) {
-        renderContext.$this.templateItems[value] = element;
+        if (renderContext.$this instanceof wipeout.viewModels.visual)
+        	renderContext.$this.templateItems[value] = element;
+		
         element.id = value;
         
         return function() {
