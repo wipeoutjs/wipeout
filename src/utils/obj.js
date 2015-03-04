@@ -73,6 +73,17 @@ var Class = function(classFullName, accessorFunction) {
     return tmp[classFullName[classFullName.length - 1]];
 };
 
+var HtmlAttr = function(attributeName, accessorFunction) {
+	///<summary>Create a wipeout html attribute</summary>
+	///<param name="attributeName" type="String">The name of the attribute</param>
+	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
+	
+	Class("wipeout.template.rendering.htmlAttributes." + "wo-" + attributeName, accessorFunction);
+	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, function () {
+		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
+	});
+};
+
 var Extend = function(namespace, extendWith) {
     ///<summary>Similar to $.extend but with a namespace string which must begin with "wipeout"</summary>
     ///<param name="namespace" type="String">The namespace to add to</param>

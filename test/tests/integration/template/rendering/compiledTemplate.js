@@ -12,7 +12,7 @@ test("success", function() {
 hello\
 {{$this.hello}}\
 <wo.content-control hello--s='bellbo' template--s='not hello' />\
-<div style='display: block' content='$this.hello'></div>");
+<div style='display: block' wo-content='$this.hello'></div>");
 	var subject = new wipeout.template.rendering.compiledTemplate(template).getBuilder();
 	
 	// act

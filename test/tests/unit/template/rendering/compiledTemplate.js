@@ -57,7 +57,7 @@ testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, s
     strictEqual(subject.html[0], before);
     strictEqual(subject.html[1], "<script");
     strictEqual(subject.html[2].length, 1);
-    strictEqual(subject.html[2][0].action, wipeout.template.rendering.htmlAttributes.render);
+    strictEqual(subject.html[2][0].action, wipeout.template.rendering.htmlAttributes["wo-render"]);
     strictEqual(subject.html[2][0].value, inner);
     strictEqual(subject.html[3], ' type="placeholder"></script>');
     strictEqual(subject.html[4], after);
