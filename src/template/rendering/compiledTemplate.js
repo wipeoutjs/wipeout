@@ -1,5 +1,5 @@
 
-Class("wipeout.template.compiledTemplate", function () {
+Class("wipeout.template.rendering.compiledTemplate", function () {
         
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
@@ -50,7 +50,7 @@ Class("wipeout.template.compiledTemplate", function () {
 
             // add the id flag and the id generator
             this.html.push([{
-                action: wipeout.template.htmlAttributes.render, //TODO: ensure this is disposed of
+                action: wipeout.template.rendering.htmlAttributes.render, //TODO: ensure this is disposed of
                 value: html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
             }]);
 
@@ -70,7 +70,7 @@ Class("wipeout.template.compiledTemplate", function () {
         
         // add the id flag and the id generator
         this.html.push([{
-            action: wipeout.template.htmlAttributes.wipeoutCreateViewModel,
+            action: wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel,
             value: vmNode
         }]);
         
@@ -85,7 +85,7 @@ Class("wipeout.template.compiledTemplate", function () {
         enumerateObj(attributes, function (attribute, name) {
         
             // if it is a special attribute
-            if (wipeout.template.htmlAttributes[name]) {
+            if (wipeout.template.rendering.htmlAttributes[name]) {
 
                 // if it is the first special attribute for this element
                 if (!modifications)
@@ -94,11 +94,11 @@ Class("wipeout.template.compiledTemplate", function () {
                 // ensure the "id" modification is the first to be done
                 name === "id" ?
                     modifications.splice(0, 0, {
-                        action: wipeout.template.htmlAttributes[name],
+                        action: wipeout.template.rendering.htmlAttributes[name],
                         value: attribute.value
                     }) :
                     modifications.push({
-                        action: wipeout.template.htmlAttributes[name],
+                        action: wipeout.template.rendering.htmlAttributes[name],
                         value: attribute.value
                     });
             } else {
@@ -160,7 +160,7 @@ Class("wipeout.template.compiledTemplate", function () {
     compiledTemplate.prototype.getBuilder = function() {
         ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
         
-        return new wipeout.template.builder(this);
+        return new wipeout.template.rendering.builder(this);
     };
         
     return compiledTemplate;

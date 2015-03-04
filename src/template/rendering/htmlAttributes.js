@@ -1,5 +1,5 @@
 
-Class("wipeout.template.htmlAttributes", function () {
+Class("wipeout.template.rendering.htmlAttributes", function () {
     function htmlAttributes() {
     }   
     

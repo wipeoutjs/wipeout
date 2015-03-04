@@ -1,4 +1,4 @@
-module("wipeout.template.builder", {
+module("wipeout.template.rendering.builder", {
     setup: function() {
     },
     teardown: function() {

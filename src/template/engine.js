@@ -13,7 +13,7 @@ Class("wipeout.template.engine", function () {
 		else if (template.nodeType === 2)
             template = wipeout.wml.wmlParser(template.value);
         
-        return this.templates[templateId] = new wipeout.template.compiledTemplate(template);
+        return this.templates[templateId] = new wipeout.template.rendering.compiledTemplate(template);
     };
     
     engine.prototype.getTemplateXml = function (templateId, callback) {        
@@ -25,7 +25,7 @@ Class("wipeout.template.engine", function () {
     engine.prototype.compileTemplate = function (templateId, callback) {
         
         // if the template exists
-        if (this.templates[templateId] instanceof wipeout.template.compiledTemplate) {
+        if (this.templates[templateId] instanceof wipeout.template.rendering.compiledTemplate) {
             callback(this.templates[templateId]);
             return null;
         }

@@ -5,7 +5,7 @@ module("wipeout.template.initialization.compiledInitializer", {
     }
 });
 
-var compiledTemplate = wipeout.template.compiledTemplate;
+var compiledTemplate = wipeout.template.rendering.compiledTemplate;
 
 testUtils.testWithUtils("getPropertyFlags", null, true, function(methods, classes, subject, invoker) {
     // arrange    

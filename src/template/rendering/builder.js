@@ -1,5 +1,5 @@
 
-Class("wipeout.template.builder", function () {
+Class("wipeout.template.rendering.builder", function () {
         
     // generate unique ids
     var wipeoutPlaceholder = "wipeout_placeholder_id_";

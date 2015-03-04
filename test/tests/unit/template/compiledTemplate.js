@@ -1,11 +1,11 @@
-module("wipeout.template.compiledTemplate", {
+module("wipeout.template.rendering.compiledTemplate", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var compiledTemplate = wipeout.template.compiledTemplate;
+var compiledTemplate = wipeout.template.rendering.compiledTemplate;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -57,7 +57,7 @@ testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, s
     strictEqual(subject.html[0], before);
     strictEqual(subject.html[1], "<script");
     strictEqual(subject.html[2].length, 1);
-    strictEqual(subject.html[2][0].action, wipeout.template.htmlAttributes.render);
+    strictEqual(subject.html[2][0].action, wipeout.template.rendering.htmlAttributes.render);
     strictEqual(subject.html[2][0].value, inner);
     strictEqual(subject.html[3], ' type="placeholder"></script>');
     strictEqual(subject.html[4], after);
@@ -74,7 +74,7 @@ testUtils.testWithUtils("addViewModel", null, false, function(methods, classes, 
     // assert
     strictEqual(subject.html.length, 3);
     strictEqual(subject.html[0], "<script");
-    strictEqual(subject.html[1][0].action, wipeout.template.htmlAttributes.wipeoutCreateViewModel);
+    strictEqual(subject.html[1][0].action, wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel);
     strictEqual(subject.html[1][0].value, input);
     strictEqual(subject.html[2], ' type="placeholder"></script>');
 });
@@ -97,14 +97,14 @@ testUtils.testWithUtils("addAttributes", "special attribute", false, function(me
     var name = "KJBKJB", val = {value:{}};
     subject.html = [];
     
-    classes.mock("wipeout.template.htmlAttributes." + name, {});
+    classes.mock("wipeout.template.rendering.htmlAttributes." + name, {});
     
     // act
     var op = invoker({"KJBKJB":val});
     
     // assert
     strictEqual(subject.html.length, 1);
-    strictEqual(subject.html[0][0].action, wipeout.template.htmlAttributes[name]);
+    strictEqual(subject.html[0][0].action, wipeout.template.rendering.htmlAttributes[name]);
     strictEqual(subject.html[0][0].value, val.value);
 });
 
