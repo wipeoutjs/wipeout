@@ -40,6 +40,29 @@ testUtils.testWithUtils("addNonElement", null, false, function(methods, classes,
     strictEqual(subject.html[0], val);
 });
 
+testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, subject, invoker) {
+    // arrange
+    var before = "KJBKJBKJB", after = "ibkjbjkbkjbk", inner = "kljb8hob", input = {
+		serialize: methods.method([], before + "{{" + inner + "}}" + after)
+	};
+    var val = "KJBKJB";
+	
+	subject.html = [];
+    
+    // act
+    invoker(input);
+    
+    // assert
+    strictEqual(subject.html.length, 5);
+    strictEqual(subject.html[0], before);
+    strictEqual(subject.html[1], "<script");
+    strictEqual(subject.html[2].length, 1);
+    strictEqual(subject.html[2][0].action, wipeout.template.htmlAttributes.render);
+    strictEqual(subject.html[2][0].value, inner);
+    strictEqual(subject.html[3], ' type="placeholder"></script>');
+    strictEqual(subject.html[4], after);
+});
+
 testUtils.testWithUtils("addViewModel", null, false, function(methods, classes, subject, invoker) {
     // arrange
     subject.html = [];
@@ -152,7 +175,7 @@ testUtils.testWithUtils("addNode", "element", false, function(methods, classes, 
 
 testUtils.testWithUtils("addNode", "view model", false, function(methods, classes, subject, invoker) {
     // arrange
-    var name = "JHBKJBKJ", node = {name: name, nodeType: 1};
+    var name = "sdfsdfds", node = {name: name, nodeType: 1};
     subject._addedElements = [];
     subject.addViewModel = methods.method([node]);
     classes.mock(name, {})
@@ -161,4 +184,35 @@ testUtils.testWithUtils("addNode", "view model", false, function(methods, classe
     invoker(node);
     
     // assert
+});
+
+testUtils.testWithUtils("quickBuild", "has builder", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var rc = {}, output = {};
+    subject._builder = {
+		html: "KBKJB",
+		execute: methods.method([rc], output)
+	};
+    
+    // act
+    var op = invoker(methods.method([subject._builder.html]), rc);
+    
+    // assert
+	strictEqual(op, output);
+});
+
+testUtils.testWithUtils("quickBuild", "no builder", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var rc = {}, output = {}, builder = {
+		html: "KBKJB",
+		execute: methods.method([rc], output)
+	};
+    subject.getBuilder = methods.method([], builder);
+    
+    // act
+    var op = invoker(methods.method([builder.html]), rc);
+    
+    // assert
+	strictEqual(op, output);
+	strictEqual(subject._builder, builder);
 });
