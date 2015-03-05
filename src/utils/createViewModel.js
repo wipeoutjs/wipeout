@@ -18,10 +18,7 @@ function createViewModel (name, extend) {
 		_built = false, 
 		_constructor = false, 
 		$constructor = function (templateId, model) {
-			extend.apply(this, getParentConstructorArgs({
-				templateId: templateId,
-				model: model
-			}, values));
+			extend.apply(this, getParentConstructorArgs(extend, arguments, values));
 
 			for (var i in values)
 				if (!valuesAsConstructorArgs[i])
