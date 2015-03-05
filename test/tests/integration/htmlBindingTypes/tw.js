@@ -9,7 +9,7 @@ test("binding", function () {
 	var viewModel = new obsjs.observable(),
 		setter = new wipeout.template.initialization.propertySetter(new wipeout.wml.wmlAttribute("$parent.val", null)),
 		name = "KJBKJBKJB",
-		renderContext = new wipeout.template.context(new obsjs.observable()).childContext(viewModel);
+		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
 	

@@ -4,26 +4,6 @@ module("wipeout.tests.integration.integration", {
     teardown: integrationTestTeardown
 });
 
-test("wipeout.viewModels.if, shareParentScope", function() {
-	return "share parent scope";
-	
-    // arrange
-    application.hello = ko.observable({hello: "xxx"});
-    application.template('<wo.if condition="hello">\
-    <template>\
-        <div id="myDiv" data-bind="html: hello().hello"></div>\
-    </template>\
-</wo.if>');
-    
-    ok(document.getElementById("myDiv"));
-    
-    // act
-    application.hello(null);
-    
-    // assert
-    ok(!document.getElementById("myDiv"));
-});
-
 test("advanced items control, creating/destroying", function() {
 	return "Needs more advanced html attributes";
 	

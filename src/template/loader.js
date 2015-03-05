@@ -4,7 +4,7 @@ Class("wipeout.template.loader", function () {
     function loader(templateName) {
         ///<summary>Private class for loading templates asynchronously</summary>
         ///<param name="templateName" type="string" optional="false">The name and url of this template</param>
-        
+		
         // specifies success callbacks for when template is loaded. If this property in null, the loading process has completed
         this._callbacks = [];
         

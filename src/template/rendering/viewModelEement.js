@@ -18,19 +18,22 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         this.initialization = xmlOverride || wipeout.wml.wmlParser(wipeout.utils.html.outerHTML(element))[0];
         
         // create actual view model
-        this.viewModel = new vm.constructor();
-        this.renderContext = new wipeout.template.context(this.viewModel, parentRenderContext);
+        this.createdViewModel = new vm.constructor();
+		
+        this.renderContext = parentRenderContext ?
+			parentRenderContext.contextFor(this.createdViewModel) :
+			new wipeout.template.context(this.createdViewModel);
         
         // initialize the view model
         this.disposeOfViewModelBindings = wipeout.template.engine.instance
             .getVmInitializer(this.initialization)
-            .initialize(this.viewModel, this.renderContext);
+            .initialize(this.createdViewModel, this.renderContext);
         
         // run onInitialized after value initialization is complete
-        if (this.viewModel instanceof wipeout.viewModels.view)
-            this.viewModel.onInitialized();
+        if (this.createdViewModel instanceof wipeout.viewModels.view)
+            this.createdViewModel.onInitialized();
         
-        this.render(this.viewModel);
+        this.render(this.createdViewModel);
     });
     
     viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {
@@ -41,12 +44,12 @@ Class("wipeout.template.rendering.viewModelElement", function () {
 		
 		this.disposeOfViewModelBindings();
 		
-		if (this.viewModel instanceof wipeout.viewModels.visual)
-        	this.viewModel.dispose();
+		if (this.createdViewModel instanceof wipeout.viewModels.visual)
+        	this.createdViewModel.dispose();
 		else
-			obsjs.dispose(this.viewModel);
+			obsjs.dispose(this.createdViewModel);
 			
-        delete this.viewModel;
+        delete this.createdViewModel;
     };
     
     return viewModelElement;    

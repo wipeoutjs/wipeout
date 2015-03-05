@@ -35,14 +35,6 @@ Class("wipeout.template.initialization.parsers", function () {
 	parsers["template"] = function (value) {
 		return value;
 	};
-	 
-	//TODO: this should be a global binding
-	parsers["viewModelId"] = function (value, propertyName, renderContext) {
-		if (renderContext.$parent instanceof wipeout.viewModels.visual)
-			renderContext.$parent.templateItems[value] = renderContext.$this;
-
-		return value;
-    };
     
     //TODO: Rename
     parsers.template.xmlParserTempName = true;

@@ -13,16 +13,6 @@ testUtils.testWithUtils("template", null, true, function(methods, classes, subje
     strictEqual(invoker("aval"), "aval");
 });
 
-testUtils.testWithUtils("viewModelId", null, true, function(methods, classes, subject, invoker) {
-    // arrange
-	var parent = new wipeout.viewModels.view(), _this = {};
-	
-    // act    
-    // assert   
-    strictEqual(invoker("aval", null, {$parent: parent, $this: _this}), "aval");
-    strictEqual(parent.templateItems.aval, _this);
-});
-
 testUtils.testWithUtils("string", null, true, function(methods, classes, subject, invoker) {
     // arrange    
     // act    

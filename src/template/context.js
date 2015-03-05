@@ -3,6 +3,9 @@ Class("wipeout.template.context", function () {
     
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
     function context (forVm, parentContext, arrayIndex) {
+		
+		if (forVm && forVm.shareParentScope)
+			throw "You cannot create a template context for a view model with a shared parent scope";
         
         this.$this = forVm;
         this.$parents = [];
@@ -30,9 +33,9 @@ Class("wipeout.template.context", function () {
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     
-    context.prototype.childContext = function (forVm, arrayIndex) {
+    context.prototype.contextFor = function (forVm, arrayIndex) {
         
-        return new context(forVm, this, arrayIndex);
+        return forVm && forVm.shareParentScope ? this : new context(forVm, this, arrayIndex);
     };
     
     context.prototype.variablesForComputed = function (additions) {

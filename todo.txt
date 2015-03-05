@@ -7,6 +7,8 @@ events and routed events. make strings?s
 
 replace xml parsing with native
 
+remove templateItems object, place items directly on the vm
+
 Test template engine, render context, renderedContent and viewModelElement
 View model namespace overhaul and tests
 

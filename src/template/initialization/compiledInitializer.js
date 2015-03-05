@@ -95,6 +95,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
         
+		//while (renderContext && renderContext.$this.shareParentScope
+		
         var disposal = [this.set(viewModel, renderContext, "model")];
         
 		for (var name in this.setters)

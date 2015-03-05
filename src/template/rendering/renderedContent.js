@@ -38,24 +38,23 @@ Class("wipeout.template.rendering.renderedContent", function () {
         }
         
         this.unRender();
+		
+		this.viewModel = object;
         
-        if (object == null)
+        if (this.viewModel == null)
             return;
 		
-		if (object.shareParentScope)
-        	this.renderContext = this.parentRenderContext;
-		else
-			this.renderContext = this.parentRenderContext ? 
-				this.parentRenderContext.childContext(object, arrayIndex) :
-				new wipeout.template.context(object, arrayIndex);
+		this.renderContext = this.parentRenderContext ? 
+			this.parentRenderContext.contextFor(this.viewModel, arrayIndex) :
+			new wipeout.template.context(this.viewModel, arrayIndex);
         
-        if (object instanceof wipeout.viewModels.visual) {
-            object.__woBag.domRoot = this;
-            object.observe("templateId", this._template, this);
-            if (object.templateId)
-                this.template(object.templateId);
+        if (this.viewModel instanceof wipeout.viewModels.visual) {
+            this.viewModel.__woBag.domRoot = this;
+            this.viewModel.observe("templateId", this._template, this);
+            if (this.viewModel.templateId)
+                this.template(this.viewModel.templateId);
         } else {
-            this.prependHtml(object.toString());
+            this.prependHtml(this.viewModel.toString());
         }
     };
     
@@ -71,10 +70,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
     renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
         this.unTemplate(leaveDeadChildNodes);
         
-        if (this.renderContext && this.renderContext.$this instanceof wipeout.viewModels.visual) {
-            delete this.renderContext.$this.__woBag.domRoot;
-            delete this.renderContext
-        }
+        if (this.viewModel instanceof wipeout.viewModels.visual)
+            delete this.viewModel.__woBag.domRoot;
+		
+		delete this.renderContext;
+		delete this.viewModel;
     };
     
     //TODO: rename to unRender
@@ -106,6 +106,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         // remove old template
         if (this.__initialTemplate)
             this.unTemplate();
+		
+		if (!templateId) return;
         
         this.asynchronous = wipeout.template.engine.instance.compileTemplate(templateId, (function (template) {
             delete this.asynchronous;
@@ -120,7 +122,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
             this.disposeOfBindings = template.quickBuild(this.prependHtml.bind(this), this.renderContext);
             this.__initialTemplate = true;
             
-            this.renderContext.$this.onRendered();
+            this.viewModel.onRendered();
         }).bind(this));
         
         if (this.asynchronous) {            

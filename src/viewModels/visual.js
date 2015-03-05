@@ -247,7 +247,8 @@ Class("wipeout.viewModels.visual", function () {
         visual.reservedTags[tag] = true;
     });
     
-    visual.addGlobalParser("id", "viewModelId");
+    visual.addGlobalParser("id", "string");
+    visual.addGlobalBindingType("id", "viewModelId");
     
     return visual;
 });

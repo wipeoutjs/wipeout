@@ -41,6 +41,9 @@ Class("wipeout.viewModels.if", function () {
                 
         this.copyTemplateId(null, this.templateId);
     });
+	
+    _if.addGlobalParser("elseTemplate", "template");
+    _if.addGlobalBindingType("elseTemplate", "setTemplateProperty");
     
     _if.prototype.elseTemplateChanged = function (oldVal, newVal) {
         ///<summary>Resets the template id to the else template if condition is not met</summary>  
@@ -54,8 +57,8 @@ Class("wipeout.viewModels.if", function () {
     _if.prototype.onConditionChanged = function (oldVal, newVal) {
         ///<summary>Set the template based on whether the condition is met</summary>      
         ///<param name="oldVal" type="Boolean" optional="false">The old condition</param>     
-        ///<param name="newVal" type="Boolean" optional="false">The condition</param>   
-        
+        ///<param name="newVal" type="Boolean" optional="false">The condition</param>
+		
         if (this.__oldConditionVal && !newVal) {
             this.templateId = this.elseTemplateId;
         } else if (!this.__oldConditionVal && newVal) {

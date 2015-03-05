@@ -21,7 +21,7 @@ test("success", function() {
 <object>')[0];
 	
 	var theValue = {}, theVm = {};
-	var rc = new wipeout.template.context({theValue: theValue}).childContext(theVm);
+	var rc = new wipeout.template.context({theValue: theValue}).contextFor(theVm);
 	
 	// act
 	new wipeout.template.initialization.compiledInitializer(template).initialize(theVm, rc);
