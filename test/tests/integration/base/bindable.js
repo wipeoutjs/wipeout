@@ -44,6 +44,32 @@ test("addGlobalParser, simple, function", function() {
 	strictEqual(parser4, p);
 });
 
+test("addGlobalParser, simple, instance", function() {
+    // arrange
+	var instance = new class2();
+	var p = function () {}
+	instance.addGlobalParser("prop", p);
+	
+	// act
+	var parser = instance.getGlobalParser("prop");
+	
+	// assert
+	strictEqual(parser, p);
+});
+
+test("addGlobalParser, simple, prototype", function() {
+    // arrange
+	var instance = new class2();
+	var p = function () {}
+	class2.prototype.addGlobalParser("prop", p);
+	
+	// act
+	var parser = instance.getGlobalParser("prop");
+	
+	// assert
+	strictEqual(parser, p);
+});
+
 test("addGlobalParser, inheritance", function() {
     // arrange
 	class1.addGlobalParser("prop", "regexp");
@@ -82,21 +108,20 @@ test("addGlobalParser, invalid parser name", function() {
 
 test("addGlobalParser, multiple parsers", function() {
     // arrange
-	var input = {}, output1 = {}, output2 = {};
-	class2.addGlobalParser("prop", function () {
-		strictEqual(input, arguments[0]);
-		return output1;
-	});
-	class2.addGlobalParser("prop", function () {
-		strictEqual(output1, arguments[0]);
-		return output2;
-	});
+	class2.addGlobalParser("prop", "string");
 	
 	// act
-	var parser1 = new class2().getGlobalParser("prop")(input);
-	
 	// assert
-	strictEqual(parser1, output2);
+	throws(function () {
+		class2.addGlobalParser("prop", "date");
+	});
+});
+
+test("addGlobalParser, added same one twice", function() {
+    // arrange
+	class2.addGlobalParser("prop", "string");
+	class2.addGlobalParser("prop", "string");
+	ok(true);
 });
 
 test("addGlobalBindingType, simple", function() {
@@ -114,6 +139,30 @@ test("addGlobalBindingType, simple", function() {
 	strictEqual(parser2, "ow");
 	ok(!parser3);
 	strictEqual(parser4, "ow");
+});
+
+test("addGlobalParser, simple, instance", function() {
+    // arrange
+	var instance = new class2();
+	instance.addGlobalBindingType("prop", "tw");
+	
+	// act
+	var parser = instance.getGlobalBindingType("prop");
+	
+	// assert
+	strictEqual(parser, "tw");
+});
+
+test("addGlobalParser, simple, prototype", function() {
+    // arrange
+	var instance = new class2();
+	class2.prototype.addGlobalBindingType("prop", "tw");
+	
+	// act
+	var parser = instance.getGlobalBindingType("prop");
+	
+	// assert
+	strictEqual(parser, "tw");
 });
 
 test("addGlobalBindingType, inheritance", function() {
@@ -134,7 +183,7 @@ test("addGlobalBindingType, inheritance", function() {
 });
 
 
-test("addGlobalBindingType, invalid parser name", function() {
+test("addGlobalBindingType, invalid binding type name", function() {
     // arrange
 	// act
 	// assert
@@ -143,7 +192,7 @@ test("addGlobalBindingType, invalid parser name", function() {
 	});
 });
 
-test("addGlobalBindingType, invalid parser", function() {
+test("addGlobalBindingType, invalid binding type", function() {
     // arrange
 	// act
 	// assert
@@ -152,13 +201,11 @@ test("addGlobalBindingType, invalid parser", function() {
 	});
 });
 
-test("addGlobalBindingType, multiple parsers", function() {
-    // arrange
-	class2.addGlobalBindingType("prop", "ow");
-	
+test("addGlobalBindingType, multiple binding types", function() {
+    // arrange	
 	// act
 	// assert
-	throws(function () {
-		class2.addGlobalBindingType("prop", "ow");
-	});
+	class2.addGlobalBindingType("prop", "ow");
+	class2.addGlobalBindingType("prop", "ow");
+	ok(true);
 });

@@ -2,7 +2,7 @@
 
 //TODO: rename
 Class("wipeout.base.bindable", function () {
-    
+	
     var bindable = wipeout.base.observable.extend(function bindable() {
         ///<summary>An object whose properties can be bound to</summary>
         
@@ -13,61 +13,54 @@ Class("wipeout.base.bindable", function () {
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalParser = function (forProperty, parser) {
-        
-        if (typeof parser === "string") {
-            var parsers = [];  
-            enumerateArr(parser.split("-"), function(parser) {                
-                if (wipeout.template.initialization.parsers[parser])
-                    parsers.push(wipeout.template.initialization.parsers[parser]);
-                else
-                    //TODO
-                    throw "Invalid parser. Parsers must be either a string which points to wipeout parser, or a function which will parse the data";
-            });
-            
-            if (parsers.length === 0)
-                return;
-            else if (parsers.length === 1)
-                parser = parsers[0];
-            else
-                parser = function (value, propertyName, renderContext) {
-                    enumerateArr(parsers, function(p) {
-                        value = p(value, propertyName, renderContext);
-                    });
-                    
-                    return value;
-                }
-            
-        } else if (!parser || parser.constructor !== Function) {
-            //TODO
-            throw "Invalid parser. Parsers must be either a string which points to wipeout parser, or a function which will parse the data";
-        }
-        
-        var parserName = parserPrefix + forProperty;      
+		 
+		if (typeof parser === "string")
+			parser = wipeout.template.initialization.parsers[parser];
+		
+        if (!(parser instanceof Function))
+			//TODO
+			throw "Invalid parser. Parsers must be either a string which points to wipeout parser, or a function which will parse the data";
+             
+        var parserName = parserPrefix + forProperty;
         if (this.prototype.hasOwnProperty(parserName)) {
-            var p = this.prototype[parserName];
-            this.prototype[parserName] = function (value, propertyName, renderContext) {
-                return parser(p(value, propertyName, renderContext), propertyName, renderContext);
-            };
-        } else {
-            this.prototype[parserName] = parser;
-        }
+			if (this.prototype[parserName] === parser)	//TODO: test
+				return;
+			
+            throw "A global parser has already been defined for this property";
+		}
+            
+        this.prototype[parserName] = parser;
     };
+	
+	//TODO: test
+	bindable.prototype.addGlobalParser = function (forProperty, parser) {
+		return bindable.addGlobalParser.apply(this.constructor, arguments);
+	};
     
     var bindingPrefix = "__wipeoutGlobalBinding_";
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
-        
+		
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODO
             throw "Invalid binding type. Binding types must be a string which points to wipeout binding type";
              
         var bindingName = bindingPrefix + forProperty;
-        if (this.prototype.hasOwnProperty(bindingName))
+        if (this.prototype.hasOwnProperty(bindingName)) {
+			if (this.prototype[bindingName] === bindingType)	//TODO: test
+				return;
+			
             throw "A global binding has already been defined for this property";
+		}
             
         this.prototype[bindingName] = bindingType;
     };
+	
+	//TODO: test
+	bindable.prototype.addGlobalBindingType = function (forProperty, parser) {
+		return bindable.addGlobalBindingType.apply(this.constructor, arguments);
+	};
     
     bindable.prototype.getGlobalParser = function (forProperty) {
         
