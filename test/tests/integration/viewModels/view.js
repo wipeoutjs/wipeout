@@ -168,3 +168,37 @@ test("multi-dimentional binding", function() {
 	stop();
 });
 
+test("shareParentScope", function() {
+    
+    // arrange
+    var container = "LKHLHKLH", val = "LKJGB*(PYGUBOPY", child = "LKGKJHFF", childNode = "ghgfhfg";
+    
+    // act
+    application.template = '<wo.content-control id="' + container + '" anItem--s="' + val + '" depth="1">\
+    <template>\
+        <wo.content-control share-parent-scope="true" depth="2">\
+            <template>\
+                <wo.view id="' + child + '" anItem="$parent.anItem" depth="3"></wo.view>\
+				<div id="' + childNode + '"></div>\
+            </template>\
+        </wo.content-control>\
+    </template>\
+</wo.content-control>';
+	
+	application.onRendered = function () {
+    
+		var subject = application.templateItems[container];
+		ok(subject);
+
+		// assert
+		ok(subject.templateItems[child]);
+		strictEqual(subject.templateItems[child].anItem, val);
+		ok(subject.templateItems[childNode]);
+		
+		start();
+	};
+	
+	
+	stop();
+});
+

@@ -41,10 +41,13 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (object == null)
             return;
-        
-        this.renderContext = this.parentRenderContext ? 
-            this.parentRenderContext.childContext(object, arrayIndex) :
-            new wipeout.template.context(object, arrayIndex);
+		
+		if (object.shareParentScope)
+        	this.renderContext = this.parentRenderContext;
+		else
+			this.renderContext = this.parentRenderContext ? 
+				this.parentRenderContext.childContext(object, arrayIndex) :
+				new wipeout.template.context(object, arrayIndex);
         
         if (object instanceof wipeout.viewModels.visual) {
             object.__woBag.domRoot = this;

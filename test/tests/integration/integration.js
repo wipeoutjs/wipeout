@@ -4,32 +4,6 @@ module("wipeout.tests.integration.integration", {
     teardown: integrationTestTeardown
 });
 
-test("shareParentScope", function() {
-	
-	return "share parent scope";
-    
-    // arrange
-    var container = "LKHLHKLH", val = "LKJGB*(PYGUBOPY", child = "LKGKJHFF";
-    
-    // act
-    application.template('<wo.content-control id="' + container + '" anItem="\'' + val + '\'" depth="1">\
-    <template>\
-        <wo.content-control share-parent-scope="true" depth="2">\
-            <template>\
-                <wo.view id="' + child + '" anItem="$parent.anItem" depth="3"></wo.view>\
-            </template>\
-        </wo.content-control>\
-    </template>\
-</wo.content-control>');
-    
-    var subject = application.templateItems[container];
-    ok(subject);
-    
-    // assert
-    ok(subject.templateItems[child]);
-    strictEqual(subject.templateItems[child].anItem, val);
-});
-
 test("wipeout.viewModels.if, shareParentScope", function() {
 	return "share parent scope";
 	
