@@ -52,15 +52,15 @@ function createViewModel (name, extend) {
 				
 				var split = name.split(".");
 				$constructor = new Function("extend", "getParentConstructorArgs", "values", "valuesAsConstructorArgs", 
-"return function " + split[split.length - 1] + "(templateId, model) {\
-	extend.apply(this, getParentConstructorArgs(arguments));\n\
-\n\
-	for (var i in values)\n\
-		if (!valuesAsConstructorArgs[i])\n\
-			this[i] = values[i] instanceof Function ?\n\
-				values[i].apply(this, arguments) :\n\
-				values[i];\n\
-}")(extend, getParentConstructorArgs, values, valuesAsConstructorArgs);
+"return function " + split[split.length - 1] + " (templateId, model) {\n" +
+"	extend.apply(this, getParentConstructorArgs(arguments));\n" +
+"\n" +
+"	for (var i in values)\n" +
+"		if (!valuesAsConstructorArgs[i])\n" +
+"			this[i] = values[i] instanceof Function ?\n" +
+"				values[i].apply(this, arguments) :\n" +
+"				values[i];\n" +
+"}")(extend, getParentConstructorArgs, values, valuesAsConstructorArgs);
 			}
 
 			Class(name, function () {
@@ -169,30 +169,30 @@ function createViewModel (name, extend) {
 			return output;
 		},
 
-		propertyParser: function (name, parser) {
+		parser: function (propertyName, parser) {
 			check();
 
-			if (parsers[name])
+			if (parsers[propertyName])
 				throw "A parser has already been set for this object";
 
 			inheritanceTree = inheritanceTree || objjs.object.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
 				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
 
-			parsers[name] = parser;
+			parsers[propertyName] = parser;
 			return output;
 		},
-		propertyBinding: function (name, bindingType) {
+		binding: function (propertyName, bindingType) {
 			check();
 
-			if (bindingTypes[name])
+			if (bindingTypes[propertyName])
 				throw "A binding type has already been set for this object";
 
-			inheritanceTree = inheritanceTree || objjs.object.getInheritanceChain.apply(extend);
+			inheritanceTree = inheritanceTree || objjs.object.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
 				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
 
-			bindingTypes[name] = bindingType;
+			bindingTypes[propertyName] = bindingType;
 			return output;
 		},
 

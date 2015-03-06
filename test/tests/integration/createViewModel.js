@@ -70,3 +70,15 @@ test("convenience methods", function() {
 	
 	strictEqual(subject.templateId, 123);
 });
+
+test("global binding/parser", function() {
+	// arrange	
+	// act
+	var vm = wo.createViewModel("vms.test")
+		.binding("bla", "tw")
+		.parser("bla", "s").build();
+
+	// assert
+	strictEqual(vm.getGlobalBindingType("bla"), "tw");
+	strictEqual(vm.getGlobalParser("bla"), wipeout.template.initialization.parsers.s);
+});
