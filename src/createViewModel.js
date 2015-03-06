@@ -10,7 +10,7 @@ function createViewModel (name, extend) {
 		_built = false, 
 		$constructor,
 		bindingTypes = {},
-		parser = {},
+		parsers = {},
 		inheritanceTree;
 
 	function check () {
@@ -63,9 +63,8 @@ function createViewModel (name, extend) {
 }")(extend, getParentConstructorArgs, values, valuesAsConstructorArgs);
 			}
 
-			//TODO: class still requires root namespace to be "wipeout"
 			Class(name, function () {
-				return obsjs.object.extend.call(extend, $constructor);
+				return objjs.object.extend.call(extend, $constructor);
 			});
 
 			methods.statics = $constructor;
@@ -200,9 +199,6 @@ function createViewModel (name, extend) {
 		// convenience functions
 		templateId: function (templateId) {
 			return output.value("templateId", templateId);
-		},
-		model: function (model) {
-			return output.value("model", model);
 		},
 		onInitialized: function (onInitialized) {
 			return output.method("onInitialized", onInitialized);
