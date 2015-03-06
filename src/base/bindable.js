@@ -81,6 +81,6 @@ Class("wipeout.base.bindable", function () {
         
         return this.prototype[bindingPrefix + forProperty];
     };
-    
+	
     return bindable;
 });

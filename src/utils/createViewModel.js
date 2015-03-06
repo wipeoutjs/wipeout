@@ -3,35 +3,18 @@ function createViewModel (name, extend) {
 		
 	extend = extend || wipeout.viewModels.view;
 
-	function getParentConstructorArgs (parentConstructor, args, argOverrides) {
-		// TODO: this
-		//			- cache result
-		//			- populate valuesAsConstructorArgs
-
-		return [];
-	}
-
 	var methods = {statics: true}, 
 		values = {},
 		valuesAsConstructorArgs = {},
 		statics = {},
 		_built = false, 
-		_constructor = false, 
-		$constructor = function (templateId, model) {
-			extend.apply(this, getParentConstructorArgs(extend, arguments, values));
-
-			for (var i in values)
-				if (!valuesAsConstructorArgs[i])
-					this[i] = values[i] instanceof Function ?
-						values[i].apply(this, arguments) :
-						values[i];
-		},
+		$constructor,
 		bindingTypes = {},
 		parser = {},
 		inheritanceTree;
 
 	function check () {
-		if (_built) throw 'This view model has already been built. You cannot add functionality using this DSL. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.createViewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
+		if (_built) throw 'You cannot add any more functionality using this DSL as this view model has already been built. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.createViewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
 	}
 
 	var output = {
@@ -45,6 +28,40 @@ function createViewModel (name, extend) {
 
 			if (wipeout.utils.obj.getObject(name))
 				throw name + " already exists.";
+			
+			if (!$constructor) {
+				var getParentConstructorArgs = function (args) {
+					/*
+					if (!getParentConstructorArgs.getArgs) {
+						var tmp, args = (tmp = extend
+							.toString()
+							.replace(/(\/\*.*\*\/)|(\/\/.*$)/g, ""))
+							.slice(tmp.indexOf('(') + 1, tmp.indexOf(')')).match(/([^\s,]+)/g) || [];
+						
+						var templateId = args.indexOf("templateId");
+						var model = args.indexOf("model");
+						
+					
+					// TODO: this
+					//			- cache result
+					//			- populate valuesAsConstructorArgs
+					}*/
+					
+					return [];
+				};
+				
+				var split = name.split(".");
+				$constructor = new Function("extend", "getParentConstructorArgs", "values", "valuesAsConstructorArgs", 
+"return function " + split[split.length - 1] + "(templateId, model) {\
+	extend.apply(this, getParentConstructorArgs(arguments));\n\
+\n\
+	for (var i in values)\n\
+		if (!valuesAsConstructorArgs[i])\n\
+			this[i] = values[i] instanceof Function ?\n\
+				values[i].apply(this, arguments) :\n\
+				values[i];\n\
+}")(extend, getParentConstructorArgs, values, valuesAsConstructorArgs);
+			}
 
 			//TODO: class still requires root namespace to be "wipeout"
 			Class(name, function () {
@@ -64,7 +81,6 @@ function createViewModel (name, extend) {
 
 			methods = undefined;
 			statics = undefined;
-			_constructor = undefined;
 			bindingTypes = undefined;
 			parser = undefined;
 			inheritanceTree = undefined;
@@ -73,18 +89,20 @@ function createViewModel (name, extend) {
 		},
 
 		// core functions
-		constructor: function (constructor) {
+		constructor: function (constructor, ignoreConstructorWarnings) {
 			check();
 
 			//TODO: test for this._super();
 
-			if (_constructor)
+			if ($constructor)
 				throw "You have already added a constructor for this view model";
+			
+			for (var i in values)
+				throw 'You have already added a value for this view model. In order to add a value and constructor you must use the following code within the constructor function: "this.value = value;"';
 
 			if (!(constructor instanceof Function))
 				throw "A constructor must be a Function.";
 
-			_constructor = true;
 			$constructor = constructor;
 			return output;
 		},
@@ -108,7 +126,7 @@ function createViewModel (name, extend) {
 			if (name === "constructor")
 				return output.constructor(value);					
 
-			if (_constructor)
+			if ($constructor)
 				throw 'You have added a constructor for this view model. In order to add a value you must use the following code within the constructor function: "this.value = value;"';
 
 			if (value instanceof Function)
@@ -126,8 +144,8 @@ function createViewModel (name, extend) {
 			if (name === "constructor")
 				return output.constructor(value);					
 
-			if (_constructor)
-				throw "You have added a constructor for this view model. ";
+			if ($constructor)
+				throw 'You have added a constructor for this view model. In order to add a value you must use the following code within the constructor function: "this.value = value;"';
 
 			if (!(value instanceof Function))
 				throw "A dynamic value must be a function which returns the value.";
@@ -140,8 +158,6 @@ function createViewModel (name, extend) {
 		},
 
 		staticMethod: function (name, method) {
-			check();
-
 			return output.staticValue(name, method);
 		},
 		staticValue: function (name, value) {
@@ -179,10 +195,10 @@ function createViewModel (name, extend) {
 
 			bindingTypes[name] = bindingType;
 			return output;
-		}
+		},
 
 		// convenience functions
-		template: function (templateId) {
+		templateId: function (templateId) {
 			return output.value("templateId", templateId);
 		},
 		model: function (model) {
