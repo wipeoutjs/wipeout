@@ -21,7 +21,7 @@ window.wo = function (model, htmlElement) {
 		});        
 };
 
-wo.createViewModel = createViewModel;
+wo.viewModel = viewModel;
 
 wo.getViewModel = function (viewModelName, skipCamelCase) {
 	
