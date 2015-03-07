@@ -1,5 +1,5 @@
 
-module("wo.createViewModel", {
+module("wo.viewModel", {
     setup: function () {
 		window.vms = {};
 	},
@@ -17,7 +17,7 @@ test("basic with method, value, dynamic value, static method, static property", 
 		staticMethod = function () { },
 		staticValue = 678;
 	
-	var builder = wo.createViewModel("vms.test")
+	var builder = wo.viewModel("vms.test")
 		.method("method", method)
 		.value("value", value)
 		.dynamicValue("dynamicValue", dynamicValue)
@@ -55,7 +55,7 @@ test("convenience methods", function() {
 		}
 	};
 	
-	var builder = wo.createViewModel("vms.test");
+	var builder = wo.viewModel("vms.test");
 	for (var i in functions)
 		builder[i](functions[i]);
 	
@@ -74,7 +74,7 @@ test("convenience methods", function() {
 test("global binding/parser", function() {
 	// arrange	
 	// act
-	var vm = wo.createViewModel("vms.test")
+	var vm = wo.viewModel("vms.test")
 		.binding("bla", "tw")
 		.parser("bla", "s").build();
 

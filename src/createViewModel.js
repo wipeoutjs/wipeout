@@ -1,5 +1,5 @@
 
-function createViewModel (name, extend) {
+function viewModel (name, extend) {
 		
 	extend = extend || wipeout.viewModels.view;
 
@@ -14,7 +14,7 @@ function createViewModel (name, extend) {
 		inheritanceTree;
 
 	function check () {
-		if (_built) throw 'You cannot add any more functionality using this DSL as this view model has already been built. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.createViewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
+		if (_built) throw 'You cannot add any more functionality using this DSL as this view model has already been built. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.viewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
 	}
 
 	var output = {
