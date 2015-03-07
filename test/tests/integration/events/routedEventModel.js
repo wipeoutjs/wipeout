@@ -28,17 +28,19 @@ test("routed event, from model", function() {
 		secondDeepest.registerRoutedEvent(aRoutedEvent, function() {
 			triggered2 = true;
 		});
-
+			
 		// act
-		deepest.onModelChanged = function () {
-			deepest.model.triggerRoutedEvent(aRoutedEvent, eventArgs);
+		deepest.observe("model", function () {
+			setTimeout(function () {
+				deepest.model.triggerRoutedEvent(aRoutedEvent, eventArgs);
 
-			// assert
-			ok(triggered2);
-			ok(triggered1);
+				// assert
+				ok(triggered2);
+				ok(triggered1);
 
-			start();
-		};
+				start();
+			});
+		}, null, {activateImmediately: true});
 	};
 	
 	stop();
