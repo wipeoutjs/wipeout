@@ -44,8 +44,8 @@ Class("wipeout.template.engine", function () {
             
             // if the template exists in the DOM but has not been loaded
             var script;      
-            if ((script = document.getElementById(templateId)) && wipeout.utils.obj.trimToLower(script.tagName) === "script") {
-                callback(this.setTemplate(templateId, script.text));
+            if (script = document.getElementById(templateId)) {
+                callback(this.setTemplate(templateId, trimToLower(script.tagName) === "script" ? script.text : script.innerHTML));
                 return null;
             } 
 

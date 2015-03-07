@@ -5,20 +5,24 @@ window.wo = function (model, htmlElement) {
     ///<param name="model" type="Any" optional="true">The root model</param>
     ///<param name="htmlElement" type="HTMLElement or String" optional="true">The root html element. Can be an element or an id</param>
 
+	var output = new obsjs.disposable();
+	
     if (arguments.length < 2)
         htmlElement = document.getElementsByTagName("body")[0];
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
 
 	if (getMeAViewModel(htmlElement))
-		new wipeout.template.rendering.viewModelElement(htmlElement);
+		output.registerDisposable(new wipeout.template.rendering.viewModelElement(htmlElement));
 	else
 		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
 			// element may have been removed since get all elements
 			if (htmlElement.contains(element) && getMeAViewModel(element))
-				new wipeout.template.rendering.viewModelElement(element);
-		});        
+				output.registerDisposable(new wipeout.template.rendering.viewModelElement(element));
+		});
+	
+	return output;
 };
 
 wo.viewModel = viewModel;

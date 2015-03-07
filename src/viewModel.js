@@ -27,40 +27,52 @@ function viewModel (name, extend) {
 			_built = true;
 
 			if (wipeout.utils.obj.getObject(name))
-				throw name + " already exists.";
+				throw name + " already exists.";			
 			
 			if (!$constructor) {
+				var tmp, args = (tmp = extend
+					.toString()
+					.replace(/\/\/.*$/mg, "")
+					.replace(/\/\*[\s\S]*?\*\//mg, ""))
+					.slice(tmp.indexOf('(') + 1, tmp.indexOf(')')).match(/([^\s,]+)/g) || [];
+
+				var tid, templateId = args.indexOf("templateId");
+				if (templateId !== -1) {
+					tid = values.templateId;
+					delete values[templateId];
+				}
+				
+				var mod, model = args.indexOf("model");
+				if (templateId !== -1) {
+					mod = values.model;
+					delete values[model];
+				}
+				
 				var getParentConstructorArgs = function (args) {
-					/*
-					if (!getParentConstructorArgs.getArgs) {
-						var tmp, args = (tmp = extend
-							.toString()
-							.replace(/(\/\*.*\*\/)|(\/\/.*$)/g, ""))
-							.slice(tmp.indexOf('(') + 1, tmp.indexOf(')')).match(/([^\s,]+)/g) || [];
-						
-						var templateId = args.indexOf("templateId");
-						var model = args.indexOf("model");
-						
+					var output = [];
+					if (templateId !== -1)
+						output[templateId] = tid instanceof Function ? 
+							tid.apply(this, args) :
+							(tid ? tid : args[0]);
 					
-					// TODO: this
-					//			- cache result
-					//			- populate valuesAsConstructorArgs
-					}*/
+					if (model !== -1)
+						output[model] = mod instanceof Function ? 
+							mod.apply(this, args) :
+							(mod ? mod : args[1]);
 					
-					return [];
+					return output;
 				};
 				
 				var split = name.split(".");
-				$constructor = new Function("extend", "getParentConstructorArgs", "values", "valuesAsConstructorArgs", 
+				$constructor = new Function("extend", "getParentConstructorArgs", "values", 
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
-"	extend.apply(this, getParentConstructorArgs(arguments));\n" +
+"	extend.apply(this, getParentConstructorArgs.call(this, arguments));\n" +
 "\n" +
 "	for (var i in values)\n" +
-"		if (!valuesAsConstructorArgs[i])\n" +
-"			this[i] = values[i] instanceof Function ?\n" +
-"				values[i].apply(this, arguments) :\n" +
-"				values[i];\n" +
-"}")(extend, getParentConstructorArgs, values, valuesAsConstructorArgs);
+"		this[i] = values[i] instanceof Function ?\n" +
+"			values[i].apply(this, arguments) :\n" +
+"			values[i];\n" +
+"}")(extend, getParentConstructorArgs, values);
 			}
 
 			Class(name, function () {
@@ -197,7 +209,10 @@ function viewModel (name, extend) {
 		},
 
 		// convenience functions
-		templateId: function (templateId) {
+		templateId: function (templateId, eagerLoad) {
+			if (eagerLoad)
+				wipeout.template.engine.instance.compileTemplate(templateId, function () {});
+			
 			return output.value("templateId", templateId);
 		},
 		onInitialized: function (onInitialized) {

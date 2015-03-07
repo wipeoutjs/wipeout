@@ -8,6 +8,98 @@ module("wo.viewModel", {
 	}
 });
 
+test("model and template id via constructor args", function() {
+	
+	// arrange
+	var ok1 = false, mod = {}, tid = {};
+	var c1 = function (sadsd, gffdgfg, templateId, ksjbdskjbd, kjb, model) {
+		ok1 = true;
+		strictEqual(model, mod);
+		strictEqual(templateId, tid);
+	};
+	
+	var vm = wo.viewModel("vms.test", c1).build();
+		
+	// act
+	new vm.constructor(tid, mod);
+	
+	// assert
+	ok(ok1);
+});
+
+test("model and template id via constructor args, with comments", function() {
+	
+	// arrange
+	var ok1 = false, mod = {}, tid = {};
+	var c1 = function (sadsd, gffdgfg, /*something*/ templateId //else
+						, ksjbdskjbd, kjb, model) {
+		ok1 = true;
+		strictEqual(model, mod);
+		strictEqual(templateId, tid);
+	};
+	
+	var vm = wo.viewModel("vms.test", c1).build();
+		
+	// act
+	new vm.constructor(tid, mod);
+	
+	// assert
+	ok(ok1);
+});
+
+test("model and template id via constructor args, overriden by value", function() {
+	
+	// arrange
+	var ok1 = false, mod = 123, tid = 234;
+	var c1 = function (sadsd, gffdgfg, templateId, ksjbdskjbd, kjb, model) {
+		ok1 = true;
+		strictEqual(model, mod);
+		strictEqual(templateId, tid);
+	};
+	
+	var vm = wo.viewModel("vms.test", c1).value("templateId", tid).value("model", mod).build();
+		
+	// act
+	new vm.constructor(345, 456);
+	
+	// assert
+	ok(ok1);
+});
+
+test("model and template id via constructor args, overriden by dynamic value", function() {
+	
+	// arrange
+	var ok1 = false, mod = 123, tid = 234;
+	var c1 = function (sadsd, gffdgfg, templateId, ksjbdskjbd, kjb, model) {
+		ok1 = true;
+		strictEqual(model, mod);
+		strictEqual(templateId, tid);
+	};
+	
+	var vm = wo.viewModel("vms.test", c1)
+		.dynamicValue("templateId", function () {
+			strictEqual(this.constructor, vm.constructor);
+			strictEqual(arguments[0], 345);
+			strictEqual(arguments[1], 456);
+			
+			return tid;
+		})
+		.dynamicValue("model", function () {
+			strictEqual(this.constructor, vm.constructor);
+			strictEqual(arguments[0], 345);
+			strictEqual(arguments[1], 456);
+			
+			return mod;
+		})
+		.build();
+		
+	// act
+	new vm.constructor(345, 456);
+	
+	// assert
+	ok(ok1);
+});
+
 test("basic with method, value, dynamic value, static method, static property", function() {
 	
 	// arrange
@@ -36,6 +128,15 @@ test("basic with method, value, dynamic value, static method, static property", 
 	strictEqual(new vms.test().dynamicValue, dynamicValue());
 	strictEqual(vms.test.staticMethod, staticMethod);
 	strictEqual(vms.test.staticValue, staticValue);
+});
+
+test("templateId with eager load", function() {
+	// arrange
+	// act
+	wo.viewModel("vms.test").templateId("qunit-fixture", true);
+	
+	// assert
+	ok(wipeout.template.engine.instance.templates["qunit-fixture"])
 });
 
 test("convenience methods", function() {
