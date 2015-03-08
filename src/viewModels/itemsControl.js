@@ -119,7 +119,6 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<returns type="wo.view">The newly created item</returns>
         
         var item = this.createItem(model);
-        item.__woBag.createdByWipeout = true;
         return item;
     };
 

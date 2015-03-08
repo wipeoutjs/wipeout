@@ -15,14 +15,17 @@ Class("wipeout.viewModels.visual", function () {
         ///<Summary type="ko.observable" generic0="String">The template of the visual, giving it an appearance</Summary>
         this.templateId = templateId;
 
-        //TODO: most of this is to do with old templating
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.__woBag = {
-            disposed: wipeout.events.event(), //TODO: remove
-            createdByWipeout: false,
-            routedEventSubscriptions: [],
-            nodes: [] //TODO: remove
-        };
+        this.$routedEventSubscriptions = [];
+		
+		this.registerDisposeCallback((function () {
+			// dispose of routed event subscriptions
+			enumerateArr(this.splice(0, this.length), function(event) {
+				event.dispose();
+			});
+		}).bind(this.$routedEventSubscriptions));
+		
+		this.__woBag = {};
     });
     
     visual.getDefaultTemplateId = (function () {
@@ -39,12 +42,9 @@ Class("wipeout.viewModels.visual", function () {
         var templateId = null;
         return function () {
             ///<summary>Returns the Id for an empty template</summary>    
-            ///<returns type="String">The Id for an empty template</returns>    
-            if (!templateId) {
-                templateId = wipeout.viewModels.contentControl.createAnonymousTemplate("");
-            }
+            ///<returns type="String">The Id for an empty template</returns>  
 
-            return templateId;
+            return templateId || (templateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
         };
     })();
     
@@ -74,79 +74,40 @@ Class("wipeout.viewModels.visual", function () {
         return output;*/
     };
     
-    visual.prototype.toString = function () {
-        
-    }
-    
-    visual.prototype.dispose = function() {
-        ///<summary>Dispose of this visual</summary>
-
-        this._super();
-
-        // dispose of routed event subscriptions
-        enumerateArr(this.__woBag.routedEventSubscriptions.splice(0, this.__woBag.routedEventSubscriptions.length), function(event) {
-            event.dispose();
-        });
-
-        this.__woBag.disposed.trigger();
-    };
-    
-    //TODO, doesn't work
-    visual.prototype.entireViewModelHtml = function() {
-        ///<summary>Gets all of the html nodes included in this view model</summary>
-        ///<returns type="Array" generic0="Node">The html elements</returns>
-        
-        return [];
-        
-        if(this.__woBag.rootHtmlElement) {
-            if (this.__woBag.rootHtmlElement.nodeType === 1) {
-                return [this.__woBag.rootHtmlElement];
-            } else if (wipeout.utils.ko.isVirtual(this.__woBag.rootHtmlElement)) {
-                // add root element
-                var output = [this.__woBag.rootHtmlElement];
-                
-                wipeout.utils.ko.enumerateOverChildren(this.__woBag.rootHtmlElement, function(child) {
-                    output.push(child);
-                    if(wipeout.utils.ko.isVirtual(child))
-                        output.push(wipeout.utils.ko.getClosingTag(child));
-                });
-                
-                var last = output[output.length - 1].nextSibling;
-                
-                if(!wipeout.utils.ko.isVirtualClosing(last))
-                    throw "Could not compile view model html";
-
-                output.push(last);
-                return output;
-            }
-        }
-
-        // visual has not been redered
-        return [];
-    };
-    
-    visual.prototype.getParents = function(includeSharedParentScopeItems) {
-        ///<summary>Gets an array of the entire tree of ancestor visual objects</summary>
-        ///<param name="includeSharedParentScopeItems" type="Boolean" optional="true">Set to true if items marked with shareParentScope can be returned</param>
-        ///<returns type="Array" generic0="wo.view" arrayType="wo.view">A tree of ancestor view models</returns>
-        var current = this.getParent(includeSharedParentScopeItems);
-        var parents = [];
-        while(current) {
-            parents.push(current);
-            current = current.getParent(includeSharedParentScopeItems);
-        }
-
-        return parents;
-    };
-    
     //TODO: include sharedScopeItems
     visual.prototype.getParent = function() {
         ///<summary>Get the parent visual of this visual</summary> 
         ///<returns type="wo.view">The parent view model</returns>
         
-        return this.__woBag.domRoot && this.__woBag.domRoot.renderContext ? 
-            this.__woBag.domRoot.renderContext.$parent :
-            null;
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return null;
+					
+        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
+    };
+    
+    //TODO: include sharedScopeItems
+    visual.prototype.getParents = function() {
+        ///<summary>Get all parent visuals of this visual</summary> 
+        ///<returns type="Array" generic0="wo.view">The parent view model</returns>
+        
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return [];
+						
+		var op = renderContext.$parents.slice();	
+		if (renderContext.$this !== this)	// if share parent scope
+			op.splice(0, 0, renderContext.$this);
+		
+		return op;
+    };
+    
+    //TODO: include sharedScopeItems
+    visual.prototype.getRenderContext = function() {
+        ///<summary>Get the render context of  this visual</summary> 
+        ///<returns type="wipeout.template.context">The render context</returns>
+        
+		return (this.$domRoot && this.$domRoot.renderContext) || null;
     };
     
     visual.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
@@ -156,9 +117,9 @@ Class("wipeout.viewModels.visual", function () {
         ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
         ///<returns type="Boolean">Whether the event registration was found or not</returns>         
 
-        for(var i = 0, ii = this.__woBag.routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__woBag.routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__woBag.routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
+        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
+            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
+                this.$routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
                 return true;
             }
         }  
@@ -175,16 +136,16 @@ Class("wipeout.viewModels.visual", function () {
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
         var rev;
-        for(var i = 0, ii = this.__woBag.routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__woBag.routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.__woBag.routedEventSubscriptions[i];
+        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
+            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
+                rev = this.$routedEventSubscriptions[i];
                 break;
             }
         }
 
         if(!rev) {
             rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.__woBag.routedEventSubscriptions.push(rev);
+            this.$routedEventSubscriptions.push(rev);
         }
 
         return rev.event.register(callback, callbackContext, priority);
@@ -201,10 +162,10 @@ Class("wipeout.viewModels.visual", function () {
         }
 
         // trigger event on this
-        for(var i = 0, ii = this.__woBag.routedEventSubscriptions.length; i < ii; i++) {
+        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
             if(eventArgs.handled) return;
-            if(this.__woBag.routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__woBag.routedEventSubscriptions[i].event.trigger(eventArgs);
+            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
+                this.$routedEventSubscriptions[i].event.trigger(eventArgs);
             }
         }
         
@@ -238,14 +199,6 @@ Class("wipeout.viewModels.visual", function () {
     visual.prototype.onApplicationInitialized = function () {
         ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
     };
-    
-    // list of html tags which will not be treated as objects
-    var reservedTags = ["a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"];
-    
-    visual.reservedTags = {};
-    enumerateArr(reservedTags, function(tag) {
-        visual.reservedTags[tag] = true;
-    });
     
     visual.addGlobalParser("id", "string");
     visual.addGlobalBindingType("id", "viewModelId");

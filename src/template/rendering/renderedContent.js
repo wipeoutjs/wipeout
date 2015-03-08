@@ -49,7 +49,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 			new wipeout.template.context(this.viewModel, arrayIndex);
         
         if (this.viewModel instanceof wipeout.viewModels.visual) {
-            this.viewModel.__woBag.domRoot = this;
+            this.viewModel.$domRoot = this;
             this.viewModel.observe("templateId", this._template, this);
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);
@@ -71,7 +71,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.unTemplate(leaveDeadChildNodes);
         
         if (this.viewModel instanceof wipeout.viewModels.visual)
-            delete this.viewModel.__woBag.domRoot;
+            delete this.viewModel.$domRoot;
 		
 		delete this.renderContext;
 		delete this.viewModel;

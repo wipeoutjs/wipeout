@@ -26,14 +26,14 @@ test("un render", function() {
 
 		// act
 		wipeout.utils.obj.enumerateArr(vms, function(item) {
-			ok(item.__woBag.domRoot);
+			ok(item.$domRoot);
 		});
 		
-		application.__woBag.domRoot.unRender();
+		application.$domRoot.unRender();
 
 		// assert
 		wipeout.utils.obj.enumerateArr(vms, function(item) {
-			ok(!item.__woBag.domRoot);
+			ok(!item.$domRoot);
 		});
 		
 		start();
@@ -104,7 +104,7 @@ function disposeTest (act) {
 
 test("dispose", function() {
     disposeTest(function() { 
-        application.__woBag.domRoot.dispose();
+        application.$domRoot.dispose();
     });
 });
 /*

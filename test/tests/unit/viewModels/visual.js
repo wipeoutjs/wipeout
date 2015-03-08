@@ -27,7 +27,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.__woBag.disposables.constructor, Object);
     strictEqual(subject.__woBag.createdByWipeout, false);
     strictEqual(subject.__woBag.rootHtmlElement, null);
-    strictEqual(subject.__woBag.routedEventSubscriptions.constructor, Array);
+    strictEqual(subject.$routedEventSubscriptions.constructor, Array);
     strictEqual(subject.__woBag.viewModelElement, vme);
 });
 
@@ -268,7 +268,7 @@ testUtils.testWithUtils("dispose", null, false, function(methods, classes, subje
     invoker();
     
     // assert
-    ok(!subject.__woBag.routedEventSubscriptions.length);
+    ok(!subject.$routedEventSubscriptions.length);
 });
 
 testUtils.testWithUtils("getParent", "don't include shareParentScope", false, function(methods, classes, subject, invoker) {
@@ -401,7 +401,7 @@ testUtils.testWithUtils("registerRoutedEvent", "new event", false, function(meth
     var actual = invoker(routedEvent, callback, context);
     
     // assert
-    strictEqual(subject.__woBag.routedEventSubscriptions.length, 1);
+    strictEqual(subject.$routedEventSubscriptions.length, 1);
     strictEqual(actual.dispose.constructor, Function);
 });
 
