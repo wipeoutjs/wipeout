@@ -12,7 +12,7 @@ Class("wipeout.viewModels.visual", function () {
         ///<Summary type="Object">Dictionary of items created within the current template. The items can be visuals or html elements</Summary>
         this.templateItems = {};
 
-        ///<Summary type="ko.observable" generic0="String">The template of the visual, giving it an appearance</Summary>
+        ///<Summary type="String">The id of the template of the visual, giving it an appearance</Summary>
         this.templateId = templateId;
 
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
