@@ -50,8 +50,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
             this.viewModel.$domRoot = this;
-            this.templateObserved = this.viewModel.observe("templateId", this._template, this);
-            //this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});	TODO: this breaks tests
+            this.templateObserved = this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});
+			
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);
         } else {
@@ -63,7 +63,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         ///<summary>Render the view model with the given template</summary>
         ///<param name="oldTemplateId" type="String">The previous value (unused)</param>
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
-        
+		
         this.template(templateId);
     };
         

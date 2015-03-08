@@ -89,6 +89,40 @@ test("render, is vm", function() {
 	rc.dispose();
 });
 	
+test("render, template change", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate("something");
+	var vm = new wo.view(wipeout.viewModels.contentControl.createAnonymousTemplate("not something"));
+	vm.onRendered = function () {
+		
+		if (vm.templateId !== tid) {
+			vm.templateId = tid;
+			return;
+		}
+		
+		ok(rc.templateObserved);
+		strictEqual(rc.viewModel, vm);
+		strictEqual(rc.renderContext.$this, vm);
+		strictEqual($("#qunit-fixture")[0].childNodes.length, 3);
+		strictEqual($("#qunit-fixture")[0].childNodes[1].textContent, "something");
+
+		rc.dispose();
+		
+		start();
+	}
+	
+	// act
+	rc.render(vm);
+	
+	// assert
+	stop();
+});
+	
 test("un render", function() {
     // arrange
     
