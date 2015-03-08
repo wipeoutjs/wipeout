@@ -8,6 +8,8 @@ Class("wipeout.template.engine", function () {
     }
     
     engine.prototype.setTemplate = function (templateId, template) {
+		if (!templateId) throw "Invalid template id";
+		
         if (typeof template === "string")
             template = wipeout.wml.wmlParser(template);
 		else if (template.nodeType === 2)
@@ -16,14 +18,24 @@ Class("wipeout.template.engine", function () {
         return this.templates[templateId] = new wipeout.template.rendering.compiledTemplate(template);
     };
     
-    engine.prototype.getTemplateXml = function (templateId, callback) {        
+    engine.prototype.getTemplateXml = function (templateId, callback) {  
+		templateId = fixTemplateId(templateId);      
         return this.compileTemplate(templateId, (function() {
             callback(this.templates[templateId].xml);
         }).bind(this));
     };
     
+	var blankTemplateId;
+	function fixTemplateId (templateId) {
+		return templateId ||
+			blankTemplateId || 
+			(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
+	}
+	
     engine.prototype.compileTemplate = function (templateId, callback) {
         
+		templateId = fixTemplateId(templateId);
+			
         // if the template exists
         if (this.templates[templateId] instanceof wipeout.template.rendering.compiledTemplate) {
             callback(this.templates[templateId]);

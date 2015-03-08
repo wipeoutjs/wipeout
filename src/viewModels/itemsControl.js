@@ -18,7 +18,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         this._super(templateId || deafaultTemplateId, model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
-        this.itemTemplateId = itemTemplateId || wipeout.viewModels.visual.getBlankTemplateId();
+        this.itemTemplateId = itemTemplateId;
 
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
         this.itemTemplate = "";

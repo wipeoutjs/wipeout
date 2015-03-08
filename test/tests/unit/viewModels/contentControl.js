@@ -25,7 +25,7 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
 testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
-    var owner = new wipeout.viewModels.visual();
+    var owner = new wipeout.viewModels.view();
     var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
     
     // act
@@ -50,7 +50,7 @@ testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods,
 testUtils.testWithUtils("createTemplatePropertyFor", "disposal, dependant on \"createTemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
-    var owner = new wipeout.viewModels.visual();
+    var owner = new wipeout.viewModels.view();
     var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
     
     // act

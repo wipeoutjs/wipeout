@@ -1,11 +1,11 @@
-module("wipeout.viewModels.visual", {
+module("wipeout.viewModels.view", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var visual = wipeout.viewModels.visual;
+var visual = wipeout.viewModels.view;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -40,7 +40,7 @@ testUtils.testWithUtils("constructor", "default template", false, function(metho
     invoker();
     
     // assert
-    strictEqual(subject.templateId, wo.visual.getDefaultTemplateId());
+    strictEqual(subject.templateId, wo.view.getDefaultTemplateId());
 });
 
 testUtils.testWithUtils("disposeOf", null, false, function(methods, classes, subject, invoker) {

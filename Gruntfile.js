@@ -72,7 +72,6 @@ module.exports = function(grunt) {
         "src/utils/dictionary.js",
         "src/base/bindable.js",
         "src/wml/wmlPart.js",
-        "src/viewModels/visual.js",
         "src/viewModels/view.js",
         "src/events/routedEvent.js",
         "src/template/rendering/renderedContent.js"

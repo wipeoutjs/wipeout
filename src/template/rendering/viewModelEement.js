@@ -44,7 +44,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
 		
 		this.disposeOfViewModelBindings();
 		
-		if (this.createdViewModel instanceof wipeout.viewModels.visual)
+		if (this.createdViewModel instanceof wipeout.viewModels.view)
         	this.createdViewModel.dispose();
 		else
 			obsjs.dispose(this.createdViewModel);

@@ -1,18 +1,76 @@
 
 Class("wipeout.viewModels.view", function () {
     
-    var view = wipeout.viewModels.visual.extend(function view (templateId, model /*optional*/) {        
-        ///<summary>Extends on the visual class to provide expected MVVM functionality, such as a model and bindings</summary>  
+    var view = wipeout.base.bindable.extend(function view (templateId, model /*optional*/) {        
+        ///<summary>Extends on the view class to provide expected MVVM functionality, such as a model and bindings</summary>  
         ///<param name="templateId" type="String" optional="true">An initial template id</param>
         ///<param name="model" type="Any" optional="true">An initial model</param>
 
-        this._super(templateId);
-        
-        ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
-        this.model = model == null ? null : model;
+        this._super();
+
+        ///<Summary type="Boolean">Specifies whether this object should be used as a binding context. If true, the binding context of this object will be it's parent. Default is false</Summary>
+        this.shareParentScope = false;
+
+        ///<Summary type="Object">Dictionary of items created within the current template. The items can be views or html elements</Summary>
+        this.templateItems = {};
+
+        ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
+        this.templateId = templateId;
         
         this.observe("model", this.onModelChanged, this);
+		
+        ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
+        this.model = model == null ? null : model;
+
+        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
+        this.$routedEventSubscriptions = [];
+		
+		this.registerDisposeCallback((function () {
+			// dispose of routed event subscriptions
+			enumerateArr(this.splice(0, this.length), function(event) {
+				event.dispose();
+			});
+		}).bind(this.$routedEventSubscriptions));
     });
+	
+    view.addGlobalParser("id", "string");
+    view.addGlobalBindingType("id", "viewModelId");
+    
+    //TODO: include sharedScopeItems
+    view.prototype.getParent = function() {
+        ///<summary>Get the parent view of this view</summary> 
+        ///<returns type="wo.view">The parent view model</returns>
+        
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return null;
+					
+        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
+    };
+    
+    //TODO: include sharedScopeItems
+    view.prototype.getParents = function() {
+        ///<summary>Get all parent views of this view</summary> 
+        ///<returns type="Array" generic0="wo.view">The parent view model</returns>
+        
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return [];
+						
+		var op = renderContext.$parents.slice();	
+		if (renderContext.$this !== this)	// if share parent scope
+			op.splice(0, 0, renderContext.$this);
+		
+		return op;
+    };
+    
+    //TODO: include sharedScopeItems
+    view.prototype.getRenderContext = function() {
+        ///<summary>Get the render context of  this view</summary> 
+        ///<returns type="wipeout.template.context">The render context</returns>
+        
+		return (this.$domRoot && this.$domRoot.renderContext) || null;
+    };
     
     // virtual
     view.prototype.onInitialized = function() {
@@ -42,6 +100,49 @@ Class("wipeout.viewModels.view", function () {
         if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
+    };
+	
+    view.visualGraph = function (rootElement, displayFunction) {
+        ///<summary>Compiles a tree of all view elements in a block of html, starting at the rootElement</summary>    
+        ///<param name="rootElement" type="HTMLNode" optional="false">The root node of the view tree</param>
+        ///<param name="displayFunction" type="Function" optional="true">A function to convert view models found into a custom type</param>
+        ///<returns type="Array" generic0="Object">The view graph</returns>
+
+        throw "TODO";
+        
+        /*if (!rootElement)
+            return [];
+
+        displayFunction = displayFunction || function() { return typeof arguments[0]; };
+
+        var output = [];
+        wipeout.utils.obj.enumerateArr(wipeout.utils.html.getAllChildren(rootElement), function (child) {
+            wipeout.utils.obj.enumerateArr(visual.visualGraph(child), output.push, output);
+        });
+
+        var vm = wipeout.utils.domData.get(rootElement, wipeout.bindings.wipeout.utils.wipeoutKey);        
+        if (vm) {
+            return [{ viewModel: vm, display: displayFunction(vm), children: output}];
+        }
+
+        return output;*/
+    };
+    
+    // virtual
+    view.prototype.onRendered = function (oldValues, newValues) {
+        ///<summary>Triggered each time after a template is rendered</summary>   
+        ///<param name="oldValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes removed</param>
+        ///<param name="newValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes rendered</param>
+    };
+    
+    // virtual
+    view.prototype.onUnrendered = function () {
+        ///<summary>Triggered just before a view is un rendered</summary>    
+    };
+    
+    // virtual
+    view.prototype.onApplicationInitialized = function () {
+        ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
     };
 
     return view;
