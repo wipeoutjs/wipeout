@@ -50,7 +50,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
             this.viewModel.$domRoot = this;
-            this.viewModel.observe("templateId", this._template, this);
+            this.templateObserved = this.viewModel.observe("templateId", this._template, this);
+            //this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});	TODO: this breaks tests
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);
         } else {
@@ -70,6 +71,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
     renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
         this.unTemplate(leaveDeadChildNodes);
         
+		if (this.templateObserved) {
+			this.templateObserved.dispose();
+			delete this.templateObserved;
+		}
+		
         if (this.viewModel instanceof wipeout.viewModels.view)
             delete this.viewModel.$domRoot;
 		

@@ -3,6 +3,92 @@ module("wipeout.template.rendering.renderedContent, integration", {
     teardown: integrationTestTeardown
 });
 	
+test("constructor", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	
+	// act
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	
+	// assert
+	ok(!document.getElementById("hello"));
+	strictEqual($("#qunit-fixture")[0].childNodes.length, 2);
+	strictEqual($("#qunit-fixture")[0].childNodes[0].nodeType, 8);
+	strictEqual($("#qunit-fixture")[0].childNodes[0].textContent, " blabla ");
+	strictEqual($("#qunit-fixture")[0].childNodes[0].wipeoutOpening, rc);
+	
+	strictEqual($("#qunit-fixture")[0].childNodes[1].nodeType, 8);
+	strictEqual($("#qunit-fixture")[0].childNodes[1].textContent, " /blabla ");
+	strictEqual($("#qunit-fixture")[0].childNodes[1].wipeoutClosing, rc);
+	
+	rc.dispose();
+});
+	
+test("rename", function() {
+    
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	
+	// act
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	rc.rename("lablab")
+	
+	// assert
+	strictEqual($("#qunit-fixture")[0].childNodes[0].textContent, " lablab ");
+	strictEqual($("#qunit-fixture")[0].childNodes[1].textContent, " /lablab ");
+	
+	rc.dispose();
+});
+	
+test("render, non vm", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	var vm = {toString: function () {return "something";}};
+	
+	// act
+	rc.render(vm);
+	
+	// assert
+	strictEqual(rc.viewModel, vm);
+	strictEqual(rc.renderContext.$this, vm);
+	strictEqual($("#qunit-fixture")[0].childNodes.length, 3);
+	strictEqual($("#qunit-fixture")[0].childNodes[1].textContent, "something");
+	
+	rc.dispose();
+});
+	
+test("render, is vm", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate("something");
+	var vm = new wo.view(tid);
+	
+	// act
+	rc.render(vm);
+	
+	// assert
+	ok(rc.templateObserved);
+	strictEqual(rc.viewModel, vm);
+	strictEqual(rc.renderContext.$this, vm);
+	strictEqual($("#qunit-fixture")[0].childNodes.length, 3);
+	strictEqual($("#qunit-fixture")[0].childNodes[1].textContent, "something");
+	
+	rc.dispose();
+});
+	
 test("un render", function() {
     // arrange
     
