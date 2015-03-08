@@ -26,6 +26,30 @@ test("removeItem routed event", function() {
 	stop();
 });
 
+test("getViewModel/getViewModels", function() {
+    
+    // arrange    
+    var item = {};
+    application.items = [{}, {}, {}];
+    application.template = '<wo.items-control id="cc" items="$parent.items"></wo.items-control>';
+    
+    // act
+	application.onRendered = function () {
+		
+		var item = application.templateItems.cc.getItemViewModel(1);
+		var items = application.templateItems.cc.getItemViewModels();
+		
+		strictEqual(item.model, application.items[1]);
+		for (var i = 0, ii = application.items.length; i < ii; i++)
+			strictEqual(application.items[i], items[i].model);
+		
+		start();
+	};
+    
+    // assert
+	stop();
+});
+
 test("basic items control. initial, add, remove, re-arrange", function() {
     // arrange
     var id1 = "JBKJBLKJBKJLBLKJB";

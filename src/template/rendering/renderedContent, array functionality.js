@@ -21,10 +21,15 @@
             this.parentRenderContext.$this :
             null;
         
-        if (itemsControl)
-            itemsControl.__woBag.getChild = getChild = function (i) { 
-				if (arguments.length === 0)
-					return children.slice();
+        if (itemsControl)	//TODO there must be a better place to put this
+            itemsControl.$getChild = getChild = function (i) { 
+				if (arguments.length === 0) {
+					var op = children.slice();
+					for (var i = 0, ii = op.length; i < ii; i++)
+						op[i] = op[i].renderedChild;
+						
+					return op;
+				}
 				
 				return children[i] ? children[i].renderedChild : undefined; 
 			};
@@ -118,8 +123,8 @@
                 arrayObserve = null;
 			}
 			
-            if (getChild && itemsControl.__woBag.getChild === getChild) {
-                delete itemsControl.__woBag.getChild;
+            if (getChild && itemsControl.$getChild === getChild) {
+                delete itemsControl.$getChild;
                 getChild = null;
             }
 			
