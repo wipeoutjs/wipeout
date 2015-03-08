@@ -1,7 +1,5 @@
 
-Class("wipeout.viewModels.view", function () {    
-
-    var modelRoutedEventKey = "wipeout.viewModels.view.modelRoutedEvents";
+Class("wipeout.viewModels.view", function () {
     
     var view = wipeout.viewModels.visual.extend(function view (templateId, model /*optional*/) {        
         ///<summary>Extends on the visual class to provide expected MVVM functionality, such as a model and bindings</summary>  
@@ -27,12 +25,12 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
 		
         if(oldValue !== newValue) {
-            this.disposeOf(this.__woBag[modelRoutedEventKey]);
-            delete this.__woBag[modelRoutedEventKey];
+            this.disposeOf(this.$modelRoutedEventKey);
+            delete this.$modelRoutedEventKey;
             
             if(newValue instanceof wipeout.events.routedEventModel) {
                 var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
-                this.__woBag[modelRoutedEventKey] = this.registerDisposable(d1);
+                this.$modelRoutedEventKey = this.registerDisposable(d1);
             }
         }
     };

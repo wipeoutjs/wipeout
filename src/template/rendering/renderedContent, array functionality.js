@@ -21,7 +21,7 @@
             this.parentRenderContext.$this :
             null;
         
-        if (itemsControl)	//TODO there must be a better place to put this
+        if (itemsControl)	//TODO: there must be a better place to put this
             itemsControl.$getChild = getChild = function (i) { 
 				if (arguments.length === 0) {
 					var op = children.slice();

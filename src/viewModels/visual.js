@@ -24,8 +24,6 @@ Class("wipeout.viewModels.visual", function () {
 				event.dispose();
 			});
 		}).bind(this.$routedEventSubscriptions));
-		
-		this.__woBag = {};
     });
     
     visual.getDefaultTemplateId = (function () {
