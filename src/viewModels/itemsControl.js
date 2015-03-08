@@ -1,21 +1,16 @@
 
 Class("wipeout.viewModels.itemsControl", function () {
     
-    var deafaultTemplateId;
-    var staticConstructor = function() {
-        if(deafaultTemplateId) return;
-        
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}');
-    };
-    
+	var deafaultTemplateId;
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
         ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
-        staticConstructor();
-        this._super(templateId || deafaultTemplateId, model);
+        this._super(templateId || 
+					deafaultTemplateId ||
+					(deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}')), model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
         this.itemTemplateId = itemTemplateId;
@@ -30,6 +25,13 @@ Class("wipeout.viewModels.itemsControl", function () {
         this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
+        
+        this.observe("itemTemplateId", function (oldVal, newVal) {
+			enumerateArr(this.getItemViewModels(), function (vm) {
+				if (vm.__createdByItemsControl)
+					vm.templateId = newVal;
+			});
+        }, this);
     });
     
     //TODO: benchmark test
@@ -76,34 +78,11 @@ Class("wipeout.viewModels.itemsControl", function () {
         this.items.remove(item);
     };
     
-    itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
-        ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="wipeout.wml.wmlElement" optional="false">An XML element containing property setters for the view</param>
-        ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
-    
-        if(propertiesXml) {        
-            var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
-            if(prop && parseBool(prop.value))
-                throw "A wo.itemsControl cannot share it's parents scope.";
-        }
-        
-        this._super(propertiesXml, parentBindingContext);
-    };
-    
     //virtual
     itemsControl.prototype.onItemRendered = function (item) {
         ///<summary>Called after a new item items control is rendered</summary>
         ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
-    
-    itemsControl.prototype.dispose = function () {
-        ///<summary>Dispose of the items control and its items</summary>
-        
-        // will dispose of items
-        this.items.length = 0;
-        
-        this._super();
-    };    
     
     //virtual
     itemsControl.prototype.onItemDeleted = function (item) {
@@ -128,12 +107,8 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
         var vm = new wipeout.viewModels.view(this.itemTemplateId, model);
-        
-        vm.registerDisposable(this.observe("itemTemplateId", function (oldVal, newVal) {
-            vm.templateId = newVal;
-        }, this));
-        
-        return vm;
+		vm.__createdByItemsControl = true;
+		return vm;
     };
 
     return itemsControl;
