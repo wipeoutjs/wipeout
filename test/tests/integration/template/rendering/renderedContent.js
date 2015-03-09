@@ -227,6 +227,64 @@ test("dispose", function() {
         application.$domRoot.dispose();
     });
 });
+	
+test("template and untemplate, with click attribute", function() {
+	
+	application.$domRoot.dispose();
+	var methods = new testUtils.methodMock(), first = true;
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	rc.renderContext = new wipeout.template.context({
+		doSomething: function () {
+			ok(first);
+			first = false;
+			methods.verifyAllExpectations();
+			
+			setTimeout(function () {
+				rc.unTemplate(true);
+				document.getElementById("theButton").click();
+				start();
+			});
+		}
+	});
+	
+	rc.viewModel = {
+		onRendered: methods.method()
+	};
+	
+	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate('<button id="theButton" wo-click="$this.doSomething()"></button>');
+	
+	// act
+	stop();
+	rc.template(tid);
+	document.getElementById("theButton").click();
+});
+	
+test("appendHtml", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html('<div id="hello"></div><div id="goodbye"></div>');
+	
+	// act
+	wipeout.template.rendering.renderedContent.prototype.appendHtml.call({
+		closingTag: document.getElementById("goodbye")
+	}, "asdsadsadsadasd<span></span>");
+	
+	// assert
+	strictEqual($("#qunit-fixture").html(), '<div id="hello"></div>asdsadsadsadasd<span></span><div id="goodbye"></div>');
+	
+    function aa (html) {
+        //TODO: hack
+        var scr = document.createElement("script");
+        this.closingTag.parentElement.insertBefore(scr, this.closingTag);
+        scr.insertAdjacentHTML('afterend', html);
+        scr.parentElement.removeChild(scr);
+    };
+});
 /*
 test("remove view model from dom", function() {
     disposeTest(function() {  

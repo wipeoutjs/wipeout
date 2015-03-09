@@ -55,7 +55,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);
         } else {
-            this.prependHtml(this.viewModel.toString());
+            this.appendHtml(this.viewModel.toString());
         }
     };
     
@@ -125,7 +125,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
             }
             
 			// add html and execute to add dynamic content
-            this.disposeOfBindings = template.quickBuild(this.prependHtml.bind(this), this.renderContext);
+            this.disposeOfBindings = template.quickBuild(this.appendHtml.bind(this), this.renderContext);
             this.__initialTemplate = true;
             
             this.viewModel.onRendered();
@@ -155,7 +155,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
         
     //TODO: test
-    renderedContent.prototype.prependHtml = function (html) {
+    renderedContent.prototype.appendHtml = function (html) {
         //TODO: hack
         var scr = document.createElement("script");
         this.closingTag.parentElement.insertBefore(scr, this.closingTag);

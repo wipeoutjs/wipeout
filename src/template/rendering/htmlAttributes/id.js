@@ -7,7 +7,7 @@ Class("wipeout.template.rendering.htmlAttributes.id", function () {
         element.id = value;
         
         return function() {
-            if (renderContext.$this.templateItems[value] === element)
+            if (renderContext.$this instanceof wipeout.viewModels.view && renderContext.$this.templateItems[value] === element)
                 delete renderContext.$this.templateItems[value]
         }
     };
