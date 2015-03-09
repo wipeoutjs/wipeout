@@ -285,6 +285,36 @@ test("appendHtml", function() {
         scr.parentElement.removeChild(scr);
     };
 });
+	
+test("getParentElement, sibling parent", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html('<div id="hello"></div><div id="goodbye"></div>');
+	document.getElementById("hello").wipeoutOpening = {};
+	
+	// act
+	var result = wipeout.template.rendering.renderedContent.getParentElement(document.getElementById("goodbye"));
+	
+	// assert
+	strictEqual(result, document.getElementById("hello"));
+});
+	
+test("getParentElement, parent parent", function() {
+	
+	application.$domRoot.dispose();
+	
+	// arrange
+	$("#qunit-fixture").html('<div id="parent"><div id="hello"></div><div id="goodbye"></div></div>');
+	
+	// act
+	var result = wipeout.template.rendering.renderedContent.getParentElement(document.getElementById("goodbye"));
+	
+	// assert
+	strictEqual(result, document.getElementById("parent"));
+});
+
 /*
 test("remove view model from dom", function() {
     disposeTest(function() {  
