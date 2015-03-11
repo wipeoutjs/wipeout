@@ -37,17 +37,12 @@
 		});
     };*/
     
-	/* this is not tested
     renderedContent.prototype.insertBefore = function (content) {
-              
-		var nodes = getNodesAndRemoveDetatched(content);
 		
-		var opening = this.opeingTag;
-		enumerateArr(nodes, function (node) {
-			opening.parentElement.insertBefore(node, opening);
-		});
+		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
+			this.parentElement.insertBefore(node, this);
+		}, this.openingTag);
     };
-	*/
     
     renderedContent.prototype.insertAfter = function (content) {
               

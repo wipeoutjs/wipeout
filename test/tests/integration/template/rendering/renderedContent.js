@@ -337,6 +337,21 @@ test("prepend", function() {
 	strictEqual(el2.nextSibling, el1);
 });
 
+test("insertBefore", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	
+	// act
+	subject.insertBefore(el1);
+	subject.insertBefore(el2);
+	
+	// assert
+	strictEqual(subject.openingTag.previousSibling, el2);	
+	strictEqual(el2.previousSibling, el1);
+});
+
 test("insertAfter", function() {
 	
 	// arrange
