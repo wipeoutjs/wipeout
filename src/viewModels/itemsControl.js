@@ -2,6 +2,7 @@
 Class("wipeout.viewModels.itemsControl", function () {
     
 	var deafaultTemplateId;
+	var defaultItemTemplateId;
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
         ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
@@ -85,7 +86,8 @@ Class("wipeout.viewModels.itemsControl", function () {
     };
     
     //virtual
-    itemsControl.prototype.onItemDeleted = function (item) {
+	//TODO: the has changed from onItemDeleted
+    itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="wo.view" optional="false">The item deleted</param>  
         
@@ -106,7 +108,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        var vm = new wipeout.viewModels.view(this.itemTemplateId, model);
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defualtItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
 		vm.__createdByItemsControl = true;
 		return vm;
     };

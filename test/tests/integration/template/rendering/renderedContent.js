@@ -90,6 +90,52 @@ test("renderArray", function() {
 	stop();
 });
 	
+test("renderArray, itemsControl", function() {
+	
+	clearIntegrationStuff();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rendered = [], removed = [];
+	var ic = new wo.itemsControl();
+	ic.items.push(1);
+	ic.items.push(2);
+	ic.items.push(3);
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla", new wipeout.template.context(ic));
+	ic.onItemRendered = function (item) { rendered.push(item) };
+	ic.onItemRemoved = function (item) { removed.push(item) };
+	
+	// act
+	rc.renderArray(ic.items);
+	
+	// assert		
+	strictEqual($("#qunit-fixture")[0].childNodes.length, (ic.items.length * 5) + 2);
+
+	for (var j = 0, i = 1, ii = $("#qunit-fixture")[0].childNodes.length - 1; i < ii; i += 5, j++) {
+		strictEqual($("#qunit-fixture")[0].childNodes[i].textContent, " item: " + j + " ");
+		strictEqual($("#qunit-fixture")[0].childNodes[i + 1].textContent, " $this.model ");
+		strictEqual($("#qunit-fixture")[0].childNodes[i + 2].textContent, ic.items[j].toString());
+		strictEqual($("#qunit-fixture")[0].childNodes[i + 3].textContent, " /$this.model ");
+		strictEqual($("#qunit-fixture")[0].childNodes[i + 4].textContent, " /item: " + j + " ");
+	}
+	
+	strictEqual(ic.getItemViewModels().length, 3);
+	wipeout.utils.obj.enumerateArr(ic.getItemViewModels(), function (val, i) {
+		strictEqual(val.model, ic.items[i]);
+	});
+	
+	strictEqual(rendered.length, 3);
+	wipeout.utils.obj.enumerateArr(rendered, function (val, i) {
+		strictEqual(val.model, ic.items[i]);
+	});
+	
+	rc.dispose();
+	strictEqual(removed.length, 3);
+	wipeout.utils.obj.enumerateArr(removed, function (val, i) {
+		strictEqual(val.model, ic.items[i]);
+	});
+});
+	
 test("render, non vm", function() {
 	
 	clearIntegrationStuff();

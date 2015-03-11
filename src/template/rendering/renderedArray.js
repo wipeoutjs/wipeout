@@ -31,7 +31,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	
 	renderedArray.prototype.remove = function (item) {                   
 		if (this.itemsControl)
-			this.itemsControl.onItemDeleted(item.renderedChild);
+			this.itemsControl.onItemRemoved(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;

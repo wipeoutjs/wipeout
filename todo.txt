@@ -25,9 +25,13 @@ standardise the way things are rendered, between Objects and wo.views (toString)
 
 initialization/disposal overrides. Needs complete overhaul
 
+for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
+
+
 bug, handle null template id better
 
 obsjs.disposable, lazy create disposables object
+obsjs.array, push with multiple arguments does not work
 
 window.requestAnimationFrame
 
