@@ -2,10 +2,9 @@ module("wipeout.template.rendering.renderedContent, integration", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
-	
+
 test("constructor", function() {
-	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
@@ -28,8 +27,7 @@ test("constructor", function() {
 });
 	
 test("rename", function() {
-    
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
@@ -47,7 +45,7 @@ test("rename", function() {
 	
 test("render, non vm", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
@@ -68,7 +66,7 @@ test("render, non vm", function() {
 	
 test("render, is vm", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
@@ -91,7 +89,7 @@ test("render, is vm", function() {
 	
 test("render, template change", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
@@ -223,14 +221,14 @@ function disposeTest (act) {
 }
 
 test("dispose", function() {
-    disposeTest(function() { 
-        application.$domRoot.dispose();
+    disposeTest(function() {
+		clearIntegrationStuff();
     });
 });
 	
 test("template and untemplate, with click attribute", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	var methods = new testUtils.methodMock(), first = true;
 	
 	// arrange
@@ -264,7 +262,7 @@ test("template and untemplate, with click attribute", function() {
 	
 test("appendHtml", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html('<div id="hello"></div><div id="goodbye"></div>');
@@ -288,7 +286,7 @@ test("appendHtml", function() {
 	
 test("getParentElement, sibling parent", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html('<div id="hello"></div><div id="goodbye"></div>');
@@ -303,7 +301,7 @@ test("getParentElement, sibling parent", function() {
 	
 test("getParentElement, parent parent", function() {
 	
-	application.$domRoot.dispose();
+	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html('<div id="parent"><div id="hello"></div><div id="goodbye"></div></div>');
@@ -323,3 +321,98 @@ test("remove view model from dom", function() {
         });
     });  
 });*/
+
+test("prepend", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	
+	// act
+	subject.prepend(el1);
+	subject.prepend(el2);
+	
+	// assert
+	strictEqual(subject.openingTag.nextSibling, el2);	
+	strictEqual(el2.nextSibling, el1);
+});
+
+test("insertAfter", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	
+	// act
+	subject.insertAfter(el1);
+	subject.insertAfter(el2);
+	
+	// assert
+	strictEqual(subject.closingTag.nextSibling, el2);	
+	strictEqual(el2.nextSibling, el1);
+});
+
+test("detatch", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	subject.prepend(el1);
+	subject.prepend(el2);
+	
+	// act
+	var op1 = subject.detatch();
+	var op2 = subject.detatch();
+	
+	// assert
+	deepEqual(op1, op2);
+	strictEqual(op1.length, 4);
+	strictEqual(op1[0], subject.openingTag);
+	strictEqual(op1[1], el2);
+	strictEqual(op1[2], el1);
+	strictEqual(op1[3], subject.closingTag);
+});
+
+test("allHtml", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	subject.prepend(el1);
+	subject.prepend(el2);
+	
+	// act
+	var result1 = subject.allHtml();
+	var result2 = subject.allHtml();
+	
+	// assert
+	deepEqual(result1, result2);
+	strictEqual(result1.length, 4);
+	strictEqual(result1[0], subject.openingTag);
+	strictEqual(result1[1], el2);
+	strictEqual(result1[2], el1);
+	strictEqual(result1[3], subject.closingTag);
+});
+
+test("allHtml, is detatched", function() {
+	
+	// arrange
+	var subject = application.$domRoot;
+	var el1 = document.createElement("div"), el2 = document.createElement("div");
+	subject.prepend(el1);
+	subject.prepend(el2);
+	var detatched = subject.detatch();
+	
+	// act
+	var result1 = subject.allHtml();
+	var result2 = subject.allHtml();
+	
+	// assert
+	deepEqual(result1, detatched);
+	deepEqual(result1, result2);
+	strictEqual(result1.length, 4);
+	strictEqual(result1[0], subject.openingTag);
+	strictEqual(result1[1], el2);
+	strictEqual(result1[2], el1);
+	strictEqual(result1[3], subject.closingTag);
+});

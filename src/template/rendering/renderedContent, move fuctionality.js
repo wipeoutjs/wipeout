@@ -18,15 +18,15 @@
     //TODO: test
     renderedContent.prototype.prepend = function (content) {
               
-		var nodes = getNodesAndRemoveDetatched(content);
+		content = getNodesAndRemoveDetatched(content);
 		
-		nodes.push(this.openingTag.nextSibling || this.closingTag);
+		content.push(this.openingTag.nextSibling || this.closingTag);
 		
-		for (var i = nodes.length - 2; i >= 0; i--)
-			nodes[i + 1].parentElement.insertBefore(nodes[i], nodes[i + 1]);
+		for (var i = content.length - 2; i >= 0; i--)
+			content[i + 1].parentElement.insertBefore(content[i], content[i + 1]);
     };
     
-    //TODO: test
+	/* this is not tested
     renderedContent.prototype.append = function (content) {
               
 		var nodes = getNodesAndRemoveDetatched(content);
@@ -35,9 +35,9 @@
 		enumerateArr(nodes, function (node) {
 			closing.parentElement.insertBefore(node, closing);
 		});
-    };
+    };*/
     
-    //TODO: test
+	/* this is not tested
     renderedContent.prototype.insertBefore = function (content) {
               
 		var nodes = getNodesAndRemoveDetatched(content);
@@ -47,39 +47,37 @@
 			opening.parentElement.insertBefore(node, opening);
 		});
     };
+	*/
     
-    //TODO: test
     renderedContent.prototype.insertAfter = function (content) {
               
-		var nodes = getNodesAndRemoveDetatched(content);
+		content = getNodesAndRemoveDetatched(content);
 		
 		if (this.closingTag.nextSibling)
-			this.closingTag.nextSibling.parentElement.insertBefore(nodes[nodes.length - 1], this.closingTag.nextSibling);
+			this.closingTag.nextSibling.parentElement.insertBefore(content[content.length - 1], this.closingTag.nextSibling);
 		else
-			this.closingTag.parentElement.appendChild(nodes[nodes.length - 1]);
+			this.closingTag.parentElement.appendChild(content[content.length - 1]);
 		
-		for (var i = nodes.length - 2; i >= 0; i--)
-			nodes[i + 1].parentElement.insertBefore(nodes[i], nodes[i + 1]);
+		for (var i = content.length - 2; i >= 0; i--)
+			content[i + 1].parentElement.insertBefore(content[i], content[i + 1]);
     };
     
-    //TODO: test
     renderedContent.prototype.detatch = function() {
 		
-		if (this.detatched) return;
-		
-        this.detatched = [this.openingTag], current = this.openingTag;
+		if (!this.detatched) {		
+			this.detatched = [this.openingTag], current = this.openingTag;
+
+			for (var i = 0; current && current !== this.closingTag; i++) {
+				this.detatched.push(current = current.nextSibling); 
+				this.detatched[i].parentElement.removeChild(this.detatched[i]);
+			}
+		}
         
-        for (var i = 0; current && current !== this.closingTag; i++) {
-            this.detatched.push(current = current.nextSibling); 
-			this.detatched[i].parentElement.removeChild(this.detatched[i]);
-        }
-        
-        return this.detatched;
+        return this.detatched.slice();
     };
     
-    //TODO: test
     renderedContent.prototype.allHtml = function() {
-		if (this.detatched) return this.detatched.slice();
+		if (this.detatched) return this.detatch();
 		
         var output = [this.openingTag], current = this.openingTag;
         

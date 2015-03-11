@@ -96,9 +96,16 @@ Class("wipeout.template.rendering.renderedContent", function () {
 
         // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
         // remove all children
-        if(!leaveDeadChildNodes)
-            while (this.openingTag.nextSibling && this.openingTag.nextSibling !== this.closingTag)
-                this.openingTag.nextSibling.parentNode.removeChild(this.openingTag.nextSibling);
+        if(!leaveDeadChildNodes) {
+			var ns;
+            while ((ns = this.openingTag.nextSibling) && ns !== this.closingTag) {
+				//TODO: benchmark test, is this necessary (does it help with memory leaks) and des it take much time?
+				if (ns.elementType === 1)
+					ns.innerHTML = "";
+				
+                ns.parentNode.removeChild(this.openingTag.nextSibling);
+			}
+		}
     };
     
     renderedContent.prototype.template = function(templateId) {
@@ -149,13 +156,20 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
         this.unRender(leaveDeadChildNodes);
         
-        if (!leaveDeadChildNodes) {
-            this.closingTag.parentElement.removeChild(this.closingTag);
-            this.openingTag.parentElement.removeChild(this.openingTag);
-			
-			delete this.closingTag;
-			delete this.openingTag;
-        }        
+        if (!leaveDeadChildNodes && !this.detatched) {
+			this.closingTag.parentElement.removeChild(this.closingTag);
+			this.openingTag.parentElement.removeChild(this.openingTag);
+		}
+		
+        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
+		delete this.detatched;
+		
+		delete this.closingTag.wipeoutClosing;
+		delete this.openingTag.wipeoutOpening;
+		
+        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
+		delete this.closingTag;
+		delete this.openingTag;
     };
 	
     renderedContent.prototype.appendHtml = function (html) {

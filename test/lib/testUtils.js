@@ -18,6 +18,12 @@ window.integrationTestSetup = function () {
 
 	window.views = {};
 };
+	
+window.clearIntegrationStuff = function() {
+	var node = application.$domRoot.openingTag;
+	application.$domRoot.dispose();
+	node.wipeoutOpening = {dispose: function (){}}
+};
 
 window.integrationTestTeardown = function () {
 	delete window.views;
