@@ -27,9 +27,6 @@ Class("wipeout.template.rendering.renderedArray", function () {
 				return this.children[i] ? this.children[i].renderedChild : undefined; 
 			}).bind(this);
 		}
-		
-        if (array instanceof wipeout.base.array)
-            this.arrayObserve = array.observe(this.render, this, {useRawChanges: true});
 	});
 	
 	renderedArray.prototype.remove = function (item) {                   
@@ -113,11 +110,6 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	
 	renderedArray.prototype.dispose = function () {
 		this._super();
-		
-		if (this.arrayObserve) {
-			this.arrayObserve.dispose();
-			delete this.arrayObserve;
-		}
 
 		enumerateArr(this.children, this.remove, this);
 		this.children.length = 0;
