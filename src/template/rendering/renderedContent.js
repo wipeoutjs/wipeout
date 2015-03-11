@@ -88,6 +88,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         ///<summary>Remove a view model's template, leaving it blank</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
+		delete this.currentTemplate;
+		
         // dispose of bindings
         if (this.disposeOfBindings) {
             this.disposeOfBindings();
@@ -104,17 +106,19 @@ Class("wipeout.template.rendering.renderedContent", function () {
     renderedContent.prototype.template = function(templateId) {
         ///<summary>Render the view model with the given template</summary>
         ///<param name="templateId" type="String">A pointer to the template to apply</param>
-        
+        		
         // if a previous request is pending, cancel it
         if (this.asynchronous)
             this.asynchronous.cancel();
+		
+		if (this.currentTemplate === templateId) return;
         
         // remove old template
         if (this.__initialTemplate)
             this.unTemplate();
-		
+				
 		if (!templateId) return;
-        
+        		
         this.asynchronous = wipeout.template.engine.instance.compileTemplate(templateId, (function (template) {
             delete this.asynchronous;
             
@@ -124,6 +128,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
                 element = null;
             }
             
+			this.currentTemplate = templateId;
+			
 			// add html and execute to add dynamic content
             this.disposeOfBindings = template.quickBuild(this.appendHtml.bind(this), this.renderContext);
             this.__initialTemplate = true;

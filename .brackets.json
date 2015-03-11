@@ -1,5 +1,6 @@
 {
     "jscodehints.detectedExclusions": [
-        "C:/Dev/Apps/wipeout-1/bower_components/objjs/tools/end.js"
+        "C:/Dev/Apps/wipeout-1/bower_components/objjs/tools/end.js",
+        "C:/Dev/Apps/wipeout-1/build/wipeout.debug.js"
     ]
 }

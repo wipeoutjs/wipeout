@@ -25,12 +25,14 @@ Class("wipeout.template.engine", function () {
         }).bind(this));
     };
     
-	var blankTemplateId;
-	function fixTemplateId (templateId) {
-		return templateId ||
-			blankTemplateId || 
-			(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
-	}
+	var fixTemplateId = (function () {
+		var blankTemplateId;
+		return function (templateId) {
+			return templateId ||
+				blankTemplateId || 
+				(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
+		};
+	}());
 	
     engine.prototype.compileTemplate = function (templateId, callback) {
         
