@@ -5,8 +5,6 @@ module("wipeout.template.rendering.compiledTemplate", {
     }
 });
 
-var compiledTemplate = wipeout.template.rendering.compiledTemplate;
-
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var template = [{}];

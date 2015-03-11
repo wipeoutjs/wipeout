@@ -3,8 +3,6 @@ module("wipeout.utils.find, integration", {
     teardown: integrationTestTeardown
 });
 
-var find = wipeout.utils.find;
-
 test("wipeout.utils.find", function() {
 	
     // arrange
@@ -66,7 +64,7 @@ testUtils.testWithUtils("find", "index only", false, function(methods, classes, 
         }
     };
     
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act        
     // assert
@@ -87,7 +85,7 @@ testUtils.testWithUtils("find", "index and ancestor", false, function(methods, c
         }
     };
     
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act
     var output = subject.find("parent", {$number: 1});
@@ -115,7 +113,7 @@ testUtils.testWithUtils("find", "ancestors", false, function(methods, classes, s
         }
     };
     
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act        
     // assert
@@ -146,7 +144,7 @@ testUtils.testWithUtils("find", "constructor and index", false, function(methods
         }
     };
     
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act        
     // assert
@@ -176,7 +174,7 @@ testUtils.testWithUtils("find", "instanceof and index", false, function(methods,
         }
     };
     
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act        
     // assert
@@ -204,7 +202,7 @@ testUtils.testWithUtils("find", "instanceof and model", false, function(methods,
     };
     
     bc.$parentContext.$parentContext.$this.model = model;    
-    subject = new find(bc);
+    subject = new wipeout.utils.find(bc);
     
     // act
     var actual = subject.find({$i:myClass, $m: true});

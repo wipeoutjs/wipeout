@@ -12,7 +12,7 @@ Class("wipeout.template.context", function () {
         if (parentContext) {
             this.$parentContext = parentContext;
             this.$parent = parentContext.$this;
-            this.$parents.push(this.$parent);
+            this.$parents = [parentContext.$this];
             this.$parents.push.apply(this.$parents, parentContext.$parents);
         } else {
 			this.$parentContext = null;

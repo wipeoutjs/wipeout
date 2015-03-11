@@ -127,7 +127,7 @@ $.extend(testUtils, (function() {
             try {
                 var subject = {};                
                 var testSubject = testUtils.currentModule;
-                if(method.toLowerCase() !== "consrtuctor") {
+                if(method.toLowerCase() !== "constructor") {
                     if(!isStatic) {
                         testSubject += ".prototype";
                     }
