@@ -42,6 +42,7 @@ Class("wipeout.viewModels.contentControl", function () {
             ///<returns type="String">The template id</returns>
 
             if (typeof templateStringOrXml === "string") {
+				// look in cached template strings and create template if necessary
                 if (!templateStringCache[templateStringOrXml]) {
                     var id = newTemplateId();
                     wipeout.template.engine.instance.setTemplate(id, templateStringOrXml);
@@ -50,6 +51,7 @@ Class("wipeout.viewModels.contentControl", function () {
 
                 return templateStringCache[templateStringOrXml];
             } else {
+				// look for cached id within xml or create one
                 if (!templateStringOrXml[anonymousTemplateId]) {
                     var id = newTemplateId();
                     wipeout.template.engine.instance.setTemplate(id, templateStringOrXml);
