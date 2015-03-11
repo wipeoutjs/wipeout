@@ -1,7 +1,7 @@
 
 Class("wipeout.template.rendering.renderedContent", function () {
     
-    var renderedContent = wipeout.base.object.extend(function renderedContent (element, name, parentRenderContext) {
+    var renderedContent = obsjs.disposable.extend(function renderedContent (element, name, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>
@@ -152,6 +152,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
+		this._super();
+		
 		if (!this.closingTag) return;
 		
         this.unRender(leaveDeadChildNodes);

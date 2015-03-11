@@ -27,6 +27,8 @@ initialization/disposal overrides. Needs complete overhaul
 
 bug, handle null template id better
 
+obsjs.disposable, lazy create disposables object
+
 window.requestAnimationFrame
 
 shadow DOM
