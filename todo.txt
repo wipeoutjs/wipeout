@@ -3,6 +3,8 @@ Try to make onModelChanged synchronus. Model routed events don't work properly i
 
 REMOVE WITH. It is incredibly slow
 
+tests with useObjectOberve === false will fail
+
 events and routed events. make strings?s
 
 replace xml parsing with native
