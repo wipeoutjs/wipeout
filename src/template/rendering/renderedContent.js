@@ -66,9 +66,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
         this.template(templateId);
     };
-        
-    //TODO: rename to unRender
-    renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
+	
+	renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
         this.unTemplate(leaveDeadChildNodes);
         
 		if (this.templateObserved) {
@@ -82,9 +81,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		delete this.renderContext;
 		delete this.viewModel;
     };
-    
-    //TODO: rename to unRender
-    renderedContent.prototype.unTemplate = function(leaveDeadChildNodes) {
+	
+	renderedContent.prototype.unTemplate = function(leaveDeadChildNodes) {
         ///<summary>Remove a view model's template, leaving it blank</summary>
         ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, do not remove html nodes after disposal. This is a performance optimization</param>
         
@@ -159,10 +157,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
 			delete this.openingTag;
         }        
     };
-        
-    //TODO: test
+	
     renderedContent.prototype.appendHtml = function (html) {
-        //TODO: hack
+        //TODO: hack to use insertAdjacentHTML on comment
         var scr = document.createElement("script");
         this.closingTag.parentElement.insertBefore(scr, this.closingTag);
         scr.insertAdjacentHTML('afterend', html);
