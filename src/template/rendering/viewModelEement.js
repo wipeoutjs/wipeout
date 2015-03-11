@@ -14,9 +14,6 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         
         this._super(element, wipeout.utils.obj.trim(vm.name), parentRenderContext);
         
-        // create initialization xml
-        this.initialization = xmlOverride || wipeout.wml.wmlParser(wipeout.utils.html.outerHTML(element))[0];
-        
         // create actual view model
         this.createdViewModel = new vm.constructor();
 		
@@ -26,7 +23,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         
         // initialize the view model
         this.disposeOfViewModelBindings = wipeout.template.engine.instance
-            .getVmInitializer(this.initialization)
+            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(wipeout.utils.html.outerHTML(element))[0])
             .initialize(this.createdViewModel, this.renderContext);
         
         // run onInitialized after value initialization is complete
@@ -34,7 +31,12 @@ Class("wipeout.template.rendering.viewModelElement", function () {
             this.createdViewModel.onInitialized();
         
         this.render(this.createdViewModel);
+		this.render = blockRendering;
     });
+	
+	function blockRendering () {
+		throw "A view model element can only be rendered once";
+	}
     
     viewModelElement.prototype.dispose = function(leaveDeadChildNodes) {
         ///<summary>Dispose of this view model and viewModel element, removing it from the DOM</summary>
