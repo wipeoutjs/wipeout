@@ -8,19 +8,22 @@ Class("wipeout.template.context", function () {
 			throw "You cannot create a template context for a view model with a shared parent scope";
         
         this.$this = forVm;
-        this.$parents = [];
-        this.$parent = null;
-        this.$parentContext = null;
         
         if (parentContext) {
             this.$parentContext = parentContext;
             this.$parent = parentContext.$this;
             this.$parents.push(this.$parent);
             this.$parents.push.apply(this.$parents, parentContext.$parents);
-        }
+        } else {
+			this.$parentContext = null;
+			this.$parent = null;
+			this.$parents = [];
+		}
 		
-		if (arrayIndex != null)
-			this.$index = obsjs.makeObservable({value: arrayIndex});
+		if (arrayIndex != null) {
+			this.$index = new obsjs.observable();
+			this.$index.value = arrayIndex;
+		}
     }
     
     // each render context has access to the global scope
@@ -35,9 +38,13 @@ Class("wipeout.template.context", function () {
     
     context.prototype.contextFor = function (forVm, arrayIndex) {
         
+		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arguments.length > 1)
+			console.warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
+		
         return forVm && forVm.shareParentScope ? this : new context(forVm, this, arrayIndex);
     };
     
+	//TODO: not testing as this will probably be removed
     context.prototype.variablesForComputed = function (additions) {
         var output = {};
         enumerateObj(this, function (property, name) {
@@ -50,14 +57,6 @@ Class("wipeout.template.context", function () {
         });
         
         return output;
-    };  
-    
-    context.addRenderContext = function (toFunction) {
-        
-        return toFunction
-            .toString()
-            .replace(/\$this/g, "renderContext.$this")
-            .replace(/\$parent/g, "renderContext.$parent");
     };
     
     return context;
