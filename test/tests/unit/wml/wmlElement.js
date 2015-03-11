@@ -5,8 +5,6 @@ module("wipeout.wml.wmlElement", {
     }
 });
 
-var wmlElement = wipeout.wml.wmlElement;
-
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
@@ -26,7 +24,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
 testUtils.testWithUtils("serialize", "inline", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    subject = new wmlElement("name", true);
+    subject = new wipeout.wml.wmlElement("name", true);
     subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     
     // act
@@ -39,7 +37,7 @@ testUtils.testWithUtils("serialize", "inline", false, function(methods, classes,
 testUtils.testWithUtils("serialize", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    subject = new wmlElement("name", false);
+    subject = new wipeout.wml.wmlElement("name", false);
     subject.attributes["attr"] = {serializeValue: function() { return "Val"; }};
     subject.serializeContent = function() { return "children"; };
     

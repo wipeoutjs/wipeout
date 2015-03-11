@@ -5,13 +5,10 @@ module("wipeout.wml.wmlElementBase", {
     }
 });
 
-var wmlElementBase = wipeout.wml.wmlElementBase;
-var getParentElement = wipeout.wml.wmlElement.prototype.getParentElement;
-
 testUtils.testWithUtils("push, splice", "no getParentElement", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new wmlElementBase();
+    var subject = new wipeout.wml.wmlElementBase();
     
     // act    
     //assert
@@ -27,9 +24,9 @@ testUtils.testWithUtils("push, splice", "no getParentElement", false, function(m
 testUtils.testWithUtils("push, splice", "has parent element", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new wmlElementBase();
+    var subject = new wipeout.wml.wmlElementBase();
     var input = {
-        getParentElement: getParentElement
+        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
     };
     input._parentElement = [input];
     
@@ -46,13 +43,13 @@ testUtils.testWithUtils("push, splice", "has parent element", false, function(me
 testUtils.testWithUtils("push, splice", "ok", false, function(methods, classes, subject, invoker) {
     
     // arrange
-    var subject = new wmlElementBase();
+    var subject = new wipeout.wml.wmlElementBase();
     var input1 = {
-        getParentElement: getParentElement
+        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
     }, input2 = {
-        getParentElement: getParentElement
+        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
     }, input3 = {
-        getParentElement: getParentElement
+        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
     };
     
     // act  

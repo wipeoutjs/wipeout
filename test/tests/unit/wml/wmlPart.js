@@ -5,8 +5,6 @@ module("wipeout.wml.wmlPart", {
     }
 });
 
-var wmlParser = wipeout.wml.wmlParser;
-
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
     // arrange    
