@@ -43,6 +43,53 @@ test("rename", function() {
 	rc.dispose();
 });
 	
+test("renderArray", function() {
+	
+	clearIntegrationStuff();
+	
+	// arrange
+	$("#qunit-fixture").html("<div id='hello'></div>");
+	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
+	var array = new obsjs.array([1, 2, 3]);
+	
+	// act
+	rc.renderArray(array);
+	
+	// assert
+	function assert() {
+		strictEqual($("#qunit-fixture")[0].childNodes.length, (array.length * 3) + 2);
+		
+		for (var j = 0, i = 1, ii = $("#qunit-fixture")[0].childNodes.length - 1; i < ii; i += 3, j++) {
+			strictEqual($("#qunit-fixture")[0].childNodes[i].textContent, " item: " + j + " ");
+			strictEqual($("#qunit-fixture")[0].childNodes[i + 1].textContent, array[j].toString());
+			strictEqual($("#qunit-fixture")[0].childNodes[i + 2].textContent, " /item: " + j + " ");
+		}
+	}
+	
+	assert();
+	
+	var disp = array.observe(function () {
+		disp.dispose();
+		
+		setTimeout(function () {
+			assert();
+	
+			rc.disposeOfBindings();
+			array = [];
+			assert();
+			
+			rc.dispose();
+			start();
+		});
+	});
+	
+	array.replace(0, 2);
+	array.replace(1, 1);
+	array.push(55);
+	
+	stop();
+});
+	
 test("render, non vm", function() {
 	
 	clearIntegrationStuff();

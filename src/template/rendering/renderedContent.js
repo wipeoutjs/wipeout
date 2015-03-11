@@ -70,7 +70,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
 		this.renderContext = this.parentRenderContext ? 
 			this.parentRenderContext.contextFor(this.viewModel, arrayIndex) :
-			new wipeout.template.context(this.viewModel, arrayIndex);
+			new wipeout.template.context(this.viewModel, null, arrayIndex);
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
             this.viewModel.$domRoot = this;

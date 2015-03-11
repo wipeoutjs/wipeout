@@ -6,7 +6,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		
 		this.parent = parent;
 		this.array = array;
-		if (this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
+		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
 			this.itemsControl = this.parent.parentRenderContext.$this;
 		
 		this.children = [];
@@ -41,7 +41,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	
 	var mysteryItem = {};
 	renderedArray.prototype.render = function (changes) {
-			
+		
 		var removed = [];
 		enumerateArr(changes, function (change) {
 			if (change.type === "splice") {
