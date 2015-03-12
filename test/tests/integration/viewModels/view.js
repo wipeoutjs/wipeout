@@ -2,6 +2,58 @@ module("wipeout.viewModels.view, integration", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
+	
+test("parent child views", function() {
+	
+    // arrange
+    var parent1 = "p1", child1 = "c1", child2 = "c2";
+    var parent2 = "p2", child3 = "c3", child4 = "c4";
+    var parent3 = "p3", child5 = "c5", child6 = "c6";
+    
+    
+    // act
+    application.template = '<wo.content-control share-parent-scope="true" id="' + parent1 + '">\
+        <template>\
+            <wo.view share-parent-scope="true" id="' + child1 + '" />\
+            <wo.view id="' + child2 + '" />\
+        </template>\
+    </wo.content-control>\
+    <wo.content-control id="' + parent2 + '">\
+        <template>\
+            <wo.view share-parent-scope="true" id="' + child3 + '" />\
+            <wo.view id="' + child4 + '" />\
+        </template>\
+    </wo.content-control>\
+    <wo.items-control items="[{},{}]" id="' + parent3 + '">\
+    </wo.items-control>';
+	
+	application.onRendered = function () {
+    
+		ok(parent1 = application.templateItems[parent1]);
+		ok(child1 = application.templateItems[child1]);
+		ok(child2 = application.templateItems[child2]);
+
+		ok(parent2 = application.templateItems[parent2]);
+		ok(child3 = parent2.templateItems[child3]);
+		ok(child4 = parent2.templateItems[child4]);
+
+		ok(parent3 = application.templateItems[parent3]);
+		ok(child5 = parent3.getItemViewModels()[0]);
+		ok(child6 = parent3.getItemViewModels()[1]);
+
+		// assert
+		strictEqual(child1.getParent(), application);
+		strictEqual(child2.getParent(), application);
+		strictEqual(child3.getParent(), parent2);
+		strictEqual(child4.getParent(), parent2);
+		strictEqual(child5.getParent(), parent3);
+		strictEqual(child6.getParent(), parent3);
+		
+		start();
+	};
+	
+	stop();
+});
 
 test("camel casing and synchronus rendering of <template>", function() {
     

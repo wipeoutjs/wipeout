@@ -132,3 +132,77 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 	
 	stop();
 });
+
+test("advanced items control, creating/destroying", function() {
+	
+    // arrange
+    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model"></div>');
+    
+    var itemsControl1 = new wo.itemsControl();
+    itemsControl1.itemTemplateId = itemTemplateId;
+    itemsControl1.items = ["a", "b", "c"];
+    
+    var itemsControl2 = new wo.itemsControl();
+    itemsControl2.itemTemplateId = itemTemplateId;
+    itemsControl2.items = ["d", "e", "f"];
+    
+    application.template = '{{$this.content}}';
+    
+    // act
+    // assert
+	var d = application.observe("content", function () {
+		d.dispose();
+		setTimeout(function () {
+			strictEqual($("#a").length, 1);
+			strictEqual($("#b").length, 1);
+			strictEqual($("#c").length, 1);
+			
+			application.observe("content", function () {
+				setTimeout(function () {
+					strictEqual($("#a").length, 0);
+					strictEqual($("#b").length, 0);
+					strictEqual($("#c").length, 0);
+					strictEqual($("#d").length, 1);
+					strictEqual($("#e").length, 1);
+					strictEqual($("#f").length, 1);
+
+					start();
+				}, 50);
+			});
+			
+			application.content = itemsControl2;
+		}, 50);
+	});
+	
+    application.content = itemsControl1;
+	
+	stop();
+});
+
+test("items control, $index", function() {
+	
+    // arrange
+    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$parentContext.$index.value" />');
+    
+    var itemsControl = new wo.itemsControl();
+    itemsControl.itemTemplateId = itemTemplateId;
+    itemsControl.items = ["a", "b", "c"];
+    application.content = itemsControl;
+    
+    application.template = '{{$this.content}}';
+    
+    // act
+    // assert
+	application.onRendered = function () {
+		strictEqual($("#a").attr("data-index"), "0");
+		strictEqual(itemsControl.getItemViewModel(0).templateItems.item.index, 0);
+		strictEqual($("#b").attr("data-index"), "1");
+		strictEqual(itemsControl.getItemViewModel(1).templateItems.item.index, 1);
+		strictEqual($("#c").attr("data-index"), "2");
+		strictEqual(itemsControl.getItemViewModel(2).templateItems.item.index, 2);
+		
+		start();
+	};
+	
+	stop();
+});
