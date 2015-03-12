@@ -61,6 +61,26 @@ testUtils.testWithUtils("onModelChanged", "", false, function(methods, classes, 
     strictEqual(subject.$modelRoutedEventKey, key);
 });
 
+testUtils.testWithUtils("getRenderContext", "has render context", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.$domRoot = {renderContext: {}};
+    
+    // act
+    var op = invoker();
+    
+    // assert
+	strictEqual(op, subject.$domRoot.renderContext);
+});
+
+testUtils.testWithUtils("getRenderContext", "no render context", false, function(methods, classes, subject, invoker) {
+    // arrange
+    // act
+    var op = invoker();
+    
+    // assert
+	strictEqual(op, null);
+});
+
 testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {
@@ -76,61 +96,80 @@ testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, clas
     // assert    
 });
 
-/*testUtils.testWithUtils("getParent", "don't include shareParentScope", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParent", "no parent", false, function(methods, classes, subject, invoker) {
     // arrange
-    var expected = {};
-    var parentElement = {};
-    classes.mock("wipeout.utils.ko.parentElement", function() {
-        strictEqual(arguments[0], subject.__woBag.rootHtmlElement);
-        return parentElement;
-    }, 1);
-    
-    classes.mock("wipeout.utils.html.getViewModel", function() {
-        strictEqual(arguments[0], parentElement);
-        return {
-            shareParentScope: true,
-            getParent: function() {
-                ok(!arguments[0]);
-                return expected;
-            }
-        };
-    });
-    
-    subject.__woBag = {
-        rootHtmlElement: {}
-    };
+	subject.getRenderContext = methods.method([], null);
     
     // act
-    var actual = invoker(false);
+    var actual = invoker();
     
     // assert
-    strictEqual(actual, expected);
+    strictEqual(actual, null);
 });
 
-testUtils.testWithUtils("getParent", "include shareParentScope", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParent", "has parent", false, function(methods, classes, subject, invoker) {
     // arrange
-    var expected = {};
-    var parentElement = {};
-    classes.mock("wipeout.utils.ko.parentElement", function() {
-        strictEqual(arguments[0], subject.__woBag.rootHtmlElement);
-        return parentElement;
-    }, 1);
-    
-    classes.mock("wipeout.utils.html.getViewModel", function() {
-        strictEqual(arguments[0], parentElement);
-        return expected;
-    });
-    
-    subject.__woBag = {
-        rootHtmlElement: {}
-    };
+	var parent = {};
+	subject.getRenderContext = methods.method([], {$parent: parent, $this: subject});
     
     // act
-    var actual = invoker(false);
+    var actual = invoker();
     
     // assert
-    strictEqual(actual, expected);
-});*/
+    strictEqual(actual, parent);
+});
+
+testUtils.testWithUtils("getParent", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent = {};
+	subject.getRenderContext = methods.method([], {$this: parent});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual, parent);
+});
+
+testUtils.testWithUtils("getParents", "no parents", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.getRenderContext = methods.method([], null);
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 0);
+});
+
+testUtils.testWithUtils("getParents", "has parent", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent0 = {}, parent1 = {};
+	subject.getRenderContext = methods.method([], {$this: subject, $parents: [parent0, parent1]});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 2);
+    strictEqual(actual[0], parent0);
+    strictEqual(actual[1], parent1);
+});
+
+testUtils.testWithUtils("getParents", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent0 = {}, parent1 = {}, parent2 = {};
+	subject.getRenderContext = methods.method([], {$this: parent0, $parents: [parent1, parent2]});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 3);
+    strictEqual(actual[0], parent0);
+    strictEqual(actual[1], parent1);
+    strictEqual(actual[2], parent2);
+});
 
 testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
     // arrange
