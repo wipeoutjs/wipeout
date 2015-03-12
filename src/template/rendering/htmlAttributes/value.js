@@ -1,7 +1,7 @@
 
 HtmlAttr("value", function () {
 	
-	return function value (value, element, renderContext) { //TODO error handling
+	return function value (value, element, renderContext, attributeName) { //TODO error handling
 		
         if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(value))
             throw "Cannot bind to the property \"" + value + "\".";
@@ -15,11 +15,6 @@ HtmlAttr("value", function () {
 			wipeout.utils.obj.setObject(value, renderContext, element.value);
         }));
         
-        return function () {
-            if (d1) {
-                d1.dispose();                
-                d1 = null;
-            }
-        }
+        return d1.dispose.bind(d1);
     }
 });

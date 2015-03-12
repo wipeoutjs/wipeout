@@ -10,8 +10,6 @@ Class("wipeout.template.engine", function () {
     engine.prototype.setTemplate = function (templateId, template) {
 		if (!templateId) throw "Invalid template id";
 		
-		if (this.templates[templateId]) throw "The template \"" + templateId + "\" has already been set.";
-		
         if (typeof template === "string")
             template = wipeout.wml.wmlParser(template);
 		else if (template.nodeType === 2)

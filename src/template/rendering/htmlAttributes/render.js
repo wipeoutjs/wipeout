@@ -1,6 +1,6 @@
 
 HtmlAttr("render", function () {
-	return function render (value, element, renderContext) {
+	return function render (value, element, renderContext, attributeName) {
 		
         var htmlContent = new wipeout.template.rendering.renderedContent(element, value, renderContext);
         var disposal = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {

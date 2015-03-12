@@ -48,7 +48,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(mod) {
-                var dispose = mod.action(mod.value, element, renderContext);
+                var dispose = mod.action(mod.value, element, renderContext, mod.actionName);
                 if(dispose instanceof Function)
                     output.push(dispose);
             });

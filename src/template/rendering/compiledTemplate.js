@@ -50,6 +50,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 
             // add the id flag and the id generator
             this.html.push([{
+				actionName: "wo-render",
                 action: wipeout.template.rendering.htmlAttributes["wo-render"], //TODO: ensure this is disposed of
                 value: html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
             }]);
@@ -70,6 +71,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
         // add the id flag and the id generator
         this.html.push([{
+			actionName: "wipeoutCreateViewModel",
             action: wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel,
             value: vmNode
         }]);
@@ -82,25 +84,37 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
         var modifications;
         
+		var attr;
         enumerateObj(attributes, function (attribute, name) {
         
             // if it is a special attribute
-            if (wipeout.template.rendering.htmlAttributes[name]) {
+			attr = false;
+            if (wipeout.template.rendering.htmlAttributes[name] || (attr = wipeout.template.rendering.htmlAttributes["wo-attr"].test(name))) {
 
                 // if it is the first special attribute for this element
                 if (!modifications)
                     this.html.push(modifications = []);
-
-                // ensure the "id" modification is the first to be done
-                name === "id" ?
-                    modifications.splice(0, 0, {
-                        action: wipeout.template.rendering.htmlAttributes[name],
-                        value: attribute.value
-                    }) :
-                    modifications.push({
-                        action: wipeout.template.rendering.htmlAttributes[name],
-                        value: attribute.value
-                    });
+				
+				if (attr) {
+					modifications.push({
+						actionName: name,
+						action: wipeout.template.rendering.htmlAttributes["wo-attr"],
+						value: attribute.value
+					});
+				} else {
+					// ensure the "id" modification is the first to be done
+					name === "id" ?
+						modifications.splice(0, 0, {
+							actionName: name,
+							action: wipeout.template.rendering.htmlAttributes[name],
+							value: attribute.value
+						}) :
+						modifications.push({
+							actionName: name,
+							action: wipeout.template.rendering.htmlAttributes[name],
+							value: attribute.value
+						});
+				}
             } else {
                 // add non special attribute
                 this.html.push(" " + name + attribute.serializeValue()); //TODO: put this on attr class

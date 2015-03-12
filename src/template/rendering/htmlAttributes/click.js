@@ -3,7 +3,7 @@ HtmlAttr("click", function () {
 	
     var functionCall = /\)[\s;]*$/;
     
-    return function click (value, element, renderContext) { //TODO error handling
+    return function click (value, element, renderContext, attributeName) { //TODO error handling
         if (!functionCall.test(value))
             value = value + "(e, element);";
         
