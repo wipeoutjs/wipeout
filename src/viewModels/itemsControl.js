@@ -40,7 +40,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     itemsControl.addGlobalBindingType("itemTemplate", "setTemplateProperty");
         
     itemsControl.removeItem = wipeout.events.routedEvent();
-    
+	
     itemsControl.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>

@@ -49,9 +49,9 @@ Class("wipeout.viewModels.if", function () {
         ///<summary>Resets the template id to the else template if condition is not met</summary>  
         ///<param name="oldVal" type="String" optional="false">The old else template Id</param>    
         ///<param name="newVal" type="String" optional="false">The else template Id</param>
-        if (!this.condition) {
+		
+        if (!this.condition)
             this.templateId = newVal;
-        }
     };
     
     _if.prototype.onConditionChanged = function (oldVal, newVal) {
@@ -59,11 +59,10 @@ Class("wipeout.viewModels.if", function () {
         ///<param name="oldVal" type="Boolean" optional="false">The old condition</param>     
         ///<param name="newVal" type="Boolean" optional="false">The condition</param>
 		
-        if (this.__oldConditionVal && !newVal) {
+        if (this.__oldConditionVal && !newVal)
             this.templateId = this.elseTemplateId;
-        } else if (!this.__oldConditionVal && newVal) {
+        else if (!this.__oldConditionVal && newVal)
             this.templateId = this.__cachedTemplateId;
-        }
         
         this.__oldConditionVal = !!newVal;
     };

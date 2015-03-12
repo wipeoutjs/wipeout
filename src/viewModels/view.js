@@ -17,20 +17,13 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
         this.templateId = templateId;
         
-        this.observe("model", this.onModelChanged, this);
+        this.observe("model", this.onModelChanged, this, {activateImmediately: true});
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
 
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.$routedEventSubscriptions = [];
-		
-		this.registerDisposeCallback((function () {
-			// dispose of routed event subscriptions
-			enumerateArr(this.splice(0, this.length), function(event) {
-				event.dispose();
-			});
-		}).bind(this.$routedEventSubscriptions));
     });
 	
     view.addGlobalParser("id", "string");
@@ -66,15 +59,10 @@ Class("wipeout.viewModels.view", function () {
     
     //TODO: include sharedScopeItems
     view.prototype.getRenderContext = function() {
-        ///<summary>Get the render context of  this view</summary> 
+        ///<summary>Get the render context of this view</summary> 
         ///<returns type="wipeout.template.context">The render context</returns>
         
 		return (this.$domRoot && this.$domRoot.renderContext) || null;
-    };
-    
-    // virtual
-    view.prototype.onInitialized = function() {
-        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
     };
         
     view.prototype.onModelChanged = function (oldValue, newValue) {
@@ -101,6 +89,15 @@ Class("wipeout.viewModels.view", function () {
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };
+	
+	view.prototype.dispose = function () {
+		this._super();
+		
+		// dispose of routed event subscriptions
+		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
+			event.dispose();
+		});
+	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
         ///<summary>Compiles a tree of all view elements in a block of html, starting at the rootElement</summary>    
@@ -143,6 +140,11 @@ Class("wipeout.viewModels.view", function () {
     // virtual
     view.prototype.onApplicationInitialized = function () {
         ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
+    };
+    
+    // virtual
+    view.prototype.onInitialized = function() {
+        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
     };
 
     return view;
