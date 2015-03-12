@@ -30,10 +30,6 @@ for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
 
 bug, handle null template id better
 
-obsjs.disposable, lazy create disposables object
-obsjs.array, push with multiple arguments does not work
-obsjs.path, try to allow this kind of thing "obj.getSomething().value"
-
 window.requestAnimationFrame
 
 shadow DOM
