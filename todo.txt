@@ -23,6 +23,8 @@ standardise the way things are rendered, between Objects and wo.views (toString)
     <value parser="s">2</value>
 </Array>
 
+on swap-xml-parser branch, try tp protect against "<wo.view />" errors
+
 initialization/disposal overrides. Needs complete overhaul
 
 for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
