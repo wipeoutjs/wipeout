@@ -2,7 +2,7 @@
 Class("wipeout.events.routedEvent", function () {
     
     var routedEvent = function routedEvent() {
-        ///<summary>A routed event is triggerd on a view and travels up to ancestor views all the way to the root of the application</summary>
+        ///<summary>A routed event is triggered on a view and travels up to ancestor views all the way to the root of the application</summary>
         
         // allow for non use of the new key word
         if(!(this instanceof routedEvent))
