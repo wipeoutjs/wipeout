@@ -69,18 +69,17 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
       
-        //TODO: this.setTemplate and this.setTemplateId should use watched.beforeNextObserveCycle or watched.afterNextObserveCycle        
+        //TODO: this.currentTemplate and this.currentTemplateId should use watched.beforeNextObserveCycle or watched.afterNextObserveCycle        
         
-        this.pendingLoad = null;
-        this.setTemplate = owner[templateProperty];
-        this.setTemplateId = owner[templateIdProperty];
+        this.currentTemplate = owner[templateProperty];
+        this.currentTemplateId = owner[templateIdProperty];
         
         this.owner = owner;
         this.templateIdProperty = templateIdProperty;
         this.templateProperty = templateProperty;
         
         // bind template to template id for the first time
-        this.refreshTemplate(this.setTemplateId);
+        this.refreshTemplate(this.currentTemplateId);
         
         this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        
         this.d2 = owner.observe(templateProperty, this.onTemplateChange, this);
@@ -91,36 +90,35 @@ Class("wipeout.viewModels.contentControl", function () {
         this.d2.dispose();
     };
     
-	var blankTemplate;
     boundTemplate.prototype.refreshTemplate = function(templateId) {
         this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
-            this.pendingLoad = null;                
-            this.setTemplate = this.owner[this.templateProperty] = template;
+            delete this.pendingLoad;                
+            this.currentTemplate = this.owner[this.templateProperty] = template;
         }).bind(this)); 
-    }
+    };
 
     boundTemplate.prototype.onTemplateIdChange = function(oldVal, newVal) {
-        if (newVal === this.setTemplateId) {
-            this.setTemplateId = null;
+        if (newVal === this.currentTemplateId) {
+            this.currentTemplateId = null;
             return;
         }
 
-        this.setTemplateId = null;
+        this.currentTemplateId = null;
 
         if (this.pendingLoad)
             this.pendingLoad.cancel();
 
         this.refreshTemplate(newVal);
-    }
+    };
 
     boundTemplate.prototype.onTemplateChange = function(oldVal, newVal) {
-        if (newVal === this.setTemplate) {
-            this.setTemplate = null;
+        if (newVal === this.currentTemplate) {
+            this.currentTemplate = null;
             return;
         }
 
-        this.setTemplate = null;
-        this.setTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        this.currentTemplate = null;
+        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
     }
     
     return contentControl;
