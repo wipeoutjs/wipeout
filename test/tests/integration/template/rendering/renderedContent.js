@@ -1,4 +1,4 @@
-module("wipeout.template.rendering.renderedContent, integration", {
+module("integration: wipeout.template.rendering.renderedContent", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

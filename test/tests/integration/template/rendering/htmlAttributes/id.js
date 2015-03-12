@@ -1,4 +1,4 @@
-module("wipeout.template.initialization.htmlAttributes.id, integration", {
+module("integration: wipeout.template.initialization.htmlAttributes.id", {
     setup: function() {
     },
     teardown: function() {

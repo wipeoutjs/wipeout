@@ -1,6 +1,6 @@
 
 var class1, class2;
-module("wipeout.base.bindable, integaration", {
+module("integration: wipeout.base.bindable", {
     setup: function() {
 		class1 = wipeout.base.bindable.extend(function () { this._super(); });
 		class2 = class1.extend(function () { this._super(); });

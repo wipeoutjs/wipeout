@@ -1,5 +1,5 @@
 
-module("wipeout.viewModels.if, integration", {
+module("integration: wipeout.viewModels.if", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

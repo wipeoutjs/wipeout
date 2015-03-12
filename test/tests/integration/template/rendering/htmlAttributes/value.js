@@ -1,4 +1,4 @@
-module("wipeout.template.initialization.htmlAttributes.wo-value, integration", {
+module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
     setup: function() {
     },
     teardown: function() {

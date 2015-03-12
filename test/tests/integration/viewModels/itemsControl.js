@@ -1,5 +1,5 @@
 
-module("wipeout.viewModels.itemsControl, integration", {
+module("integration: wipeout.viewModels.itemsControl", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

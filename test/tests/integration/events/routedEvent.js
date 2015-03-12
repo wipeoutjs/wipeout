@@ -1,5 +1,5 @@
 
-module("wipeout.events.routedEvent, integration", {
+module("integration: wipeout.events.routedEvent", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

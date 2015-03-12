@@ -1,4 +1,4 @@
-module("wipeout.template.loader, integration", {
+module("integration: wipeout.template.loader", {
     setup: function() {
     },
     teardown: function() {

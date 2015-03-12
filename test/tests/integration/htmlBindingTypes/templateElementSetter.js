@@ -1,5 +1,5 @@
 
-module("wipeout.htmlBindingTypes.templateElementSetter, integration", {
+module("integration: wipeout.htmlBindingTypes.templateElementSetter", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

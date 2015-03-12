@@ -1,4 +1,4 @@
-module("wipeout.template.initialization.htmlAttributes.wo-click, integration", {
+module("integration: wipeout.template.initialization.htmlAttributes.wo-click", {
     setup: function() {
     },
     teardown: function() {

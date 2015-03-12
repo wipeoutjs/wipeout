@@ -1,5 +1,5 @@
 
-module("wipeout.htmlBindingTypes.viewModelId, integration", {
+module("integration: wipeout.htmlBindingTypes.viewModelId", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

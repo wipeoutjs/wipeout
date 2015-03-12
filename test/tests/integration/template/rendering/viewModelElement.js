@@ -1,4 +1,4 @@
-module("wipeout.template.rendering.viewModelElement, integration", {
+module("integration: wipeout.template.rendering.viewModelElement", {
     setup: function () {},
     teardown: function () {}
 });

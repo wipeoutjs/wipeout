@@ -1,5 +1,5 @@
 
-module("wipeout.htmlBindingTypes.ow, integration", {
+module("integration: wipeout.htmlBindingTypes.ow", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

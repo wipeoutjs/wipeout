@@ -1,4 +1,4 @@
-module("wipeout.template.initialization.htmlAttributes.wo-render, integration", {
+module("integration: wipeout.template.initialization.htmlAttributes.wo-render", {
     setup: function() {
     },
     teardown: function() {

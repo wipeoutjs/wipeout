@@ -1,5 +1,5 @@
 
-module("wipeout.utils.htmlBindingTypes, integration", {
+module("integration: wipeout.utils.htmlBindingTypes", {
     setup: function() {
     },
     teardown: function() {

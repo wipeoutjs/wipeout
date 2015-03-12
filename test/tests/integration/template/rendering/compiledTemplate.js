@@ -1,4 +1,4 @@
-module("wipeout.template.rendering.compiledTemplate, integration", {
+module("integration: wipeout.template.rendering.compiledTemplate", {
     setup: function() {
     },
     teardown: function() {

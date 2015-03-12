@@ -1,4 +1,4 @@
-module("wipeout.utils.find, integration", {
+module("integration: wipeout.utils.find", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

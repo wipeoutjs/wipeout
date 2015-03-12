@@ -1,4 +1,4 @@
-module("wipeout.viewModels.contentControl, integration", {
+module("integration: wipeout.viewModels.contentControl", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });

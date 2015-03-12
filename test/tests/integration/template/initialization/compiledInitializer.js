@@ -1,4 +1,4 @@
-module("wipeout.template.initialization.compiledInitializer, integration", {
+module("integration: wipeout.template.initialization.compiledInitializer", {
     setup: function() {
     },
     teardown: function() {
