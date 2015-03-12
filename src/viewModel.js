@@ -2,78 +2,74 @@
 function viewModel (name, extend) {
 		
 	extend = extend || wipeout.viewModels.view;
-
-	var methods = {statics: true}, 
+	
+	var $constructor,
 		values = {},
+		tmp, args = (tmp = extend
+		.toString()
+		.replace(/\/\/.*$/mg, "")
+		.replace(/\/\*[\s\S]*?\*\//mg, ""))
+		.slice(tmp.indexOf('(') + 1, tmp.indexOf(')')).match(/([^\s,]+)/g) || [];
+	
+	var templateId, tid, model, mod;	// will be populated later
+	function getParentConstructorArgs() {
+		var output = [];
+		if (templateId !== -1)
+			output[templateId] = tid instanceof Function ? 
+				tid.apply(this, arguments) :
+				(tid !== undefined ? tid : arguments[0]);	// arguments[0] === templateId
+
+		if (model !== -1)
+			output[model] = mod instanceof Function ? 
+				mod.apply(this, arguments) :
+				(mod !== undefined ? mod : arguments[1]);	// arguments[1] === model
+
+		return output;
+	};
+
+	var methods = {statics: true},	//statics is reserved
 		valuesAsConstructorArgs = {},
 		statics = {},
-		_built = false, 
-		$constructor,
 		bindingTypes = {},
 		parsers = {},
 		inheritanceTree;
 
 	function check () {
-		if (_built) throw 'You cannot add any more functionality using this DSL as this view model has already been built. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.viewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
+		if ($constructor) throw 'You cannot add any more functionality using this DSL as this view model has already been built. You can still add methods to the view model by adding them directly to the build output, e.g.\nvar myClass = wo.viewModel("myClass").build();\nmyClass.doSomething = function () { ... };';
 	}
 
 	var output = {
 
 		build: function () {
 
-			if (_built)
+			if ($constructor)
 				return $constructor.prototype;
 
-			_built = true;
-
 			if (wipeout.utils.obj.getObject(name))
-				throw name + " already exists.";			
-			
-			if (!$constructor) {
-				var tmp, args = (tmp = extend
-					.toString()
-					.replace(/\/\/.*$/mg, "")
-					.replace(/\/\*[\s\S]*?\*\//mg, ""))
-					.slice(tmp.indexOf('(') + 1, tmp.indexOf(')')).match(/([^\s,]+)/g) || [];
+				throw name + " already exists.";
 
-				var tid, templateId = args.indexOf("templateId");
-				if (templateId !== -1) {
-					tid = values.templateId;
-					delete values[templateId];
-				}
-				
-				var mod, model = args.indexOf("model");
-				if (templateId !== -1) {
-					mod = values.model;
-					delete values[model];
-				}
-				
-				var getParentConstructorArgs = function (args) {
-					var output = [];
-					if (templateId !== -1)
-						output[templateId] = tid instanceof Function ? 
-							tid.apply(this, args) :
-							(tid ? tid : args[0]);
-					
-					if (model !== -1)
-						output[model] = mod instanceof Function ? 
-							mod.apply(this, args) :
-							(mod ? mod : args[1]);
-					
-					return output;
-				};
-				
-				var split = name.split(".");
-				$constructor = new Function("extend", "getParentConstructorArgs", "values", 
+			templateId = args.indexOf("templateId");
+			if (templateId !== -1) {
+				tid = values.templateId;
+				delete values[templateId];
+			}
+
+			model = args.indexOf("model");
+			if (templateId !== -1) {
+				mod = values.model;
+				delete values[model];
+			}
+
+			split = name.split(".");
+			$constructor = new Function("extend", "getParentConstructorArgs", "values", 
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
-"	extend.apply(this, getParentConstructorArgs.call(this, arguments));\n" +
+"	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
 "\n" +
 "	for (var i in values)\n" +
 "		this[i] = values[i] instanceof Function ?\n" +
 "			values[i].apply(this, arguments) :\n" +
 "			values[i];\n" +
 "}")(extend, getParentConstructorArgs, values);
-			}
 
 			Class(name, function () {
 				return objjs.object.extend.call(extend, $constructor);
@@ -99,25 +95,6 @@ function viewModel (name, extend) {
 			return output.build();
 		},
 
-		// core functions
-		constructor: function (constructor, ignoreConstructorWarnings) {
-			check();
-
-			//TODO: test for this._super();
-
-			if ($constructor)
-				throw "You have already added a constructor for this view model";
-			
-			for (var i in values)
-				throw 'You have already added a value for this view model. In order to add a value and constructor you must use the following code within the constructor function: "this.value = value;"';
-
-			if (!(constructor instanceof Function))
-				throw "A constructor must be a Function.";
-
-			$constructor = constructor;
-			return output;
-		},
-
 		method: function (name, method) {
 			check();
 
@@ -135,10 +112,7 @@ function viewModel (name, extend) {
 			check();
 
 			if (name === "constructor")
-				return output.constructor(value);					
-
-			if ($constructor)
-				throw 'You have added a constructor for this view model. In order to add a value you must use the following code within the constructor function: "this.value = value;"';
+				return output.constructor(value);
 
 			if (value instanceof Function)
 				return output.method(name, value);
@@ -153,10 +127,7 @@ function viewModel (name, extend) {
 			check();
 
 			if (name === "constructor")
-				return output.constructor(value);					
-
-			if ($constructor)
-				throw 'You have added a constructor for this view model. In order to add a value you must use the following code within the constructor function: "this.value = value;"';
+				return output.constructor(value);
 
 			if (!(value instanceof Function))
 				throw "A dynamic value must be a function which returns the value.";
