@@ -35,7 +35,7 @@ testUtils.testWithUtils("onPropertyChange", "complex not allowed", true, functio
 
 testUtils.testWithUtils("onPropertyChange", "complex", true, function(methods, classes, subject, invoker) {
     // arrange
-	var obj = {}, path = "this.aa + this.bb", cb = {}, parser = {};
+	var obj = new wipeout.template.context(), path = "this.aa + this.bb", cb = {}, parser = {};
 	
 	//wipeout.template.initialization.compiledInitializer.getAutoParser(propertyPath)
 	

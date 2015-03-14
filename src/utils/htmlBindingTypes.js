@@ -8,22 +8,17 @@ Class("wipeout.utils.htmlBindingTypes", function () {
 		var watcher;
 		if (wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(propertyPath)) {
 			watcher = new obsjs.observeTypes.pathObserver(object, propertyPath);
-		} else if (!allowComplexProperties) {
+		} else if (!allowComplexProperties || !(object instanceof wipeout.template.context)) {
 			throw "The property " + propertyPath + 
-				" is not valid for this binding. Only simple paths (e.g. \"$this.prop1.prop2\" are allowed";
+				" is not valid for this binding. Only simple paths (e.g. \"$this.prop1.prop2\") are allowed";
 		} else {
 			
-			var watchVariables = {
-				value: propertyPath, 
-				propertyName: "",
-				renderContext: object
-			};
-			
-			if (object instanceof wipeout.template.context)
-				watchVariables = object.variablesForComputed(watchVariables);
-			
 			watcher = new obsjs.observeTypes.computed(wipeout.template.initialization.compiledInitializer.getAutoParser(propertyPath), null, {
-				watchVariables: watchVariables,
+				watchVariables: object.variablesForComputed({
+					value: propertyPath, 
+					propertyName: "",
+					renderContext: object
+				}),
 				allowWith: true
 			});
 		}

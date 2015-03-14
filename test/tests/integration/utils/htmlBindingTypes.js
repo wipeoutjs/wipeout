@@ -42,7 +42,7 @@ test("bindOneWay, computed", function () {
 	obj2.p1 = new obsjs.observable();
 	
 	// act
-	var output = wipeout.utils.htmlBindingTypes.bindOneWay(obj1, "renderContext.v1 + renderContext.v2", obj2, "p1.val", true);
+	var output = wipeout.utils.htmlBindingTypes.bindOneWay(new wipeout.template.context(obj1), "renderContext.$this.v1 + renderContext.$this.v2", obj2, "p1.val", true);
 	
 	// assert
 	strictEqual(obj2.p1.val, 77);
