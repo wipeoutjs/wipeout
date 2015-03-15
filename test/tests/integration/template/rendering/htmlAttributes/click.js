@@ -9,6 +9,12 @@ test("standard call", function() {
 	// arrange
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello"), called = false;
+	var attribute = new ast("wo-click", "$this.method");
+	
+	// act
+	attribute.cacheAllWatched(function () {
+		wipeout.template.rendering.htmlAttributes["wo-click"](input, attribute, new wipeout.template.context(model));
+	});
 	var disp = wipeout.template.rendering.htmlAttributes["wo-click"]("$this.method", button, new wipeout.template.context({
 		method: function (e, el) {
 			strictEqual(button, el);
