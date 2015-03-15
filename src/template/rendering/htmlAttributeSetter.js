@@ -2,7 +2,7 @@
 Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	
 	//52,73,96
-	function htmlAttributeSetter (name, action, value) {
+	function htmlAttributeSetter (name, value, action) {
 		this.name = name;
 		this.action = action;
 		this.value = value;

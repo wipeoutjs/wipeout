@@ -50,7 +50,6 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 
             // add the id flag and the id generator
             this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render",
-									  null, //TODO: ensure this is disposed of
 									  html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
 									  )]);
 
@@ -69,11 +68,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push([new wipeout.template.rendering.htmlAttributeSetter(
-			"wipeoutCreateViewModel",
-            null,
-            vmNode
-		)]);
+        this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wipeoutCreateViewModel", vmNode)]);
         
         // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
@@ -95,24 +90,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                     this.html.push(modifications = []);
 				
 				if (attr) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(
-						name,
-						"wo-attr",
-						attribute.value
-					));
+					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, "wo-attr"));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(
-							name,
-							null,
-							attribute.value
-					)) :
-						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(
-							name,
-							null,
-							attribute.value
-					));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value)) :
+						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value));
 				}
             } else {
                 // add non special attribute
