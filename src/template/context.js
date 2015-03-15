@@ -43,6 +43,20 @@ Class("wipeout.template.context", function () {
 		
         return forVm && forVm.shareParentScope ? this : new context(forVm, this, arrayIndex);
     };
+	
+	context.prototype.asGetterArgs = function () {
+		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
+	};
+	
+	context.buildGetter = function (logic) {
+		try {
+			// TODO: try to reuse stuff in "asGetterArgs"
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
+		} catch (e) {
+			// TODO: try to take into account some of these cases
+			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
+		}	
+	}
     
 	//TODO: not testing as this will probably be removed
     context.prototype.variablesForComputed = function (additions) {

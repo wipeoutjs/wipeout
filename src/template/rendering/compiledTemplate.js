@@ -49,11 +49,10 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.html.push("<script");
 
             // add the id flag and the id generator
-            this.html.push([{
-				actionName: "wo-render",
-                action: wipeout.template.rendering.htmlAttributes["wo-render"], //TODO: ensure this is disposed of
-                value: html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
-            }]);
+            this.html.push([new setter("wo-render",
+									  null, //TODO: ensure this is disposed of
+									  html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
+									  )]);
 
             // add the end of the placeholder
             this.html.push(' type="placeholder"></script>');
@@ -70,11 +69,11 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push([{
-			actionName: "wipeoutCreateViewModel",
-            action: wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel,
-            value: vmNode
-        }]);
+        this.html.push([new setter(
+			"wipeoutCreateViewModel",
+            null,
+            vmNode
+		)]);
         
         // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
@@ -96,24 +95,24 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                     this.html.push(modifications = []);
 				
 				if (attr) {
-					modifications.push({
-						actionName: name,
-						action: wipeout.template.rendering.htmlAttributes["wo-attr"],
-						value: attribute.value
-					});
+					modifications.push(new setter(
+						name,
+						"wo-attr",
+						attribute.value
+					));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, {
-							actionName: name,
-							action: wipeout.template.rendering.htmlAttributes[name],
-							value: attribute.value
-						}) :
-						modifications.push({
-							actionName: name,
-							action: wipeout.template.rendering.htmlAttributes[name],
-							value: attribute.value
-						});
+						modifications.splice(0, 0, new setter(
+							name,
+							null,
+							attribute.value
+					)) :
+						modifications.push(new setter(
+							name,
+							null,
+							attribute.value
+					));
 				}
             } else {
                 // add non special attribute
@@ -121,6 +120,64 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             }
         }, this);
     };
+	
+	//52,73,96
+	function setter (name, action, value) {
+		this.name = name;
+		this.action = action;
+		this.value = value;
+	}
+	
+	setter.prototype.build = function () {
+		
+		return this._built || (this._built = wipeout.template.context.buildGetter(this.value));
+	};
+	
+	setter.prototype.getWatchable = function (renderContext) {
+		
+		return wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.value) ?
+			new obsjs.observeTypes.pathWatch(renderContext, this.value) :
+			renderContext.getComputed(this.build());
+	};
+	
+	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
+		if (!this._caching)
+			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+				
+		var watched = this.getWatchable(renderContext);
+		if (this._caching)
+			this._caching.push(watched);
+		
+		return watched.onValueChanged(callback, evaluateImmediately);
+	};
+	
+	setter.prototype.apply = function (element, renderContext) {
+		var op = [];
+		op.push.apply(op, this.cacheAllWatched((function () {
+			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](this, element, renderContext);
+			if (o instanceof Function)
+				op.push(o);
+		}).bind(this)));
+		
+		return op;
+	};
+	
+	setter.prototype.execute = function (renderContext) {
+		return this.build().apply(null, renderContext.asGetterArgs());
+	};
+	
+	setter.prototype.cacheAllWatched = function (logic) {
+		if (this._caching)
+			throw "cacheAllWatched cannot be asynchronus or nested.";
+		
+		try {
+			this._caching = [];
+			logic();
+			return this._caching;
+		} finally {
+			delete this._caching;
+		}
+	}
     
     compiledTemplate.prototype.addElement = function(element) {
         ///<summary>Add an element which will be scanned for functionality and added to the dom</summary>

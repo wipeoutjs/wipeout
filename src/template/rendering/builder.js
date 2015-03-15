@@ -47,16 +47,14 @@ Class("wipeout.template.rendering.builder", function () {
             element.removeAttribute("id");
             
             // run all actions on it
-            enumerateArr(elementAction.actions, function(mod) {
-                var dispose = mod.action(mod.value, element, renderContext, mod.actionName);
-                if(dispose instanceof Function)
-                    output.push(dispose);
+            enumerateArr(elementAction.actions, function(setter) {				
+				output.push.apply(output, setter.apply(element, renderContext));
             });
         }, this);
     
         return function() {
-            enumerateArr(output.splice(0, output.length), function(f) {
-                f();
+            enumerateArr(output.splice(0, output.length), function(d) {
+                d();
             });
         };
     }
