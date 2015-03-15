@@ -18,7 +18,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
         // protection from infite loops not needed
         delete this._addedElements;
-    };
+    }
     
     compiledTemplate.prototype.addNonElement = function(node) {
         ///<summary>Add a node to the html string without scanning for dynamic functionality</summary>
@@ -49,7 +49,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.html.push("<script");
 
             // add the id flag and the id generator
-            this.html.push([new setter("wo-render",
+            this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render",
 									  null, //TODO: ensure this is disposed of
 									  html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
 									  )]);
@@ -69,7 +69,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push([new setter(
+        this.html.push([new wipeout.template.rendering.htmlAttributeSetter(
 			"wipeoutCreateViewModel",
             null,
             vmNode
@@ -95,7 +95,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                     this.html.push(modifications = []);
 				
 				if (attr) {
-					modifications.push(new setter(
+					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(
 						name,
 						"wo-attr",
 						attribute.value
@@ -103,12 +103,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new setter(
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(
 							name,
 							null,
 							attribute.value
 					)) :
-						modifications.push(new setter(
+						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(
 							name,
 							null,
 							attribute.value
@@ -120,64 +120,6 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             }
         }, this);
     };
-	
-	//52,73,96
-	function setter (name, action, value) {
-		this.name = name;
-		this.action = action;
-		this.value = value;
-	}
-	
-	setter.prototype.build = function () {
-		
-		return this._built || (this._built = wipeout.template.context.buildGetter(this.value));
-	};
-	
-	setter.prototype.getWatchable = function (renderContext) {
-		
-		return wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.value) ?
-			new obsjs.observeTypes.pathWatch(renderContext, this.value) :
-			renderContext.getComputed(this.build());
-	};
-	
-	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
-		if (!this._caching)
-			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
-				
-		var watched = this.getWatchable(renderContext);
-		if (this._caching)
-			this._caching.push(watched);
-		
-		return watched.onValueChanged(callback, evaluateImmediately);
-	};
-	
-	setter.prototype.apply = function (element, renderContext) {
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](this, element, renderContext);
-			if (o instanceof Function)
-				op.push(o);
-		}).bind(this)));
-		
-		return op;
-	};
-	
-	setter.prototype.execute = function (renderContext) {
-		return this.build().apply(null, renderContext.asGetterArgs());
-	};
-	
-	setter.prototype.cacheAllWatched = function (logic) {
-		if (this._caching)
-			throw "cacheAllWatched cannot be asynchronus or nested.";
-		
-		try {
-			this._caching = [];
-			logic();
-			return this._caching;
-		} finally {
-			delete this._caching;
-		}
-	}
     
     compiledTemplate.prototype.addElement = function(element) {
         ///<summary>Add an element which will be scanned for functionality and added to the dom</summary>

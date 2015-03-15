@@ -54,7 +54,7 @@ Class("wipeout.template.rendering.builder", function () {
     
         return function() {
             enumerateArr(output.splice(0, output.length), function(d) {
-                d();
+                d.dispose();
             });
         };
     }

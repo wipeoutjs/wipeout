@@ -1,10 +1,8 @@
 
 HtmlAttr("content", function () {
-	return function content (value, element, renderContext, attributeName) { //TODO error handling
-        var disp = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
+	return function content (element, attribute, renderContext) { //TODO error handling
+		attribute.watch(renderContext, function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
         }, true);
-		
-		return disp.dispose.bind(disp);
     }
 });

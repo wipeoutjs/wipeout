@@ -1,20 +1,13 @@
 
 HtmlAttr("render", function () {
-	return function render (value, element, renderContext, attributeName) {
+	return function render (element, attribute, renderContext) {
 		
-        var htmlContent = new wipeout.template.rendering.renderedContent(element, value, renderContext);
-        var disposal = wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
+        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value, renderContext);
+		
+		attribute.watch(renderContext, function (oldVal, newVal) {
             htmlContent.render(newVal);
         }, true);
         
-        return function() {
-			if (disposal) {
-				disposal.dispose();
-				htmlContent.dispose();
-				
-				disposal = null;
-				htmlContent = null;
-			}
-        };
+        return htmlContent.dispose.bind(htmlContent);
     }
 });

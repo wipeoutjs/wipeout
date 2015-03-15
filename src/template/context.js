@@ -48,15 +48,53 @@ Class("wipeout.template.context", function () {
 		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
 	};
 	
+	context.prototype.asWatchVariables = function () {
+		return this.watchVariables || (this.watchVariables = {
+			$context: this, 
+			$this: this.$this, 
+			$parent: this.$parent, 
+			$parents: this.$parents, 
+			$index: this.$index
+		});
+	};
+	
+	context.prototype.asEventArgs = function (e, element) {
+		var args = this.asGetterArgs();
+		args.push(e);
+		args.push(element);
+		
+		return args;
+	};
+	
+	context.prototype.getComputed = function (forFunction) {
+		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables(), allowWith: true});
+	}
+	
 	context.buildGetter = function (logic) {
+		
 		try {
 			// TODO: try to reuse stuff in "asGetterArgs"
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "with ($context) return " + logic + ";");
 		} catch (e) {
 			// TODO: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
-	}
+	};
+	
+	//TODO: handle logic like this "$this.set = true; $this.unset = false;"
+	context.buildEventGetter = function (logic) {
+		
+		if (!/\)[\s;]*$/.test(logic))
+			logic += "(e, element)";
+			
+		try {
+			// TODO: try to reuse stuff in "asGetterArgs"
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", "with ($context) return " + logic + ";");
+		} catch (e) {
+			// TODO: try to take into account some of these cases
+			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
+		}	
+	};
     
 	//TODO: not testing as this will probably be removed
     context.prototype.variablesForComputed = function (additions) {

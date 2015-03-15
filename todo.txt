@@ -1,3 +1,6 @@
+refactor htmlAttributeSetter and propertySetter to use a base class
+refactor htmlAttributeSetter into 2 classes, one for html attributes, one for html events
+
 
 Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 

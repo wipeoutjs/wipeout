@@ -1,26 +1,25 @@
 
 HtmlAttr("attr", function () {
 	
-	attr.test = function (attributeName) {
+	var test = attr.test = function (attributeName) {
 		return /^\s*(data\-)?wo\-attr\-./.test(attributeName);
 	};
 	
-	function attr (value, element, renderContext, attributeName) { //TODO error handling
+	function attr (element, attribute, renderContext) { //TODO error handling
 		
-		if (!attr.test(attributeName)) return;
+		if (!test(attribute.name)) return;
 		
-		var attribute;
-		attributeName = attributeName.substr(attributeName.indexOf("attr-") + 5);
-		if (!(attribute = element.attributes[attributeName])) {
+		var attr;
+		var attributeName = attribute.name.substr(attribute.name.indexOf("attr-") + 5);
+		if (!(attr = element.attributes[attributeName])) {
 			element.setAttribute(attributeName, "");
-			attribute = element.attributes[attributeName]
+			attr = element.attributes[attributeName]
 		}
 		
-		
-        return wipeout.utils.htmlBindingTypes.onPropertyChange(renderContext, value, function (oldVal, newVal) {
-            if (attribute.value !== newVal)
-                attribute.value = newVal;
-        }, true);
+		attribute.watch(renderContext, function (oldVal, newVal) {
+            if (attr.value !== newVal)
+                attr.value = newVal;
+		}, true);
     }
 	
 	return attr;
