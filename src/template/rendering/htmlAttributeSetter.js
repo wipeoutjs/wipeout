@@ -1,7 +1,7 @@
 
 Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	
-	function htmlAttributeSetter (name, value, action) {
+	function htmlAttributeSetter (name, value, action /* optional */) {
 		this.name = name;
 		this.action = action;
 		this.value = value;
@@ -15,7 +15,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	htmlAttributeSetter.prototype.onElementEvent = function (element, event, renderContext, callback) { //TODO error handling
         
 		if (!this._caching)
-			throw "The onElementEvent function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+			throw "The onElementEvent function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
 		
 		callback = callback || (function (e) {
 			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
@@ -40,18 +40,14 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return this._built || (this._built = wipeout.template.context.buildGetter(this.value));
 	};
 	
-	htmlAttributeSetter.prototype.getWatchable = function (renderContext) {
-		
-		return wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.value) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.value) :
-			renderContext.getComputed(this.build());
-	};
-	
 	htmlAttributeSetter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
 		if (!this._caching)
 			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
 				
-		var watched = this.getWatchable(renderContext);
+		var watched = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.value) ?
+			new obsjs.observeTypes.pathObserver(renderContext, this.value) :
+			renderContext.getComputed(this.build());
+		
 		this._caching.push(watched);
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};

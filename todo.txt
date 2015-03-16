@@ -1,9 +1,4 @@
-context.asGetterArgs
-context.buildGetter
-context.buildEventGetter
-context.asWatchVariables
-context.asEventArgs
-context.getComputed
+
 new setter
 
 refactor htmlAttributeSetter and propertySetter to use a base class
