@@ -59,7 +59,8 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.asEventArgs = function (e, element) {
-		var args = this.asGetterArgs();
+		
+		var args = this.asGetterArgs().slice();
 		args.push(e);
 		args.push(element);
 		
