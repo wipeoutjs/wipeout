@@ -9,9 +9,10 @@ test("success", function() {
 	$("#qunit-fixture").html("<div id='hello'></div>")
 	var div = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-content", "$this.theVal");
 	
 	// act
-	var disp = wipeout.template.rendering.htmlAttributes["wo-content"]("$this.theVal", div, new wipeout.template.context(model));
+	var disp = attribute.apply(div, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(div.innerHTML, "234");
@@ -20,7 +21,7 @@ test("success", function() {
 	obsjs.observe(model, "theVal", function () {
 		setTimeout(function () {
 			strictEqual(div.innerHTML, "456");
-			disp();
+			disp[0].dispose();
 			start();
 			
 			model.theVal = 567;	// should not trigger change in element		

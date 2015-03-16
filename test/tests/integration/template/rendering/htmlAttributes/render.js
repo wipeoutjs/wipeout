@@ -9,9 +9,10 @@ test("success", function() {
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var div = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-render", "$this.theVal");
 	
 	// act
-	var disp = wipeout.template.rendering.htmlAttributes["wo-render"]("$this.theVal", div, new wipeout.template.context(model));
+	var disp = attribute.apply(div, new wipeout.template.context(model));
 	
 	div = document.getElementById("qunit-fixture");
 	
@@ -22,7 +23,9 @@ test("success", function() {
 	obsjs.observe(model, "theVal", function () {
 		setTimeout(function () {
 			strictEqual(div.innerHTML, "<!-- $this.theVal -->456<!-- /$this.theVal -->");
-			disp();
+			enumerateArr(disp, function(disp) {
+				disp.dispose();
+			});
 			strictEqual(div.innerHTML, "");
 			start();
 		});

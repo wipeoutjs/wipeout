@@ -8,6 +8,8 @@ window.asyncAssert = function(callback, context) {
     }, 50);
 };
 
+window.enumerateArr = wipeout.utils.obj.enumerateArr;
+
 window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
 window.integrationTestSetup = function () {
 	window.$fixture = $("#qunit-fixture");

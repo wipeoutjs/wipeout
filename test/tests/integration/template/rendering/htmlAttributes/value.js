@@ -5,13 +5,15 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
     }
 });
 
+//TODO: other types
 test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = wipeout.template.rendering.htmlAttributes["wo-value"]("$this.theVal", input, new wipeout.template.context(model));
+	var disp = attribute.apply(input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.value, "234");
@@ -43,9 +45,12 @@ test("disposal", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	wipeout.template.rendering.htmlAttributes["wo-value"]("$this.theVal", input, new wipeout.template.context(model))();
+	enumerateArr(attribute.apply(input, new wipeout.template.context(model)), function (d) {
+		d.dispose();
+	});
 	
 	// assert
 	strictEqual(input.value, "234");

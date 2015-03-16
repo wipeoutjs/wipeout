@@ -9,13 +9,10 @@ test("standard call", function() {
 	// arrange
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello"), called = false;
-	var attribute = new ast("wo-click", "$this.method");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-click", "$this.method");
 	
 	// act
-	attribute.cacheAllWatched(function () {
-		wipeout.template.rendering.htmlAttributes["wo-click"](input, attribute, new wipeout.template.context(model));
-	});
-	var disp = wipeout.template.rendering.htmlAttributes["wo-click"]("$this.method", button, new wipeout.template.context({
+	var disp = attribute.apply(button, new wipeout.template.context({
 		method: function (e, el) {
 			strictEqual(button, el);
 			ok(e);
@@ -26,18 +23,21 @@ test("standard call", function() {
 	
 	// act
 	button.click();
-	disp();
+	disp[0].dispose();
 	button.click();
 	
 	// assert
 	ok(called);
 });
 
-test("standard call", function() {
+test("standard call, with args", function() {
 	// arrange
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello"), called = false;
-	var disp = wipeout.template.rendering.htmlAttributes["wo-click"]("$this.method(e, element, 333)", button, new wipeout.template.context({
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-click", "$this.method(e, element, 333)");
+	
+	// act
+	var disp = attribute.apply(button, new wipeout.template.context({
 		method: function (e, el, number) {
 			strictEqual(button, el);
 			strictEqual(number, 333);
@@ -49,9 +49,6 @@ test("standard call", function() {
 	
 	// act
 	button.click();
-	disp();
+	disp[0].dispose();
 	button.click();
-	
-	// assert
-	ok(called);
 });
