@@ -7,8 +7,8 @@ module("integration: wipeout.htmlBindingTypes.tw", {
 test("binding", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
-		setter = new wipeout.template.initialization.propertySetter(new wipeout.wml.wmlAttribute("$parent.val", null)),
 		name = "KJBKJBKJB",
+		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("$parent.val", null)),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};

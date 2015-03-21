@@ -11,7 +11,7 @@ test("binding", function () {
 	var name = "daasdasd";
 	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$parent.val"><val2>3</val2></views.set-view></val>');
 	var viewModel = new obsjs.observable(),
-		setter = new wipeout.template.initialization.propertySetter({
+		setter = new wipeout.template.initialization.propertySetter(name, {
 			xml: xml,
 			constructor: Object
 		}),

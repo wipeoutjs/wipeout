@@ -1,9 +1,9 @@
 
 Class("wipeout.template.initialization.propertySetter", function () {
 	
-    function propertySetter (value, flags) {
+    var propertySetter = wipeout.template.setter.extend(function propertySetter (name, value, flags) {
 		
-        this.value = value;
+		this._super(name, value);
         
         this.parser = [];
         this.bindingType = null;
@@ -39,7 +39,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
         } else {
             this.parser = null;
         }
-    }
+    });
 	
 	propertySetter.prototype.getParser = function(forViewModel, propertyName) {
         

@@ -27,7 +27,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-            this.setters.model = new wipeout.template.initialization.propertySetter(new wipeout.wml.wmlAttribute("$parent ? $parent.model : null", null));
+            this.setters.model = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null", null));
         }
     };
     
@@ -45,7 +45,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODO
                 });
                 
-                this.setters[name] = new wipeout.template.initialization.propertySetter(element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
+                this.setters[name] = new wipeout.template.initialization.propertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -64,7 +64,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = new wipeout.template.initialization.propertySetter({
+                    this.setters[name] = new wipeout.template.initialization.propertySetter(name, {
 						xml: element[i],
 						constructor: vm.constructor
                     }, ["templateElementSetter"]);
@@ -75,12 +75,12 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         }
 
         if (p && p.constructor === Function) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(element);
+            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
             this.setters[name].parser = p;
         } else if (p) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
         } else {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(element);
+            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
         }
     };
     
@@ -90,7 +90,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = new wipeout.template.initialization.propertySetter(attribute, name.flags);
+        this.setters[name.name] = new wipeout.template.initialization.propertySetter(name.name, attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
