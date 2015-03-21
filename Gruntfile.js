@@ -74,7 +74,8 @@ module.exports = function(grunt) {
         "src/wml/wmlPart.js",
         "src/viewModels/view.js",
         "src/events/routedEvent.js",
-        "src/template/rendering/renderedContent.js"
+        "src/template/rendering/renderedContent.js",
+        "src/template/setter.js"
     ];
 	
     var src = [
