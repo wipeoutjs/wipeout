@@ -54,6 +54,18 @@ Class("wipeout.template.initialization.propertySetter", function () {
             this._valueAsString :
             (this._valueAsString = this.value.serializeContent());
     };
+    
+    propertySetter.prototype.set = function (viewModel, renderContext) {
+		
+		if (!this.bindingType)
+			this.bindingType = 
+				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(this.name)) || 
+				"ow";
+		
+		if (!wipeout.htmlBindingTypes[this.bindingType]) throw "Invalid binding type :\"" + this.bindingType + "\" for property: \"" + this.name + "\".";
+
+        return wipeout.htmlBindingTypes[this.bindingType](viewModel, this, this.name, renderContext);
+    };
 	
 	return propertySetter;
 });

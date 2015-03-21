@@ -97,11 +97,11 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
 		//while (renderContext && renderContext.$this.shareParentScope
 		
-        var disposal = [this.set(viewModel, renderContext, "model")];
+        var disposal = [this.setters.model.set(viewModel, renderContext)];
         
 		for (var name in this.setters)
             if (name !== "model")
-            	disposal.push(this.set(viewModel, renderContext, name));
+            	disposal.push(this.setters[name].set(viewModel, renderContext));
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -109,19 +109,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					d.dispose();
 			});
 		}
-    };
-    
-    compiledInitializer.prototype.set = function (viewModel, renderContext, name) {
-		if (!this.setters[name]) return;
-		
-        // use binding type, globally defined binding type or default binding type
-        var bt = this.setters[name].bindingType || 
-            (viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(name)) || 
-            "ow";
-		
-		if (!wipeout.htmlBindingTypes[bt]) throw "Invalid binding type :\"" + bt + "\" for property: \"" + name + "\".";
-
-        return wipeout.htmlBindingTypes[bt](viewModel, this.setters[name], name, renderContext);
     };
     
     compiledInitializer.getAutoParser = function (value) {
