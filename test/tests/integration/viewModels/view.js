@@ -10,44 +10,50 @@ test("all binding types", function() {
 	var ow = application.ow = {}, ow2 = {};
 	var tw = application.tw = {val: 1}, tw2 = {val: 2};
 	var owts = application.owts = {};
-        
+	        
     // act
     application.template = '<wo.view id="item"\
 		nb--nb="$parent.nb" nbs--nb-s="$parent.nb"\
 		ow--ow="$parent.ow" ows--ow-s="$parent.ow"\
 		tw--tw="$parent.tw"\
 		owts--owts="$parent.owts">\
+		<xml parser="template">\
+			<hello></hello>\
+		</xml>\
     </wo.view>';
 	
 	application.onRendered = function () {
-    
+		var item = application.templateItems.item;
+		
+		strictEqual(item.xml.constructor, wipeout.wml.wmlElement);
+		
 		strictEqual(application.nb, nb);
-		strictEqual(application.nb, application.templateItems.item.nb);
-		strictEqual("$parent.nb", application.templateItems.item.nbs);
+		strictEqual(application.nb, item.nb);
+		strictEqual("$parent.nb", item.nbs);
 		
 		strictEqual(application.ow, ow);
-		strictEqual(application.ow, application.templateItems.item.ow);
-		strictEqual("$parent.ow", application.templateItems.item.ows);
+		strictEqual(application.ow, item.ow);
+		strictEqual("$parent.ow", item.ows);
 		
 		strictEqual(application.tw, tw);
-		strictEqual(application.tw, application.templateItems.item.tw);
+		strictEqual(application.tw, item.tw);
 		
 		strictEqual(application.owts, undefined);
-		strictEqual(application.owts, application.templateItems.item.owts);
+		strictEqual(application.owts, item.owts);
 		
-		var d1 = application.templateItems.item.observe("ow", function () {
+		var d1 = item.observe("ow", function () {
 			d1.dispose();
 			
 			strictEqual(application.ow, ow2);
-			strictEqual(application.ow, application.templateItems.item.ow);
+			strictEqual(application.ow, item.ow);
 			start();
 		});
 		
-		var d2 = application.templateItems.item.observe("tw", function () {
+		var d2 = item.observe("tw", function () {
 			d2.dispose();
 			
 			strictEqual(application.tw, tw2);
-			strictEqual(application.tw, application.templateItems.item.tw);
+			strictEqual(application.tw, item.tw);
 			
 			//TODO: this doesn't work without the set timeout. This is a bug
 			setTimeout(function () {
@@ -55,11 +61,11 @@ test("all binding types", function() {
 					d2.dispose();
 
 					strictEqual(application.tw, tw);
-					strictEqual(application.tw, application.templateItems.item.tw);
+					strictEqual(application.tw, item.tw);
 					start();
 				});
 
-				application.templateItems.item.tw = tw;
+				item.tw = tw;
 			});
 		});
 		
@@ -67,13 +73,13 @@ test("all binding types", function() {
 			d3.dispose();
 			
 			strictEqual(application.owts, owts);
-			strictEqual(application.owts, application.templateItems.item.owts);
+			strictEqual(application.owts, item.owts);
 			start();
 		});
 		
 		application.ow = ow2;
 		application.tw = tw2;
-		application.templateItems.item.owts = owts;
+		item.owts = owts;
 	};
 	
 	stop(3);
