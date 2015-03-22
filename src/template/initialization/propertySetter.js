@@ -41,11 +41,11 @@ Class("wipeout.template.initialization.propertySetter", function () {
         }
     });
 	
-	propertySetter.prototype.getParser = function(forViewModel, propertyName) {
-        
+	propertySetter.prototype.getParser = function(forViewModel) {
+		
         // use parser, global parser or lazy create auto parser
         return this.parser ||
-            (this.parser = (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(propertyName) : null) || 
+            (this.parser = (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(this.name) : null) || 
 			wipeout.template.initialization.compiledInitializer.getAutoParser(this.valueAsString()));
     };
     

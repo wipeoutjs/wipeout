@@ -37,7 +37,7 @@ function a () {
     
     return function owts (viewModel, setter, name, renderContext) {
         var val;
-        if (!setter.getParser(viewModel, name).wipeoutAutoParser ||	//TODO: expensive parser compile here
+        if (!setter.getParser(viewModel).wipeoutAutoParser ||	//TODO: expensive parser compile here
 			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.valueAsString()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
         

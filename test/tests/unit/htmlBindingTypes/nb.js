@@ -8,7 +8,7 @@ module("wipeout.htmlBindingTypes.nb", {
 testUtils.testWithUtils("binding", "xmlParserTempName", false, function(methods, classes, subject, invoker) {
     // arrange
 	var parsed = {}, rc = {}, value = {}, vm = {}, name = "KJBKJBKJB", parser = methods.method([value, name, rc], parsed), setter = {
-		getParser: methods.method([vm, name], parser),
+		getParser: methods.method([vm], parser),
 		value: value
 	};
 	parser.xmlParserTempName = true;
@@ -23,7 +23,7 @@ testUtils.testWithUtils("binding", "xmlParserTempName", false, function(methods,
 testUtils.testWithUtils("binding", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	var value = {}, parsed = {}, rc = {}, vm = {}, name = "KJBKJBKJB", parser = methods.method([value, name, rc], parsed), setter = {
-		getParser: methods.method([vm, name], parser),
+		getParser: methods.method([vm], parser),
 		valueAsString: function () {
 			return value;
 		}
