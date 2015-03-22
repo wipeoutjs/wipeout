@@ -1,8 +1,7 @@
+1: re-introduce commented tests
+2: test -	setter, compiledInitializer, builder
 
-new setter
 
-refactor htmlAttributeSetter and propertySetter to use a base class
-refactor htmlAttributeSetter into 2 classes, one for html attributes, one for html events
 
 look at console.logs in tests
 
