@@ -12,7 +12,7 @@ test("standard call", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-click", "$this.method");
 	
 	// act
-	var disp = attribute.apply(button, new wipeout.template.context({
+	var disp = attribute.applyToElement(button, new wipeout.template.context({
 		method: function (e, el) {
 			strictEqual(button, el);
 			ok(e);
@@ -37,7 +37,7 @@ test("standard call, with args", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-click", "$this.method(e, element, 333)");
 	
 	// act
-	var disp = attribute.apply(button, new wipeout.template.context({
+	var disp = attribute.applyToElement(button, new wipeout.template.context({
 		method: function (e, el, number) {
 			strictEqual(button, el);
 			strictEqual(number, 333);

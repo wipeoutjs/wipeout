@@ -54,8 +54,8 @@ Class("wipeout.template.initialization.propertySetter", function () {
             this._valueAsString :
             (this._valueAsString = this.value.serializeContent());
     };
-    
-    propertySetter.prototype.set = function (viewModel, renderContext) {
+	
+	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
 		
 		if (!this.bindingType)
 			this.bindingType = 
@@ -63,9 +63,18 @@ Class("wipeout.template.initialization.propertySetter", function () {
 				"ow";
 		
 		if (!wipeout.htmlBindingTypes[this.bindingType]) throw "Invalid binding type :\"" + this.bindingType + "\" for property: \"" + this.name + "\".";
-
-        return wipeout.htmlBindingTypes[this.bindingType](viewModel, this, this.name, renderContext);
-    };
+		
+		var op = [];
+		op.push.apply(op, this.cacheAllWatched((function () {
+			var o = wipeout.htmlBindingTypes[this.bindingType](viewModel, this, this.name, renderContext)
+			if (o instanceof Function)
+				op.push({ dispose: o });
+			else if (o && o.dispose instanceof Function)
+				op.push(o);
+		}).bind(this)));
+		
+		return op;
+	};
 	
 	return propertySetter;
 });

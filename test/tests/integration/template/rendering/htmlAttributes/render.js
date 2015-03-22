@@ -12,7 +12,7 @@ test("success", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-render", "$this.theVal");
 	
 	// act
-	var disp = attribute.apply(div, new wipeout.template.context(model));
+	var disp = attribute.applyToElement(div, new wipeout.template.context(model));
 	
 	div = document.getElementById("qunit-fixture");
 	

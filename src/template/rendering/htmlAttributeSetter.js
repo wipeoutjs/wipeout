@@ -36,7 +36,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return output.dispose.bind(output);
     };
 	
-	htmlAttributeSetter.prototype.apply = function (element, renderContext) {
+	htmlAttributeSetter.prototype.applyToElement = function (element, renderContext) {
 		var op = [];
 		op.push.apply(op, this.cacheAllWatched((function () {
 			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](element, this, renderContext);

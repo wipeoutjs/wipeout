@@ -93,15 +93,13 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         this.setters[name.name] = new wipeout.template.initialization.propertySetter(name.name, attribute, name.flags);
     };
     
-    compiledInitializer.prototype.initialize = function (viewModel, renderContext) { 
-        
-		//while (renderContext && renderContext.$this.shareParentScope
+    compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
 		
-        var disposal = [this.setters.model.set(viewModel, renderContext)];
+        var disposal = this.setters.model.applyToViewModel(viewModel, renderContext);
         
 		for (var name in this.setters)
             if (name !== "model")
-            	disposal.push(this.setters[name].set(viewModel, renderContext));
+            	disposal.push.apply(disposal, this.setters[name].applyToViewModel(viewModel, renderContext));
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -109,7 +107,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					d.dispose();
 			});
 		}
-    };
+    }; 
     
     compiledInitializer.getAutoParser = function (value) {
 		

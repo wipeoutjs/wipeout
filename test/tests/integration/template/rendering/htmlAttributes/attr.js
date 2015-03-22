@@ -12,7 +12,7 @@ test("existing attribute", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
 	
 	// act
-	attribute.apply(input, new wipeout.template.context(model));
+	attribute.applyToElement(input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.style.display, "none");
@@ -38,7 +38,7 @@ test("non existing attribute", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
 	
 	// act
-	attribute.apply(input, new wipeout.template.context(model));
+	attribute.applyToElement(input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.style.display, "none");
@@ -64,7 +64,7 @@ test("disposal", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
 	
 	// act
-	var disp = attribute.apply(input, new wipeout.template.context(model));
+	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.style.display, "none");

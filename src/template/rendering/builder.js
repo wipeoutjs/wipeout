@@ -48,7 +48,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(setter) {				
-				output.push.apply(output, setter.apply(element, renderContext));
+				output.push.apply(output, setter.applyToElement(element, renderContext));
             });
         }, this);
     

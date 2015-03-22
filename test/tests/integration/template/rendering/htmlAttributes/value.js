@@ -13,7 +13,7 @@ test("textbox", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = attribute.apply(input, new wipeout.template.context(model));
+	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.value, "234");
@@ -48,7 +48,7 @@ test("disposal", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	enumerateArr(attribute.apply(input, new wipeout.template.context(model)), function (d) {
+	enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) {
 		d.dispose();
 	});
 	
