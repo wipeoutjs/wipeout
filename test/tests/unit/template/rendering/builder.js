@@ -29,7 +29,7 @@ testUtils.testWithUtils("execute", null, false, function(methods, classes, subje
 	subject.elements = [{
 		id: id,
 		actions: [{
-			apply: methods.method([$("#" + id)[0], rc], [{
+			applyToElement: methods.method([$("#" + id)[0], rc], [{
 				dispose: methods.method()
 			}])
 		}]
