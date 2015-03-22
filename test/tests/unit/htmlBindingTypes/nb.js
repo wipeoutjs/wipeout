@@ -24,7 +24,7 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
     // arrange
 	var value = {}, parsed = {}, rc = {}, vm = {}, name = "KJBKJBKJB", parser = methods.method([value, name, rc], parsed), setter = {
 		getParser: methods.method([vm], parser),
-		valueAsString: function () {
+		getValue: function () {
 			return value;
 		}
 	};

@@ -2,12 +2,15 @@ Class("wipeout.htmlBindingTypes.owts", function () {
     
     return function owts (viewModel, setter, name, renderContext) {
         var val;
-        if (!setter.getParser(viewModel).wipeoutAutoParser ||	//TODO: expensive parser compile here
-			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.valueAsString()))
+        if (setter.getParser(viewModel) ||
+			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.getValue()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
-        
-		// "wipeoutAutoParser" ensures "xmlParserTempName" is false
 		
-        return wipeout.utils.htmlBindingTypes.bindOneWay(viewModel, name, renderContext, val);
+		var watch = new obsjs.observeTypes.pathObserver(viewModel, setter.name);
+		watch.onValueChanged(function (oldVal, newVal) {
+			wipeout.utils.obj.setObject(val, renderContext, newVal);
+		}, true);
+		
+		return watch;
     };
 });

@@ -41,19 +41,30 @@ Class("wipeout.template.initialization.propertySetter", function () {
         }
     });
 	
+	// override
+	propertySetter.prototype.getValue = function() {
+		
+        return this.hasOwnProperty("_valueAsString") ?
+            this._valueAsString :
+            (this._valueAsString = this._value.serializeContent());
+    };
+	
 	propertySetter.prototype.getParser = function(forViewModel) {
 		
         // use parser, global parser or lazy create auto parser
         return this.parser ||
-            (this.parser = (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(this.name) : null) || 
-			wipeout.template.initialization.compiledInitializer.getAutoParser(this.valueAsString()));
+            (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(this.name) : null);
     };
-    
-    propertySetter.prototype.valueAsString = function () {
-        return typeof this._valueAsString === "string" ?
-            this._valueAsString :
-            (this._valueAsString = this.value.serializeContent());
-    };
+	
+	propertySetter.prototype.parseOrExecute = function (viewModel, renderContext) {
+		//parser(parser.xmlParserTempName ? setter.value : setter.valueAsString(), name, renderContext);
+		
+		var parser = this.getParser(viewModel);
+		
+		return parser ?
+			parser(parser.xmlParserTempName ? this._value : this.getValue(), this.name, renderContext) :
+			this.build().apply(null, renderContext.asGetterArgs());
+	};
 	
 	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
 		

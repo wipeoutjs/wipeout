@@ -59,7 +59,7 @@ testUtils.testWithUtils("constructor", "nb, boolNumberOrRegex", false, function(
 		name = {},
 		setter = {
 			getParser: methods.method([vm, name], parser),
-			valueAsString: methods.method([], "true")
+			getValue: methods.method([], "true")
 		},
 		rc = {};
 	

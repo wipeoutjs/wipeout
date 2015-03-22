@@ -2,13 +2,14 @@ Class("wipeout.htmlBindingTypes.ow", function () {
 	
 	var boolNumberOrRegex = /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/.*\/))\s*$/
 	
-    return function ow (viewModel, setter, name, renderContext) {
-        var parser = setter.getParser(viewModel);
+	return function ow (viewModel, setter, name, renderContext) {
 		
 		// cannot bind to xml definition or a parsed value
-		if (parser.xmlParserTempName || !parser.wipeoutAutoParser || boolNumberOrRegex.test(setter.valueAsString()))
+		if (setter.getParser(viewModel) || boolNumberOrRegex.test(setter.getValue()))
             return wipeout.htmlBindingTypes.nb(viewModel, setter, name, renderContext);
 		
-        return wipeout.utils.htmlBindingTypes.bindOneWay(renderContext, setter.valueAsString(), viewModel, name, true);
+		setter.watch(renderContext, function (oldVal, newVal) {
+			viewModel[setter.name] = newVal;
+		}, true);
     };
 });

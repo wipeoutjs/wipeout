@@ -10,7 +10,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	
 	htmlAttributeSetter.prototype.eventBuild = function () {
 		
-		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.value));
+		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.getValue()));
 	};
 	
 	htmlAttributeSetter.prototype.onElementEvent = function (element, event, renderContext, callback) { //TODO error handling
