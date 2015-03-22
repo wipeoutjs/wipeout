@@ -19,27 +19,27 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
 	var tmp,
 		vm = {}, 
 		set = {
-			value: {
+			_value: {
 				constructor: function () {
 					if (tmp) ok(false, "constructor invoked twice");
 					tmp = this;
 				},
 				xml: {}
-			}
-		}, 
-		name = "LBLKBJKBKJB", 
+			},
+			name: "kjbkjbkjbkjb"
+		},
 		rc = {};
 	classes.mock("wipeout.template.engine.instance.getVmInitializer", function () {
-		strictEqual(arguments[0], set.value.xml);
+		strictEqual(arguments[0], set._value.xml);
 		return {
 			initialize: methods.method([tmp, rc], methods.method())	// will be called by dispose
 		};
 	}, 1);
 	
 	// act
-	var output = wipeout.htmlBindingTypes.templateElementSetter(vm, set, name, rc);
+	var output = wipeout.htmlBindingTypes.templateElementSetter(vm, set, rc);
 	
 	// assert
-	strictEqual(tmp, vm[name]);
+	strictEqual(tmp, vm[set.name]);
 	output.dispose();
 });
