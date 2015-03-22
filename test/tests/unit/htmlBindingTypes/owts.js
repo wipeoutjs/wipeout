@@ -33,41 +33,7 @@ testUtils.testWithUtils("binding", "", false, function(methods, classes, subject
 	var op = wipeout.htmlBindingTypes.owts(vm, setter, rc);
 	
 	// assert
-	strictEqual(op, _this);return;
-	
-	/*
-		var watch = new obsjs.observeTypes.pathObserver(viewModel, setter.name);
-		watch.onValueChanged(function (oldVal, newVal) {
-			wipeout.utils.obj.setObject(val, renderContext, newVal);
-		}, true);*/
-	
-	
-    // arrange
-	var output = {},
-		valAsString = {},
-		vm = {},
-		name = "POJOIN",
-		setter = {
-			getParser: methods.method([vm, name], {wipeoutAutoParser: true}),
-			valueAsString: methods.method([], valAsString)
-		},
-		rc = {};
-	
-	classes.mock("wipeout.utils.htmlBindingTypes.isSimpleBindingProperty", function () {
-		strictEqual(arguments[0], valAsString);
-		return true;
-	}, 1);
-	
-	classes.mock("wipeout.utils.htmlBindingTypes.bindOneWay", function () {
-		methods.method([vm, name, rc, valAsString]).apply(null, arguments);
-		return output;
-	}, 1);
-	
-	// act
-	var op = wipeout.htmlBindingTypes.owts(vm, setter, name, rc);
-	
-	// assert
-	strictEqual(op, output);
+	strictEqual(op, _this);
 });
 
 testUtils.testWithUtils("binding", "has parser", false, function(methods, classes, subject, invoker) {

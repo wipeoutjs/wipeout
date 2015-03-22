@@ -10,18 +10,18 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
 	var output = {},
 		vm = {}, 
 		set = {
-			value: {}
-		}, 
-		name = "LBLKBJKBKJB";
+			_value: {},
+			name: "kjbkjbkjb"
+		};
 	
 	classes.mock("wipeout.viewModels.contentControl.createAnonymousTemplate", function () {
-		strictEqual(arguments[0], set.value);
+		strictEqual(arguments[0], set._value);
 		return output;
 	}, 1);
 	
 	// act
-	wipeout.htmlBindingTypes.setTemplateProperty(vm, set, name);
+	wipeout.htmlBindingTypes.setTemplateProperty(vm, set);
 	
 	// assert
-	strictEqual(output, vm[name + "Id"]);
+	strictEqual(output, vm[set.name + "Id"]);
 });
