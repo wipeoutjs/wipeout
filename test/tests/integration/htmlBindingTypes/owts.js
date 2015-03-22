@@ -14,7 +14,7 @@ test("binding, bindOneWay", function () {
 	var val1 = viewModel[name] = {}, val2 = {};
 	
 	// act
-	var disp = wipeout.htmlBindingTypes.owts(viewModel, setter, name, renderContext);
+	var disp = wipeout.htmlBindingTypes.owts(viewModel, setter, renderContext);
 	
 	// assert
 	strictEqual(renderContext.$parent.val, val1);

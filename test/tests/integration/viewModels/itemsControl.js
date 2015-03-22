@@ -12,14 +12,14 @@ test("removeItem routed event", function() {
     application.template = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
     
     // act
-	application.onRendered = function () {
-		
-    	application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
-		
-		application.items.observe(function () {
+	application.onRendered = function () {		
+		var d = application.items.observe(function () {
     		strictEqual(application.items.indexOf(item), -1);
+			d.dispose();
 			start();
 		});
+		
+    	application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
 	};
     
     // assert
@@ -91,23 +91,20 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 </wo.items-control>";
 	
 	application.onRendered = function () {
-    
 		// assert
 		assert(item1, item2, item3);
 
 		// re-act
 		var item4  = "item4";
-		application.model.items.push(item4);
 		var destroy = application.templateItems[id1].items.observe(function () {
+			
 			destroy.dispose();
 					
 			// re-assert
 			ok(true, "added item");
 			assert(item1, item2, item3, item4);
 			
-			
 			// re-act
-			application.model.items.splice(1, 1);
 			destroy = application.templateItems[id1].items.observe(function () {
 				destroy.dispose();
 
@@ -117,7 +114,6 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 				
 				
 				// re-act
-				application.model.items.reverse();
 				destroy = application.templateItems[id1].items.observe(function () {
 					destroy.dispose();
 					
@@ -126,8 +122,12 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 									
 					start();
 				});
+				application.model.items.reverse();
 			});
+			application.model.items.splice(1, 1);
 		});
+		
+		application.model.items.push(item4);
 	};
 	
 	stop();

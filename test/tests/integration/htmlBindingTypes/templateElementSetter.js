@@ -14,13 +14,13 @@ test("binding", function () {
 		setter = new wipeout.template.initialization.propertySetter(name, {
 			xml: xml,
 			constructor: Object
-		}),
+		}, ["templateElementSetter"]),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = wipeout.htmlBindingTypes.templateElementSetter(viewModel, setter, name, renderContext);
+	var disp = setter.applyToViewModel(viewModel, renderContext);
 	
 	// assert
 	strictEqual(viewModel[name].val.val1, val1);
@@ -30,7 +30,7 @@ test("binding", function () {
 		strictEqual(viewModel[name].val.val1, val2);
 		start();
 		
-		disp.dispose();
+		enumerateArr(disp, function(disp) { disp.dispose() });
 		renderContext.$parent.val = {};
 	});
 	

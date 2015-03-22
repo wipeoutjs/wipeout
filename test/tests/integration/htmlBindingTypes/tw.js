@@ -8,13 +8,13 @@ test("binding", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("$parent.val", null)),
+		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("$parent.val", null), ["tw"]),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
 	
 	// act
-	var dispose = wipeout.htmlBindingTypes.tw(viewModel, setter, name, renderContext);
+	var dispose = setter.applyToViewModel(viewModel, renderContext);
 	
 	// assert
 	strictEqual(viewModel[name], val1);
@@ -28,7 +28,7 @@ test("binding", function () {
 			dis.dispose();
 			
 			strictEqual(renderContext.$parent.val, val3);
-			dispose.dispose();
+			enumerateArr(dispose, function (d) { d.dispose(); });
 			renderContext.$parent.val = {};
 			viewModel[name] = {};
 			

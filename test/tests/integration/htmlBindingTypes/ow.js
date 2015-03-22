@@ -8,14 +8,15 @@ test("binding, nb", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("true", null)),
+		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("true", null), ["ow"]),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	// act
-	wipeout.htmlBindingTypes.ow(viewModel, setter, name, renderContext);
+	setter.applyToViewModel(viewModel, renderContext);
 	
 	// assert
 	strictEqual(viewModel[name], true);
+	viewModel[name] = false;
 	viewModel.observe(name, function () {
 		ok(false, "nothing should trigger change after initial set");
 	});
@@ -25,13 +26,13 @@ test("binding, bindOneWay", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("$parent.val", null)),
+		setter = new wipeout.template.initialization.propertySetter(name, new wipeout.wml.wmlAttribute("$parent.val", null), ["ow"]),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = wipeout.htmlBindingTypes.ow(viewModel, setter, name, renderContext);
+	var disp = setter.applyToViewModel(viewModel, renderContext);
 	
 	// assert
 	strictEqual(viewModel[name], val1);
@@ -41,7 +42,7 @@ test("binding, bindOneWay", function () {
 		strictEqual(viewModel[name], val2);
 		start();
 		
-		disp.dispose();
+		enumerateArr(disp, function (a) { a.dispose() });
 		renderContext.$parent.val = {};
 	});
 	

@@ -3,8 +3,9 @@ HtmlAttr("value", function () {
 	//TODO: change, blur, keyup?
 	return function value (element, attribute, renderContext) { //TODO error handling
 		
-        if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(attribute.value))
-            throw "Cannot bind to the property \"" + attribute.value + "\".";
+		var val = attribute.getValue();
+        if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val))
+            throw "Cannot bind to the property \"" + val + "\".";
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
             if (element.value !== newVal)
@@ -12,7 +13,7 @@ HtmlAttr("value", function () {
         }, true);
 		
 		attribute.onElementEvent(element, "change", renderContext, function () {
-			wipeout.utils.obj.setObject(attribute.value, renderContext, element.value);
+			wipeout.utils.obj.setObject(val, renderContext, element.value);
         }, renderContext);
     }
 });
