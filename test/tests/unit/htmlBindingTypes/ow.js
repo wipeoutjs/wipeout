@@ -5,47 +5,22 @@ module("wipeout.htmlBindingTypes.ow", {
     }
 });
 
-testUtils.testWithUtils("constructor", "nb, xmlParserTempName", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("constructor", "nb, parser", false, function(methods, classes, subject, invoker) {
     // arrange
 	var op = {},
-		parser = {xmlParserTempName: true},
 		vm = {},
-		name = {},
 		setter = {
-			getParser: methods.method([vm, name], parser)
+			getParser: methods.method([vm], {})
 		},
 		rc = {};
 	
 	classes.mock("wipeout.htmlBindingTypes.nb", function () {
-		methods.method([vm, setter, name, rc]).apply(this, arguments);
+		methods.method([vm, setter, rc]).apply(this, arguments);
 		return op;
 	}, 1);
 	
 	// act
-	var output = wipeout.htmlBindingTypes.ow(vm, setter, name, rc);
-	
-	// assert
-	strictEqual(op, output);
-});
-
-testUtils.testWithUtils("constructor", "nb, wipeoutAutoParser", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var op = {},
-		parser = {wipeoutAutoParser: false},
-		vm = {},
-		name = {},
-		setter = {
-			getParser: methods.method([vm, name], parser)
-		},
-		rc = {};
-	
-	classes.mock("wipeout.htmlBindingTypes.nb", function () {
-		methods.method([vm, setter, name, rc]).apply(this, arguments);
-		return op;
-	}, 1);
-	
-	// act
-	var output = wipeout.htmlBindingTypes.ow(vm, setter, name, rc);
+	var output = wipeout.htmlBindingTypes.ow(vm, setter, rc);
 	
 	// assert
 	strictEqual(op, output);
@@ -54,48 +29,49 @@ testUtils.testWithUtils("constructor", "nb, wipeoutAutoParser", false, function(
 testUtils.testWithUtils("constructor", "nb, boolNumberOrRegex", false, function(methods, classes, subject, invoker) {
     // arrange
 	var op = {},
-		parser = {wipeoutAutoParser: true},
 		vm = {},
-		name = {},
 		setter = {
-			getParser: methods.method([vm, name], parser),
+			getParser: methods.method([vm], null),
 			getValue: methods.method([], "true")
 		},
 		rc = {};
 	
 	classes.mock("wipeout.htmlBindingTypes.nb", function () {
-		methods.method([vm, setter, name, rc]).apply(this, arguments);
+		methods.method([vm, setter, rc]).apply(this, arguments);
 		return op;
 	}, 1);
 	
 	// act
-	var output = wipeout.htmlBindingTypes.ow(vm, setter, name, rc);
+	var output = wipeout.htmlBindingTypes.ow(vm, setter, rc);
 	
 	// assert
 	strictEqual(op, output);
 });
 
+/*
+		setter.watch(renderContext, function (oldVal, newVal) {
+			viewModel[setter.name] = newVal;
+		}, true);*/
+
 testUtils.testWithUtils("constructor", "bindOneWay", false, function(methods, classes, subject, invoker) {
     // arrange
-	var valueAsString = "KJBKJ()",
-		op = {},
-		parser = {wipeoutAutoParser: true},
-		vm = {},
-		name = {},
+	var vm = {},
 		setter = {
-			getParser: methods.method([vm, name], parser),
-			valueAsString: methods.method([], valueAsString)
+			getParser: methods.method([vm], null),
+			getValue: methods.method([], "nothing"),
+			watch: methods.customMethod(function () {
+				strictEqual(arguments[0], rc);
+				var newV = {};
+				arguments[1](null, newV);
+				strictEqual(vm[setter.name], newV);
+				strictEqual(arguments[2], true);
+			}),
+			name: "KBKJB"
 		},
 		rc = {};
 	
-	classes.mock("wipeout.utils.htmlBindingTypes.bindOneWay", function () {
-		methods.method([rc, valueAsString, vm, name, true]).apply(this, arguments);
-		return op;
-	}, 1);
-	
 	// act
-	var output = wipeout.htmlBindingTypes.ow(vm, setter, name, rc);
+	wipeout.htmlBindingTypes.ow(vm, setter, rc);
 	
 	// assert
-	strictEqual(op, output);
 });

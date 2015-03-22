@@ -4,34 +4,18 @@ module("wipeout.htmlBindingTypes.nb", {
     teardown: function() {
     }
 });
-
-testUtils.testWithUtils("binding", "xmlParserTempName", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var parsed = {}, rc = {}, value = {}, vm = {}, name = "KJBKJBKJB", parser = methods.method([value, name, rc], parsed), setter = {
-		getParser: methods.method([vm], parser),
-		value: value
-	};
-	parser.xmlParserTempName = true;
-	
-	// act
-	wipeout.htmlBindingTypes.nb(vm, setter, name, rc);
-	
-	// assert
-	strictEqual(vm[name], parsed)
-});
-
+/*
+        viewModel[setter.name] = setter.parseOrExecute(viewModel, renderContext);*/
 testUtils.testWithUtils("binding", null, false, function(methods, classes, subject, invoker) {
     // arrange
-	var value = {}, parsed = {}, rc = {}, vm = {}, name = "KJBKJBKJB", parser = methods.method([value, name, rc], parsed), setter = {
-		getParser: methods.method([vm], parser),
-		getValue: function () {
-			return value;
-		}
+	var vm = {}, rc = {}, val = {}, setter = {
+		parseOrExecute: methods.method([vm, rc], val),
+		name: "AAA"
 	};
 	
 	// act
-	wipeout.htmlBindingTypes.nb(vm, setter, name, rc);
+	wipeout.htmlBindingTypes.nb(vm, setter, rc);
 	
 	// assert
-	strictEqual(vm[name], parsed)
+	strictEqual(vm.AAA, val)
 });
