@@ -57,7 +57,6 @@ Class("wipeout.template.initialization.propertySetter", function () {
     };
 	
 	propertySetter.prototype.parseOrExecute = function (viewModel, renderContext) {
-		//parser(parser.xmlParserTempName ? setter.value : setter.valueAsString(), name, renderContext);
 		
 		var parser = this.getParser(viewModel);
 		
