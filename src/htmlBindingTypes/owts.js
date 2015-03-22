@@ -1,6 +1,6 @@
 Class("wipeout.htmlBindingTypes.owts", function () {  
     
-    return function owts (viewModel, setter, name, renderContext) {
+    return function owts (viewModel, setter, renderContext) {
         var val;
         if (setter.getParser(viewModel) ||
 			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.getValue()))

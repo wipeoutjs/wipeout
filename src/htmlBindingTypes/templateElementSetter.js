@@ -1,6 +1,6 @@
 Class("wipeout.htmlBindingTypes.templateElementSetter", function () {  
     
-    return function templateElementSetter(viewModel, setter, name, renderContext) {
+    return function templateElementSetter(viewModel, setter, renderContext) {
 		
 		viewModel[setter.name] = new setter.value.constructor;
 

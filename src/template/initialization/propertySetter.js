@@ -77,7 +77,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		
 		var op = [];
 		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.htmlBindingTypes[this.bindingType](viewModel, this, this.name, renderContext)
+			var o = wipeout.htmlBindingTypes[this.bindingType](viewModel, this, renderContext)
 			if (o instanceof Function)
 				op.push({ dispose: o });
 			else if (o && o.dispose instanceof Function)
