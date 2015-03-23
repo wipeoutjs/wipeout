@@ -5,7 +5,7 @@ module("integration: wipeout.template.setter", {
     }
 });
 
-//TODO: this is very slow
+//TODO: this is slow but an obsjs update should fix it
 test("cacheAllWatched and watch: computed", function() {
 	// arrange
 	var subject = new wipeout.template.setter("hello", "$this.value || 555");
@@ -64,7 +64,7 @@ test("cacheAllWatched and watch: pathObserver", function() {
 			
 				assert.assert = function (oldVal, newVal) {
 					ok(false);
-				}
+				};
 				
 				start();
 			}
