@@ -1,59 +1,141 @@
-module("integration: wipeout.template.loader", {
+module("integration: wipeout.template.setter", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-test("success", function() {
-});
-
-function aa () {
-	
-	var setter = objjs.object.extend(function setter (name, value) {
-		this._super();
-		
-		this.name = name;
-		this._value = value;
-	});
-	
-	setter.prototype.build = function () {
-		
-		return this._built || (this._built = wipeout.template.context.buildGetter(this.getValue()));
-	};
-	
-	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
-		if (!this._caching)
-			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+//TODO: this is very slow
+test("cacheAllWatched and watch: computed", function() {
+	// arrange
+	var subject = new wipeout.template.setter("hello", "$this.value || 555");
+	var model = obsjs.makeObservable({value: 666});
+	var assert = {
+		assert: function (oldVal, newVal) {
+			strictEqual(oldVal, undefined);
+			strictEqual(newVal, 666);
+			
+			assert.assert = function (oldVal, newVal) {
+				strictEqual(oldVal, 666);
+				strictEqual(newVal, 555);
 				
-		var watched = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.getValue()) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.getValue()) :
-			renderContext.getComputed(this.build());
-		
-		this._caching.push(watched);
-		return watched.onValueChanged(callback, evaluateImmediately);
-	};
-	
-	setter.prototype.execute = function (renderContext) {
-		return this.build().apply(null, renderContext.asGetterArgs());
-	};
-	
-	setter.prototype.cacheAllWatched = function (logic) {
-		if (this._caching)
-			throw "cacheAllWatched cannot be asynchronus or nested.";
-		
-		try {
-			this._caching = [];
-			logic();
-			return this._caching;
-		} finally {
-			delete this._caching;
+				enumerateArr(disp, function(d) { d.dispose(); });
+				model.value = 999;
+			
+				assert.assert = function (oldVal, newVal) {
+					ok(false);
+				}
+				
+				start();
+			}
 		}
 	};
 	
-	setter.prototype.getValue = function () {
-		return this._value;
+	// act
+	// assert
+	var disp = subject.cacheAllWatched(function () {
+		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+			assert.assert(oldVal, newVal);
+		}, true);
+	});
+	
+	model.value = 0;
+	strictEqual(disp.length, 1);
+	ok(disp[0] instanceof obsjs.observeTypes.computed);
+	
+	stop();
+});
+
+test("cacheAllWatched and watch: pathObserver", function() {
+	// arrange
+	var subject = new wipeout.template.setter("hello", "$this.value");
+	var model = obsjs.makeObservable({value: 666});
+	var assert = {
+		assert: function (oldVal, newVal) {
+			strictEqual(oldVal, undefined);
+			strictEqual(newVal, 666, "new val");
+			
+			assert.assert = function (oldVal, newVal) {
+				strictEqual(oldVal, 666);
+				strictEqual(newVal, 0, "new val");
+				
+				enumerateArr(disp, function(d) { d.dispose(); });
+				model.value = 999;
+			
+				assert.assert = function (oldVal, newVal) {
+					ok(false);
+				}
+				
+				start();
+			}
+		}
 	};
 	
-	return setter;
-};
+	// act
+	// assert
+	var disp = subject.cacheAllWatched(function () {
+		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+			assert.assert(oldVal, newVal);
+		}, true);
+	});
+	
+	model.value = 0;
+	strictEqual(disp.length, 1);
+	ok(disp[0] instanceof obsjs.observeTypes.pathObserver);
+	
+	stop();
+});
+
+test("execute, $context", function() {
+	// arrange
+	var context = new wipeout.template.context({}).contextFor({}, 333);
+	var subject = new wipeout.template.setter("hello", "$context");
+	
+	// act
+	// assert
+	strictEqual(context, subject.execute(context));
+});
+
+test("execute, $this", function() {
+	// arrange
+	var context = new wipeout.template.context({}).contextFor({}, 333);
+	var subject = new wipeout.template.setter("hello", "$this");
+	
+	// act
+	// assert
+	ok(context.$this);
+	strictEqual(context.$this, subject.execute(context));
+});
+
+test("execute, $parent", function() {
+	// arrange
+	var context = new wipeout.template.context({}).contextFor({}, 333);
+	var subject = new wipeout.template.setter("hello", "$parent");
+	
+	// act
+	// assert
+	ok(context.$parent);
+	strictEqual(context.$parent, subject.execute(context));
+});
+
+test("execute, $parents", function() {
+	// arrange
+	var context = new wipeout.template.context({}).contextFor({}, 333);
+	var subject = new wipeout.template.setter("hello", "$parents");
+	
+	// act
+	// assert
+	ok(context.$parents);
+	strictEqual(context.$parents, subject.execute(context));
+});
+
+test("execute, $index", function() {
+	// arrange
+	var context = new wipeout.template.context({}).contextFor({}, 333);
+	var subject = new wipeout.template.setter("hello", "$index");
+	
+	// act
+	// assert
+	ok(context.$index);
+	strictEqual(context.$index, subject.execute(context));
+});
