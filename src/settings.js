@@ -11,6 +11,7 @@ Class("wipeout.settings", function() {
 
     settings.asynchronousTemplates = true;
     settings.displayWarnings = true;
+    settings.useElementClassName = false;
     
     settings.wipeoutAttributes = {
         viewModelName: "wo-view-model"
