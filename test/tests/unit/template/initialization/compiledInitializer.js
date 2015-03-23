@@ -37,7 +37,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     // assert
 	strictEqual(subject.setters.constructor, Object);
 	ok(subject.setters.model instanceof wipeout.template.initialization.propertySetter);
-	strictEqual(subject.setters.model.value.value,  "$parent ? $parent.model : null");
+	strictEqual(subject.setters.model._value.value,  "$parent ? $parent.model : null");
 });
 
 testUtils.testWithUtils("addElement", "has setter already", false, function(methods, classes, subject, invoker) {
@@ -71,9 +71,10 @@ testUtils.testWithUtils("addElement", "has attribute value with flags", false, f
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0], attr);
-		strictEqual(arguments[1][0], "f1");
-		strictEqual(arguments[1][1], "f2");
+		strictEqual(arguments[0], element.name);
+		strictEqual(arguments[1], attr);
+		strictEqual(arguments[2][0], "f1");
+		strictEqual(arguments[2][1], "f2");
 		
 		setter = this;
 	}, 1);
@@ -122,9 +123,10 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0].xml, element[0]);
-		strictEqual(arguments[0].constructor, Array);
-		strictEqual(arguments[1][0], "templateElementSetter");
+		strictEqual(arguments[0], element.name);
+		strictEqual(arguments[1].xml, element[0]);
+		strictEqual(arguments[1].constructor, Array);
+		strictEqual(arguments[2][0], "templateElementSetter");
 		
 		setter = this;
 	}, 1);
@@ -147,7 +149,8 @@ testUtils.testWithUtils("addElement", "no parser, text setter", false, function(
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0], element);
+		strictEqual(arguments[0], element.name);
+		strictEqual(arguments[1], element);
 		
 		setter = this;
 	}, 1);
@@ -171,7 +174,8 @@ testUtils.testWithUtils("addElement", "with parser function", false, function(me
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0], element);
+		strictEqual(arguments[0], element.name);
+		strictEqual(arguments[1], element);
 		
 		setter = this;
 	}, 1);
@@ -203,7 +207,8 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0], element);
+		strictEqual(arguments[0], element.name);
+		strictEqual(arguments[1], element);
 		
 		setter = this;
 	}, 1);
@@ -240,9 +245,10 @@ testUtils.testWithUtils("addAttribute", "with global parser", false, function(me
 	subject.setters = {};
 	
 	classes.mock("wipeout.template.initialization.propertySetter", function () {
-		strictEqual(arguments[0], attr);
-		strictEqual(arguments[1][0], "f1");
-		strictEqual(arguments[1][1], "f2");
+		strictEqual(arguments[0], "name");
+		strictEqual(arguments[1], attr);
+		strictEqual(arguments[2][0], "f1");
+		strictEqual(arguments[2][1], "f2");
 		
 		setter = this;
 	}, 1);
@@ -260,22 +266,20 @@ testUtils.testWithUtils("initialize", null, false, function(methods, classes, su
 	var vm = {}, rc = {};
 	
 	subject.setters = {
-		model: {},
-		p1: {}
+		model: {
+			applyToViewModel: methods.method([vm, rc], [{dispose: methods.method()}])
+		},
+		p1: {
+			applyToViewModel: methods.method([vm, rc], [{dispose: methods.method()}])
+		}
 	};
-	
-	subject.set = methods.customMethod(function () {
-		methods.method([vm, rc, "model"]).apply(null, arguments);
-		subject.set = methods.method([vm, rc, "p1"], {dispose: methods.method()});
-		
-		return {dispose: methods.method()};
-	});
 	
     // act
     // assert
 	invoker(vm, rc)();
 });
 
+/*
 testUtils.testWithUtils("set", "invalid binding type", false, function(methods, classes, subject, invoker) {
 		
     // arrange
@@ -287,9 +291,9 @@ testUtils.testWithUtils("set", "invalid binding type", false, function(methods, 
 	
     // act
     // assert
-	throws(function () {
+	//throws(function () {
 		invoker(vm, rc, "name");
-	});
+	//});
 });
 
 testUtils.testWithUtils("set", "has binding type", false, function(methods, classes, subject, invoker) {
@@ -355,7 +359,7 @@ testUtils.testWithUtils("set", "default to one way binding", false, function(met
 	
     // assert
 	strictEqual(op, output);
-});
+});*/
 
 testUtils.testWithUtils("getAutoParser", null, true, function(methods, classes, subject, invoker) {
 		

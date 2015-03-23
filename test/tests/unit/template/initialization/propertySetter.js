@@ -177,7 +177,6 @@ testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, funct
 	subject.cacheAllWatched = function () { arguments[0](); return []; };
 	
 	// act
-	debugger;
 	var output = invoker(vm, rc);
 	
     // assert
@@ -186,39 +185,3 @@ testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, funct
 	
 	output[0].dispose();
 });
-
-function sssss () {
-	
-	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
-		
-		var bindingType = this.getBindingType(viewModel);
-		
-		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + this.name + "\".";
-		
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this, renderContext)
-			if (o instanceof Function)
-				op.push({ dispose: o });
-			else if (o && o.dispose instanceof Function)
-				op.push(o);
-		}).bind(this)));
-		
-		return op;
-	};
-	
-	return propertySetter;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-

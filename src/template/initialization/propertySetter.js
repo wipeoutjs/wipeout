@@ -55,7 +55,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
         return this.parser ||
             (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(this.name) : null);
     };
-	
+	 
 	propertySetter.prototype.parseOrExecute = function (viewModel, renderContext) {
 		
 		var parser = this.getParser(viewModel);
