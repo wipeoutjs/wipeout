@@ -166,7 +166,7 @@ testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, funct
 	});
 });
 
-testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("applyToViewModel", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	var vm = {}, rc = {};
 	subject.getBindingType = methods.method([vm], "theBinding");
