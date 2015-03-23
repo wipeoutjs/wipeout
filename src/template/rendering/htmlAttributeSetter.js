@@ -40,10 +40,10 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		var op = [];
 		op.push.apply(op, this.cacheAllWatched((function () {
 			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](element, this, renderContext);
-			if (o instanceof Function)
-				op.push({ dispose: o });
-			else if (o && o.dispose instanceof Function)
+			if (o && o.dispose instanceof Function)
 				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
 		}).bind(this)));
 		
 		return op;

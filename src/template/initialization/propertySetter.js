@@ -64,23 +64,26 @@ Class("wipeout.template.initialization.propertySetter", function () {
 			parser(parser.xmlParserTempName ? this._value : this.getValue(), this.name, renderContext) :
 			this.build().apply(null, renderContext.asGetterArgs());
 	};
+		
+	propertySetter.prototype.getBindingType = function (viewModel) {
+		return this.bindingType || 
+				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(this.name)) || 
+				"ow";
+	};
 	
 	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
 		
-		if (!this.bindingType)
-			this.bindingType = 
-				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(this.name)) || 
-				"ow";
+		var bindingType = this.getBindingType(viewModel);
 		
-		if (!wipeout.htmlBindingTypes[this.bindingType]) throw "Invalid binding type :\"" + this.bindingType + "\" for property: \"" + this.name + "\".";
+		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + this.name + "\".";
 		
 		var op = [];
 		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.htmlBindingTypes[this.bindingType](viewModel, this, renderContext)
-			if (o instanceof Function)
-				op.push({ dispose: o });
-			else if (o && o.dispose instanceof Function)
+			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this, renderContext)
+			if (o && o.dispose instanceof Function)
 				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
 		}).bind(this)));
 		
 		return op;
