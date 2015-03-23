@@ -1,5 +1,5 @@
-1: re-introduce commented tests
-2: test -	setter, compiledInitializer, builder, context??
+
+2: test -	htmlAttributeSetter, context??
 
 
 
