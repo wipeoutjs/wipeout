@@ -3,7 +3,7 @@ Class("wipeout.htmlBindingTypes.owts", function () {
     return function owts (viewModel, setter, renderContext) {
         var val;
         if (setter.getParser(viewModel) ||
-			!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val = setter.getValue()))
+			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		
 		var watch = new obsjs.observeTypes.pathObserver(viewModel, setter.name);

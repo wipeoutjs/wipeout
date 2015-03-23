@@ -4,7 +4,7 @@ HtmlAttr("value", function () {
 	return function value (element, attribute, renderContext) { //TODO error handling
 		
 		var val = attribute.getValue();
-        if (!wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(val))
+        if (!wipeout.template.setter.isSimpleBindingProperty(val))
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {

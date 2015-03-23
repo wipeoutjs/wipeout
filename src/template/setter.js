@@ -13,11 +13,15 @@ Class("wipeout.template.setter", function () {
 		return this._built || (this._built = wipeout.template.context.buildGetter(this.getValue()));
 	};
 	
+    setter.isSimpleBindingProperty = function (property) {
+        return /^[\$\w\s\.\[\]]+$/.test(property);
+    };
+	
 	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
 		if (!this._caching)
 			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
 		
-		var watched = wipeout.utils.htmlBindingTypes.isSimpleBindingProperty(this.getValue()) ?
+		var watched = setter.isSimpleBindingProperty(this.getValue()) ?
 			new obsjs.observeTypes.pathObserver(renderContext, this.getValue()) :
 			renderContext.getComputed(this.build());
 		
