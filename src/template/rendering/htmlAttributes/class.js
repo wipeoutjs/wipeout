@@ -7,7 +7,7 @@ HtmlAttr("class", function () {
 	
 	var buildRegex = function (forClass) {
 		
-		return new RegExp("(?:^|\\s)" + forClass + "(?!\\$)", "g");
+		return new RegExp("(?:^|\\s)" + forClass + "(?!\\S)", "g");
 	};
 
 	var hasClass = function (element, className) {

@@ -1,7 +1,7 @@
 
 (function () {
-	//modules at the bottom
 	
+	//modules at the bottom
 	function go() { 
 		//TODO: other types
 		test("class, add remove test", function() {
