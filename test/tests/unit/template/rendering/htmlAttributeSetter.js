@@ -36,6 +36,8 @@ testUtils.testWithUtils("setData, getData", null, true, function(methods, classe
 	subject.setData(element, name, data);
 	
 	// assert
+	ok(subject.dataExists(element, name));
+	ok(!subject.dataExists(element, "kjbefbksdjbfs"));
 	strictEqual(subject.getData(element, name), data);
 	
 	subject._caching[0].dispose();

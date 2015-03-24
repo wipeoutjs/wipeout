@@ -22,9 +22,14 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return wipeout.utils.domData.set(element, name, data);
 	};
 	
-	htmlAttributeSetter.prototype.getData = function (element, name, data) {
+	htmlAttributeSetter.prototype.getData = function (element, name) {
 		
 		return wipeout.utils.domData.get(element, name);
+	};
+	
+	htmlAttributeSetter.prototype.dataExists = function (element, name) {
+		
+		return wipeout.utils.domData.exists(element, name);
 	};
 	
 	htmlAttributeSetter.prototype.eventBuild = function () {

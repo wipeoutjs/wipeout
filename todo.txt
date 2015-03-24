@@ -23,6 +23,8 @@ View model namespace overhaul and tests
 
 standardise the way things are rendered, between Objects and wo.views (toString)
 
+<div wo-name="wo.view"></div>
+
 <Array>
     <value parser="s">A</value>
     <value parser="s">Random</value>
