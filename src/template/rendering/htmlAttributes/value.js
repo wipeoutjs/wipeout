@@ -4,6 +4,7 @@ HtmlAttr("value", function () {
 	//TODO: radio, checkbox
 	
 	function radio (element, attribute, renderContext) { 
+		throw "not implemented";
 	}
 	
 	function checkbox (element, attribute, renderContext) { 

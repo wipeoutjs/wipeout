@@ -120,7 +120,7 @@ test("disposal", function() {
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {	
+	var d2 = obsjs.observe(model, "theVal", function () {
 		
 		d2.dispose();
 		
