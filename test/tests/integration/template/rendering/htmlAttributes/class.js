@@ -3,8 +3,28 @@
 	
 	//modules at the bottom
 	function go() { 
+
+		test("smoke test", function() {
+
+			// arrange
+			application.val = true;
+
+			// act
+			application.template = '<input id="element" wo-class-the-class="$this.val" />';
+
+			// assert
+			application.onRendered = function () {
+				strictEqual(application.templateItems.element.className, "the-class");
+				start();
+			};
+
+			stop();
+		});
+	
 		//TODO: other types
 		test("class, add remove test", function() {
+			clearIntegrationStuff();
+			
 			$("#qunit-fixture").html("<input type='text' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
@@ -46,7 +66,9 @@
 			stop();
 		});
 		
-		test("visible, class at the beginning", function() {
+		test("class at the beginning", function() {
+			clearIntegrationStuff();
+			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
@@ -58,7 +80,9 @@
 			strictEqual(input.className, "class1 class2");
 		});
 		
-		test("visible, class in the middle", function() {
+		test("class in the middle", function() {
+			clearIntegrationStuff();
+			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
@@ -70,7 +94,9 @@
 			strictEqual(input.className, "class0 class2");
 		});
 		
-		test("visible, class at the end", function() {
+		test("class at the end", function() {
+			clearIntegrationStuff();
+			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
@@ -84,10 +110,8 @@
 	}
 		
 	module("integration: wipeout.template.initialization.htmlAttributes.wo-class", {
-		setup: function() {
-		},
-		teardown: function() {
-		}
+		setup: integrationTestSetup,
+		teardown: integrationTestTeardown
 	});
 	
 	go();
@@ -95,9 +119,11 @@
 	module("integration: wipeout.template.initialization.htmlAttributes.wo-class, no classList", {
 		setup: function() {
 			wipeout.settings.useElementClassName = true;
+			integrationTestSetup();
 		},
 		teardown: function() {
 			wipeout.settings.useElementClassName = false;
+			integrationTestTeardown();
 		}
 	});
 

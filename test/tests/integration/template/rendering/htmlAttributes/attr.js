@@ -1,11 +1,28 @@
 module("integration: wipeout.template.initialization.htmlAttributes.wo-attr", {
-    setup: function() {
-    },
-    teardown: function() {
-    }
+    setup: integrationTestSetup,
+    teardown: integrationTestTeardown
+});
+
+test("smoke test", function() {
+	
+	// arrange
+	application.val = "checkbox";
+	
+	// act
+	application.template = '<input id="element" wo-attr-type="$this.val" />';
+	
+	// assert
+	application.onRendered = function () {
+		strictEqual(application.templateItems.element.type, "checkbox");
+		start();
+	};
+	
+	stop();
 });
 
 test("existing attribute", function() {
+	clearIntegrationStuff();
+	
 	$("#qunit-fixture").html("<div id='hello' style='display: block'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});
@@ -32,6 +49,8 @@ test("existing attribute", function() {
 });
 
 test("non existing attribute", function() {
+	clearIntegrationStuff();
+	
 	$("#qunit-fixture").html("<div id='hello'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});
@@ -58,6 +77,8 @@ test("non existing attribute", function() {
 });
 
 test("disposal", function() {
+	clearIntegrationStuff();
+	
 	$("#qunit-fixture").html("<div id='hello' style='display: block'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});

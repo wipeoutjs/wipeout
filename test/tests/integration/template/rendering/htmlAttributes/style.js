@@ -1,51 +1,47 @@
-module("integration: wipeout.template.initialization.htmlAttributes.wo-visible", {
+module("integration: wipeout.template.initialization.htmlAttributes.wo-style", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
 
 test("smoke test", function() {
-	
 	// arrange
-	application.val = false;
+	application.val = "none";
 	
 	// act
-	application.template = '<input id="element" wo-visible="$this.val" />';
+	application.template = '<input id="element" wo-style-display="$this.val" />';
 	
 	// assert
 	application.onRendered = function () {
-		strictEqual(application.templateItems.element.style.display, "none");
+		strictEqual(application.templateItems.element.style.display, application.val);
 		start();
 	};
 	
 	stop();
 });
 
-//TODO: other types
-test("visible", function() {
+test("class, add remove test", function() {
 	clearIntegrationStuff();
 	
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: false});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-visible", "$this.theVal");
-	
+	var model = obsjs.makeObservable({theVal: "none"});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-style-display", "$this.theVal", "wo-style");
+
 	// act
 	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
-	
+
 	// assert
-	strictEqual(input.style.display, "none");
-	
+	strictEqual(input.style.display, model.theVal);
 	var d2 = obsjs.observe(model, "theVal", function () {
 		d2.dispose();
-		
+
 		setTimeout(function () {
-			
-			strictEqual(input.style.display, "");
+			strictEqual(input.style.display, model.theVal);
 			d2 = obsjs.observe(model, "theVal", function () {
 				d2.dispose();
-				
+
 				setTimeout(function () {
-					strictEqual(input.style.display, "none");
+					strictEqual(input.style.display, model.theVal);
 					enumerateArr(disp, function (d) { d.dispose(); });
 					d2 = obsjs.observe(model, "theVal", function () {
 						d2.dispose();
@@ -54,13 +50,14 @@ test("visible", function() {
 							start();
 						});
 					});
-					model.theVal = true;
+					model.theVal = "inline";
 				});
 			});
-			model.theVal = false;
+
+			model.theVal = "none";
 		});
 	});
-	
-	model.theVal = true;
+
+	model.theVal = "inline";
 	stop();
 });

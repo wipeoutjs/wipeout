@@ -73,6 +73,17 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
     };
+	
+	compiledTemplate.getAttributeName = function (attributeName) {
+		if (wipeout.template.rendering.htmlAttributes[attributeName])
+			return attributeName;
+	
+		//TODO: document
+		for (var i in wipeout.template.rendering.htmlAttributes)
+			if (wipeout.template.rendering.htmlAttributes[i].test instanceof Function &&
+				wipeout.template.rendering.htmlAttributes[i].test(attributeName))
+				return i;
+	};
     
     compiledTemplate.prototype.addAttributes = function(attributes) {
         
@@ -83,14 +94,14 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
             // if it is a special attribute
 			attr = false;
-            if (wipeout.template.rendering.htmlAttributes[name] || (attr = wipeout.template.rendering.htmlAttributes["wo-attr"].test(name))) {
+            if (attr = compiledTemplate.getAttributeName(name)) {
 
                 // if it is the first special attribute for this element
                 if (!modifications)
                     this.html.push(modifications = []);
 				
-				if (attr) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, "wo-attr"));
+				if (attr !== name) {
+					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?

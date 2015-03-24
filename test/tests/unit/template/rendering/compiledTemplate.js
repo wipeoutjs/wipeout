@@ -23,7 +23,14 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.html[0], "abc");
 });
 
-var string = "string", idString = "id";
+testUtils.testWithUtils("getAttributeName", null, true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act
+    // assert
+    strictEqual(invoker("wo-click"), "wo-click");
+    strictEqual(invoker("wo-attr-blabla"), "wo-attr");
+    strictEqual(invoker("wo-nothing"), undefined);
+});
 
 testUtils.testWithUtils("addNonElement", null, false, function(methods, classes, subject, invoker) {
     // arrange
