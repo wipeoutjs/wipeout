@@ -25,6 +25,25 @@ testUtils.testWithUtils("eventBuild", "create", false, function(methods, classes
 	strictEqual(subject._eventBuilt, tmp);
 });
 
+testUtils.testWithUtils("setData, getData", null, true, function(methods, classes, subject, invoker) {
+	
+	// arrange
+	var element = {}, name = "LKJBKJBKJBJK", data = {};
+	subject = new wipeout.template.rendering.htmlAttributeSetter();
+	subject._caching = [];
+	
+	// act
+	subject.setData(element, name, data);
+	
+	// assert
+	strictEqual(subject.getData(element, name), data);
+	
+	subject._caching[0].dispose();
+	
+	// assert
+	strictEqual(subject.getData(element, name), undefined);
+});
+
 testUtils.testWithUtils("onElementEvent", null, true, function(methods, classes, subject, invoker) {
 	
 	// arrange

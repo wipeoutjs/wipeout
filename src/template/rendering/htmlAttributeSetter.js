@@ -8,6 +8,25 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		this.action = action;
 	});
 	
+	htmlAttributeSetter.prototype.setData = function (element, name, data) {
+        
+		if (!this._caching)
+			throw "The setData function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
+		
+		this._caching.push({
+			dispose: function () {
+				wipeout.utils.domData.clear(element, name);
+			}
+		});
+		
+		return wipeout.utils.domData.set(element, name, data);
+	};
+	
+	htmlAttributeSetter.prototype.getData = function (element, name, data) {
+		
+		return wipeout.utils.domData.get(element, name);
+	};
+	
 	htmlAttributeSetter.prototype.eventBuild = function () {
 		
 		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.getValue()));
