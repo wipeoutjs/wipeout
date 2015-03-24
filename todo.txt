@@ -1,5 +1,9 @@
 
 html event handled
+wrap domData in htmlAttributeSetter, use to chain attrs.
+	can I get over ordering?
+	do value binding onblur, onchange, onkeyup etc
+	do radio button and checkbox value
 
 
 look at console.logs in tests
