@@ -9,10 +9,12 @@ test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var onEvent = new wipeout.template.rendering.htmlAttributeSetter("wo-on-event", "blur"),
+		attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+	var disp = onEvent.applyToElement(input, new wipeout.template.context(model));
+	disp.push.apply(disp, attribute.applyToElement(input, new wipeout.template.context(model)));
 	
 	// assert
 	strictEqual(input.value, "234");
@@ -26,9 +28,8 @@ test("textbox", function() {
 			
 			input.value = 678;
 			
-			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
-			input.dispatchEvent(event);
+			input.focus();
+			input.blur();
 			
 			strictEqual(model.theVal, "678");
 			
