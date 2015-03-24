@@ -70,3 +70,75 @@ test("disposal", function() {
 	model.theVal = 456;
 	stop();
 });
+
+//TODO: other types
+test("checkbox", function() {
+	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
+	var input = document.getElementById("hello");
+	var model = obsjs.makeObservable({theVal: true});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	
+	// act
+	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+	
+	// assert
+	strictEqual(input.attributes.checked.value, "checked");
+	
+	var d2 = obsjs.observe(model, "theVal", function () {
+		d2.dispose();
+		
+		setTimeout(function () {
+			
+			ok(!input.attributes.checked);
+			
+			input.setAttribute("checked", "checked");
+			var event = document.createEvent("UIEvents");
+			event.initUIEvent("change", true, true);
+			input.dispatchEvent(event);
+			
+			strictEqual(model.theVal, true);
+			
+			start();
+		});
+	});
+	
+	model.theVal = false;
+	stop();
+});
+
+test("disposal", function() {
+	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
+	var input = document.getElementById("hello");
+	var model = obsjs.makeObservable({theVal: true});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	
+	// act
+	enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) {
+		d.dispose();
+	});
+	
+	// assert
+	strictEqual(input.attributes.checked.value, "checked");
+	
+	var d2 = obsjs.observe(model, "theVal", function () {	
+		
+		d2.dispose();
+		
+		setTimeout(function () {
+			
+			strictEqual(input.attributes.checked.value, "checked");
+			
+			input.removeAttribute("checked");
+			var event = document.createEvent("UIEvents");
+			event.initUIEvent("change", true, true);
+			input.dispatchEvent(event);
+			
+			strictEqual(model.theVal, false);
+			
+			start();
+		});
+	});
+	
+	model.theVal = false;
+	stop();
+});

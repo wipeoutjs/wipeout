@@ -21,7 +21,6 @@
 			stop();
 		});
 	
-		//TODO: other types
 		test("class, add remove test", function() {
 			clearIntegrationStuff();
 			

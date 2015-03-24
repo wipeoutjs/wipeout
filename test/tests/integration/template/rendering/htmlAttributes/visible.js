@@ -20,7 +20,6 @@ test("smoke test", function() {
 	stop();
 });
 
-//TODO: other types
 test("visible", function() {
 	clearIntegrationStuff();
 	
