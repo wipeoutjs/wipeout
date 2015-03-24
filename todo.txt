@@ -1,6 +1,5 @@
 
-2: test -	htmlAttributeSetter, context??
-
+html event handled
 
 
 look at console.logs in tests

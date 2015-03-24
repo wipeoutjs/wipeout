@@ -77,11 +77,10 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 	compiledTemplate.getAttributeName = function (attributeName) {
 		if (wipeout.template.rendering.htmlAttributes[attributeName])
 			return attributeName;
-	
+		
 		//TODO: document
-		for (var i in wipeout.template.rendering.htmlAttributes)
-			if (wipeout.template.rendering.htmlAttributes[i].test instanceof Function &&
-				wipeout.template.rendering.htmlAttributes[i].test(attributeName))
+		for (var i in wipeout.template.rendering.dynamicHtmlAttributes)
+			if (wipeout.template.rendering.dynamicHtmlAttributes[i].test(attributeName))
 				return i;
 	};
     
