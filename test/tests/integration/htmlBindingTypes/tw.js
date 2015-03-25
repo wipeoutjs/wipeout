@@ -60,7 +60,7 @@ test("integration", function() {
         m.push(newVal);
     };
         
-    application.template = "<views.view model--tw='$parent.property' id='" + id + "'></views.view>";
+    application.setTemplate = "<views.view model--tw='$parent.property' id='" + id + "'></views.view>";
     
 	application.onRendered = function () {
 	

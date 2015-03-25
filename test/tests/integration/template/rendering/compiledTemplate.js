@@ -11,7 +11,7 @@ test("success", function() {
 "<!-- hello -->\
 hello\
 {{$this.hello}}\
-<wo.content-control hello--s='bellbo' template--s='not hello' />\
+<wo.content-control hello--s='bellbo' set-template--s='not hello'></wo.content-control>\
 <div style='display: block' wo-content='$this.hello'></div>");
 	var subject = new wipeout.template.rendering.compiledTemplate(template).getBuilder();
 	

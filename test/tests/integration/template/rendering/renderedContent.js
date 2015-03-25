@@ -221,15 +221,15 @@ test("un render", function() {
     
     application.hello = vms[1];
     application.hello.helloAgain = vms[2];
-    application.hello.helloAgain.template = 
+    application.hello.helloAgain.setTemplate = 
 "<wo.content-control id=\"cc1\">\
 	</wo.content-control>\
 		<div>Hi</div>\
 	<wo.content-control id=\"cc2\">\
 </wo.content-control>";
-    application.hello.template = "<div wo-render='$this.helloAgain'></div>";
+    application.hello.setTemplate = "<div wo-render='$this.helloAgain'></div>";
     
-    application.template = "<div wo-render='$this.hello'></div>";
+    application.setTemplate = "<div wo-render='$this.hello'></div>";
 	
 	application.onRendered = function () {
 		vms.push(application.hello.helloAgain.templateItems.cc1);
@@ -255,25 +255,25 @@ test("un render", function() {
 
 function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
-    application.template = '<wo.view id="i0" />\
+    application.setTemplate = '<wo.view id="i0"></wo.view>\
 <div id="a" something something1=\'aaa\' something2=wer345>\
     <wo.content-control id="i1">\
-        <template>\
+        <set-template>\
             <div id="b">\
                 <div id="c">\
-                    <wo.view inner="true" id="i2" />\
+                    <wo.view inner="true" id="i2"></wo.view>\
                 </div>\
             </div>\
-        </template>\
+        </set-template>\
     </wo.content-control>\
     <div id="d">\
         <div id="e">\
             <wo.items-control id="i3" items="[{},{}]">\
-                <template>\
+                <set-template>\
                     <div id="f">\
 						{{$this.items}}\
                     </div>\
-                </template>\
+                </set-template>\
             </wo.items-control>\
         </div\>\
     </div\>\

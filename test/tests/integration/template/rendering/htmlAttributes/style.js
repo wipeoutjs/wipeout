@@ -8,7 +8,7 @@ test("smoke test", function() {
 	application.val = "none";
 	
 	// act
-	application.template = '<input id="element" wo-style-display="$this.val" />';
+	application.setTemplate = '<input id="element" wo-style-display="$this.val" />';
 	
 	// assert
 	application.onRendered = function () {

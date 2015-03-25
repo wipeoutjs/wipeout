@@ -8,7 +8,7 @@ test("setting template inline", function() {
     // arrange
     // act
 	var innerTemplate = "<wo.content-control xxx='true' a-property='true' id='item'></wo.content-control>";
-    application.template = '<wo.content-control id="item" template="' + innerTemplate + '" ></wo.content-control>';
+    application.setTemplate = '<wo.content-control id="item" set-template="' + innerTemplate + '" ></wo.content-control>';
     
     // assert
 	application.onRendered = function () {
@@ -21,8 +21,8 @@ test("setting template inline", function() {
 
 test("bug, ensure template rendering is only invoked once ", function() {
     // arrange
-    var open1 = "<wo.content-control id='item", open2 = "'><template>", close = "</template></wo.content-control>";
-    application.template = open1 + "1" + open2 + open1 + "2" + open2 + "<div>hi</div>" + close + close;
+    var open1 = "<wo.content-control id='item", open2 = "'><set-template>", close = "</set-template></wo.content-control>";
+    application.setTemplate = open1 + "1" + open2 + open1 + "2" + open2 + "<div>hi</div>" + close + close;
 		
 	application.onRendered = function () {
 

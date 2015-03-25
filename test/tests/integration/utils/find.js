@@ -6,19 +6,19 @@ module("integration: wipeout.utils.find", {
 test("wipeout.utils.find", function() {
 	
     // arrange
-    application.template = '<wo.content-control id="me1">\
-    <template>\
+    application.setTemplate = '<wo.content-control id="me1">\
+    <set-template>\
         <wo.content-control id="me2">\
-            <template>\
+            <set-template>\
                 <wo.content-control id="me3"\
-                    parent="$find(\'parent\')" grandParent="$find({$a:\'grandParent\'})" greatGrandParent="$find({$a:\'greatGrandParent\'})"\
+                    parent="$find(\'parent\')" grand-parent="$find({$a:\'grandParent\'})" great-grand-parent="$find({$a:\'greatGrandParent\'})"\
                     cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
                     v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
-                    f0="$find({id: \'me1\'})" fY="$find({id: \'me1\'}, {$n:1})" fX="$find({id: \'me3\'})">\
+                    f0="$find({id: \'me1\'})" f-y="$find({id: \'me1\'}, {$n:1})" f-x="$find({id: \'me3\'})">\
                 </wo.content-control>\
-            </template>\
+            </set-template>\
         </wo.content-control>\
-    </template>\
+    </set-template>\
 </wo.content-control>';
 	
 	application.onRendered = function () {

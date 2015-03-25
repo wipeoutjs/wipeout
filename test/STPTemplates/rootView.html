@@ -20,7 +20,7 @@
         </js-object>
     </div>
     <wo.content-control id="listTest">
-        <template>
+        <set-template>
             <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
                 <wo.items-control 
@@ -36,36 +36,36 @@
             </div>
             <div style="clear: both"></div>
             {{$this.totals}}
-        </template>
+        </set-template>
         <totals>
             <wo.content-control>
-                <template>
+                <set-template>
                     <div wo-content="$this.model.totalOfIds"></div>
-                </template>
+                </set-template>
             </wo.content-control>
         </totals>
     </wo.content-control>
     <br/>
     <wo.content-control model="$parent.model.deepItem" id="multiLevelTest">
-        <template>
+        <set-template>
             <wo.content-control model="$parent.model.item">
-                <template>
+                <set-template>
                     <wo.content-control model="$parent.model.value">
                         <supplimentary-prop>
                             <child-view model--tw="$parent.model" value--tw="$this.model">
-                                <template>
+                                <set-template>
                                     <input type="text" data-wo-value="$this.value"></input>
-                                </template>
+                                </set-template>
                             </child-view>
                         </supplimentary-prop>
-                        <template>
+                        <set-template>
                             <div wo-content="$this.model"></div>
                             <div wo-render="$this.supplimentaryProp"></div>
-                        </template>
+                        </set-template>
                     </wo.content-control>
-                </template>
+                </set-template>
             </wo.content-control>                
-        </template>
+        </set-template>
     </wo.content-control>        
     <br/>
     <br/>

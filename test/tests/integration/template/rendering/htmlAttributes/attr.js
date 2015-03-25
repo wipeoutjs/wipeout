@@ -9,7 +9,7 @@ test("smoke test", function() {
 	application.val = "checkbox";
 	
 	// act
-	application.template = '<input id="element" wo-attr-type="$this.val" />';
+	application.setTemplate = '<input id="element" wo-attr-type="$this.val" />';
 	
 	// assert
 	application.onRendered = function () {

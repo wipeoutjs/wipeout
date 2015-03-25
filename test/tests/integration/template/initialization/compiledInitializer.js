@@ -8,14 +8,14 @@ module("integration: wipeout.template.initialization.compiledInitializer", {
 test("success", function() {
 	// arrange
 	var template = wipeout.wml.wmlParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
-	<val3 value="true" />\
-	<val4 value--s="true" />\
+	<val3 value="true"></val3>\
+	<val4 value--s="true"></val4>\
 	<val5>true</val5>\
 	<val6 parser="s">true</val6>\
 	<val7>\
 		<js-object>\
-			<val1 value="55" />\
-			<val2 value="$parent.theValue" />\
+			<val1 value="55"></val1>\
+			<val2 value="$parent.theValue"></val2>\
 		</js-object>\
 	</val7>\
 <object>')[0];

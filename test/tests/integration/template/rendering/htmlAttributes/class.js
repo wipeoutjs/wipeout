@@ -10,7 +10,7 @@
 			application.val = true;
 
 			// act
-			application.template = '<input id="element" wo-class-the-class="$this.val" />';
+			application.setTemplate = '<input id="element" wo-class-the-class="$this.val" />';
 
 			// assert
 			application.onRendered = function () {

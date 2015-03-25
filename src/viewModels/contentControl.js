@@ -8,7 +8,7 @@ Class("wipeout.viewModels.contentControl", function () {
         this._super(templateId, model);
 
         ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
-        //this.template = "";
+        //this.setTemplate = "";
         
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  

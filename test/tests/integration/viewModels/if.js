@@ -8,10 +8,10 @@ test("shareParentScope", function() {
 	
     // arrange
     application.hello = new obsjs.observable({hello: "xxx"});
-    application.template = '<wo.if id="blabla" condition="$this.hello">\
-    <template>\
+    application.setTemplate = '<wo.if id="blabla" condition="$this.hello">\
+    <set-template>\
         <div id="myDiv" content="$this.hello.hello"></div>\
-    </template>\
+    </set-template>\
 </wo.if>';
 	
 	application.onRendered = function () {
@@ -36,10 +36,10 @@ test("elseTemplate", function() {
 	
     // arrange
     application.ok = true;
-    application.template = '<wo.if id="theIf" condition="$this.ok">\
-    <template>\
+    application.setTemplate = '<wo.if id="theIf" condition="$this.ok">\
+    <set-template>\
         <div id="myDiv1"></div>\
-    </template>\
+    </set-template>\
 	<else-template>\
         <div id="myDiv2"></div>\
 	</else-template>\
@@ -66,10 +66,10 @@ test("elseTemplate", function() {
 test("shareParentScope = false", function() {
     // arrange
     application.hello = obsjs.observe(obsjs.observe({hello: "xxx"}));
-    application.template = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
-    <template>\
+    application.setTemplate = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
+    <set-template>\
         <div id="myDiv" data-bind="html: $parent.hello().hello"></div>\
-    </template>\
+    </set-template>\
 </wo.if>';
     
 	application.onRendered = function () {

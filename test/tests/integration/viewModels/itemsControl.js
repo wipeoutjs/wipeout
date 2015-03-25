@@ -9,7 +9,7 @@ test("removeItem routed event", function() {
     // arrange    
     var item = {};
     application.items = new obsjs.array([{}, item]);
-    application.template = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
+    application.setTemplate = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
     
     // act
 	application.onRendered = function () {		
@@ -31,7 +31,7 @@ test("getViewModel/getViewModels", function() {
     // arrange    
     var item = {};
     application.items = [{}, {}, {}];
-    application.template = '<wo.items-control id="cc" items="$parent.items"></wo.items-control>';
+    application.setTemplate = '<wo.items-control id="cc" items="$parent.items"></wo.items-control>';
     
     // act
 	application.onRendered = function () {
@@ -83,7 +83,7 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     }
     
     // act
-    application.template =
+    application.setTemplate =
 "<wo.items-control items='$this.model.items' id='" + id1 + "'>\
     <item-template>\
         <div class='" + id2 + "' wo-content='$this.model'></div>\
@@ -146,7 +146,7 @@ test("advanced items control, creating/destroying", function() {
     itemsControl2.itemTemplateId = itemTemplateId;
     itemsControl2.items = ["d", "e", "f"];
     
-    application.template = '{{$this.content}}';
+    application.setTemplate = '{{$this.content}}';
     
     // act
     // assert
@@ -189,7 +189,7 @@ test("items control, $index", function() {
     itemsControl.items = ["a", "b", "c"];
     application.content = itemsControl;
     
-    application.template = '{{$this.content}}';
+    application.setTemplate = '{{$this.content}}';
     
     // act
     // assert

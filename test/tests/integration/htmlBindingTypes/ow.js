@@ -58,7 +58,7 @@ test("integration test", function() {
         this._super();
     });
         
-    application.template = "<views.view property='$parent.property' id='" + id + "'></views.view>";
+    application.setTemplate = "<views.view property='$parent.property' id='" + id + "'></views.view>";
     
 	application.onRendered = function () {
 	

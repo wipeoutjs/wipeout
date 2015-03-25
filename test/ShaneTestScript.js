@@ -6,14 +6,14 @@
     initializeView = wipeout.viewModels.contentControl.extend(function initializeView() {
         this._super();
         
-        this.template = "<div id='theDiv'>If this text is still here something went wrong</div>\
+        this.setTemplate = "<div id='theDiv'>If this text is still here something went wrong</div>\
 <wo.content-control id='theContentControl' template='If this text is still here something went wrong'></wo.content-control>";
     });
     
     initializeView.prototype.onRendered = function() {
         this._super();
         this.templateItems.theDiv.innerHTML = this.item1 + " " + this.item2;
-        this.templateItems.theContentControl.template = this.item1 + " " + this.item2;
+        this.templateItems.theContentControl.setTemplate = this.item1 + " " + this.item2;
     };
     
     childView = wipeout.viewModels.contentControl.extend(function childView() {
@@ -29,7 +29,7 @@
         this.registerRoutedEvent(aRoutedEvent, function() { this.templateItems.routedEvent.innerHTML = "routed event caught"; }, this);
         
         this.childView = new wo.contentControl();
-        this.childView.template = "<div>Child view</div>";
+        this.childView.setTemplate = "<div>Child view</div>";
     });
     
     rootView.prototype.next = function() {
@@ -121,7 +121,7 @@ var actions = [
         view.model = {deepItem:{item:{value:"newModel"}}};
         return "Swapped out root model";
     }, function(view) {
-        view.template = "<div>Cleared down</div>";
+        view.setTemplate = "<div>Cleared down</div>";
         return "Clear down view";
     }, 
 ];

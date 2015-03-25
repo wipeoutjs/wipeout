@@ -9,7 +9,7 @@ test("smoke test", function() {
 	application.val = false;
 	
 	// act
-	application.template = '<input id="element" wo-visible="$this.val" />';
+	application.setTemplate = '<input id="element" wo-visible="$this.val" />';
 	
 	// assert
 	application.onRendered = function () {

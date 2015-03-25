@@ -10,7 +10,7 @@ var viewModelElement = wipeout.template.rendering.viewModelElement;
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     
     // arrange
-    subject.template = {};
+    subject.setTemplate = {};
     subject.init = methods.method();
     var xmlOverride = {
         name: "KJBKBJK"
