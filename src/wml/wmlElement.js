@@ -114,18 +114,15 @@ Class("wipeout.wml.wmlElement", function () {
 
 Class("wipeout.wml.wmlAttribute", function () {
     
-    function wmlAttribute(value, surrounding) {
+    function wmlAttribute(value) {
         this.value = value;
-        this.surrounding = surrounding;
         this.nodeType = 2;
     };
     
+	//TODO: test
     wmlAttribute.prototype.serializeValue = function() {
-        if (!this.value && !this.surrounding) return "";
-        
-        if (!this.surrounding) return "=" + this.value;
-        
-        return "=" + this.surrounding + this.value + this.surrounding;
+		
+        return "=\"" + this.value.replace(/"/g, '\\"') + "\"";
     };    
     
     wmlAttribute.prototype.serializeContent = function() {

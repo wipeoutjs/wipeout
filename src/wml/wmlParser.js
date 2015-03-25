@@ -21,7 +21,7 @@ Class("wipeout.wml.wmlParser", function () {
 		}
 
 		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
-			output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value, '"');
+			output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
 
 		return output;
 	}
