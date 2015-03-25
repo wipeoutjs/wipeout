@@ -26,4 +26,5 @@ testUtils.testWithUtils("serializeValue", "inline", false, function(methods, cla
 	test('asds\\"');
 	test('asds&');
 	test('asds<');
+	test('asds&amp;&quot;');
 });

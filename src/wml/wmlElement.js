@@ -119,7 +119,6 @@ Class("wipeout.wml.wmlAttribute", function () {
         this.nodeType = 2;
     };
     
-	//TODO: test
     wmlAttribute.prototype.serializeValue = function() {
 		
         return '="' + this.value.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"';
