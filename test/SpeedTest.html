@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Wipeout</title>
+  <link rel="stylesheet" href="lib/qunit/qunit-1.17.1.css">
+</head>
+<body>
+	<counts model="rootModel"></counts>
+	<br>
+	<br>
+	<root-vm model="rootModel"></root-vm>
+	
+	<div id="theCounts">
+		Compile template: <span wo-content="$this.model.compileTime"></span><br/>
+		Render: <span wo-content="$this.model.render"></span>
+	</div>
+	
+	<script type="application/javascript">useObjectObserve = true;</script>
+	<script src="../build/wipeout.debug.js"></script>
+	
+	<script>
+		
+		var depth = 35, width = 35;
+		
+		var templateBeginning = '<div>\
+	<div>\
+		<!-- a comment -->\
+		<div>\
+			<wo.content-control a-prop="$this.model.theVal">\
+				<set-template>\
+					<span wo-content="$this.aProp"></span>', templateEnd = '\
+				</set-template>\
+			</wo.content-control>\
+		</div>\
+		<!-- a comment -->\
+	</div>\
+</div>';
+				
+		var template = "", time;
+		for (var j = 0; j < width; j++) {
+			for (var i = 0; i < depth; i++)
+				template += templateBeginning + ": " + (i + (j * width));
+
+			for (var i = 0; i < depth; i++)
+				template += templateEnd;
+		}
+		
+		var rootModel = obsjs.makeObservable({theVal: "Hi"});
+		time = new Date();
+		template = wipeout.wml.wmlParser(template);
+		rootModel.compileTime = new Date() - time;
+		
+		var measure;
+		rootVm = wipeout.viewModels.contentControl.extend(function rootVm() {
+			this._super();
+			
+			this.model = rootModel;
+			this.time = new Date();
+			this.setTemplate = template;
+		});
+		
+		rootVm.prototype.onRendered = function () {
+			this._super();
+			
+			rootModel.render = new Date() - this.time;
+		}
+			
+		counts = wipeout.viewModels.contentControl.extend(function counts () {
+			this._super();
+						
+			this.templateId = "theCounts";
+		});
+	</script>
+</body>
+</html>

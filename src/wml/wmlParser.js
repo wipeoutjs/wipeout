@@ -1,12 +1,35 @@
 
 //http://www.w3.org/TR/html-markup/syntax.html
 Class("wipeout.wml.wmlParser", function () {  
-    
+    		
+	function parse (htmlElement) {
+
+		var output = new wipeout.wml.wmlElement(htmlElement.localName);
+		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
+			if (htmlElement.childNodes[i].nodeType === 1)
+				output.push(parse(htmlElement.childNodes[i]));
+			if (htmlElement.childNodes[i].nodeType === 8)
+				output.push(new wipeout.wml.wmlComment(htmlElement.childNodes[i].textContent));
+			if (htmlElement.childNodes[i].nodeType === 3)
+				output.push(new wipeout.wml.wmlString(htmlElement.childNodes[i].textContent));
+		}
+
+		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
+			output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value, '"');
+
+		return output;
+	}
+	
     function wmlParser(wmlString) {
+		
+		var div = document.createElement("div");
+		div.innerHTML = wmlString;
+		return parse(div);
                 
         var preParsed = wmlParser.preParse(wmlString);
         var root = new wipeout.wml.rootWmlElement();        
         wmlParser._parseTheEther(preParsed, root, 0);
+		console.log("length: " + root.length);
         return root;
     }
     

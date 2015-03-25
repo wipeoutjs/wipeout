@@ -10,12 +10,12 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
         //this.template = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "template");
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  
     
     //TODO: benchmark test
-    contentControl.addGlobalParser("template", "template");
-    contentControl.addGlobalBindingType("template", "setTemplateProperty");
+    contentControl.addGlobalParser("setTemplate", "template");
+    contentControl.addGlobalBindingType("setTemplate", "setTemplateProperty");
     
     contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
