@@ -14,27 +14,11 @@ REMOVE WITH. It is incredibly slow
 
 tests with useObjectOberve === false will fail
 
-events and routed events. make strings?s
-
-replace xml parsing with native
-
-Test template engine, render context, renderedContent and viewModelElement
-View model namespace overhaul and tests
+events and routed events. make strings
 
 standardise the way things are rendered, between Objects and wo.views (toString)
 
-<div wo-name="wo.view"></div>
-
-<Array>
-    <value parser="s">A</value>
-    <value parser="s">Random</value>
-    <value parser="s">Object</value>
-    <value parser="s">2</value>
-</Array>
-
 on swap-xml-parser branch, try tp protect against "<wo.view />" errors
-
-initialization/disposal overrides. Needs complete overhaul
 
 for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
 
@@ -47,9 +31,4 @@ shadow DOM
 
 profiler
 
-there is a lot of camelcasing. Is there a single point of failure I can use here?
-
-Alter xml engine to use RegExp(/something/g).lastIndex
-
-html events
-filters
+document example of using filters
