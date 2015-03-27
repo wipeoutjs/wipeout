@@ -70,7 +70,7 @@ Class("wipeout.template.engine", function () {
             }
         }
         
-        throw "Could not load template \"" + templateId + "\".";    //TODO
+        throw "Could not load template \"" + templateId + "\".";    //TODE
     };
     
     engine.prototype.getVmInitializer = function (xmlInitializer) {

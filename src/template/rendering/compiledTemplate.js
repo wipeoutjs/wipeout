@@ -27,37 +27,41 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push(node.serialize());
     };
     
-    // TODO: ability to modify
-    // TODO: escape characters
-    var begin = /\{\{/g;
-    var end = /\}\}/g;
+    var begin = "{{";
+    var end = "}}";
+	
+	//TODM
+    compiledTemplate.renderParenthesis = function(beginParenthesis, endParenthesis) {
+		begin = beginParenthesis;
+		end = endParenthesis;
+	};
+	
     compiledTemplate.prototype.addTextNode = function(node) {
         ///<summary>Add a text node to the html string scanning for dynamic functionality</summary>
         ///<param name="node" type="Object">The node</param>
-                
-        begin.lastIndex = 0;
-        end.lastIndex = 0;
         
-        var html = node.serialize();
-        while (begin.exec(html)) {
-            this.html.push(html.substring(end.lastIndex, begin.lastIndex - 2)); //TODO: -2 is for {{, what if it changes
-            end.lastIndex = begin.lastIndex;
-            if (!end.exec(html))
-                throw "TODO";
+        var html = node.serialize(), oldIndex = 0, index = 0;
+        while ((index = html.indexOf(begin, oldIndex)) !== -1) {
+            this.html.push(html.substring(oldIndex, index));
+			
+			oldIndex = index + begin.length;
+			if ((index = html.indexOf(end, oldIndex)) === -1)
+                throw "TODE";
             
             // add the beginning of a placeholder
             this.html.push("<script");
 
             // add the id flag and the id generator
             this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render",
-									  html.substring(begin.lastIndex, end.lastIndex - 2)//TODO: -2 is for {{, what if it changes
-									  )]);
+									  html.substring(oldIndex, index))]);
 
             // add the end of the placeholder
             this.html.push(' type="placeholder"></script>');
+			
+			oldIndex = index + begin.length;
         }
         
-        this.html.push(html.substr(end.lastIndex));
+        this.html.push(html.substr(oldIndex));
     };
     
     compiledTemplate.prototype.addViewModel = function(vmNode) {
@@ -78,7 +82,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 		if (wipeout.template.rendering.htmlAttributes[attributeName])
 			return attributeName;
 		
-		//TODO: document
+		//TODM
 		for (var i in wipeout.template.rendering.dynamicHtmlAttributes)
 			if (wipeout.template.rendering.dynamicHtmlAttributes[i].test(attributeName))
 				return i;
@@ -109,7 +113,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 				}
             } else {
                 // add non special attribute
-                this.html.push(" " + name + attribute.serializeValue()); //TODO: put this on attr class
+                this.html.push(" " + name + attribute.serializeValue());
             }
         }, this);
     };
@@ -140,7 +144,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         ///<param name="node" type="Object">The node</param>
         
         if(this._addedElements.indexOf(node) !== -1)
-            throw "Infinite loop"; //TODO
+            throw "Infinite loop"; //TODE
         
         this._addedElements.push(node);
         
@@ -148,7 +152,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.addTextNode(node);
         else if (node.nodeType !== 1)
             this.addNonElement(node);
-        else if (wipeout.utils.viewModels.getViewModelConstructor(node))//TODO
+        else if (wipeout.utils.viewModels.getViewModelConstructor(node))
             this.addViewModel(node);
         else
             this.addElement(node);

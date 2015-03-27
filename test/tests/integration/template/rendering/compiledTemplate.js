@@ -6,6 +6,7 @@ module("integration: wipeout.template.rendering.compiledTemplate", {
 });
 
 test("success", function() {
+	
 	// arrange
 	var template = wipeout.wml.wmlParser(
 "<!-- hello -->\
@@ -51,4 +52,7 @@ hello\
 	ok(!html.childNodes[8].id);
 	
 	strictEqual(wipeout.utils.html.getViewModel(html.childNodes[5]).hello, "bellbo");
+	
+	console.log($("#qunit-fixture").html());
+	
 });

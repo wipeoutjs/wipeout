@@ -35,7 +35,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
                 return value;
             };
             
-            this.parser.xmlParserTempName = p[0].xmlParserTempName;
+            this.parser.useRawXmlValue = p[0].useRawXmlValue;
         } else {
             this.parser = null;
         }
@@ -61,7 +61,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		var parser = this.getParser(viewModel);
 		
 		return parser ?
-			parser(parser.xmlParserTempName ? this._value : this.getValue(), this.name, renderContext) :
+			parser(parser.useRawXmlValue ? this._value : this.getValue(), this.name, renderContext) :
 			this.build().apply(null, renderContext.asGetterArgs());
 	};
 		

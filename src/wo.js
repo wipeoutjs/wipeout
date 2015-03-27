@@ -1,5 +1,4 @@
 
-//TODO: unit test
 window.wo = function (model, htmlElement) {
     ///<summary>Create a new observable array</summary>
     ///<param name="model" type="Any" optional="true">The root model</param>

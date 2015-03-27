@@ -1,7 +1,5 @@
 
 HtmlAttr("value", function () {
-	//TODO: change, blur, keyup?
-	//TODO: radio, checkbox
 	
 	function radio (radio, attribute, renderContext) { 
 		

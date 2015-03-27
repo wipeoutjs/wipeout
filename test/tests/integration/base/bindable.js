@@ -12,6 +12,7 @@ module("integration: wipeout.base.bindable", {
 test("addGlobalParser, simple, string", function() {
     // arrange
 	class2.addGlobalParser("prop", "regexp");
+	class2.addGlobalParser("prop", "regexp");
 	
 	// act
 	var parser1 = new class1().getGlobalParser("prop");
@@ -126,6 +127,7 @@ test("addGlobalParser, added same one twice", function() {
 
 test("addGlobalBindingType, simple", function() {
     // arrange
+	class2.addGlobalBindingType("prop", "ow");
 	class2.addGlobalBindingType("prop", "ow");
 	
 	// act

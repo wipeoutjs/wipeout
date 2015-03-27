@@ -187,13 +187,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
 			this.openingTag.parentElement.removeChild(this.openingTag);
 		}
 		
-        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
 		delete this.detatched;
 		
 		delete this.closingTag.wipeoutClosing;
 		delete this.openingTag.wipeoutOpening;
 		
-        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
 		delete this.closingTag;
 		delete this.openingTag;
     };

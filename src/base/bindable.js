@@ -1,6 +1,4 @@
-// name is subject to change
 
-//TODO: rename
 Class("wipeout.base.bindable", function () {
 	
     var bindable = wipeout.base.observable.extend(function bindable() {
@@ -18,12 +16,12 @@ Class("wipeout.base.bindable", function () {
 			parser = wipeout.template.initialization.parsers[parser];
 		
         if (!(parser instanceof Function))
-			//TODO
+			//TODE
 			throw "Invalid parser. Parsers must be either a string which points to wipeout parser, or a function which will parse the data";
              
         var parserName = parserPrefix + forProperty;
         if (this.prototype.hasOwnProperty(parserName)) {
-			if (this.prototype[parserName] === parser)	//TODO: test
+			if (this.prototype[parserName] === parser)
 				return;
 			
             throw "A global parser has already been defined for this property";
@@ -32,7 +30,6 @@ Class("wipeout.base.bindable", function () {
         this.prototype[parserName] = parser;
     };
 	
-	//TODO: test
 	bindable.prototype.addGlobalParser = function (forProperty, parser) {
 		return bindable.addGlobalParser.apply(this.constructor, arguments);
 	};
@@ -43,12 +40,12 @@ Class("wipeout.base.bindable", function () {
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
 		
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
-            //TODO
+            //TODE
             throw "Invalid binding type. Binding types must be a string which points to wipeout binding type";
              
         var bindingName = bindingPrefix + forProperty;
         if (this.prototype.hasOwnProperty(bindingName)) {
-			if (this.prototype[bindingName] === bindingType)	//TODO: test
+			if (this.prototype[bindingName] === bindingType)
 				return;
 			
             throw "A global binding has already been defined for this property";
@@ -57,7 +54,6 @@ Class("wipeout.base.bindable", function () {
         this.prototype[bindingName] = bindingType;
     };
 	
-	//TODO: test
 	bindable.prototype.addGlobalBindingType = function (forProperty, parser) {
 		return bindable.addGlobalBindingType.apply(this.constructor, arguments);
 	};

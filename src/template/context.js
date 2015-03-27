@@ -97,20 +97,5 @@ Class("wipeout.template.context", function () {
 		}	
 	};
     
-	//TODO: not testing as this will probably be removed
-    context.prototype.variablesForComputed = function (additions) {
-        var output = {};
-        enumerateObj(this, function (property, name) {
-            if (this.hasOwnProperty(name) && name[0] === "$")
-                output[name] = property;
-        }, this);
-        
-        enumerateObj(additions, function (property, name) {
-            output[name] = property;
-        });
-        
-        return output;
-    };
-    
     return context;
 });

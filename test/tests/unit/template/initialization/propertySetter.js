@@ -73,13 +73,13 @@ testUtils.testWithUtils("getValue", "no val", false, function(methods, classes, 
     strictEqual(val, subject._valueAsString);
 });
 
-testUtils.testWithUtils("parseOrExecute", "xmlParserTempName", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("parseOrExecute", "useRawXmlValue", false, function(methods, classes, subject, invoker) {
     // arrange
 	var output = {};
 	subject._value = {}, subject.name = {};
 	var vm = {}, rc = {}, parser = methods.method([subject._value, subject.name, rc], output);
 	subject.getParser = methods.method([vm], parser);
-    parser.xmlParserTempName = true;
+    parser.useRawXmlValue = true;
 	
 	// act
 	var op = invoker(vm, rc);

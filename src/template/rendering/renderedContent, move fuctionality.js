@@ -15,7 +15,6 @@
 		}
 	}
     
-    //TODO: test
     renderedContent.prototype.prepend = function (content) {
               
 		content = getNodesAndRemoveDetatched(content);

@@ -27,7 +27,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         enumerateArr(template, this.addElement, this);
         
         if(!this.setters.model) {
-			//TODO: only if $this.model == null && $parent exists 
             this.setters.model = compiledInitializer.modelSetter ||
 				(compiledInitializer.modelSetter = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
         }
@@ -45,7 +44,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
             if (val === "value" || val.indexOf("value--") === 0) {
                 enumerateArr(element, function(child) {
                     if (child.nodeType !== 3 || !child.serialize().match(/^\s*$/))
-                        throw "You cannot set the value both in attributes and with elements." //TODO
+                        throw "You cannot set the value both in attributes and with elements." //TODE
                 });
 				
                 this.setters[name] = new wipeout.template.initialization.propertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
@@ -56,14 +55,14 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         var p = element.attributes.parser || element.attributes.parsers;
         if (!p && element._parentElement && element._parentElement.name) {
             var parent = wipeout.utils.obj.getObject(wipeout.utils.obj.camelCase(element._parentElement.name))
-            if (parent && parent.getGlobalParser) //TODO better way
+            if (parent && parent.getGlobalParser)
                 p = parent.getGlobalParser(name);
         }
             
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-					var vm = wipeout.utils.viewModels.getViewModelConstructor(element[i]); 	//TODO: temp solution
+					var vm = wipeout.utils.viewModels.getViewModelConstructor(element[i]);
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					

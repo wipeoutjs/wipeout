@@ -1,7 +1,5 @@
 Class("wipeout.utils.find", function () {
-    
-	//TODO: cache results?
-	
+    	
     var find = wipeout.base.object.extend(function find(renderContext) {
         ///<summary>Find an ancestor from the binding context</summary>
         ///<param name="renderContext" type="ko.renderContext" optional="false">The ancestor chain</param>

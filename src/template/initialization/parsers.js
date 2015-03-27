@@ -36,8 +36,8 @@ Class("wipeout.template.initialization.parsers", function () {
 		return value;
 	};
     
-    //TODO: Rename
-    parsers.template.xmlParserTempName = true;
+    //TODO: document
+    parsers.template.useRawXmlValue = true;
     
     parsers.j = parsers["json"];
     parsers.s = parsers["string"];
