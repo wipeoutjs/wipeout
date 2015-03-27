@@ -19,7 +19,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 	function compiledInitializer(template) {
         
         this.setters = {};
-        
+		
         // add attribute properties
         enumerateObj(template.attributes, this.addAttribute, this);
         
@@ -33,7 +33,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     };
     
     compiledInitializer.prototype.addElement = function (element) {
-        
         if (element.nodeType !== 1) return;
         
         var name = wipeout.utils.viewModels.getElementName(element);

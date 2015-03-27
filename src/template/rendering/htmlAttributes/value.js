@@ -97,7 +97,7 @@ HtmlAttr("value", function () {
             if (element.value !== newVal)
                 element.value = newVal;
         }, true);
-				console.log(attribute.getData(element, "wo-on-event"))
+		
 		attribute.onElementEvent(element, attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
 			wipeout.utils.obj.setObject(val, renderContext, element.value);
         }, renderContext);

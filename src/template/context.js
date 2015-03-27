@@ -38,7 +38,7 @@ Class("wipeout.template.context", function () {
     
     context.prototype.contextFor = function (forVm, arrayIndex) {
         
-		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arguments.length > 1)
+		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arrayIndex != null)
 			console.warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
 		
         return forVm && forVm.shareParentScope ? this : new context(forVm, this, arrayIndex);

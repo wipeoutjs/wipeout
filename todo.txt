@@ -1,6 +1,3 @@
-It is probably possible to combine wmlParser and compiled template
-wmlAttributes and " or '
-
 
 html event handled
 wrap domData in htmlAttributeSetter, use to chain attrs.

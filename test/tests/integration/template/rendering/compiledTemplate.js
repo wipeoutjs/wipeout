@@ -52,7 +52,4 @@ hello\
 	ok(!html.childNodes[8].id);
 	
 	strictEqual(wipeout.utils.html.getViewModel(html.childNodes[5]).hello, "bellbo");
-	
-	console.log($("#qunit-fixture").html());
-	
 });
