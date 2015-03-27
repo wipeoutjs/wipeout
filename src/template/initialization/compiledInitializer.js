@@ -61,7 +61,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         if (!p) {                
             for (var i = 0, ii = element.length; i < ii; i++) {
                 if (element[i].nodeType === 1) {
-					var vm = wo.getViewModelConstructor(element[i]); 	//TODO: temp solution
+					var vm = wipeout.utils.viewModels.getViewModelConstructor(element[i]); 	//TODO: temp solution
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					

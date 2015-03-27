@@ -12,13 +12,13 @@ window.wo = function (model, htmlElement) {
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
 
-	if (wo.getViewModelConstructor(htmlElement))
+	if (wipeout.utils.viewModels.getViewModelConstructor(htmlElement))
 		output.registerDisposable(new wipeout.template.rendering.viewModelElement(htmlElement));
 	else
 		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
 			// element may have been removed since get all elements
-			if (htmlElement.contains(element) && wo.getViewModelConstructor(element))
+			if (htmlElement.contains(element) && wipeout.utils.viewModels.getViewModelConstructor(element))
 				output.registerDisposable(new wipeout.template.rendering.viewModelElement(element));
 		});
 	
@@ -26,31 +26,6 @@ window.wo = function (model, htmlElement) {
 };
 
 wo.viewModel = viewModel;
-
-//TODO: document
-var realName = "data-wo-element-name";
-wo.getViewModelConstructor = function (wmlElement) {
-	
-	if (wmlElement instanceof Element) {
-		var constr, name = wmlElement.attributes[realName] ?
-			wmlElement.attributes[realName].value : 
-			wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(wmlElement.localName));
-	} else {
-		var constr, name = wmlElement.attributes[realName] ?
-			wmlElement.attributes[realName].value : 
-			wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(wmlElement.name));
-	}
-	
-	//TODO: document
-	if (/^js[A-Z]/.test(name))
-		name = name.substr(2);
-	
-	if (constr = wipeout.utils.obj.getObject(name))
-		return {
-			name: name,
-			constructor: constr
-		};
-};
 
 window.addEventListener("load", function () {
     window.wo(null); //TODO: model
