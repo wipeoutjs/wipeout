@@ -3,7 +3,7 @@
 Class("wipeout.wml.wmlParser", function () {  
         
     // tags which cannot go into a <div /> tag, along with the tag they should go into
-    var specialTags = {
+    wmlParser.specialTags = {
         area: "map",
         base: "head",
         basefont: "head",
@@ -31,7 +31,7 @@ Class("wipeout.wml.wmlParser", function () {
     };
     
     // tags which, if the root, wipeout will refuse to create
-    var cannotCreateTags = {
+    wmlParser.cannotCreateTags = {
         html:true,
         basefont: true,
         base: true,
@@ -42,7 +42,7 @@ Class("wipeout.wml.wmlParser", function () {
     };
     
     // tags which are readonly once created in IE
-    var ieReadonlyElements = {
+    wmlParser.ieReadonlyElements = {
         audio: true,
         col: true, 
         colgroup: true,
@@ -61,10 +61,11 @@ Class("wipeout.wml.wmlParser", function () {
         tr: true
     };
     
+	// not needed right now
     // firefox replaces some tags with others
-    var replaceTags = {
-        keygen: "select"
-    };
+    //wmlParser.replaceTags = {
+    //    keygen: "select"
+    //};
     		
 	function parse (htmlElement) {
 
@@ -129,12 +130,12 @@ Class("wipeout.wml.wmlParser", function () {
 			return parent;
 		}
         
-        if(cannotCreateTags[childTag]) throw "Cannot create an instance of the \"" + tagName + "\" tag.";
+        if(wmlParser.cannotCreateTags[childTag]) throw "Cannot create an instance of the \"" + tagName + "\" tag.";
         
-        var parentTagName = specialTags[childTag] || "div";
+        var parentTagName = wmlParser.specialTags[childTag] || "div";
         
         // the innerHTML for some tags is readonly in IE
-        if (ie && ieReadonlyElements[parentTagName])
+        if (ie && wmlParser.ieReadonlyElements[parentTagName])
             return wmlParser.firstChildOfType(wmlParser.createElement("<" + parentTagName + ">" + htmlString + "</" + parentTagName + ">"), parentTagName);
             
         var parent = document.createElement(parentTagName);
