@@ -5,6 +5,34 @@ module("wipeout.wml.wmlParser", {
     }
 });
 
+testUtils.testWithUtils("getFirstTagName", "", true, function(methods, classes, subject, invoker) {
+    
+    // arrange	
+    // act
+    var tagName = "lask-nd.lk$asd";
+	
+    //assert
+    strictEqual(invoker("<" + tagName + " "), tagName);
+    strictEqual(invoker("    <   " + tagName + " "), tagName);
+    strictEqual(invoker("<" + tagName + ">"), tagName);
+    strictEqual(invoker("<" + tagName + "/>"), tagName);
+});
+
+testUtils.testWithUtils("addToElement", "", true, function(methods, classes, subject, invoker) {
+    
+    // arrange
+    // act
+	enumerateArr(testUtils.allHtmlTags, function (tag) {
+		// assert
+		if (wipeout.wml.wmlParser.cannotCreateTags[tag])
+			throws(function () {
+				invoker("<" + tag + "></" + tag + ">");
+			});
+		else
+			strictEqual(invoker("<" + tag + "></" + tag + ">").childNodes[0].localName, tag);
+	});
+});
+
 testUtils.testWithUtils("parse", "elements, multiple levels", true, function(methods, classes, subject, invoker) {
     
     // arrange	
