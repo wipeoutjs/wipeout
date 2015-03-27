@@ -145,6 +145,9 @@ Class("wipeout.wml.wmlParser", function () {
 	
     function wmlParser(wmlString) {
 		
+		if (wmlString instanceof Element)
+			return parse(wmlString);
+		
 		var tag = wmlParser.addToElement(wmlString);
 		if (!tag)
 			throw "Cannot create a template for the following string: " + wmlString;

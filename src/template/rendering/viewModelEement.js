@@ -23,7 +23,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         
         // initialize the view model
         this.disposeOfViewModelBindings = wipeout.template.engine.instance
-            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(wipeout.utils.html.outerHTML(element))[0])
+            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(element))
             .initialize(this.createdViewModel, this.renderContext);
         
         // run onInitialized after value initialization is complete
