@@ -29,7 +29,6 @@ Class("wipeout.viewModels.view", function () {
     view.addGlobalParser("id", "string");
     view.addGlobalBindingType("id", "viewModelId");
     
-    //TODO: include sharedScopeItems
     view.prototype.getParent = function() {
         ///<summary>Get the parent view of this view</summary> 
         ///<returns type="wo.view">The parent view model</returns>
@@ -41,7 +40,6 @@ Class("wipeout.viewModels.view", function () {
         return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
     };
     
-    //TODO: include sharedScopeItems
     view.prototype.getParents = function() {
         ///<summary>Get all parent views of this view</summary> 
         ///<returns type="Array" generic0="wo.view">The parent view model</returns>
@@ -57,7 +55,6 @@ Class("wipeout.viewModels.view", function () {
 		return op;
     };
     
-    //TODO: include sharedScopeItems
     view.prototype.getRenderContext = function() {
         ///<summary>Get the render context of this view</summary> 
         ///<returns type="wipeout.template.context">The render context</returns>

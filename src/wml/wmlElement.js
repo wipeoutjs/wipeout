@@ -1,5 +1,3 @@
-//TODO unit test
-
 var getParentElement = function() {
     if (this._parentElement) {
         if(this._parentElement.indexOf(this) === -1)

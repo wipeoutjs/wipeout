@@ -2,7 +2,7 @@ Class("wipeout.utils.viewModels", function () {
 	
 	function viewModels () {}
 
-	//TODO: document
+	//TODM
 	var realName = "data-wo-element-name";
 	viewModels.getElementName = function (wmlElement) {
 
@@ -11,7 +11,7 @@ Class("wipeout.utils.viewModels", function () {
 		
 		var name = camelCase(trimToLower(wmlElement instanceof Element ? wmlElement.localName : wmlElement.name));
 		
-		//TODO: document
+		//TODM
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};
 	

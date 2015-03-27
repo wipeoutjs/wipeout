@@ -29,7 +29,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         
         this.observe("itemTemplateId", function (oldVal, newVal) {
 			enumerateArr(this.getItemViewModels(), function (vm) {
-				if (vm.__createdByItemsControl)	//TODO: document
+				if (vm.__createdByItemsControl)
 					vm.templateId = newVal;
 			});
         }, this);

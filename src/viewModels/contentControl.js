@@ -13,7 +13,6 @@ Class("wipeout.viewModels.contentControl", function () {
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  
     
-    //TODO: benchmark test
     contentControl.addGlobalParser("setTemplate", "template");
     contentControl.addGlobalBindingType("setTemplate", "setTemplateProperty");
     

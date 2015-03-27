@@ -367,14 +367,6 @@ test("appendHtml", function() {
 	
 	// assert
 	strictEqual($("#qunit-fixture").html(), '<div id="hello"></div>asdsadsadsadasd<span></span><div id="goodbye"></div>');
-	
-    function aa (html) {
-        //TODO: hack
-        var scr = document.createElement("script");
-        this.closingTag.parentElement.insertBefore(scr, this.closingTag);
-        scr.insertAdjacentHTML('afterend', html);
-        scr.parentElement.removeChild(scr);
-    };
 });
 	
 test("getParentElement, sibling parent", function() {
