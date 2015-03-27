@@ -16,7 +16,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         };
     };
     
-    function compiledInitializer(template) {
+	function compiledInitializer(template) {
         
         this.setters = {};
         
@@ -28,7 +28,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
 			//TODO: only if $this.model == null && $parent exists 
-            this.setters.model = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null"));
+            this.setters.model = compiledInitializer.modelSetter ||
+				(compiledInitializer.modelSetter = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
         }
     };
     
@@ -97,7 +98,10 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
 		
-        var disposal = this.setters.model.applyToViewModel(viewModel, renderContext);
+		// only auto set model if model wasn't already set
+        var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
+			[] :
+			this.setters.model.applyToViewModel(viewModel, renderContext);
         
 		for (var name in this.setters)
             if (name !== "model")

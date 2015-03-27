@@ -1,11 +1,35 @@
 module("integration: wipeout.template.initialization.compiledInitializer", {
-    setup: function() {
-    },
-    teardown: function() {
-    }
+    setup: integrationTestSetup,
+    teardown: integrationTestTeardown
 });
 
-test("success", function() {
+test("set model", function() {
+	// arrange
+	var model1 = {model2: {}}, model3 = {};
+	views.myView = wo.view.extend(function () {
+		this._super(undefined, model3);
+	})
+	
+	application.model = model1;
+	application.setTemplate = '<wo.view id="v1"></wo.view>\
+<wo.view id="v2" model="$parent.model.model2"></wo.view>\
+<views.my-view id="v3"></views.my-view>';
+	
+	application.onRendered = function () {
+		strictEqual(application.model, model1);
+		strictEqual(application.templateItems.v1.model, model1);
+		strictEqual(application.templateItems.v2.model, model1.model2);
+		strictEqual(application.templateItems.v3.model, model3);
+		
+		start();
+	}
+	
+	stop();
+});
+
+test("all property setter types", function() {
+	clearIntegrationStuff();
+	
 	// arrange
 	var template = wipeout.wml.wmlParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
 	<val3 value="true"></val3>\
