@@ -25,8 +25,6 @@ window.wo = function (model, htmlElement) {
 	return output;
 };
 
-wo.viewModel = viewModel;
-
 window.addEventListener("load", function () {
     window.wo(null); //TODO: model
 });
