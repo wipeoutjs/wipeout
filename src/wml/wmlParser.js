@@ -1,6 +1,70 @@
 
 //http://www.w3.org/TR/html-markup/syntax.html
 Class("wipeout.wml.wmlParser", function () {  
+        
+    // tags which cannot go into a <div /> tag, along with the tag they should go into
+    var specialTags = {
+        area: "map",
+        base: "head",
+        basefont: "head",
+        body: "html",
+        caption: "table",
+        col: "colgroup",
+        colgroup: "table",
+        command : "menu",
+        frame: "frameset",
+        frameset: "html",
+        head: "html",
+        keygen: "form",
+        li: "ul",
+        optgroup: "select",
+        option: "select",
+        rp: "rt",
+        rt: "ruby",
+        source: "audio",
+        tbody: "table",
+        td: "tr",
+        tfoot: "table",
+        th: "tr",
+        thead: "table",
+        tr: "tbody"
+    };
+    
+    // tags which, if the root, wipeout will refuse to create
+    var cannotCreateTags = {
+        html:true,
+        basefont: true,
+        base: true,
+        body: true,
+        frame: true,
+        frameset: true,
+        head: true
+    };
+    
+    // tags which are readonly once created in IE
+    var ieReadonlyElements = {
+        audio: true,
+        col: true, 
+        colgroup: true,
+        frameset: true,
+        head: true,
+        rp: true,
+        rt: true,
+        ruby: true,
+        select: true,
+        style: true,
+        table: true,
+        tbody: true,
+        tfooy: true,
+        thead: true,
+        title: true,
+        tr: true
+    };
+    
+    // firefox replaces some tags with others
+    var replaceTags = {
+        keygen: "select"
+    };
     		
 	function parse (htmlElement) {
 
@@ -24,13 +88,67 @@ Class("wipeout.wml.wmlParser", function () {
 			output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
 
 		return output;
-	}
+	};
+    
+    wmlParser.firstChildOfType = function (parentElement, childType) {
+        for(var i = 0, ii = parentElement.childNodes.length; i < ii; i++) {
+            var child = parentElement.childNodes[i];
+            if (child.nodeType === 1 && trimToLower(child.tagName) === trimToLower(childType)) {
+                return child;
+            }
+        }
+    };
+	
+    wmlParser.getFirstTagName = function(htmlContent) {
+        ///<summary>Get the tag name of the first element in the string</summary>
+        ///<param name="htmlContent" type="String">A string of html</param>
+        ///<returns type="String">The name of the first tag</returns>
+        
+        var result = /^\s*<[a-z\-\.0-9\$]+(\s|>|\/)/.exec(
+			htmlContent.replace(/<\!--[^>]*-->/g, "").replace(/^\s*/, ""));
+		
+		return result ?
+			result[0].substr(1, result[0].length - 2) :
+			null;
+    };
+	
+	// TODO: test
+	var test = document.createElement("table");
+	test.innerHTML = "<tbody></tbody>";
+	var ie = !test.childNodes.length;
+	
+	wmlParser.addToElement = function(htmlString) {
+        ///<summary>Create a html element from a string</summary>
+        ///<param name="htmlString" type="String">A string of html</param>
+        ///<returns type="HTMLElement">The first element in the string as a HTMLElement</returns>
+				
+		var childTag = wmlParser.getFirstTagName(htmlString);
+		if (!childTag) {
+			var parent = document.createElement("div");
+			parent.innerHTML = htmlString
+			return parent;
+		}
+        
+        if(cannotCreateTags[childTag]) throw "Cannot create an instance of the \"" + tagName + "\" tag.";
+        
+        var parentTagName = specialTags[childTag] || "div";
+        
+        // the innerHTML for some tags is readonly in IE
+        if (ie && ieReadonlyElements[parentTagName])
+            return wmlParser.firstChildOfType(wmlParser.createElement("<" + parentTagName + ">" + htmlString + "</" + parentTagName + ">"), parentTagName);
+            
+        var parent = document.createElement(parentTagName);
+        parent.innerHTML = htmlString;
+		return parent;
+	};
 	
     function wmlParser(wmlString) {
 		
-		var div = document.createElement("div");
-		div.innerHTML = wmlString;
-		return parse(div);
+		var tag = wmlParser.addToElement(wmlString);
+		if (!tag)
+			throw "Cannot create a template for the following string: " + wmlString;
+		
+		return parse(tag);
     }
     
     return wmlParser;

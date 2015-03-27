@@ -190,7 +190,7 @@ testUtils.testWithUtils("addNode", "view model", false, function(methods, classe
     
     // act
     invoker(node);
-    
+	
     // assert
 });
 

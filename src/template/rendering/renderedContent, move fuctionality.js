@@ -60,7 +60,8 @@
     renderedContent.prototype.detatch = function() {
 		
 		if (!this.detatched) {		
-			this.detatched = [this.openingTag], current = this.openingTag;
+			var current = this.openingTag;
+			this.detatched = [this.openingTag];
 
 			for (var i = 0; current && current !== this.closingTag; i++) {
 				this.detatched.push(current = current.nextSibling); 

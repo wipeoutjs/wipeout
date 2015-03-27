@@ -56,7 +56,13 @@ $.extend(testUtils, (function() {
             current = current[className[i]] = (current[className[i]] || {});
         }
  
-        var mock = {ns: current, name: className[i], oldVal: current[className[i]], expected: expected, actual: 0};
+        var mock = {
+			ns: current, 
+			name: className[i], 
+			oldVal: current.hasOwnProperty(className[i]) ? current[className[i]] : deleteMe, 
+			expected: expected, 
+			actual: 0
+		};
         this.mocks.push(mock);
         if(newValue == null || newValue.constructor === Function)        
             current[className[i]] = function() {
@@ -71,13 +77,17 @@ $.extend(testUtils, (function() {
         return current[className[i]];
     };
  
+	var deleteMe;
     classMock.prototype.reset = function() {
         for(var i = 0, ii = this.mocks.length; i < ii; i++) {
             if(this.mocks[i].expected != null) {
                 strictEqual(this.mocks[i].actual, this.mocks[i].expected, "Constructor not called the correct number of times");
             }
  
-            this.mocks[i].ns[this.mocks[i].name] = this.mocks[i].oldVal;
+			if (this.mocks[i].oldVal === deleteMe)
+				delete this.mocks[i].ns[this.mocks[i].name];
+			else
+            	this.mocks[i].ns[this.mocks[i].name] = this.mocks[i].oldVal;
         }
  
         this.mocks.length = 0;

@@ -60,7 +60,7 @@ function viewModel (name, extend) {
 				delete values[model];
 			}
 
-			split = name.split(".");
+			var split = name.split(".");
 			$constructor = new Function("extend", "getParentConstructorArgs", "values", 
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
 "	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
@@ -89,7 +89,6 @@ function viewModel (name, extend) {
 			methods = undefined;
 			statics = undefined;
 			bindingTypes = undefined;
-			parser = undefined;
 			inheritanceTree = undefined;
 
 			return output.build();

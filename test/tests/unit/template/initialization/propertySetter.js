@@ -75,7 +75,8 @@ testUtils.testWithUtils("getValue", "no val", false, function(methods, classes, 
 
 testUtils.testWithUtils("parseOrExecute", "xmlParserTempName", false, function(methods, classes, subject, invoker) {
     // arrange
-	subject._value = {}, subject.name = {}, output = {};
+	var output = {};
+	subject._value = {}, subject.name = {};
 	var vm = {}, rc = {}, parser = methods.method([subject._value, subject.name, rc], output);
 	subject.getParser = methods.method([vm], parser);
     parser.xmlParserTempName = true;
@@ -89,9 +90,9 @@ testUtils.testWithUtils("parseOrExecute", "xmlParserTempName", false, function(m
 
 testUtils.testWithUtils("parseOrExecute", "parser", false, function(methods, classes, subject, invoker) {
     // arrange
-	var value = {};
+	var value = {}, output = {};
 	subject.getValue = methods.method([], value)
-	subject.name = {}, output = {};
+	subject.name = {};
 	var vm = {}, rc = {}, parser = methods.method([value, subject.name, rc], output);
 	subject.getParser = methods.method([vm], parser);
 	

@@ -108,7 +108,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defualtItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
 		vm.__createdByItemsControl = true;
 		return vm;
     };
