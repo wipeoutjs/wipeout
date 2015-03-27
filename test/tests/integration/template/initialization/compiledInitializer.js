@@ -18,6 +18,8 @@ test("success", function() {
 			<val2 value="$parent.theValue"></val2>\
 		</js-object>\
 	</val7>\
+	<div data-wo-element-name="val8">777</div>\
+	<div data-wo-element-name="val9" parser="s">777</div>\
 <object>')[0];
 	
 	var theValue = {}, theVm = {};
@@ -37,4 +39,7 @@ test("success", function() {
 	
 	strictEqual(theVm.val7.val1, 55);
 	strictEqual(theVm.val7.val2, theValue);
+	
+	strictEqual(theVm.val8, 777);
+	strictEqual(theVm.val9, "777");
 });

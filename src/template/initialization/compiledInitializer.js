@@ -36,7 +36,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if (element.nodeType !== 1) return;
         
-        var name = compiledInitializer.getPropertyFlags(element.name).name;
+        var name = wipeout.utils.viewModels.getElementName(element);
+		name = compiledInitializer.getPropertyFlags(name).name;
         if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\"has been set more than once.";
         
         for (var val in element.attributes) {
@@ -45,7 +46,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
                     if (child.nodeType !== 3 || !child.serialize().match(/^\s*$/))
                         throw "You cannot set the value both in attributes and with elements." //TODO
                 });
-                
+				
                 this.setters[name] = new wipeout.template.initialization.propertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
