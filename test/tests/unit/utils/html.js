@@ -5,19 +5,6 @@ module("wipeout.utils.html", {
     }
 });
 
-test("outerHTML", function() {
-        
-	// arrange    
-    // act    
-    //assert
-    wipeout.utils.obj.enumerateObj(testUtils.allHtmlTags, function(tag) {
-        if(tag === "html")
-            throws(function() { wipeout.utils.html.outerHTML(document.createElement(tag)); }, tag);
-        else
-            ok(wipeout.utils.html.outerHTML(document.createElement(tag)), tag);        
-    });    
-});
-
 testUtils.testWithUtils("getViewModel", "", true, function(methods, classes, subject, invoker) {
     // arrange
 	var rc = {viewModel: {}};
