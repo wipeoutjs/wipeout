@@ -12,13 +12,13 @@ window.wo = function (model, htmlElement) {
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
 
-	if (getMeAViewModel(htmlElement))
+	if (wo.getViewModelConstructor(htmlElement))
 		output.registerDisposable(new wipeout.template.rendering.viewModelElement(htmlElement));
 	else
 		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
 
 			// element may have been removed since get all elements
-			if (htmlElement.contains(element) && getMeAViewModel(element))
+			if (htmlElement.contains(element) && wo.getViewModelConstructor(element))
 				output.registerDisposable(new wipeout.template.rendering.viewModelElement(element));
 		});
 	
@@ -27,40 +27,31 @@ window.wo = function (model, htmlElement) {
 
 wo.viewModel = viewModel;
 
-wo.getViewModel = function (viewModelName, skipCamelCase) {
+//TODO: document
+var realName = "data-wo-element-name";
+wo.getViewModelConstructor = function (wmlElement) {
+	
+	if (wmlElement instanceof Element) {
+		var constr, name = wmlElement.attributes[realName] ?
+			wmlElement.attributes[realName].value : 
+			wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(wmlElement.localName));
+	} else {
+		var constr, name = wmlElement.attributes[realName] ?
+			wmlElement.attributes[realName].value : 
+			wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(wmlElement.name));
+	}
 	
 	//TODO: document
-	if (!skipCamelCase && wipeout.utils.obj.trimToLower(viewModelName).indexOf("js-") === 0)
-		viewModelName = viewModelName.substring(2);
+	if (/^js[A-Z]/.test(name))
+		name = name.substr(2);
 	
-	var tmp1 = skipCamelCase ? 
-		wipeout.utils.obj.trim(viewModelName) : 
-		wipeout.utils.obj.camelCase(wipeout.utils.obj.trimToLower(viewModelName));
-	var tmp2;
-	if (tmp2 = wipeout.utils.obj.getObject(tmp1))
+	if (constr = wipeout.utils.obj.getObject(name))
 		return {
-			name: tmp1,
-			constructor: tmp2
+			name: name,
+			constructor: constr
 		};
 };
 
 window.addEventListener("load", function () {
     window.wo(null); //TODO: model
 });
-
-function getMeAViewModel(element) {   
-    	
-	var tmp1, tmp2;
-	if (tmp1 = wo.getViewModel(element.tagName))
-		return tmp1;
-	
-	tmp2 = wipeout.settings.wipeoutAttributes.viewModelName;
-	if (element.attributes[tmp2] && 
-		(tmp1 = wo.getViewModel(element.attributes[tmp2].value, true)))
-		return tmp1;
-	
-	tmp2 = "data-" + wipeout.settings.wipeoutAttributes.viewModelName;
-	if (element.attributes[tmp2] && 
-		(tmp1 = wo.getViewModel(element.attributes[tmp2].value, true)))
-		return tmp1;
-}

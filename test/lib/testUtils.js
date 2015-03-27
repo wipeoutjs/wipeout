@@ -13,7 +13,7 @@ window.enumerateArr = wipeout.utils.obj.enumerateArr;
 window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
 window.integrationTestSetup = function () {
 	window.$fixture = $("#qunit-fixture");
-	$fixture.html("<div " + wipeout.settings.wipeoutAttributes.viewModelName + "='testApp' model='obsjs.makeObservable()' application='true'></div>");
+	$fixture.html("<div data-wo-element-name='testApp' model='obsjs.makeObservable()' application='true'></div>");
 	wo(null, $fixture.children()[0]);
 	window.application = wipeout.utils.html.getViewModel(window.node = $fixture[0].firstChild);
 	application.application = true;

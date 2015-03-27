@@ -171,7 +171,7 @@ testUtils.testWithUtils("addNode", "non element", false, function(methods, class
 
 testUtils.testWithUtils("addNode", "element", false, function(methods, classes, subject, invoker) {
     // arrange
-    var node = {name: "KJBKJBKJB",  nodeType: 1};
+    var node = {name: "KJBKJBKJB",  nodeType: 1, attributes: {}};
     subject._addedElements = [];
     subject.addElement = methods.method([node]);
     
@@ -183,7 +183,7 @@ testUtils.testWithUtils("addNode", "element", false, function(methods, classes, 
 
 testUtils.testWithUtils("addNode", "view model", false, function(methods, classes, subject, invoker) {
     // arrange
-    var name = "sdfsdfds", node = {name: name, nodeType: 1};
+    var name = "sdfsdfds", node = {name: name, nodeType: 1, attributes: {}};
     subject._addedElements = [];
     subject.addViewModel = methods.method([node]);
     classes.mock(name, {})

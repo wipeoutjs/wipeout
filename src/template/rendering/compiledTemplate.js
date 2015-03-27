@@ -148,7 +148,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.addTextNode(node);
         else if (node.nodeType !== 1)
             this.addNonElement(node);
-        else if (wo.getViewModel(node.name))//TODO
+        else if (wo.getViewModelConstructor(node))//TODO
             this.addViewModel(node);
         else
             this.addElement(node);

@@ -7,7 +7,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         ///<param name="xmlOverride" type="wipeout.wml.wmlElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
         ///<param name="parentRenderContext" type="wipeout.template.context" optional="true">The render context of the parent view model</param>
         
-        var vm = xmlOverride ? wo.getViewModel(xmlOverride.name) : getMeAViewModel(element);
+        var vm = wo.getViewModelConstructor(xmlOverride ? xmlOverride : element);
         
         if(!vm)
             throw "Invalid view model";

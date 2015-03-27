@@ -116,7 +116,8 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 		length: 1,
 		"0": {
 			nodeType: 1,
-			name: "-array"
+			name: "js-array",
+			attributes: {}
 		}
 	}, setter;
 	
