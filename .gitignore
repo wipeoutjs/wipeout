@@ -32,14 +32,6 @@ local.properties
 .buildpath
 
 #################
-## Jekyll
-#################
-
-#Jekyll build files
-_site/
-
-
-#################
 ## Visual Studio
 #################
 

@@ -74,8 +74,8 @@ module.exports = function(grunt) {
 	 *
 	 */
 	
-    var debugFile = "scripts/build/<%= pkg.name %>.debug.js",
-        releaseFile = "scripts/build/<%= pkg.name %>.js";
+    var debugFile = "scripts/<%= pkg.name %>.debug.js",
+        releaseFile = "scripts/<%= pkg.name %>.js";
     
     var bower = grunt.file.readJSON('bower.json'),
         pkg = grunt.file.readJSON('package.json');
