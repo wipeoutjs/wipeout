@@ -9,11 +9,13 @@ var routedEventModel = wipeout.events.routedEventModel;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange    
+	subject._super = methods.method();
+	
     // act
     invoker();
     
     // assert
-    strictEqual(subject.__triggerRoutedEventOnVM.constructor, wo.event);
+    strictEqual(subject.__triggerRoutedEventOnVM.constructor, wipeout.events.event);
 });
 
 testUtils.testWithUtils("triggerRoutedEvent", null, false, function(methods, classes, subject, invoker) {

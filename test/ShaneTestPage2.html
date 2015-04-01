@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <script src="lib/jquery/jquery-1.10.2.js"></script>
+    <script src="lib/knockout/knockout-2.3.0.debug.js" type="text/javascript"></script>
+
+    <script src="../build/wipeout.debug.js" type="text/javascript"></script> 
+    
+    <div id="xxx"></div>
+    
+    <!--<root></root>-->
+	<wo.content-control template--s="XXX">
+	</wo.content-control>
+
+    <script type="text/javascript">
+        
+        window.newObject = wo.view.extend(function newObject() {
+            this._super();
+        });
+                
+        window.root = wo.view.extend(function root() {
+            this._super("rrrooottt");
+            
+            this.val = 666;
+        
+            r = this;
+        });
+        window.root2 = wo.view.extend(function root2() {
+            this._super("rrrooottt2");
+                    
+            r1 = this;
+        });
+        
+        root2.addGlobalBindingType("xY", "tw");
+        
+        setTimeout(function() {
+            console.log(r1.xZ.prop2 + " " + typeof r1.xZ.prop2);
+            
+            return;
+            alert(r1.xY);
+            r1.xY = 555;
+            setTimeout(function() {
+                alert(r.val);
+            }, 100);
+        }, 2000);
+        
+        window.val1 = "val1";
+        
+        /*setTimeout(function() {
+            document.getElementById("xxx").nextSibling.nextSibling.wipeoutOpening.dispose()
+        }, 500);*/
+    </script>
+    
+    <script id="rrrooottt" type="text/xml">
+    Hello
+    <div>
+        <root2 x-y="$parent.val">
+            <x-z>
+                <new-object constructor-args="3">
+                    <prop1>val1</prop1>
+                    <prop2 parser="s">val2</prop2>
+                    <prop3 value--s="val3" />
+                </new-object>
+            </x-z>
+        </root2>
+    </div>
+    </script>
+    
+    <script id="rrrooottt2" type="text/xml">
+    again
+    </script>
+</body>
+</html>

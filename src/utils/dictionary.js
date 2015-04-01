@@ -1,43 +1,43 @@
-/* Not currently used
 Class("wipeout.utils.dictionary", function () {
-    var dictionary = function() {
-        this._items = {
-            keys: [],
-            values: []
-        };
+
+    var dictionary = wipeout.base.object.extend(function dictionary() {
+        this.__keyArray = [], this.__valueArray = [];
+    });
+    
+    dictionary.prototype.add = function (key, value) {
+        var i = this.__keyArray.indexOf(key);
+        i === -1 ? (this.__keyArray.push(key), this.__valueArray.push(value)) : this.__valueArray[i] = value;
+
+        return value;
     };
     
-    dictionary.prototype.add = function(key, value) {
-        var existing = this._items.keys.indexOf(key);
-        
-        if (existing === -1) {
-            this._items.keys.push(key);
-            this._items.values.push(value);
-        } else {
-            this._items.values[existing] = value;
+    dictionary.prototype.length = function () {
+        return this.__keyArray.length;
+    };
+    
+    dictionary.prototype.keys = function () {
+        return wipeout.utils.obj.compyArray(this.keys_unsafe());
+    };
+    
+    dictionary.prototype.keys_unsafe = function () {
+        return this.__keyArray;
+    };
+    
+    dictionary.prototype.remove = function (key) {
+        var i;
+        if ((i = this.__keyArray.indexOf(key)) !== -1) {
+            this.__valueArray.splice(i, 1);
+            this.__keyArray.splice(i, 1);
+            
+            return true;
         }
-    };
-    
-    dictionary.prototype.remove = function(key) {
-        var existing = this._items.keys.indexOf(key);
         
-        if(existing !== -1) {
-            this._items.keys.splice(existing, 1);
-            this._items.values.splice(existing, 1);
-        }
+        return false;
     };
     
-    dictionary.prototype.allKeys = function() {
-        return wipeout.utils.obj.copyArray(this._items.keys);
-    };
-    
-    dictionary.prototype.containsKey = function(key) {
-        return this._items.keys.indexOf(key) !== -1;
-    };
-    
-    dictionary.prototype.value = function(key) {
-        return this._items.values[this._items.keys.indexOf(key)];
+    dictionary.prototype.value = function (key) {
+        return this.__valueArray[this.__keyArray.indexOf(key)];
     };
     
     return dictionary;
-});*/
+});

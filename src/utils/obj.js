@@ -1,6 +1,5 @@
 
 //"use strict"; - cannot use strict right now. any functions defined in strict mode are not accesable via arguments.callee.caller, which is used by _super
-var wipeout = {};
 
 var ajax = function (options) {
     ///<summary>Perform an ajax request</summary>
@@ -58,57 +57,43 @@ var enumerateObj = function(enumerate, action, context) {
         action.call(context, enumerate[i], i);
 };
 
-var Binding = function(bindingName, allowVirtual, accessorFunction) {
-    ///<summary>Create a knockout binding</summary>
-    ///<param name="bindingName" type="String">The name of the binding</param>
-    ///<param name="allowVirtual" type="Boolean">Specify whether the binding can be used with virtual elements</param>
-    ///<param name="accessorFunction" type="Function">A function which returns the binding</param>
-    
-    var cls = Class("wipeout.bindings." + bindingName, accessorFunction);    
-    ko.bindingHandlers[bindingName] = {
-        init: cls.init,
-        update: cls.update
-    };
-    
-    if(allowVirtual)
-        ko.virtualElements.allowedBindings[bindingName] = true;
-};
-
 var Class = function(classFullName, accessorFunction) {
     ///<summary>Create a wipeout class</summary>
     ///<param name="classFullName" type="String">The name of the class</param>
     ///<param name="accessorFunction" type="Function">A function which returns the class</param>
     
-    classFullName = classFullName.split(".");
-    var namespace = classFullName.splice(0, classFullName.length - 1);
+	var current = window;
+    classFullName = splitPropertyName(classFullName);
     
-    var tmp = {};
-    tmp[classFullName[classFullName.length - 1]] = accessorFunction();
-    
-    Extend(namespace.join("."), tmp);
-    
-    return tmp[classFullName[classFullName.length - 1]];
+    if (classFullName[0] === "wipeout") {
+		current = wipeout;
+    	classFullName.splice(0, 1);
+		if (!classFullName.length)
+			throw 'Cannot override the "wipeout" variable';
+	}
+	
+	for (var i = 0, ii = classFullName.length - 1; i < ii; i++)
+		current = current[classFullName[i]] || (current[classFullName[i]] = {});
+	
+	return current[classFullName[classFullName.length - 1]] = accessorFunction();
 };
 
-var Extend = function(namespace, extendWith) {
-    ///<summary>Similar to $.extend but with a namespace string which must begin with "wipeout"</summary>
-    ///<param name="namespace" type="String">The namespace to add to</param>
-    ///<param name="extendWith" type="Object">The object to add to the namespace</param>
-    
-    namespace = namespace.split(".");
-    
-    if(namespace[0] !== "wipeout") throw "Root must be \"wipeout\".";
-    namespace.splice(0, 1);
-    
-    var current = wipeout;
-    enumerateArr(namespace, function(nsPart) {
-        current = current[nsPart] || (current[nsPart] = {});
-    });
-    
-    if(extendWith && extendWith instanceof Function) extendWith = extendWith();
-    enumerateObj(extendWith, function(item, i) {
-        current[i] = item;
-    });
+//TODO: expose. This is the only way attributes with "test" can be searched for
+var HtmlAttr = function(attributeName, accessorFunction) {
+	///<summary>Create a wipeout html attribute</summary>
+	///<param name="attributeName" type="String">The name of the attribute</param>
+	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
+	
+	Class("wipeout.template.rendering.htmlAttributes." + "wo-" + attributeName, accessorFunction);
+	
+	if (wipeout.template.rendering.htmlAttributes["wo-" + attributeName].test instanceof Function)
+		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, function () {
+			return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
+		});
+	
+	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, function () {
+		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
+	});
 };
     
 var _trimString = /^\s+|\s+$/g;
@@ -159,64 +144,96 @@ var camelCase = function(input) {
     return input;
 };
 
+var splitPropertyName = (function () {
+	
+	var arrayMatch = /\[\s*\d\s*\]$/g;
+	return function(propertyName) {
+		propertyName = propertyName.split(".");
+
+		var tmp;
+		for (var i = 0; i < propertyName.length; i++) {
+			propertyName[i] = trim(propertyName[i]);
+			var match = propertyName[i].match(arrayMatch);
+			if (match && match.length) {
+				if (tmp = trim(propertyName[i].replace(arrayMatch, ""))) {
+					propertyName[i] = trim(propertyName[i].replace(arrayMatch, ""));
+				} else {
+					propertyName.splice(i, 1);
+					i--;
+				}
+
+				for (var j = 0, jj = match.length; j < jj; j++)
+					propertyName.splice(++i, 0, parseInt(match[j].match(/\d/)[0]));
+			}
+		}
+
+		return propertyName;
+	};
+}());
+
 Class("wipeout.utils.obj", function () {
+            
+    var joinPropertyName = function (propertyName) {
+        var output = [];
+        enumerateArr(propertyName, function (item) {
+            if (!isNaN(item))
+                output.push("[" + item + "]");
+            else if (output.length === 0)
+                output.push(item);
+            else
+                output.push("." + item);
+        });
         
-    var getObject = function(constructorString, context) {
+        return output.join("");
+    }
+    
+    var getObject = function(propertyName, context) {
         ///<summary>Get an object from string</summary>
-        ///<param name="constructorString" type="String">A pointer to the object to create</param>
+        ///<param name="propertyName" type="String">A pointer to the object to get</param>
+        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
+        ///<returns type="Any">The object</returns>
+        
+        return _getObject(splitPropertyName(propertyName), context);
+    };
+    
+    var _getObject = function(splitPropertyName, context) {
+        ///<summary>Get an object from string</summary>
+        ///<param name="splitPropertyName" type="Array">The property name split into parts, including numbers for array parts</param>
         ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
         ///<returns type="Any">The object</returns>
         if(!context) context = window;
         
-        var constructor = constructorString.split(".");
-        for(var i = 0, ii = constructor.length; i <ii; i++) {
-            context = context[constructor[i]];
+        for (var i = 0, ii = splitPropertyName.length; i <ii; i++) {
+            context = context[splitPropertyName[i]];
             if(context == null)
-                return null;
+                return i === ii - 1 ? context : null;
         }
         
         return context;
     };
+    
+    var setObject = function(propertyName, context, value) {
+        propertyName = splitPropertyName(propertyName);
+        if (propertyName.length > 1)
+            context = _getObject(propertyName.splice(0, propertyName.length -1), context);
         
-    var createObject = function(constructorString, context) {
-        ///<summary>Create an object from string</summary>
-        ///<param name="constructorString" type="String">A pointer to the object to create</param>
-        ///<param name="context" type="Any" optional="true">The root context. Defaults to window</param>
-        ///<returns type="Any">The created object</returns>
-        
-        var constructor = getObject(constructorString, context);
-        
-        if(constructor instanceof Function) {
-            
-            var object = new constructor();
-            if(object instanceof wipeout.viewModels.view && DEBUG)
-                object.__woBag.constructedViewType = constructorString;
-            
-            return object;
-        }
-        
-        throw constructorString + " is not a valid function.";
-    };
+        context[propertyName[0]] = value;
+    };   
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
         ///<param name="input" type="Array">The array to copy</param>
         ///<returns type="Array">The copied array</returns>
+        
+        if (input instanceof Array)
+            return input.slice();
+        
         var output = [];
         for(var i = 0, ii = input.length; i < ii; i++) {
             output.push(input[i]);
         }
         
         return output;
-    };
-    
-    var endsWith = function(string, endsWith) {
-        ///<summary>Determine whether a string ends with another string</summary>
-        ///<param name="string" type="String">The container string</param>
-        ///<param name="endsWith" type="String">The contained string</param>
-        ///<returns type="Boolean"></returns>
-        
-        return string.indexOf(endsWith, string.length - endsWith.length) !== -1;
     };
     
     var random = function(max) {
@@ -226,7 +243,16 @@ Class("wipeout.utils.obj", function () {
         return Math.floor(Math.random() * max);
     };
     
+    var extend = function(extend, extendWith) {
+        if(extendWith && extend)
+            for(var i in extendWith)
+                extend[i] = extendWith[i];
+        
+        return extend;
+    };
+    
     var obj = function obj() { };
+    obj.extend = extend;
     obj.camelCase = camelCase;
     obj.ajax = ajax;
     obj.parseBool = parseBool;
@@ -235,9 +261,10 @@ Class("wipeout.utils.obj", function () {
     obj.enumerateArr = enumerateArr;
     obj.enumerateObj = enumerateObj;
     obj.getObject = getObject;
-    obj.createObject = createObject;
+    obj.setObject = setObject;
+    obj.splitPropertyName = splitPropertyName;
+    obj.joinPropertyName = joinPropertyName;
     obj.copyArray = copyArray;
     obj.random = random;
-    obj.endsWith = endsWith;
     return obj;
 });

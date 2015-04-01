@@ -9,9 +9,13 @@ Class("wipeout.settings", function() {
         });        
     }
 
-    settings.suppressWarnings = false;
     settings.asynchronousTemplates = true;
-    settings.htmlAsyncTimeout = 10000;
+    settings.displayWarnings = true;
+    settings.useElementClassName = false;
     
+    settings.wipeoutAttributes = {
+        viewModelName: "wo-view-model"
+    };
+	
     return settings;
 });

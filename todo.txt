@@ -1,9 +1,34 @@
 
-document async templates
+html event handled
+wrap domData in htmlAttributeSetter, use to chain attrs.
+	can I get over ordering?
+	do value binding onblur, onchange, onkeyup etc
+	do radio button and checkbox value
 
-bug, put &lt; in anonymous template
+
+look at console.logs in tests
+
+Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
+
+REMOVE WITH. It is incredibly slow
+
+tests with useObjectOberve === false will fail
+
+events and routed events. make strings
+
+standardise the way things are rendered, between Objects and wo.views (toString)
+
+on swap-xml-parser branch, try tp protect against "<wo.view />" errors
+
+for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
+
+
 bug, handle null template id better
 
-changes:    __woBag.type
+window.requestAnimationFrame
 
-search ranking
+shadow DOM
+
+profiler
+
+document example of using filters

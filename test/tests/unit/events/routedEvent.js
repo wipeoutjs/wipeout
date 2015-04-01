@@ -10,17 +10,17 @@ var routedEvent = wipeout.events.routedEvent;
 testUtils.testWithUtils("trigger", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {};
-    var triggerOnVisual = {
+    var triggerOnView = {
         triggerRoutedEvent: methods.customMethod(function() {
             strictEqual(arguments[0], subject);
             strictEqual(arguments[1].constructor, wipeout.events.routedEventArgs);
             strictEqual(arguments[1].data, eventArgs);
-            strictEqual(arguments[1].originator, triggerOnVisual);            
+            strictEqual(arguments[1].originator, triggerOnView);            
         })
     };
     
     // act
-    invoker(triggerOnVisual, eventArgs);
+    invoker(triggerOnView, eventArgs);
     
     // assert
 });
@@ -28,12 +28,12 @@ testUtils.testWithUtils("trigger", null, false, function(methods, classes, subje
 testUtils.testWithUtils("unRegister", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var callback = {}, context = {}, expected = {};
-    var triggerOnVisual = {
+    var triggerOnView = {
         unRegisterRoutedEvent: methods.method([subject, callback, context], expected)
     };
     
     // act
-    var actual = invoker(callback, triggerOnVisual, context);
+    var actual = invoker(callback, triggerOnView, context);
     
     // assert
     strictEqual(actual, expected);
@@ -42,12 +42,12 @@ testUtils.testWithUtils("unRegister", null, false, function(methods, classes, su
 testUtils.testWithUtils("register", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var callback = {}, context = {}, expected = {};
-    var triggerOnVisual = {
+    var triggerOnView = {
         registerRoutedEvent: methods.method([subject, callback, context], expected)
     };
     
     // act
-    var actual = invoker(callback, triggerOnVisual, context);
+    var actual = invoker(callback, triggerOnView, context);
     
     // assert
     strictEqual(actual, expected);

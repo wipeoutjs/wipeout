@@ -1,7 +1,4 @@
 
-var wipeout = wipeout || {};
-wipeout.base = wipeout.base || {};
-
 Class("wipeout.events.eventRegistration", function () {
     
     return wipeout.base.disposable.extend(function eventRegistration(callback, context, dispose) {
@@ -10,13 +7,15 @@ Class("wipeout.events.eventRegistration", function () {
         ///<param name="context" type="Any" optional="true">The context of the event logic</param>
         ///<param name="dispose" type="Function" optional="false">A dispose function</param>
         ///<param name="priority" type="Number">The event priorty. The lower the priority number the sooner the callback will be triggered.</param>
-        this._super(dispose);    
+        this._super();    
                
         ///<Summary type="Function">The callback to use when the event is triggered</Summary>
         this.callback = callback;
         
         ///<Summary type="Any">The context to usse with the callback when the event is triggered</Summary>
         this.context = context;                
+        
+        this.registerDisposeCallback(dispose);
     });
 });
 
@@ -63,6 +62,7 @@ Class("wipeout.events.event", function () {
         this._registrations.length = 0;
     }
     
+    //TODO refactor, with disposable
     event.prototype.register = function(callback, context, priority) {
         ///<summary>Subscribe to an event</summary>
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
@@ -82,9 +82,13 @@ Class("wipeout.events.event", function () {
             callback: callback, 
             context: context == null ? window : context,
             dispose: function() {
+                if (!evnt) return;
+                
                 var index = reg.indexOf(evnt);
                 if(index >= 0)
                     reg.splice(index, 1);
+                
+                evnt = null;
             }
         };
         

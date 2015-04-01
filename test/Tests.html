@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Wipeout</title>
+  <link rel="stylesheet" href="lib/qunit/qunit-1.17.1.css">
+</head>
+<body>
+	<script type="application/javascript">useObjectObserve = true;</script>
+	
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="lib/jquery/jquery-1.10.2.js"></script>
+	<script src="../build/wipeout.debug.js" data-cover></script>
+
+	<script src="lib/qunit/qunit-1.17.1.js"></script>
+	<script src="lib/testUtils.js"></script>
+	
+	<script src="lib/blanket.min.js"></script>
+	
+
+	<!-- INTEGRATION TESTS -->
+	<script src="tests/integration/viewModel.js"></script>
+	
+	<script src="tests/integration/base/bindable.js"></script>
+	<script src="tests/integration/events/routedEvent.js"></script>
+	<script src="tests/integration/events/routedEventModel.js"></script>
+	
+	<script src="tests/integration/htmlBindingTypes/ow.js"></script>
+	<script src="tests/integration/htmlBindingTypes/owts.js"></script>
+	<script src="tests/integration/htmlBindingTypes/templateElementSetter.js"></script>
+	<script src="tests/integration/htmlBindingTypes/tw.js"></script>
+	<script src="tests/integration/htmlBindingTypes/viewModelId.js"></script>
+	
+	<script src="tests/integration/template/loader.js"></script>
+	<script src="tests/integration/template/setter.js"></script>
+	
+	<script src="tests/integration/template/rendering/compiledTemplate.js"></script>
+	<script src="tests/integration/template/rendering/renderedContent.js"></script>
+	<script src="tests/integration/template/rendering/viewModelElement.js"></script>
+	
+	<script src="tests/integration/template/rendering/htmlAttributes/attr.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/class.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/content.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/event.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/id.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/render.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/style.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/value.js"></script>
+	<script src="tests/integration/template/rendering/htmlAttributes/visible.js"></script>
+	
+	<script src="tests/integration/template/initialization/compiledInitializer.js"></script>
+	
+	<script src="tests/integration/utils/domData.js"></script>
+	<script src="tests/integration/utils/find.js"></script>
+	
+	<script src="tests/integration/viewModels/contentControl.js"></script>
+	<script src="tests/integration/viewModels/if.js"></script>
+	<script src="tests/integration/viewModels/itemsControl.js"></script>
+	<script src="tests/integration/viewModels/view.js"></script>	
+
+
+	<!-- UNIT TESTS -->
+	<script src="tests/unit/base/bindable.js"></script>
+	
+	<script src="tests/unit/events/event.js"></script>
+	<script src="tests/unit/events/routedEvent.js"></script>
+	<script src="tests/unit/events/routedEventModel.js"></script>
+	
+	<script src="tests/unit/htmlBindingTypes/nb.js"></script>
+	<script src="tests/unit/htmlBindingTypes/ow.js"></script>
+	<script src="tests/unit/htmlBindingTypes/owts.js"></script>
+	<script src="tests/unit/htmlBindingTypes/setTemplateProperty.js"></script>
+	<script src="tests/unit/htmlBindingTypes/templateElementSetter.js"></script>
+	<script src="tests/unit/htmlBindingTypes/tw.js"></script>
+	
+	<script src="tests/unit/polyfills/Array.js"></script>
+	<script src="tests/unit/polyfills/Function.js"></script>
+	
+	<script src="tests/unit/template/context.js"></script>
+	<script src="tests/unit/template/setter.js"></script>
+	
+	<script src="tests/unit/template/initialization/compiledInitializer.js"></script>
+	<script src="tests/unit/template/initialization/parsers.js"></script>
+	<script src="tests/unit/template/initialization/propertySetter.js"></script>
+	<script src="tests/unit/template/rendering/builder.js"></script>
+	<script src="tests/unit/template/rendering/compiledTemplate.js"></script>
+	<script src="tests/unit/template/rendering/htmlAttributeSetter.js"></script>
+	
+	<script src="tests/unit/utils/find.js"></script>
+	<script src="tests/unit/utils/html.js"></script>
+	<script src="tests/unit/utils/obj.js"></script>
+	<script src="tests/unit/utils/viewModels.js"></script>
+	
+	<script src="tests/unit/viewModels/contentControl.js"></script>
+	<script src="tests/unit/viewModels/itemsControl.js"></script>
+	<script src="tests/unit/viewModels/view.js"></script>
+	
+	<script src="tests/unit/wml/wmlAttribute.js"></script>
+	<script src="tests/unit/wml/wmlElement.js"></script>
+	<script src="tests/unit/wml/wmlElementBase.js"></script>
+	<script src="tests/unit/wml/wmlParser.js"></script>
+	
+	<script src="tests/unit/wo.js"></script>
+</body>
+</html>
