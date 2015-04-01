@@ -1,0 +1,35 @@
+<h1>Share parent scope</h1>
+
+    <p>It is not always necessary to create a scope for each view model. A good example of this is in using the <Wipeout.Rl href="'/wipeout-1/v1.2/api.html?type=api&amp;className=wo.if'" text="'if'" />
+ control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $parents[4].value"</code> which is an indicator
+of un-needed scope.</p>
+    <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a view model.</p>
+
+
+    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'share-parent-scope-script-1'">
+        <code>&lt;wo.content-control scope="'Parent scope'">
+    &lt;template>
+        &lt;div>    
+            &lt;wo.content-control share-parent-scope="true" scope="'Child scope 1'">
+                &lt;template>
+                    Scope is: &lt;span data-bind="text: scope">&lt;/span>
+                &lt;/template>
+            &lt;/wo.content-control>
+        &lt;/div>
+        &lt;div>    
+            &lt;wo.content-control scope="'Child scope 2'">
+                &lt;template>
+                    Scope is: &lt;span data-bind="text: scope">&lt;/span>
+                &lt;/template>
+            &lt;/wo.content-control>
+        &lt;/div>
+    &lt;/template>
+&lt;/wo.content-control></code>
+    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+
+    
+    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+        <code>&lt;wo.view templateId="'share-parent-scope-script-1'" /></code>
+    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+
+    <p>By default, the shareParentScope property of a <Wipeout.Rl href="'/wipeout-1/v1.2/api.html?type=api&amp;className=wo.if'" text="'wo.if'" /> control is true.</p>
