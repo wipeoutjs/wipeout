@@ -22,7 +22,7 @@ Class("wipeout.template.asyncLoader", function () {
         ///<param name="templateName" type="string" optional="false">The name and url of this template</param>
         
         // signifies whether the template has been sucessfully loaded or not
-        this._success = wipeout.base.contentControl.templateExists(templateName);
+        this._success = wipeout.viewModels.contentControl.templateExists(templateName);
         
         // specifies success callbacks for when template is loaded. If this property in null, the loading process has completed
         this._callbacks = this._success ? null : [];
@@ -36,7 +36,7 @@ Class("wipeout.template.asyncLoader", function () {
                 type: "GET",
                 url: templateName,
                 success: function(result) {                
-                    wipeout.base.contentControl.createTemplate(templateName, result.responseText);                
+                    wipeout.viewModels.contentControl.createTemplate(templateName, result.responseText);                
 
                     _this._success = true;
                     var callbacks = _this._callbacks;

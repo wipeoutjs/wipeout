@@ -319,7 +319,7 @@ testUtils.testWithUtils("createValueAccessor", "invalid value", true, function(m
     var output = invoker({})();
     
     // assert
-    strictEqual(output.name, wipeout.base.visual.getBlankTemplateId());
+    strictEqual(output.name, wipeout.viewModels.visual.getBlankTemplateId());
 });
 
 testUtils.testWithUtils("createValueAccessor", "value, shareParentScope", true, function(methods, classes, subject, invoker) {

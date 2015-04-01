@@ -1,9 +1,9 @@
 
-Class("wipeout.base.view", function () {    
+Class("wipeout.viewModels.view", function () {    
 
-    var modelRoutedEventKey = "wipeout.base.view.modelRoutedEvents";
+    var modelRoutedEventKey = "wipeout.viewModels.view.modelRoutedEvents";
     
-    var view = wipeout.base.visual.extend(function view (templateId, model /*optional*/) {        
+    var view = wipeout.viewModels.visual.extend(function view (templateId, model /*optional*/) {        
         ///<summary>Extends on the visual class to provide expected MVVM functionality, such as a model and bindings</summary>  
         ///<param name="templateId" type="String" optional="true">An initial template id</param>
         ///<param name="model" type="Any" optional="true">An initial model</param>
@@ -42,15 +42,6 @@ Class("wipeout.base.view", function () {
         }
     };
     
-    view.prototype.disposeOfBinding = function(propertyName) {
-        ///<summary>Un-bind this property.</summary>
-        ///<param name="propertyName" type="String" optional="false">The name of the property to un-bind</param>
-        
-        if(this.__woBag.bindings[propertyName]) {
-            this.__woBag.bindings[propertyName].dispose();
-        }
-    };
-    
     view.prototype.dispose = function() {
         ///<summary>Dispose of view specific items</summary>    
         this._super();
@@ -60,8 +51,13 @@ Class("wipeout.base.view", function () {
             delete this.__woBag[modelRoutedEventKey];
         }
         
-        for(var i in this.__woBag.bindings)
-            this.disposeOfBinding(i);
+        for(var i in this.__woBag.bindings) {
+            for (var j = 0, jj = this.__woBag.bindings[i].length; j < jj; j++) {
+                this.__woBag.bindings[i][j].dispose();
+            }
+            
+            delete this.__woBag.bindings[i];
+        }
     };
 
     
@@ -79,8 +75,6 @@ Class("wipeout.base.view", function () {
         
         if(twoWay && (!ko.isObservable(this[property]) || !ko.isObservable(valueAccessor())))
            throw 'Two way bindings must be between 2 observables';
-           
-        this.disposeOfBinding(property);
         
         var toBind = ko.dependentObservable({ 
             read: function() { return ko.utils.unwrapObservable(valueAccessor()); },
@@ -115,7 +109,7 @@ Class("wipeout.base.view", function () {
             null;
         
         var _this = this;
-        return this.__woBag.bindings[property] = new wipeout.base.disposable(function() {
+        var binding = new wipeout.base.disposable(function() {
             if(subscription1) {
                 subscription1.dispose();
                 subscription1 = null;
@@ -131,22 +125,37 @@ Class("wipeout.base.view", function () {
                 toBind = null;
             }
             
-            delete _this.__woBag.bindings[property];
+            if(binding) {
+                var tmp;
+                if (_this.__woBag.bindings[property] && (tmp = _this.__woBag.bindings[property].indexOf(binding)) !== -1) {
+                    _this.__woBag.bindings[property].splice(tmp, 1);
+                    if (!_this.__woBag.bindings[property].length) {
+                        delete _this.__woBag.bindings[property];
+                    }
+                }
+                
+                binding = null;
+            }
         });
+        
+        if(!this.__woBag.bindings[property])
+            this.__woBag.bindings[property] = [binding];
+        else
+            this.__woBag.bindings[property].push(binding);
+        
+        return binding;
     };    
     
     view._elementHasModelBinding = function(element) {
         ///<summary>returns whether the view defined in the element was explicitly given a model property</summary>
-        ///<param name="element" type="Element" optional="false">The element to check for a model setter property</param>
+        ///<param name="element" type="wipeout.template.templateElement" optional="false">The element to check for a model setter property</param>
         ///<returns type="Boolean"></returns>
         
-        for(var i = 0, ii = element.attributes.length; i < ii; i++) {
-            if(element.attributes[i].nodeName === "model" || element.attributes[i].nodeName === "model-tw")
-                return true;
-        }
+        if(element.attributes["model"] || element.attributes["model-tw"])
+            return true;
         
-        for(var i = 0, ii = element.childNodes.length; i < ii; i++) {
-            if(element.childNodes[i].nodeType === 1 && element.childNodes[i].nodeName === "model")
+        for(var i = 0, ii = element.length; i < ii; i++) {
+            if(element[i].constructor === wipeout.template.templateElement && element[i].name === "model")
                 return true;
         }
         
@@ -158,7 +167,7 @@ Class("wipeout.base.view", function () {
     
     view.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="Element" optional="false">An XML element containing property setters for the view</param>
+        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
         if(this.__woBag.initialized) throw "Cannot call initialize item twice";
         this.__woBag.initialized = true;
@@ -166,25 +175,24 @@ Class("wipeout.base.view", function () {
         if(!propertiesXml)
             return;
         
-        var prop = propertiesXml.getAttribute("id");
-        if(prop)
-            this.id = prop;
+        if(propertiesXml.attributes["id"])
+            this.id = propertiesXml.attributes["id"].value;
         
-        prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
+        var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
         if(prop)
-            this.shareParentScope = parseBool(prop);
+            this.shareParentScope = parseBool(prop.value);
                 
         if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null) {
             this.bind('model', parentBindingContext.$data.model);
         }
         
         var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerateArr(propertiesXml.attributes, function(attr) {
+        enumerateObj(propertiesXml.attributes, function(attr, name) {
             
-            var name = attr.nodeName, setter = "";
+            var setter = "";
             
             // find and removr "-tw" if necessary
-            if(attr.nodeName.length > 3 && name.substr(name.length - 3) === "-tw") {
+            if(name.length > 3 && name.substr(name.length - 3) === "-tw") {
                 name = name.substr(0, name.length - 3);
                 setter = 
         ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
@@ -205,35 +213,31 @@ Class("wipeout.base.view", function () {
             }
         }, this);
         
-        enumerateArr(propertiesXml.childNodes, function(child, i) {
+        enumerateArr(propertiesXml, function(child, i) {
             
-            var nodeName = camelCase(child.nodeName);
-            if(child.nodeType !== 1 || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
+            var nodeName = camelCase(child.name);
+            if(child.constructor !== wipeout.template.templateElement || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
             
             // default
             var type = "string";
-            for(var j = 0, jj = child.attributes.length; j < jj; j++) {
-                if(child.attributes[j].nodeName === "constructor" && child.attributes[j].nodeValue) {
-                    type = camelCase(child.attributes[j].nodeValue);
+            for(var j in child.attributes) {
+                if(j === "constructor" && child.attributes[j].value) {
+                    type = camelCase(child.attributes[j].value);
                     break;
                 }
             }
             
             if (view.objectParser[trimToLower(type)]) {
                 var innerHTML = [];
-                var ser = ser || new XMLSerializer();
-                for (var j = 0, jj = child.childNodes.length; j < jj; j++) {
-                    if(child.childNodes[j].nodeType == 3)
-                        innerHTML.push(child.childNodes[j].nodeValue);
-                    else
-                        innerHTML.push(ser.serializeToString(child.childNodes[j]));
+                for (var j = 0, jj = child.length; j < jj; j++) {
+                    innerHTML.push(child[j].serialize());
                 }
             
                 var val = view.objectParser[trimToLower(type)](innerHTML.join(""));
                 view.setObservable(this, nodeName, val);
             } else {
                 var val = wipeout.utils.obj.createObject(type);
-                if(val instanceof wipeout.base.view) {
+                if(val instanceof wipeout.viewModels.view) {
                     val.__woBag.createdByWipeout = true;
                     val._initialize(child, bindingContext);
                 }
@@ -277,7 +281,7 @@ Class("wipeout.base.view", function () {
             this.disposeOf(this.__woBag[modelRoutedEventKey]);
             delete this.__woBag[modelRoutedEventKey];
             
-            if(newValue instanceof wipeout.base.routedEventModel) {
+            if(newValue instanceof wipeout.events.routedEventModel) {
                 var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
                 this.__woBag[modelRoutedEventKey] = this.registerDisposable(d1);
             }
@@ -297,7 +301,7 @@ Class("wipeout.base.view", function () {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
         ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
         
-        if(!(eventArgs.routedEvent instanceof wipeout.base.routedEvent)) throw "Invaid routed event";
+        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };

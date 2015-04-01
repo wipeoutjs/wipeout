@@ -14,7 +14,7 @@ Binding("wipeout", true, function () {
 
         ///<Summary type="wo.view">The view to render</Summary>
         this.renderedView = new type();
-        if(!(this.renderedView instanceof wipeout.base.view))
+        if(!(this.renderedView instanceof wipeout.viewModels.view))
             throw "Invalid view type";
 
         this._super(element, this.renderedView, allBindingsAccessor, bindingContext);

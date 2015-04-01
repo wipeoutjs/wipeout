@@ -12,6 +12,14 @@ test("Test there is no overlap in wipeout.base and wipeout.utils", function() {
         strictEqual(window.wo[i], item);
     });
 
+    wipeout.utils.obj.enumerateObj(wipeout.viewModels, function(item, i) {
+        strictEqual(window.wo[i], item);
+    });
+
+    wipeout.utils.obj.enumerateObj(wipeout.events, function(item, i) {
+        strictEqual(window.wo[i], item);
+    });
+
     wipeout.utils.obj.enumerateObj(wipeout.utils, function(item, i) {
         strictEqual(window.wo[i], item);
     });

@@ -1,11 +1,11 @@
-module("wipeout.base.routedEvent", {
+module("wipeout.events.routedEvent", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var routedEvent = wipeout.base.routedEvent;
+var routedEvent = wipeout.events.routedEvent;
 
 testUtils.testWithUtils("trigger", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -13,7 +13,7 @@ testUtils.testWithUtils("trigger", null, false, function(methods, classes, subje
     var triggerOnVisual = {
         triggerRoutedEvent: methods.customMethod(function() {
             strictEqual(arguments[0], subject);
-            strictEqual(arguments[1].constructor, wipeout.base.routedEventArgs);
+            strictEqual(arguments[1].constructor, wipeout.events.routedEventArgs);
             strictEqual(arguments[1].data, eventArgs);
             strictEqual(arguments[1].originator, triggerOnVisual);            
         })
@@ -54,7 +54,7 @@ testUtils.testWithUtils("register", null, false, function(methods, classes, subj
 });
 
 
-module("wipeout.base.routedEventArgs", {
+module("wipeout.events.routedEventArgs", {
     setup: function() {
     },
     teardown: function() {
@@ -73,16 +73,16 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.originator, originator);
 });
 
-var routedEventArgs = wipeout.base.routedEventArgs;
+var routedEventArgs = wipeout.events.routedEventArgs;
 
-module("wipeout.base.routedEventRegistration", {
+module("wipeout.events.routedEventRegistration", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var routedEventRegistration = wipeout.base.routedEventRegistration;
+var routedEventRegistration = wipeout.events.routedEventRegistration;
 
 testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -93,7 +93,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     
     // assert
     strictEqual(subject.routedEvent, routedEvent);
-    strictEqual(subject.event.constructor, wipeout.base.event);
+    strictEqual(subject.event.constructor, wipeout.events.event);
 });
 
 testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {

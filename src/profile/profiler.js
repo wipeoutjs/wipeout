@@ -11,7 +11,7 @@ Class("wipeout.profile.profile", function () {
         if((profile && profileState) || (!profile && !profileState)) return;
         
         doRendering = doRendering || wipeout.bindings.render.prototype.doRendering;
-        _initialize = _initialize || wipeout.base.view.prototype._initialize;
+        _initialize = _initialize || wipeout.viewModels.view.prototype._initialize;
         rewriteTemplate = rewriteTemplate || wipeout.template.engine.prototype.rewriteTemplate;
         
         if(profile) {
@@ -48,7 +48,7 @@ If view models have odd names ensure you are not using a minifier';
                     
                     document.body.removeEventListener("click", profileState.eventHandler);
                     wipeout.bindings.render.prototype.doRendering = doRendering;
-                    wipeout.base.view.prototype._initialize =  _initialize;
+                    wipeout.viewModels.view.prototype._initialize =  _initialize;
                     wipeout.template.engine.prototype.rewriteTemplate = rewriteTemplate;
                 }
             };
@@ -67,7 +67,7 @@ If view models have odd names ensure you are not using a minifier';
                     this.value.__woBag.profiler["Template compile time"] =  wipeout.utils.domData.get(template, "rewriteTemplateTime");
             };
             
-             wipeout.base.view.prototype._initialize = function() {
+             wipeout.viewModels.view.prototype._initialize = function() {
                 var before = new Date();
                 _initialize.apply(this, arguments);
                 var time = new Date() - before;

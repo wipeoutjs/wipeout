@@ -1,11 +1,11 @@
 
-Class("wipeout.base.contentControl", function () {    
+Class("wipeout.viewModels.contentControl", function () {    
 
-    var contentControl = wipeout.base.view.extend(function contentControl(templateId, model) {
+    var contentControl = wipeout.viewModels.view.extend(function contentControl(templateId, model) {
         ///<summary>Expands on visual and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
-        this._super(templateId || wipeout.base.visual.getBlankTemplateId(), model);
+        this._super(templateId || wipeout.viewModels.visual.getBlankTemplateId(), model);
 
         ///<Summary type="ko.observable" generic0="string">The template which corresponds to the templateId for this item</Summary>
         this.template = contentControl.createTemplatePropertyFor(this.templateId, this);
@@ -19,15 +19,15 @@ Class("wipeout.base.contentControl", function () {
         var output = ko.dependentObservable({
             read: function () {
                 var script = document.getElementById(templateIdObservable());
-                return script ? script.textContent : "";
+                return script ? script.text : "";
             },
             write: function (newValue) {
-                templateIdObservable(wipeout.base.contentControl.createAnonymousTemplate(newValue));
+                templateIdObservable(wipeout.viewModels.contentControl.createAnonymousTemplate(newValue));
             },
             owner: owner
         });
         
-        if(owner instanceof wipeout.base.visual)
+        if(owner instanceof wipeout.viewModels.visual)
             owner.registerDisposable(output);
         
         return output;
@@ -122,7 +122,7 @@ Class("wipeout.base.contentControl", function () {
                 att3.value = templateHash;
                 script.setAttributeNode(att3);
                 
-                script.textContent = template;
+                script.text = template;
                 templateArea.appendChild(script);
                 
                 // keep a record of the template before the ko/wo template engine mangles it

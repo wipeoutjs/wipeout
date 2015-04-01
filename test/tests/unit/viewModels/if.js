@@ -1,4 +1,4 @@
-module("wipeout.base.if", {
+module("wipeout.viewModels.if", {
     setup: function() {
     },
     teardown: function() {
@@ -7,7 +7,7 @@ module("wipeout.base.if", {
 
 testUtils.testWithUtils("if", "and all functionality (kind of an integration test)", false, function(methods, classes, subject, invoker) {
     // arrange
-    var subject = new wipeout.base["if"]();
+    var subject = new wipeout.viewModels["if"]();
     subject.condition(true);
     subject.template("asdfsdfgkhlsaklksndf");
     subject.elseTemplate("LAJKISBDKJBASDKJ");

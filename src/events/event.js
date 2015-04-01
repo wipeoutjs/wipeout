@@ -2,7 +2,7 @@
 var wipeout = wipeout || {};
 wipeout.base = wipeout.base || {};
 
-Class("wipeout.base.eventRegistration", function () {
+Class("wipeout.events.eventRegistration", function () {
     
     return wipeout.base.disposable.extend(function eventRegistration(callback, context, dispose) {
         ///<summary>On object containing event registration details</summary>
@@ -20,7 +20,7 @@ Class("wipeout.base.eventRegistration", function () {
     });
 });
 
-Class("wipeout.base.event", function () {
+Class("wipeout.events.event", function () {
     
     var event = function event() {
         ///<summary>Defines a new event with register and trigger functinality</summary>
@@ -29,7 +29,7 @@ Class("wipeout.base.event", function () {
         if(!(this instanceof event))
            return new event();
         
-        ///<Summary type="Array" generic0="wipeout.base.eventRegistration">Array of callbacks to fire when event is triggered</Summary>
+        ///<Summary type="Array" generic0="wipeout.events.eventRegistration">Array of callbacks to fire when event is triggered</Summary>
         this._registrations = [];
     };
 
@@ -38,7 +38,7 @@ Class("wipeout.base.event", function () {
         ///<param name="eventArgs" type="Any" optional="true">The arguments to pass to event handlers</param>
         
         for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(eventArgs instanceof wipeout.base.routedEventArgs && eventArgs.handled) return;
+            if(eventArgs instanceof wipeout.events.routedEventArgs && eventArgs.handled) return;
             
             this._registrations[i].callback.call(this._registrations[i].context, eventArgs);
         }
@@ -98,7 +98,7 @@ Class("wipeout.base.event", function () {
         if(i === ii)
             this._registrations.push(evnt);
         
-        return new wipeout.base.eventRegistration(evnt.callback, evnt.context, evnt.dispose, evnt.priority);
+        return new wipeout.events.eventRegistration(evnt.callback, evnt.context, evnt.dispose, evnt.priority);
     };
     
     return event;

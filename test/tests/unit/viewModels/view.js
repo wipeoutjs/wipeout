@@ -1,11 +1,11 @@
-module("wipeout.base.view", {
+module("wipeout.viewModels.view", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var view = wipeout.base.view;
+var view = wipeout.viewModels.view;
 
 testUtils.testWithUtils("binding subscriptions one way", null, false, function(methods, classes, subject, invoker) {
     // arrange
@@ -125,47 +125,32 @@ testUtils.testWithUtils("setObservable", "observable", true, function(methods, c
     // assert    
     strictEqual(obj.val(), val);
 });
-    
-
-testUtils.testWithUtils("disposeOfBinding", "", false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.__woBag = {
-        bindings: {
-            propertyName: {
-                dispose: methods.method([])
-            }
-        }
-    };
-    
-    // act
-    invoker("propertyName");
-    
-    // assert    
-});
    
 
 testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject._super = methods.method();
     subject.__woBag = {
-        "wipeout.base.view.modelRoutedEvents": {},
+        "wipeout.viewModels.view.modelRoutedEvents": {},
         bindings: {
-            blabla: {}
+            blabla: [{
+                dispose: methods.method()
+            }]
         }
     };
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.base.view.modelRoutedEvents"]]);
-    subject.disposeOfBinding = methods.method(["blabla"]);
+    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
     
     // act
     invoker();
     
     // assert    
-    ok(!subject.__woBag["wipeout.base.view.modelRoutedEvents"]);
+    ok(!subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]);
+    ok(!subject.__woBag.bindings.blabla);
 });
 
 testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -176,7 +161,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(me
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root model='asdsad'></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root model='asdsad'></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -187,7 +172,7 @@ testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, f
 
 testUtils.testWithUtils("_elementHasModelBinding", "model as element", true, function(methods, classes, subject, invoker) {
     // arrange
-    var element = new DOMParser().parseFromString("<root><model /></root>", "application/xml").documentElement;
+    var element = wipeout.template.templateParser("<root><model /></root>", "application/xml")[0];
     
     // act
     var actual = invoker(element);
@@ -207,12 +192,12 @@ testUtils.testWithUtils("initialize", "more of an integration test than a unit t
     var subject = new wo.view();
     subject.twProp = ko.observable();
     
-    var element = new DOMParser().parseFromString(
+    var element = wipeout.template.templateParser(
 '<root shareParentScope="false" twProp-tw="$parent.twProperty" owProp="$parent.owProperty">\
     <inlinePropString>Hello</inlinePropString>\
     <inlinePropParser constructor="int">22</inlinePropParser>\
     <inlinePropConstructor constructor="Array"></inlinePropConstructor>\
-</root>', "application/xml").documentElement;
+</root>', "application/xml")[0];
     
     // act
     subject._initialize(element, bindingContext);
@@ -252,11 +237,11 @@ testUtils.testWithUtils("objectParser", "json", false, function(methods, classes
 testUtils.testWithUtils("_onModelChanged", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject.__woBag = {
-        "wipeout.base.view.modelRoutedEvents": {}
+        "wipeout.viewModels.view.modelRoutedEvents": {}
     };
     var disposable = {};
-    var newVal = new wipeout.base.routedEventModel();
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.base.view.modelRoutedEvents"]]);
+    var newVal = new wipeout.events.routedEventModel();
+    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
     subject.registerDisposable = methods.customMethod(function() {
         return disposable;
     });
@@ -267,13 +252,13 @@ testUtils.testWithUtils("_onModelChanged", "", false, function(methods, classes,
     invoker(null, newVal);
     
     // assert   
-    strictEqual(subject.__woBag["wipeout.base.view.modelRoutedEvents"], disposable);
+    strictEqual(subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"], disposable);
 });
 
 testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {
-        routedEvent: new wipeout.base.routedEvent(),
+        routedEvent: new wipeout.events.routedEvent(),
         eventArgs: {}
     };
     

@@ -1,14 +1,14 @@
 
-Class("wipeout.base.itemsControl", function () {
+Class("wipeout.viewModels.itemsControl", function () {
     
     var deafaultTemplateId;
     var staticConstructor = function() {
         if(deafaultTemplateId) return;
         
-        deafaultTemplateId = wipeout.base.contentControl.createAnonymousTemplate("<div data-bind='itemsControl: null'></div>");
+        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<div data-bind='itemsControl: null'></div>");
     };
     
-    var itemsControl = wipeout.base.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
+    var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
         ///<summary>Bind a list of models (itemSource) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
@@ -21,7 +21,7 @@ Class("wipeout.base.itemsControl", function () {
         this.itemTemplateId = ko.observable(itemTemplateId);
 
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
-        this.itemTemplate = wipeout.base.contentControl.createTemplatePropertyFor(this.itemTemplateId, this);
+        this.itemTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.itemTemplateId, this);
         
         ///<Summary type="ko.observableArray" generic0="Any">An array of models to render</Summary>
         this.itemSource = ko.observableArray([]);
@@ -79,7 +79,7 @@ Class("wipeout.base.itemsControl", function () {
         this.registerDisposable(d2);
     };
     
-    itemsControl.removeItem = wipeout.base.routedEvent();
+    itemsControl.removeItem = wipeout.events.routedEvent();
     
     itemsControl._subscribeV3 = function() {
         ///<summary>Bind items to itemSource for knockout v3. Context must be an itemsControl</summary>
@@ -110,12 +110,12 @@ Class("wipeout.base.itemsControl", function () {
     
     itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
         ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="Element" optional="false">An XML element containing property setters for the view</param>
+        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
         ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
     
         if(propertiesXml) {        
-            var prop = propertiesXml.getAttribute("shareParentScope") || propertiesXml.getAttribute("share-parent-scope");
-            if(prop && parseBool(prop))
+            var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
+            if(prop && parseBool(prop.value))
                 throw "A wo.itemsControl cannot share it's parents scope.";
         }
         
@@ -260,7 +260,7 @@ Class("wipeout.base.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        return new wipeout.base.view(this.itemTemplateId(), model);        
+        return new wipeout.viewModels.view(this.itemTemplateId(), model);        
     };
 
     itemsControl.prototype.reDrawItems = function () {

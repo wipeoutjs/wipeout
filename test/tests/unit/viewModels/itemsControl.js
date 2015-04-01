@@ -1,11 +1,11 @@
-module("wipeout.base.itemsControl", {
+module("wipeout.viewModels.itemsControl", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var itemsControl = wipeout.base.itemsControl;
+var itemsControl = wipeout.viewModels.itemsControl;
 
 testUtils.testWithUtils("constructor", "static constructor", false, function(methods, classes, subject, invoker) {
     // arrange
@@ -31,12 +31,12 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     // arrange
     var templateId = {}, itemTemplateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
-    classes.mock("wipeout.base.contentControl.createTemplatePropertyFor", function () {
+    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function () {
         methods.method([subject.itemTemplateId, subject])(arguments[0], arguments[1]);
     }, 1);
     
     var mock = wipeout.utils.ko.version()[0] < 3 ? "_subscribeV2" : "_subscribeV3";
-    classes.mock("wipeout.base.itemsControl." + mock, function() {
+    classes.mock("wipeout.viewModels.itemsControl." + mock, function() {
         strictEqual(this, subject);
     }, 1);
     
@@ -44,7 +44,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     subject.registerDisposable = methods.method();
     
     subject._removeItem = {};
-    subject.registerRoutedEvent = methods.method([wipeout.base.itemsControl.removeItem, subject._removeItem, subject]);
+    subject.registerRoutedEvent = methods.method([wipeout.viewModels.itemsControl.removeItem, subject._removeItem, subject]);
     
     // act
     invoker(templateId, itemTemplateId, model);
@@ -233,7 +233,7 @@ testUtils.testWithUtils("createItem", "", false, function(methods, classes, subj
     var actual = invoker(model);
     
     // assert
-    ok(actual instanceof wipeout.base.view);
+    ok(actual instanceof wipeout.viewModels.view);
     strictEqual(actual.model(), model);
     strictEqual(actual.templateId(), itemTemplateId);
 });

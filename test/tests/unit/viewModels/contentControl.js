@@ -1,18 +1,18 @@
-module("wipeout.base.contentControl", {
+module("wipeout.viewModels.contentControl", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var contentControl = wipeout.base.contentControl;
+var contentControl = wipeout.viewModels.contentControl;
 
 testUtils.testWithUtils("constructor", "and all functionality", false, function(methods, classes, subject, invoker) {
     // arrange
     var template = {}, templateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
     subject.templateId = {};
-    classes.mock("wipeout.base.contentControl.createTemplatePropertyFor", function() {
+    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function() {
         methods.method([subject.templateId, subject])(arguments[0], arguments[1]);
         return template;
     }, 1);
@@ -27,7 +27,7 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
 testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
-    var owner = new wipeout.base.visual();
+    var owner = new wipeout.viewModels.visual();
     var templateId = ko.observable(contentControl.createAnonymousTemplate(templateValue));
     
     // act

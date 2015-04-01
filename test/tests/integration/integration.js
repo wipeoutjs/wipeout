@@ -25,6 +25,27 @@ module("wipeout.tests.integration.integration", {
     }
 });
 
+test("camel casing and reserved property behavior", function() {
+    
+    // arrange
+    // act
+    application.template('<wo.contentControl aProperty1="true" constructor="true" id="i1" >\
+        <aProperty2>true</aProperty2>\
+    </wo.contentControl>\
+    <wo.content-control a-property-1="true" constructor="true" id="i2" >\
+        <a-property-2>true</a-property-2>\
+    </wo.content-control>');
+    
+    // assert
+    ok(application.templateItems.i1.aProperty1);
+    ok(application.templateItems.i1.aProperty2);
+    strictEqual(application.templateItems.i1.constructor, wo.contentControl);
+    
+    ok(application.templateItems.i2.aProperty1);
+    ok(application.templateItems.i2.aProperty2);
+    strictEqual(application.templateItems.i2.constructor, wo.contentControl);
+});
+
 test("parent child views", function() {
     
     // arrange
@@ -186,6 +207,43 @@ test("findAndCall with args", function() {
     mocks.verifyAllExpectations();
 });
 
+test("wipeout.utils.find", function() {
+    // arrange
+    application.template('<wo.content-control id="me1">\
+    <template>\
+        <wo.content-control id="me2">\
+            <template>\
+                <wo.content-control id="me3"\
+                    parent="$find(\'parent\')" grandParent="$find({$a:\'grandParent\'})" greatGrandParent="$find({$a:\'greatGrandParent\'})"\
+                    cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
+                    v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
+                    f0="$find({id: \'me1\'})" fY="$find({id: \'me1\'}, {$n:1})" fX="$find({id: \'me3\'})">\
+                </wo.content-control>\
+            </template>\
+        </wo.content-control>\
+    </template>\
+</wo.content-control>');
+    
+    var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
+    ok(me);
+    
+    // act    
+    // assert
+    strictEqual(me.parent, application.templateItems.me1.templateItems.me2);
+    strictEqual(me.grandParent, application.templateItems.me1);
+    strictEqual(me.greatGrandParent, application);
+    
+    strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
+    strictEqual(me.cc1, application.templateItems.me1);
+    
+    strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
+    strictEqual(me.v1, application.templateItems.me1);
+    
+    strictEqual(me.f0, application.templateItems.me1);
+    strictEqual(me.fX, null);
+    strictEqual(me.fY, null);
+});
+
 test("removeItem routed event", function() {
     
     // arrange    
@@ -224,7 +282,7 @@ test("shareParentScope", function() {
     strictEqual(subject.templateItems[child].anItem, val);
 });
 
-test("wipeout.base.if", function() {
+test("wipeout.viewModels.if", function() {
     // arrange
     application.hello = ko.observable({hello: "xxx"});
     application.template('<wo.if share-parent-scope="false" condition="$parent.hello">\
@@ -242,44 +300,7 @@ test("wipeout.base.if", function() {
     ok(!document.getElementById("myDiv"));
 });
 
-test("wipeout.utils.find", function() {
-    // arrange
-    application.template('<wo.content-control id="me1">\
-    <template>\
-        <wo.content-control id="me2">\
-            <template>\
-                <wo.content-control id="me3"\
-                    parent="$find(\'parent\')" grandParent="$find({$a:\'grandParent\'})" greatGrandParent="$find({$a:\'greatGrandParent\'})"\
-                    cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
-                    v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
-                    f0="$find({id: \'me1\'})" fY="$find({id: \'me1\'}, {$n:1})" fX="$find({id: \'me3\'})">\
-                </wo.content-control>\
-            </template>\
-        </wo.content-control>\
-    </template>\
-</wo.content-control>');
-    
-    var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
-    ok(me);
-    
-    // act    
-    // assert
-    strictEqual(me.parent, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.grandParent, application.templateItems.me1);
-    strictEqual(me.greatGrandParent, application);
-    
-    strictEqual(me.cc0, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.cc1, application.templateItems.me1);
-    
-    strictEqual(me.v0, application.templateItems.me1.templateItems.me2);
-    strictEqual(me.v1, application.templateItems.me1);
-    
-    strictEqual(me.f0, application.templateItems.me1);
-    strictEqual(me.fX, null);
-    strictEqual(me.fY, null);
-});
-
-test("wipeout.base.if, shareParentScope", function() {
+test("wipeout.viewModels.if, shareParentScope", function() {
     // arrange
     application.hello = ko.observable({hello: "xxx"});
     application.template('<wo.if condition="hello">\
@@ -594,7 +615,7 @@ test("items control, $index, shareParentScope", function() {
     itemsControl1.itemTemplateId(itemTemplateId);
     itemsControl1.itemSource(["a", "b", "c"]);
     itemsControl1.createItem = function (model) {
-        var view = new wipeout.base.view(this.itemTemplateId(), model);
+        var view = new wipeout.viewModels.view(this.itemTemplateId(), model);
         view.shareParentScope = true;
         return view;
     };
@@ -660,7 +681,7 @@ test("items control, $index, shareParentScope", function() {
 function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
     application.template('<wo.view id="i0" />\
-<div id="a">\
+<div id="a" something something1=\'aaa\' something2=wer345>\
     <wo.content-control id="i1">\
         <template>\
             <div id="b">\

@@ -1,11 +1,11 @@
-module("wipeout.base.event", {
+module("wipeout.events.event", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var event = wipeout.base.event;
+var event = wipeout.events.event;
 
 testUtils.testWithUtils("event", "constructor, trigger, register, unregister", false, function(methods, classes, subject, invoker) {
     // arrange
