@@ -1,20 +1,18 @@
 # to set up a dev environment
 1. Install node.js
 2. Install grunt and the grunt cli: "http://gruntjs.com/"
-2. Install bower: "http://bower.io/"
-2. Install grunt plugins:
+2. Install grunt plugins/node server:
     Navigate to project directory
     Use command "npm install"
 
-# to build
+# to build js
 Run the "grunt" command (no args)
 
-# to monitor and build/test
+# to build html
+Run the "grunt build-html" command (no args)
+
+# to monitor and build js
 Run the "grunt watch" command
 
-# to change bower dependencies or dependency versions
-alter dependencies in bower.json and run: "bower install"
-
-# to do a release
-1.  Alter the version number in package.json
-2.  Use "grunt release"
+# to serve web page
+Run the "serve .." command. i.e. serve the directory 1 level up

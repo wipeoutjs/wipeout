@@ -39,7 +39,7 @@ compiler.registerClass("Wipeout.Docs.ViewModels.Components.TreeViewBranch", "wo.
             this.templateId(treeViewBranch.nullTemplate);
         }
     };
-    
+	
     treeViewBranch.prototype.select = function() {
         var content = this.templateItems.content.templateItems.content;
         
