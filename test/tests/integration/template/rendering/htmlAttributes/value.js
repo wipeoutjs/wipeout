@@ -61,7 +61,7 @@ test("disposal", function() {
 			strictEqual(input.value, "234");
 			
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);	// if event triggers model change, start will be called twice, causing test failure
 			start();
 		});
@@ -95,7 +95,7 @@ test("radio", function() {
 			
 			input1.setAttribute("checked", "checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input1.dispatchEvent(event);
 			
 			strictEqual(model.theVal, "1");
@@ -129,7 +129,7 @@ test("checkbox", function() {
 			
 			input.setAttribute("checked", "checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);
 			
 			strictEqual(model.theVal, true);
@@ -165,7 +165,7 @@ test("checkbox, with value", function() {
 			
 			input.setAttribute("checked", "checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);
 			
 			strictEqual(model.theVal, "something");
@@ -203,7 +203,7 @@ test("checkbox, with data", function() {
 			
 			input.setAttribute("checked", "checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);
 			
 			strictEqual(model.theVal, "something");
@@ -242,7 +242,7 @@ test("checkbox, with data === null", function() {
 			
 			input.setAttribute("checked", "checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);
 			
 			strictEqual(model.theVal, null);
@@ -279,7 +279,7 @@ test("disposal", function() {
 			
 			input.removeAttribute("checked");
 			var event = document.createEvent("UIEvents");
-			event.initUIEvent("change", true, true);
+			event.initUIEvent("change", true, true, null, 1);
 			input.dispatchEvent(event);
 			
 			strictEqual(model.theVal, false);

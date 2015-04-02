@@ -46,10 +46,10 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
 		}).bind(this);
 						
-        element.addEventListener(event, callback, capture);
+        element.addEventListener(event, callback, capture || false);
         
         var output = new obsjs.disposable(function() {
-			element.removeEventListener(event, callback, capture);
+			element.removeEventListener(event, callback, capture || false);
 			callback = null;
         });
 		

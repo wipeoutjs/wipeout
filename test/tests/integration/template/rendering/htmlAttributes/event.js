@@ -75,7 +75,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 		var disp = attribute.applyToElement(input, new wipeout.template.context(model));
 
 		var ev = document.createEvent("UIEvents");
-		ev.initUIEvent(event, true, true);
+		ev.initUIEvent(event, true, true, null, 1);
 		input.dispatchEvent(ev);
 		
 		enumerateArr(disp, function (d) { d.dispose(); });

@@ -17,7 +17,7 @@ HtmlAttr("value", function () {
 		
 		attribute.onElementEvent(radio, "change", renderContext, function () {			
 			wipeout.utils.obj.setObject(val, renderContext, getRadioButtonVal(radio, attribute, renderContext));
-        }, renderContext);
+        });
 	}
 	
 	var noVal = {};
@@ -67,7 +67,7 @@ HtmlAttr("value", function () {
 			}
 			
 			wipeout.utils.obj.setObject(val, renderContext, tmpData);
-        }, renderContext);
+        });
 	}
 	
 	return function value (element, attribute, renderContext) { //TODE
@@ -89,6 +89,6 @@ HtmlAttr("value", function () {
 		
 		attribute.onElementEvent(element, attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
 			wipeout.utils.obj.setObject(val, renderContext, element.value);
-        }, renderContext);
+        });
     }
 });
