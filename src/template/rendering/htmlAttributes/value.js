@@ -9,15 +9,10 @@ HtmlAttr("value", function () {
 		
 		var tmpData;		
 		attribute.watch(renderContext, function (oldVal, newVal) {
-			if (newVal === getRadioButtonVal(radio, attribute, renderContext)) {
-				if (radio.attributes["checked"])
-					radio.attributes["checked"].value = "checked";
-				else
-					radio.setAttribute("checked", "checked");
-			} else {
-				if (radio.attributes["checked"])
-					radio.removeAttribute("checked");
-			}
+			if (newVal === getRadioButtonVal(radio, attribute, renderContext))
+				radio.setAttribute("checked", "checked");
+			else
+				radio.removeAttribute("checked");
         }, true);
 		
 		attribute.onElementEvent(radio, "change", renderContext, function () {			
@@ -30,8 +25,8 @@ HtmlAttr("value", function () {
 		var tmpData;
 		if (tmpData = attribute.getData(element, "wo-data"))
 			return tmpData.execute(renderContext);
-		if (tmpData = element.attributes["value"])
-			return tmpData.value;
+		if ((tmpData = element.getAttribute("value")) != null)
+			return tmpData;
 		
 		return noVal;		
 	}

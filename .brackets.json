@@ -5,6 +5,7 @@
         "C:/Dev/Apps/wipeout-1/test/tests/integration/viewModels/view.js",
         "C:/Dev/Apps/wipeout/src/events/event.js",
         "C:/Dev/Apps/wipeout/src/viewModels/itemsControl.js",
-        "C:/Dev/Apps/wipeout/src/viewModels/view.js"
+        "C:/Dev/Apps/wipeout/src/viewModels/view.js",
+        "C:/Dev/Apps/wipeout/src/utils/html.js"
     ]
 }

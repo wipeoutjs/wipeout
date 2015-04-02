@@ -14,5 +14,5 @@ testUtils.testWithUtils("getViewModel", "", true, function(methods, classes, sub
 	strictEqual(invoker(null), null);
 	strictEqual(invoker({wipeoutOpening: rc}), rc.viewModel);
 	strictEqual(invoker({wipeoutClosing: rc}), rc.viewModel);
-	strictEqual(invoker({parentElement: {wipeoutClosing: rc}}), rc.viewModel);
+	strictEqual(invoker({parentNode: {wipeoutClosing: rc}}), rc.viewModel);
 });

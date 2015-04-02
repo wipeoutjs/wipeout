@@ -9,16 +9,11 @@ HtmlAttr("attr", function () {
 		
 		if (!test(attribute.name)) return;
 		
-		var attr;
 		var attributeName = attribute.name.substr(attribute.name.indexOf("attr-") + 5);
-		if (!(attr = element.attributes[attributeName])) {
-			element.setAttribute(attributeName, "");
-			attr = element.attributes[attributeName]
-		}
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
-            if (attr.value !== newVal)
-                attr.value = newVal;
+            if (element.getAttribute(attributeName) !== newVal)
+                element.setAttribute(attributeName, newVal)
 		}, true);
     }
 	

@@ -1,5 +1,4 @@
 
-
 Class("wipeout.utils.html", function () { 
     
     var getViewModel = function(forHtmlNode) {
