@@ -29,7 +29,7 @@ Class("wipeout.profile.profile", function () {
                     var vms = vm.getParents();
                     vms.splice(0, 0, vm);
 
-                    // todo: dispose of old content (dispose methods from buildProfile function)
+                    // TODO: dispose of old content (dispose methods from buildProfile function)
                     profileState.infoBox.innerHTML = '<span style="float: right; margin-left: 10px; cursor: pointer;">x</span><br/>Open a console window and click on a class to debug it<br/>\
 If view models do not have names, you can <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name">name them</a><br/>\
 If view models have odd names ensure you are not using a minifier';
