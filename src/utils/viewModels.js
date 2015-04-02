@@ -6,8 +6,9 @@ Class("wipeout.utils.viewModels", function () {
 	var realName = "data-wo-element-name";
 	viewModels.getElementName = function (wmlElement) {
 
-		if (wmlElement.attributes && wmlElement.attributes[realName])
-			return wmlElement.attributes[realName].value;
+		var tmp;
+		if (wmlElement.getAttribute && (tmp = wmlElement.getAttribute(realName)) != null)
+			return tmp;
 		
 		var name = camelCase(trimToLower(wmlElement instanceof Element ? wmlElement.localName : wmlElement.name));
 		

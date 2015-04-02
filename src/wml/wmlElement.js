@@ -85,6 +85,12 @@ Class("wipeout.wml.wmlElement", function () {
     
     wmlElement.prototype.getParentElement = getParentElement;
     
+	wmlElement.prototype.getAttribute = function (attributeName) {
+		return this.attributes[attributeName] ?
+			this.attributes[attributeName].value :
+			null;
+	};
+	
     wmlElement.prototype.serialize = function() {
         var output = [];
         

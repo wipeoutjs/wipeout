@@ -51,20 +51,15 @@ HtmlAttr("value", function () {
 			wipeout.utils.obj.setObject(val, renderContext, tmpData);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
-			if (newVal || newVal === "") {
-				if (checkbox.attributes["checked"])
-					checkbox.attributes["checked"].value = "checked";
-				else
-					checkbox.setAttribute("checked", "checked");
-			} else {
-				if (checkbox.attributes["checked"])
-					checkbox.removeAttribute("checked");
-			}
+			if (newVal || newVal === "")
+				checkbox.setAttribute("checked", "checked");
+			else
+				checkbox.removeAttribute("checked");
         }, true);
 		
 		attribute.onElementEvent(checkbox, "change", renderContext, function () {
 			tmpData = getCheckboxVal(checkbox, attribute, renderContext);
-			if (checkbox.attributes["checked"]) {
+			if (checkbox.getAttribute("checked") != null) {
 				if (tmpData === noVal)
 					tmpData = true;
 			} else {
