@@ -130,8 +130,8 @@ Class("wipeout.profile.highlighter", function () {
     highlighter.prototype.dispose = function() {
         ///<summary>Dispose of this instances.</summary>
         
-        if(this.style.parentElement)
-            this.style.parentElement.removeChild(this.style);
+        if(this.style,parentNode)
+            this.style,parentNode.removeChild(this.style);
         
         delete this.__timeoutToken;
         window.removeEventListener("mousemove", this.eventHandler);

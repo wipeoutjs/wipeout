@@ -22,7 +22,7 @@
 		content.push(this.openingTag.nextSibling || this.closingTag);
 		
 		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentElement.insertBefore(content[i], content[i + 1]);
+			content[i + 1],parentNode.insertBefore(content[i], content[i + 1]);
     };
     
 	/* this is not tested
@@ -32,14 +32,14 @@
 		
 		var closing = this.closingTag;
 		enumerateArr(nodes, function (node) {
-			closing.parentElement.insertBefore(node, closing);
+			closing,parentNode.insertBefore(node, closing);
 		});
     };*/
     
     renderedContent.prototype.insertBefore = function (content) {
 		
 		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
-			this.parentElement.insertBefore(node, this);
+			this,parentNode.insertBefore(node, this);
 		}, this.openingTag);
     };
     
@@ -48,12 +48,12 @@
 		content = getNodesAndRemoveDetatched(content);
 		
 		if (this.closingTag.nextSibling)
-			this.closingTag.nextSibling.parentElement.insertBefore(content[content.length - 1], this.closingTag.nextSibling);
+			this.closingTag,parentNode.insertBefore(content[content.length - 1], this.closingTag.nextSibling);
 		else
-			this.closingTag.parentElement.appendChild(content[content.length - 1]);
+			this.closingTag,parentNode.appendChild(content[content.length - 1]);
 		
 		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentElement.insertBefore(content[i], content[i + 1]);
+			content[i + 1],parentNode.insertBefore(content[i], content[i + 1]);
     };
     
     renderedContent.prototype.detatch = function() {
@@ -64,7 +64,7 @@
 
 			for (var i = 0; current && current !== this.closingTag; i++) {
 				this.detatched.push(current = current.nextSibling); 
-				this.detatched[i].parentElement.removeChild(this.detatched[i]);
+				this.detatched[i],parentNode.removeChild(this.detatched[i]);
 			}
 		}
         
