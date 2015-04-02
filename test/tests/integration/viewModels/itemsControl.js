@@ -76,7 +76,7 @@ test("basic items control. initial, add, remove, re-arrange", function() {
         
         for(var i in bound) {
             if(!reBound[i]) {
-                ok(!bound[i],parentNode, "deleted item was removed");
+                ok(!bound[i].parentNode, "deleted item was removed");
                 delete bound[i];
             }
         }

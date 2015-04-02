@@ -44,8 +44,8 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.viewModel.constructor, constructor);
     strictEqual(subject.renderContext.constructor, wipeout.template.context);
     
-    equal(element,parentNode, undefined);
-    strictEqual(subject.openingTag,parentNode, document.getElementById("qunit-fixture"));
+    equal(element.parentNode, undefined);
+    strictEqual(subject.openingTag.parentNode, document.getElementById("qunit-fixture"));
 });
 
 testUtils.testWithUtils("init", null, false, function(methods, classes, subject, invoker) {
@@ -121,7 +121,7 @@ testUtils.testWithUtils("getParentElement", "parent is element", false, function
     parent.innerHTML = "<div id='xxx' wo-view-model='wo.view'></div>"
     document.getElementById("qunit-fixture").appendChild(parent);
     var vm = new viewModelElement(document.getElementById("xxx"));
-    vm.closingTag,parentNode.insertBefore(child, vm.closingTag);
+    vm.closingTag.parentNode.insertBefore(child, vm.closingTag);
     
     // act    
     // assert
@@ -191,6 +191,6 @@ testUtils.testWithUtils("dispose", null, false, function(methods, classes, subje
     
     // assert
     strictEqual(subject.viewModel, undefined);
-    strictEqual(subject.openingTag,parentNode, null);
-    strictEqual(subject.closingTag,parentNode, null);
+    strictEqual(subject.openingTag.parentNode, null);
+    strictEqual(subject.closingTag.parentNode, null);
 });

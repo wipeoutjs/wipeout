@@ -23,9 +23,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.closingTag.wipeoutClosing = this;
         
         // add this to DOM and remove placeholder
-        element,parentNode.insertBefore(this.openingTag, element);
-        element,parentNode.insertBefore(this.closingTag, element);
-        element,parentNode.removeChild(element);
+        element.parentNode.insertBefore(this.openingTag, element);
+        element.parentNode.insertBefore(this.closingTag, element);
+        element.parentNode.removeChild(element);
     });
 	
 	renderedContent.prototype.rename = function (name) {
@@ -156,7 +156,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
             
             // remove loading placeholder
             if (element) {
-                element,parentNode.removeChild(element);
+                element.parentNode.removeChild(element);
                 element = null;
             }
             
@@ -171,7 +171,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.asynchronous) {            
             var element = wipeout.utils.html.createTemplatePlaceholder(this.viewModel);
-            this.closingTag,parentNode.insertBefore(element, this.closingTag);
+            this.closingTag.parentNode.insertBefore(element, this.closingTag);
         }
     };
     
@@ -186,8 +186,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.unRender(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes && !this.detatched) {
-			this.closingTag,parentNode.removeChild(this.closingTag);
-			this.openingTag,parentNode.removeChild(this.openingTag);
+			this.closingTag.parentNode.removeChild(this.closingTag);
+			this.openingTag.parentNode.removeChild(this.openingTag);
 		}
 		
 		delete this.detatched;
@@ -202,13 +202,13 @@ Class("wipeout.template.rendering.renderedContent", function () {
     renderedContent.prototype.appendHtml = function (html) {
 		if (this.openingTag && this.openingTag.nodeType === 1) {
 			this.openingTag.insertAdjacentHTML('afterend', html);
-			console.log(this.openingTag,parentNode.innerHTML);
+			console.log(this.openingTag.parentNode.innerHTML);
 		} else {
         	//TODV: see todv in constructor
 			var scr = document.createElement("script");
-			this.closingTag,parentNode.insertBefore(scr, this.closingTag);
+			this.closingTag.parentNode.insertBefore(scr, this.closingTag);
 			scr.insertAdjacentHTML('afterend', html);
-			scr,parentNode.removeChild(scr);
+			scr.parentNode.removeChild(scr);
 		}
     };
     
@@ -221,7 +221,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
                 return current;
         }
         
-        return forHtmlElement,parentNode;
+        return forHtmlElement.parentNode;
     };
     
     return renderedContent;    

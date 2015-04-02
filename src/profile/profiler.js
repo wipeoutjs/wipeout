@@ -43,8 +43,8 @@ If view models have odd names ensure you are not using a minifier';
                 },
                 dispose: function() {
                     profileState.highlighter.dispose();
-                    if(profileState.infoBox,parentNode)
-                        profileState.infoBox,parentNode.removeChild(profileState.infoBox);
+                    if(profileState.infoBox.parentNode)
+                        profileState.infoBox.parentNode.removeChild(profileState.infoBox);
                     
                     document.body.removeEventListener("click", profileState.eventHandler);
                     wipeout.bindings.render.prototype.doRendering = doRendering;
