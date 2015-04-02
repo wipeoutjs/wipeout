@@ -3,20 +3,11 @@ module("integration: wipeout.viewModels.view", {
     teardown: integrationTestTeardown
 });
 	
-test("all binding types", function() {
+test("xml parser", function() {
 	
     // arrange
-	var nb = application.nb = {};
-	var ow = application.ow = {}, ow2 = {};
-	var tw = application.tw = {val: 1}, tw2 = {val: 2};
-	var owts = application.owts = {};
-	        
-    // act
-    application.setTemplate = '<wo.view id="item"\
-		nb--nb="$parent.nb" nbs--nb-s="$parent.nb"\
-		ow--ow="$parent.ow" ows--ow-s="$parent.ow"\
-		tw--tw="$parent.tw"\
-		owts--owts="$parent.owts">\
+	// act
+    application.setTemplate = '<wo.view id="item">\
 		<xml parser="template">\
 			<hello></hello>\
 		</xml>\
@@ -26,20 +17,53 @@ test("all binding types", function() {
 		var item = application.templateItems.item;
 		
 		strictEqual(item.xml.constructor, wipeout.wml.wmlElement);
+		strictEqual(item.xml[1].name, "hello");
+		
+		start();
+	};
+	
+	stop();
+});
+	
+test("nb", function() {
+	
+    // arrange
+	var nb = application.nb = {};
+	        
+    // act
+    application.setTemplate = '<wo.view id="item"\
+		nb--nb="$parent.nb" nbs--nb-s="$parent.nb"\
+    </wo.view>';
+	
+	application.onRendered = function () {
+		var item = application.templateItems.item;
 		
 		strictEqual(application.nb, nb);
 		strictEqual(application.nb, item.nb);
 		strictEqual("$parent.nb", item.nbs);
 		
+		start();
+	};
+	
+	stop();
+});
+	
+test("ow", function() {
+	
+    // arrange
+	var ow = application.ow = {}, ow2 = {};
+	        
+    // act
+    application.setTemplate = '<wo.view id="item"\
+		ow--ow="$parent.ow" ows--ow-s="$parent.ow">\
+    </wo.view>';
+	
+	application.onRendered = function () {
+		var item = application.templateItems.item;
+		
 		strictEqual(application.ow, ow);
 		strictEqual(application.ow, item.ow);
 		strictEqual("$parent.ow", item.ows);
-		
-		strictEqual(application.tw, tw);
-		strictEqual(application.tw, item.tw);
-		
-		strictEqual(application.owts, undefined);
-		strictEqual(application.owts, item.owts);
 		
 		var d1 = item.observe("ow", function () {
 			d1.dispose();
@@ -48,6 +72,29 @@ test("all binding types", function() {
 			strictEqual(application.ow, item.ow);
 			start();
 		});
+		
+		application.ow = ow2;
+	};
+	
+	stop();
+});
+	
+test("tw", function() {
+	
+    // arrange
+	var tw = application.tw = {val: 1}, tw2 = {val: 2};
+	var owts = application.owts = {};
+	        
+    // act
+    application.setTemplate = '<wo.view id="item"\
+		tw--tw="$parent.tw">\
+    </wo.view>';
+	
+	application.onRendered = function () {
+		var item = application.templateItems.item;
+		
+		strictEqual(application.tw, tw);
+		strictEqual(application.tw, item.tw);
 		
 		var d2 = item.observe("tw", function () {
 			d2.dispose();
@@ -64,10 +111,32 @@ test("all binding types", function() {
 					strictEqual(application.tw, item.tw);
 					start();
 				});
-
+			
 				item.tw = tw;
 			});
 		});
+		
+		application.tw = tw2;
+	};
+	
+	stop();
+});
+	
+test("owts", function() {
+	
+    // arrange
+	var owts = application.owts = {};
+	        
+    // act
+    application.setTemplate = '<wo.view id="item"\
+		owts--owts="$parent.owts">\
+    </wo.view>';
+	
+	application.onRendered = function () {
+		var item = application.templateItems.item;
+		
+		strictEqual(application.owts, undefined);
+		strictEqual(application.owts, item.owts);
 		
 		var d3 = application.observe("owts", function () {
 			d3.dispose();
@@ -77,14 +146,12 @@ test("all binding types", function() {
 			start();
 		});
 		
-		application.ow = ow2;
-		application.tw = tw2;
 		item.owts = owts;
 	};
 	
-	stop(3);
+	stop();
 });
-	
+
 test("parent child views", function() {
 	
     // arrange
