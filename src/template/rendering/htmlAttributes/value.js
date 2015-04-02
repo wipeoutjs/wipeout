@@ -81,7 +81,7 @@ HtmlAttr("value", function () {
         }, renderContext);
 	}
 	
-	return function value (element, attribute, renderContext) { //TODO error handling
+	return function value (element, attribute, renderContext) { //TODE
 		
 		if (element.type === "checkbox")
 			return checkbox(element, attribute, renderContext);

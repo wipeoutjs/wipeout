@@ -1,6 +1,6 @@
 
 HtmlAttr("visible", function () {
-	return function visible (element, attribute, renderContext) { //TODO error handling
+	return function visible (element, attribute, renderContext) { //TODE
 		
 		element.style.display = attribute.execute(renderContext) ? "" : "none";
 		

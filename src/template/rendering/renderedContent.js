@@ -12,9 +12,12 @@ Class("wipeout.template.rendering.renderedContent", function () {
         name = wipeout.utils.obj.trim(name);
         
         this.parentRenderContext = parentRenderContext;
-                
+        
+		//TODV: if: debug, else this.openingTag = document.createComment(" " + name + " ");   
+        //this.openingTag = document.createElement("script");
+		
         // create opening and closing tags and link to this
-        this.openingTag = document.createComment(" " + name + " ");        
+        this.openingTag = document.createComment(" " + name + " ");
         this.openingTag.wipeoutOpening = this;
         this.closingTag = document.createComment(" /" + name + " ");
         this.closingTag.wipeoutClosing = this;
@@ -118,12 +121,12 @@ Class("wipeout.template.rendering.renderedContent", function () {
             delete this.disposeOfBindings;
         }
 
-        // TODO: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
+        // TODV: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
         // remove all children
         if(!leaveDeadChildNodes) {
 			var ns;
             while ((ns = this.openingTag.nextSibling) && ns !== this.closingTag) {
-				//TODO: benchmark test, is this necessary (does it help with memory leaks) and des it take much time?
+				//TODV: benchmark test, is this necessary (does it help with memory leaks) and des it take much time?
 				if (ns.elementType === 1)
 					ns.innerHTML = "";
 				
@@ -198,10 +201,15 @@ Class("wipeout.template.rendering.renderedContent", function () {
 	
     renderedContent.prototype.appendHtml = function (html) {
         //TODO: hack to use insertAdjacentHTML on comment
-        var scr = document.createElement("script");
-        this.closingTag.parentElement.insertBefore(scr, this.closingTag);
-        scr.insertAdjacentHTML('afterend', html);
-        scr.parentElement.removeChild(scr);
+		if (this.openingTag && this.openingTag.nodeType === 1) {
+			this.openingTag.insertAdjacentHTML('afterend', html);
+			console.log(this.openingTag.parentElement.innerHTML);
+		} else {
+			var scr = document.createElement("script");
+			this.closingTag.parentElement.insertBefore(scr, this.closingTag);
+			scr.insertAdjacentHTML('afterend', html);
+			scr.parentElement.removeChild(scr);
+		}
     };
     
     renderedContent.getParentElement = function(forHtmlElement) {

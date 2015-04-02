@@ -44,7 +44,7 @@ HtmlAttr("class", function () {
 		}, false);
 	}
 	
-	function _class (element, attribute, renderContext) { //TODO error handling
+	function _class (element, attribute, renderContext) { //TODE
 		
 		if (!test(attribute.name)) return;
 		

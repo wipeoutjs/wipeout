@@ -36,7 +36,7 @@ Class("wipeout.template.initialization.parsers", function () {
 		return value;
 	};
     
-    //TODO: document
+    //TODM
     parsers.template.useRawXmlValue = true;
     
     parsers.j = parsers["json"];

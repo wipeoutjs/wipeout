@@ -1,3 +1,8 @@
+Typse of todos:
+TODV: in later version
+TODE: exception handling
+TODM: document
+
 
 html event handled
 wrap domData in htmlAttributeSetter, use to chain attrs.

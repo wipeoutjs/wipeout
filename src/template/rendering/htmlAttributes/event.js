@@ -5,7 +5,7 @@ HtmlAttr("event", function () {
 		return /^\s*(data\-)?wo\-event\-./.test(attributeName);
 	};
 	
-    function event (element, attribute, renderContext) { //TODO error handling
+    function event (element, attribute, renderContext) { //TODE
 		
 		if (!test(attribute.name)) return;
 		
@@ -20,7 +20,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 	function (event) {
 	HtmlAttr(event, function () {
 
-		return function (element, attribute, renderContext) { //TODO error handling
+		return function (element, attribute, renderContext) { //TODE
 
 			attribute.onElementEvent(element, event, renderContext);
 		};

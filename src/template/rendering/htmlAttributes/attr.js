@@ -5,7 +5,7 @@ HtmlAttr("attr", function () {
 		return /^\s*(data\-)?wo\-attr\-./.test(attributeName);
 	};
 	
-	function attr (element, attribute, renderContext) { //TODO error handling
+	function attr (element, attribute, renderContext) { //TODE
 		
 		if (!test(attribute.name)) return;
 		

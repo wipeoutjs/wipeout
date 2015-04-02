@@ -37,7 +37,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.getValue()));
 	};
 	
-	htmlAttributeSetter.prototype.onElementEvent = function (element, event, renderContext, callback, capture) { //TODO error handling
+	htmlAttributeSetter.prototype.onElementEvent = function (element, event, renderContext, callback, capture) { //TODE
         
 		if (!this._caching)
 			throw "The onElementEvent function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
