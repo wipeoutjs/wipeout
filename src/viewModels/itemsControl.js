@@ -35,7 +35,6 @@ Class("wipeout.viewModels.itemsControl", function () {
         }, this);
     });
     
-    //TODO: benchmark test
     itemsControl.addGlobalParser("itemTemplate", "template");
     itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
         
@@ -51,7 +50,6 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
     };
     
-    // TODO: test
     itemsControl.prototype.getItemViewModels = function() {
         ///<summary>Get the child view models if any</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
@@ -60,9 +58,7 @@ Class("wipeout.viewModels.itemsControl", function () {
             this.$getChild() :
 			[];
 	};
-           
     
-    // TODO: test
     itemsControl.prototype.getItemViewModel = function(index) {
         ///<summary>Get the child view model at a given index</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
@@ -79,14 +75,13 @@ Class("wipeout.viewModels.itemsControl", function () {
         this.items.remove(item);
     };
     
-    //virtual
+    //virtual, TODV
     itemsControl.prototype.onItemRendered = function (item) {
         ///<summary>Called after a new item items control is rendered</summary>
         ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
     
-    //virtual
-	//TODO: the has changed from onItemDeleted
+    //virtual, TODV
     itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="wo.view" optional="false">The item deleted</param>  

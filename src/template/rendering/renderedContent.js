@@ -200,11 +200,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
     renderedContent.prototype.appendHtml = function (html) {
-        //TODO: hack to use insertAdjacentHTML on comment
 		if (this.openingTag && this.openingTag.nodeType === 1) {
 			this.openingTag.insertAdjacentHTML('afterend', html);
 			console.log(this.openingTag.parentElement.innerHTML);
 		} else {
+        	//TODV: see todv in constructor
 			var scr = document.createElement("script");
 			this.closingTag.parentElement.insertBefore(scr, this.closingTag);
 			scr.insertAdjacentHTML('afterend', html);

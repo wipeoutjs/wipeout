@@ -67,8 +67,6 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
         ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
-      
-        //TODO: this.currentTemplate and this.currentTemplateId should use watched.beforeNextObserveCycle or watched.afterNextObserveCycle        
         
         this.currentTemplate = owner[templateProperty];
         this.currentTemplateId = owner[templateIdProperty];

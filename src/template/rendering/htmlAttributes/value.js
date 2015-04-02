@@ -67,7 +67,6 @@ HtmlAttr("value", function () {
 			}
         }, true);
 		
-		//TODO: test if wo-data is null
 		attribute.onElementEvent(checkbox, "change", renderContext, function () {
 			tmpData = getCheckboxVal(checkbox, attribute, renderContext);
 			if (checkbox.attributes["checked"]) {

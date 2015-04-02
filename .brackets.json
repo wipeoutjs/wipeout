@@ -2,6 +2,9 @@
     "jscodehints.detectedExclusions": [
         "C:/Dev/Apps/wipeout-1/bower_components/objjs/tools/end.js",
         "C:/Dev/Apps/wipeout-1/build/wipeout.debug.js",
-        "C:/Dev/Apps/wipeout-1/test/tests/integration/viewModels/view.js"
+        "C:/Dev/Apps/wipeout-1/test/tests/integration/viewModels/view.js",
+        "C:/Dev/Apps/wipeout/src/events/event.js",
+        "C:/Dev/Apps/wipeout/src/viewModels/itemsControl.js",
+        "C:/Dev/Apps/wipeout/src/viewModels/view.js"
     ]
 }

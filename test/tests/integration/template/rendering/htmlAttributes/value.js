@@ -216,6 +216,45 @@ test("checkbox, with data", function() {
 	stop();
 });
 
+//TODM: if data === null, checked attribute will never be applied
+test("checkbox, with data === null", function() {
+	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
+	var input = document.getElementById("hello");
+	var model = obsjs.makeObservable({theVal: true});
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	
+	// act
+	var disp = new wipeout.template.rendering.htmlAttributeSetter("wo-data", "null")
+		.applyToElement(input, new wipeout.template.context(model));
+	disp.push.apply(disp, attribute.applyToElement(input, new wipeout.template.context(model)));
+	
+	// assert
+	ok(!input.attributes.checked);
+	strictEqual(model.theVal, null);
+	
+	var d2 = obsjs.observe(model, "theVal", function () {
+		d2.dispose();
+		
+		setTimeout(function () {
+			
+			ok(!input.attributes.checked);
+			strictEqual(model.theVal, false);
+			
+			input.setAttribute("checked", "checked");
+			var event = document.createEvent("UIEvents");
+			event.initUIEvent("change", true, true);
+			input.dispatchEvent(event);
+			
+			strictEqual(model.theVal, null);
+			
+			start();
+		});
+	});
+	
+	model.theVal = false;
+	stop();
+});
+
 test("disposal", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");

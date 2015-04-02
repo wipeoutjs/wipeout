@@ -3,6 +3,8 @@ TODV: in later version
 TODE: exception handling
 TODM: document
 
+Expose stuff
+
 
 html event handled
 wrap domData in htmlAttributeSetter, use to chain attrs.
