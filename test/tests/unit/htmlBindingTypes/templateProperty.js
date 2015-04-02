@@ -1,4 +1,4 @@
-module("wipeout.htmlBindingTypes.setTemplateProperty", {
+module("wipeout.htmlBindingTypes.templateProperty", {
     setup: function() {
     },
     teardown: function() {
@@ -20,7 +20,7 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
 	}, 1);
 	
 	// act
-	wipeout.htmlBindingTypes.setTemplateProperty(vm, set);
+	wipeout.htmlBindingTypes.templateProperty(vm, set);
 	
 	// assert
 	strictEqual(output, vm[set.name + "Id"]);

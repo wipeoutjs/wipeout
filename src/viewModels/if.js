@@ -43,7 +43,7 @@ Class("wipeout.viewModels.if", function () {
     });
 	
     _if.addGlobalParser("elseTemplate", "template");
-    _if.addGlobalBindingType("elseTemplate", "setTemplateProperty");
+    _if.addGlobalBindingType("elseTemplate", "templateProperty");
     
     _if.prototype.elseTemplateChanged = function (oldVal, newVal) {
         ///<summary>Resets the template id to the else template if condition is not met</summary>  

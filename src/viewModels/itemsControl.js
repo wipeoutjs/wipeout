@@ -1,4 +1,4 @@
-
+ 
 Class("wipeout.viewModels.itemsControl", function () {
     
 	var deafaultTemplateId;
@@ -37,7 +37,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     
     //TODO: benchmark test
     itemsControl.addGlobalParser("itemTemplate", "template");
-    itemsControl.addGlobalBindingType("itemTemplate", "setTemplateProperty");
+    itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
         
     itemsControl.removeItem = wipeout.events.routedEvent();
 	
