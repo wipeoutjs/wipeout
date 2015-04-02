@@ -21,11 +21,11 @@ test("shareParentScope", function() {
 		application.hello = null;
 		
 		application.templateItems.blabla.observe("condition", function () {
-
 			// assert
-			ok(!document.getElementById("myDiv"));
-
-			start();
+			setTimeout(function () {
+				ok(!document.getElementById("myDiv"));
+				start();
+			});
 		});
 	}
 	

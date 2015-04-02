@@ -86,9 +86,7 @@ test("tw", function() {
 	var owts = application.owts = {};
 	        
     // act
-    application.setTemplate = '<wo.view id="item"\
-		tw--tw="$parent.tw">\
-    </wo.view>';
+    application.setTemplate = '<wo.view id="item" tw--tw="$parent.tw"></wo.view>';
 	
 	application.onRendered = function () {
 		var item = application.templateItems.item;
@@ -102,18 +100,15 @@ test("tw", function() {
 			strictEqual(application.tw, tw2);
 			strictEqual(application.tw, item.tw);
 			
-			//TODO: this doesn't work without the set timeout. This is a bug
-			setTimeout(function () {
-				d2 = application.observe("tw", function () {
-					d2.dispose();
+			d2 = application.observe("tw", function () {
+				d2.dispose();
 
-					strictEqual(application.tw, tw);
-					strictEqual(application.tw, item.tw);
-					start();
-				});
-			
-				item.tw = tw;
+				strictEqual(application.tw, tw);
+				strictEqual(application.tw, item.tw);
+				start();
 			});
+
+			item.tw = tw;
 		});
 		
 		application.tw = tw2;
@@ -158,7 +153,6 @@ test("parent child views", function() {
     var parent1 = "p1", child1 = "c1", child2 = "c2";
     var parent2 = "p2", child3 = "c3", child4 = "c4";
     var parent3 = "p3", child5 = "c5", child6 = "c6";
-    
     
     // act
     application.setTemplate = '<wo.content-control share-parent-scope="true" id="' + parent1 + '">\

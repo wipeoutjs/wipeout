@@ -88,18 +88,18 @@ test("integration", function() {
 
 		// act
 		m.length = 0;
-		view.model = (1);
-		application.property = (2);
-		view.model = (3);
-		application.property = (4);
-		view.model = (5);
-		application.property = (6);
-		view.model = (7);
+		view.model = 1;
+		application.property = 2;
+		view.model = 3;
+		application.property = 4;
+		view.model = 5;
+		application.property = 6;
+		view.model = 7;
 
 		// assert
 		function assert() {
 			obsjs.observable.afterNextObserveCycle(function () {
-				deepEqual(m, [7, 6]);
+				deepEqual(m, [6]);
 				deepEqual(v, [1, 3, 5, 7, 6]);
 				deepEqual(a, [2, 4, 6]);
 				start();
