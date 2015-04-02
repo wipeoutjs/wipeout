@@ -31,7 +31,7 @@ Class("wipeout.template.context", function () {
     renderContextPrototype.prototype = window;
     context.prototype = new renderContextPrototype();
     
-    context.prototype.$find = function (searchTermOrFilters, filters) {
+    context.prototype.find = function (searchTermOrFilters, filters) {
 		
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
@@ -68,14 +68,14 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.getComputed = function (forFunction) {
-		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables(), allowWith: true});
+		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {
 		
 		try {
 			// TODO: try to reuse stuff in "asGetterArgs"
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "with ($context) return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
 		} catch (e) {
 			// TODO: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
@@ -90,7 +90,7 @@ Class("wipeout.template.context", function () {
 			
 		try {
 			// TODO: try to reuse stuff in "asGetterArgs"
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", "with ($context) return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", "return " + logic + ";");
 		} catch (e) {
 			// TODO: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";

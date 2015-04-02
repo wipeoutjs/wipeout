@@ -63,7 +63,7 @@ testUtils.testWithUtils("prototype", null, false, function(methods, classes, sub
 	delete window.XXX;
 });
 
-testUtils.testWithUtils("$find", null, false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("find", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	var arg1 = {}, arg2 = {}, found = {};
 	subject = new wipeout.template.context();	
@@ -73,8 +73,8 @@ testUtils.testWithUtils("$find", null, false, function(methods, classes, subject
 	}, 1);
 	
 	// act
-	var f1 = subject.$find(arg1, arg2);
-	var f2 = subject.$find(arg1, arg2);
+	var f1 = subject.find(arg1, arg2);
+	var f2 = subject.find(arg1, arg2);
 	
 	// assert
 	strictEqual(f1, f2);

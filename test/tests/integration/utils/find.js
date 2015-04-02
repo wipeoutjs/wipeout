@@ -10,11 +10,12 @@ test("wipeout.utils.find", function() {
     <set-template>\
         <wo.content-control id="me2">\
             <set-template>\
+				<div id="theDiv"></div>\
                 <wo.content-control id="me3"\
-                    parent="$find(\'parent\')" grand-parent="$find({$a:\'grandParent\'})" great-grand-parent="$find({$a:\'greatGrandParent\'})"\
-                    cc0="$find(wo.contentControl)" cc1="$find({$t:wo.contentControl, $number: 1})"\
-                    v0="$find({$i:wo.view})" v1="$find({$instanceof:wo.view, $number: 1})"\
-                    f0="$find({id: \'me1\'})" f-y="$find({id: \'me1\'}, {$n:1})" f-x="$find({id: \'me3\'})">\
+                    parent="$context.find(\'parent\')" grand-parent="$context.find({$a:\'grandParent\'})" great-grand-parent="$context.find({$a:\'greatGrandParent\'})"\
+                    cc0="$context.find(wo.contentControl)" cc1="$context.find({$t:wo.contentControl, $number: 1})"\
+                    v0="$context.find({$i:wo.view})" v1="$context.find({$instanceof:wo.view, $number: 1})"\
+                    f0="$context.find({id: \'me1\'})" f-y="$context.find({id: \'me1\'}, {$n:1})" f-x="$context.find({id: \'me3\'})">\
                 </wo.content-control>\
             </set-template>\
         </wo.content-control>\

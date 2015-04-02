@@ -17,7 +17,7 @@ testUtils.testWithUtils("eventBuild", "has existing", false, function(methods, c
 testUtils.testWithUtils("eventBuild", "create", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var tmp;
-	subject.getValue = function () { return "theMethod" };
+	subject.getValue = function () { return "$context.theMethod" };
 	
 	// act
 	// assert
