@@ -24,6 +24,9 @@ Class("wipeout.viewModels.view", function () {
 
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
         this.$routedEventSubscriptions = [];
+		
+        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
+		this.$synchronusTemplateChange = new wipeout.events.event();
     });
 	
     view.addGlobalParser("id", "string");
@@ -94,6 +97,14 @@ Class("wipeout.viewModels.view", function () {
 		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
 			event.dispose();
 		});
+	};
+	
+	view.prototype.synchronusTemplateChange = function (templateId) {
+		
+		if (arguments.length)
+			this.templateId = templateId;
+		
+		this.$synchronusTemplateChange.trigger();
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {

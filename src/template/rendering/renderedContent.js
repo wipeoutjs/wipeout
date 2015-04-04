@@ -76,6 +76,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
 			new wipeout.template.context(this.viewModel, null, arrayIndex);
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
+			this.templateChangeKey = this.registerDisposable(
+				this.viewModel.$synchronusTemplateChange.register(this.templateHasChanged, this));
+			
             this.viewModel.$domRoot = this;
             this.templateObserved = this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});
 			
@@ -85,6 +88,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
             this.appendHtml(this.viewModel.toString());
         }
     };
+	
+	renderedContent.prototype.templateHasChanged = function () {
+        ///<summary>Re-render</summary>
+		this.template(this.viewModel.templateId);
+	};
     
     renderedContent.prototype._template = function(oldTemplateId, templateId) {
         ///<summary>Render the view model with the given template</summary>
@@ -100,6 +108,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		if (this.templateObserved) {
 			this.templateObserved.dispose();
 			delete this.templateObserved;
+		}
+		
+		if (this.templateChangeKey) {
+			this.disposeOf(this.templateChangeKey);
+			delete this.templateChangeKey;
 		}
 		
         if (this.viewModel instanceof wipeout.viewModels.view)

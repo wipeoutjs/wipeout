@@ -51,7 +51,7 @@ Class("wipeout.viewModels.if", function () {
         ///<param name="newVal" type="String" optional="false">The else template Id</param>
 		
         if (!this.condition)
-            this.templateId = newVal;
+			this.synchronusTemplateChange(newVal);
     };
     
     _if.prototype.onConditionChanged = function (oldVal, newVal) {
@@ -60,9 +60,9 @@ Class("wipeout.viewModels.if", function () {
         ///<param name="newVal" type="Boolean" optional="false">The condition</param>
 		
         if (this.__oldConditionVal && !newVal)
-            this.templateId = this.elseTemplateId;
+			this.synchronusTemplateChange(this.elseTemplateId);
         else if (!this.__oldConditionVal && newVal)
-            this.templateId = this.__cachedTemplateId;
+			this.synchronusTemplateChange(this.__cachedTemplateId);
         
         this.__oldConditionVal = !!newVal;
     };
