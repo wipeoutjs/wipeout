@@ -99,7 +99,10 @@ Class("wipeout.viewModels.view", function () {
 		});
 	};
 	
+	//TODM
 	view.prototype.synchronusTemplateChange = function (templateId) {
+        ///<summary>Tell the overlying renderedContent the the template has changed</summary>    
+        ///<param name="templateId" type="String" optional="true">Set the template id also</param>
 		
 		if (arguments.length)
 			this.templateId = templateId;
