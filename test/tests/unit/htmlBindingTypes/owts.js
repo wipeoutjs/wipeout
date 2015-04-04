@@ -5,9 +5,20 @@ module("wipeout.htmlBindingTypes.owts", {
     }
 });
 
+/*
+        var val;
+        if (setter.getParser(viewModel) ||
+			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
+            throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
+		
+		wipeout.utils.obj.setObject(val, renderContext, viewModel[setter.name]);
+		return obsjs.tryObserve(viewModel, setter.name, function (oldVal, newVal) {
+			wipeout.utils.obj.setObject(val, renderContext, newVal);
+		});
+    };*/
 testUtils.testWithUtils("binding", "", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {},
+	var vm = {OUOUO: {}},
 		setter = {
 			getParser: methods.method([vm], null),
 			getValue: methods.method([], "hello"),
@@ -15,25 +26,17 @@ testUtils.testWithUtils("binding", "", false, function(methods, classes, subject
 		},
 		rc = {};
 		
-	var _this;
-	classes.mock("obsjs.observeTypes.pathObserver", function () {
-		ok(!_this);
-		_this = this;
+	classes.mock("obsjs.tryObserve", function () {
 		
-		methods.method([vm, setter.name]).apply(null, arguments);
-		this.onValueChanged = methods.customMethod(function (oldVal, newVal) {
-			var nv = {};
-			arguments[0](null, nv);			
-			strictEqual(rc.hello, nv);
-			strictEqual(arguments[1], true);
-		});
+		strictEqual(vm, arguments[0]);
+		strictEqual(setter.name, arguments[1]);
 	}, 1);
 	
 	// act
 	var op = wipeout.htmlBindingTypes.owts(vm, setter, rc);
 	
 	// assert
-	strictEqual(op, _this);
+	strictEqual(rc.hello, vm.OUOUO);
 });
 
 testUtils.testWithUtils("binding", "has parser", false, function(methods, classes, subject, invoker) {
