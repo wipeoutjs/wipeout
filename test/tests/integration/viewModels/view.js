@@ -83,7 +83,6 @@ test("tw", function() {
 	
     // arrange
 	var tw = application.tw = {val: 1}, tw2 = {val: 2};
-	var owts = application.owts = {};
 	        
     // act
     application.setTemplate = '<wo.view id="item" tw--tw="$parent.tw"></wo.view>';

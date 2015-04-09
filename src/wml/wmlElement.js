@@ -1,16 +1,21 @@
 var getParentElement = function() {
     if (this._parentElement) {
-        if(this._parentElement.indexOf(this) === -1)
-            delete this._parentElement;
+		for (var i in this._parentElement)
+			if (this._parentElement[i] === this)
+				return this._parentElement;
+		
+        delete this._parentElement;
     }
     
-    return this._parentElement;
+    return null;
 };
 
 Class("wipeout.wml.wmlElementBase", function () {
     
-    var wmlElementBase = wipeout.base.object.extend.call(Array, function wmlElementBase() {
+    var wmlElementBase = wipeout.base.object.extend(function wmlElementBase() {
         this._super();
+		
+		this.length = 0;
     });
 	
 	obsjs.observeTypes.computed.nonArrayType(wmlElementBase);
@@ -24,13 +29,15 @@ Class("wipeout.wml.wmlElementBase", function () {
         if(obj.getParentElement())
             throw "This node already has a parent element";
         
-        var output = this._super(obj);
+		this[this.length] = obj;
+		this.length++;
         obj._parentElement = this;
-        return output;
+        return this.length;
     };
     
     wmlElementBase.prototype.splice = function() {
-        
+        throw "not implemented";
+		
         for(var i = 2, ii = arguments.length; i < ii; i++) {
             if(!arguments[i].getParentElement)
                 throw "Invalid template node";

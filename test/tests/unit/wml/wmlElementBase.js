@@ -5,7 +5,7 @@ module("wipeout.wml.wmlElementBase", {
     }
 });
 
-testUtils.testWithUtils("push, splice", "no getParentElement", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("push", "no getParentElement", false, function(methods, classes, subject, invoker) {
     
     // arrange
     var subject = new wipeout.wml.wmlElementBase();
@@ -21,7 +21,7 @@ testUtils.testWithUtils("push, splice", "no getParentElement", false, function(m
 });
 
 
-testUtils.testWithUtils("push, splice", "has parent element", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("push", "has parent element", false, function(methods, classes, subject, invoker) {
     
     // arrange
     var subject = new wipeout.wml.wmlElementBase();
@@ -40,30 +40,21 @@ testUtils.testWithUtils("push, splice", "has parent element", false, function(me
     });
 });
 
-testUtils.testWithUtils("push, splice", "ok", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("push", "ok", false, function(methods, classes, subject, invoker) {
     
     // arrange
     var subject = new wipeout.wml.wmlElementBase();
     var input1 = {
         getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
-    }, input2 = {
-        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
-    }, input3 = {
-        getParentElement: wipeout.wml.wmlElement.prototype.getParentElement
     };
     
     // act  
-    subject.push(input1);  
-    subject.splice(1, 0, input2, input3);  
+    subject.push(input1);
     
     //assert
     strictEqual(subject[0], input1);
-    strictEqual(subject[1], input2);
-    strictEqual(subject[2], input3);
     
     strictEqual(input1.getParentElement(), subject);
-    strictEqual(input2.getParentElement(), subject);
-    strictEqual(input3.getParentElement(), subject);
 });
 
 testUtils.testWithUtils("serializeContent", null, false, function(methods, classes, subject, invoker) {
