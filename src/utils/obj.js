@@ -148,6 +148,10 @@ var splitPropertyName = (function () {
 	
 	var arrayMatch = /\[\s*\d\s*\]$/g;
 	return function(propertyName) {
+        ///<summary>Split a property path into its component parts</summary>
+        ///<param name="propertyName" type="String">the property</param>
+        ///<returns type="Array">An array of strings and numbers</returns>
+		
 		propertyName = propertyName.split(".");
 
 		var tmp;
@@ -174,6 +178,10 @@ var splitPropertyName = (function () {
 Class("wipeout.utils.obj", function () {
             
     var joinPropertyName = function (propertyName) {
+        ///<summary>Join an array of strings and numbers into a property path</summary>
+        ///<param name="propertyName" type="Array">the name</param>
+        ///<returns type="String">The name</returns>
+		
         var output = [];
         enumerateArr(propertyName, function (item) {
             if (!isNaN(item))
@@ -213,12 +221,19 @@ Class("wipeout.utils.obj", function () {
     };
     
     var setObject = function(propertyName, context, value) {
+        ///<summary>Set an object</summary>
+        ///<param name="propertyName" type="String">The property name</param>
+        ///<param name="context" type="Any">The root</param>
+        ///<param name="value" type="Any">The value</param>
+        ///<returns type="Any">The value</returns>
+		
         propertyName = splitPropertyName(propertyName);
         if (propertyName.length > 1)
             context = _getObject(propertyName.splice(0, propertyName.length -1), context);
         
-        context[propertyName[0]] = value;
-    };   
+		if (context)
+        	return context[propertyName[0]] = value;
+    };
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -244,6 +259,10 @@ Class("wipeout.utils.obj", function () {
     };
     
     var extend = function(extend, extendWith) {
+        ///<summary>The same as jQuery.extend</summary>
+        ///<param name="extend" type="Object"></param>
+        ///<param name="extendWith" type="Object"></param>
+		
         if(extendWith && extend)
             for(var i in extendWith)
                 extend[i] = extendWith[i];

@@ -5,6 +5,7 @@ TODM: document
 
 Expose stuff
 
+view model constructor context (defualt = window)
 
 html event handled
 

@@ -34,7 +34,7 @@ Class("wipeout.viewModels.view", function () {
     
     view.prototype.getParent = function() {
         ///<summary>Get the parent view of this view</summary> 
-        ///<returns type="wo.view">The parent view model</returns>
+        ///<returns type="Any">The parent view model</returns>
         
 		var renderContext = this.getRenderContext();
 		if (!renderContext)
@@ -91,6 +91,8 @@ Class("wipeout.viewModels.view", function () {
     };
 	
 	view.prototype.dispose = function () {
+        ///<summary>Dispose of this view</summary>
+		
 		this._super();
 		
 		// dispose of routed event subscriptions

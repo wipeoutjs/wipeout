@@ -86,9 +86,9 @@ Class("wipeout.wml.wmlParser", function () {
 	var ie = !test.childNodes.length;
 	
 	wmlParser.addToElement = function(htmlString) {
-        ///<summary>Create a html element from a string</summary>
+        ///<summary>Add the html string to a html element and return it</summary>
         ///<param name="htmlString" type="String">A string of html</param>
-        ///<returns type="HTMLElement">The first element in the string as a HTMLElement</returns>
+        ///<returns type="HTMLElement">The element</returns>
 				
 		var childTag = wmlParser.getFirstTagName(htmlString);
 		if (!childTag) {
@@ -144,6 +144,9 @@ Class("wipeout.wml.wmlParser", function () {
 	};
 	
     function wmlParser(wmlString) {
+        ///<summary>Parse a string to wml</summary>
+        ///<param name="wmlString" type="String|Element">The value to parse</param>
+        ///<returns type="wipeout.wml.wmlElement">The element</returns>
 		
 		if (wmlString instanceof Element)
 			return parse(wmlString);

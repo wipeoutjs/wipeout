@@ -52,7 +52,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     
     itemsControl.prototype.getItemViewModels = function() {
         ///<summary>Get the child view models if any</summary>
-        ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+        ///<returns type="Array">The items</returns>
     
         return this.$getChild ?
             this.$getChild() :
@@ -62,6 +62,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     itemsControl.prototype.getItemViewModel = function(index) {
         ///<summary>Get the child view model at a given index</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+        ///<returns type="Any">The view model</returns>
     
         return this.$getChild ?
             this.$getChild(index) :
@@ -84,7 +85,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     //virtual, TODV
     itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
-        ///<param name="item" type="wo.view" optional="false">The item deleted</param>  
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
         
         item.dispose();
     };
@@ -103,6 +104,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
+		
         var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
 		vm.__createdByItemsControl = true;
 		return vm;

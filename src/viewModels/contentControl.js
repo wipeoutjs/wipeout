@@ -37,7 +37,7 @@ Class("wipeout.viewModels.contentControl", function () {
                 
         return function (templateStringOrXml) {
             ///<summary>Creates an anonymous template within the DOM and returns its id</summary>
-            ///<param name="templateString" type="String" optional="false">Gets a template id for an anonymous template</param>
+            ///<param name="templateStringOrXml" type="String" optional="false">Gets a template id for an anonymous template</param>
             ///<returns type="String">The template id</returns>
 
             if (typeof templateStringOrXml === "string") {
@@ -83,11 +83,14 @@ Class("wipeout.viewModels.contentControl", function () {
     };
         
     boundTemplate.prototype.dispose = function() {
+        ///<summary>Dispose of this binding</summary>
+		
         this.d1.dispose();
         this.d2.dispose();
     };
     
     boundTemplate.prototype.refreshTemplate = function(templateId) {
+		
         this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
             delete this.pendingLoad;                
             this.currentTemplate = this.owner[this.templateProperty] = template;
