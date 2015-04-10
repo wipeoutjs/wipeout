@@ -2,6 +2,10 @@
 Class("wipeout.template.setter", function () {
 	
 	var setter = objjs.object.extend(function setter (name, value) {
+		///<summary>Base class for vm property setters and html attribute setters</summary>
+        ///<param name="name" type="String">The name of the item to set</param>
+        ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
+		
 		this._super();
 		
 		this.name = name;
@@ -9,12 +13,18 @@ Class("wipeout.template.setter", function () {
 	});
 	
 	setter.prototype.build = function () {
+		///<summary>Build a getter for this._value</summary>
+        ///<returns type="Function">A function to get the value from render context parts</returns>
 		
 		return this._built || (this._built = wipeout.template.context.buildGetter(this.getValue()));
 	};
 	
     setter.isSimpleBindingProperty = function (property) {
-        return /^[\$\w\s\.\[\]]+$/.test(property);
+		///<summary>Determine whether a logic string is a simple property chain</summary>
+        ///<param name="property" type="String">The logic</param>
+        ///<returns type="Boolean">The result</returns>
+		
+        return /^([\$\w\s\.]|(\[\d+\]))+$/.test(property);
     };
 	
 	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {

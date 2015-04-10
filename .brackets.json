@@ -10,6 +10,10 @@
         "C:/Dev/Apps/wipeout/bower_components/objjs/tools/end.js",
         "C:/Dev/Apps/wipeout/src/htmlBindingTypes/setTemplateToTemplateId.js",
         "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/viewModelId.js",
-        "C:/Dev/Apps/wipeout/test/tests/integration/base/bindable.js"
+        "C:/Dev/Apps/wipeout/test/tests/integration/base/bindable.js",
+        "C:/Dev/Apps/wipeout/src/utils/domData.js",
+        "C:/Dev/Apps/wipeout/src/template/context.js",
+        "C:/Dev/Apps/wipeout/test/tests/unit/template/rendering/builder.js",
+        "C:/Dev/Apps/wipeout/src/template/setter.js"
     ]
 }

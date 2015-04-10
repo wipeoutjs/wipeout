@@ -25,6 +25,18 @@ testUtils.testWithUtils("build", "create", false, function(methods, classes, sub
 	strictEqual(subject._built, tmp);
 });
 
+testUtils.testWithUtils("isSimpleBindingProperty", null, true, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+	ok(invoker("ok"));
+	ok(invoker("ok.something"));
+	ok(invoker("ok[9].something"));
+	ok(!invoker("ok(9)"));
+	ok(!invoker("ok;"));
+	ok(!invoker("ok[a]"));
+});
+
 testUtils.testWithUtils("watch", "not caching. Other logic tested in integration tests", false, function(methods, classes, subject, invoker) {
 	// arrange
 	// act
