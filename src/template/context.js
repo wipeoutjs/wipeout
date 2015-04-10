@@ -3,15 +3,22 @@ Class("wipeout.template.context", function () {
     
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
     function context (forVm, parentContext, arrayIndex) {
+		///<summary>The context for any view model or html property set in a template</summary>
 		
 		if (forVm && forVm.shareParentScope)
 			throw "You cannot create a template context for a view model with a shared parent scope";
-        
+		
+		///<summary type="Any">The current view model</summary>
         this.$this = forVm;
         
         if (parentContext) {
+			///<summary type="Any">The parent render context</summary>
             this.$parentContext = parentContext;
+			
+			///<summary type="Any">The parent view model</summary>
             this.$parent = parentContext.$this;
+			
+			///<summary type="Array" generic0="Any">A list of all ancestor view models</summary>
             this.$parents = [parentContext.$this];
             this.$parents.push.apply(this.$parents, parentContext.$parents);
         } else {
@@ -21,6 +28,8 @@ Class("wipeout.template.context", function () {
 		}
 		
 		if (arrayIndex != null) {
+			
+			///<summary type="Object">An object whcih contains a "value" property. The value is the index. This property is only available for items in a rendered Array</summary>
 			this.$index = new obsjs.observable();
 			this.$index.value = arrayIndex;
 		}
@@ -32,11 +41,19 @@ Class("wipeout.template.context", function () {
     context.prototype = new renderContextPrototype();
     
     context.prototype.find = function (searchTermOrFilters, filters) {
+		///<summary>Find an item from the ancestor chain</summary>
+        ///<param name="searchTermOrFilters" type="String|Object">The search term if a string, search filters if an object</param>
+        ///<param name="filters" type="Object" optional="true">The filters if arg 1 is a search term</param>
+        ///<returns type="Any">The item searched for</returns>
 		
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     
     context.prototype.contextFor = function (forVm, arrayIndex) {
+		///<summary>Create a child context</summary>
+        ///<param name="forVm" type="Any">The child to context</param>
+        ///<param name="arrayIndex" type="Number" optional="true">The index if this item is in an array</param>
+        ///<returns type="wipeout.template.context">The child context</returns>
         
 		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arrayIndex != null)
 			console.warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
@@ -45,10 +62,16 @@ Class("wipeout.template.context", function () {
     };
 	
 	context.prototype.asGetterArgs = function () {
+		///<summary>Return a version of this to be plugged into a function creted by context.buildGetter(...)</summary>
+        ///<returns type="Array">the arguments</returns>
+		
 		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
 	};
 	
 	context.prototype.asWatchVariables = function () {
+		///<summary>Return a version of this which can be plugged into the watch varialbes for a computed who's logic was taken from a context.buildGetter(...)</summary>
+        ///<returns type="Object">The watch varialbles</returns>
+        
 		return this.watchVariables || (this.watchVariables = {
 			$context: this, 
 			$this: this.$this, 
@@ -59,6 +82,8 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.asEventArgs = function (e, element) {
+		///<summary>Return a version of this to be plugged into a function creted by context.buildEventGetter(...)</summary>
+        ///<returns type="Array">the arguments</returns>
 		
 		var args = this.asGetterArgs().slice();
 		args.push(e);
@@ -68,10 +93,17 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.getComputed = function (forFunction) {
+		///<summary>Get a computed from this and a given function</summary>
+        ///<param name="forFunction" type="Function">The function</param>
+        ///<returns type="obsjs.observeTypes.computed">The computed</returns>
+		
 		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {
+		///<summary>Build a function around a logic string</summary>
+        ///<param name="logic" type="String">The logic</param>
+        ///<returns type="Function">A getter</returns>
 		
 		try {
 			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
@@ -83,6 +115,9 @@ Class("wipeout.template.context", function () {
 	
 	//TODV: handle logic like this "$this.set = true; $this.unset = false;"
 	context.buildEventGetter = function (logic) {
+		///<summary>Build a function around a logic string, specifically for html events</summary>
+        ///<param name="logic" type="String">The logic</param>
+        ///<returns type="Function">A getter</returns>
 		
 		if (!/\)[\s;]*$/.test(logic))
 			logic += "(e, element)";

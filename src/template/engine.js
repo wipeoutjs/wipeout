@@ -2,12 +2,20 @@
 Class("wipeout.template.engine", function () {
         
     function engine () {
+		///<summary>The wipeout template engine</summary>
+		
+		///<summary type="Object">Cached templates</summary>
         this.templates = {};
         
+		///<summary type="wipeout.utils.dictionary">Cached view model initializers</summary>
         this.xmlIntializers = new wipeout.utils.dictionary;
     }
     
     engine.prototype.setTemplate = function (templateId, template) {
+		///<summary>Associate a template string with a template id</summary>
+        ///<param name="templateId" type="String|wipeout.wml.wmlAttribute">The template</param>
+        ///<returns type="wipeout.template.rendering.compiledTemplate">The compiled template</returns>
+		
 		if (!templateId) throw "Invalid template id";
 		
         if (typeof template === "string")
@@ -19,6 +27,11 @@ Class("wipeout.template.engine", function () {
     };
     
     engine.prototype.getTemplateXml = function (templateId, callback) {  
+		///<summary>Load a template and pass the value to a callback. The load may be synchronus (if the template exists) or asynchronus) if the template has to be loaded.</summary>
+        ///<param name="templateId" type="String">The template id</param>
+        ///<param name="callback" type="Function">The callback</param>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
+	
 		templateId = fixTemplateId(templateId);      
         return this.compileTemplate(templateId, (function() {
             callback(this.templates[templateId].xml);
@@ -35,6 +48,10 @@ Class("wipeout.template.engine", function () {
 	}());
 	
     engine.prototype.compileTemplate = function (templateId, callback) {
+		///<summary>Load a template and pass the value to a callback. The load may be synchronus (if the template exists) or asynchronus) if the template has to be loaded.</summary>
+        ///<param name="templateId" type="String">The template id</param>
+        ///<param name="callback" type="Function">The callback</param>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
         
 		templateId = fixTemplateId(templateId);
 			
@@ -73,12 +90,15 @@ Class("wipeout.template.engine", function () {
         throw "Could not load template \"" + templateId + "\".";    //TODE
     };
     
-    engine.prototype.getVmInitializer = function (xmlInitializer) {
-        
+    engine.prototype.getVmInitializer = function (wmlInitializer) {
+		///<summary>Get a compiled initializer from a piece of wml</summary>
+        ///<param type="wipeout.wml.wmlElement" name="wmlInitializer">The xml</param>
+        ///<returns type="wipeout.template.initialization.compiledInitializer">The initializer</returns>
+		
         var tmp;
-        return (tmp = this.xmlIntializers.value(xmlInitializer)) ?
+        return (tmp = this.xmlIntializers.value(wmlInitializer)) ?
             tmp :
-            this.xmlIntializers.add(xmlInitializer, new wipeout.template.initialization.compiledInitializer(xmlInitializer));
+            this.xmlIntializers.add(wmlInitializer, new wipeout.template.initialization.compiledInitializer(wmlInitializer));
     };
     
     engine.instance = new engine();

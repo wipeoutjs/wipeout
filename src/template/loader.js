@@ -34,7 +34,7 @@ Class("wipeout.template.loader", function () {
     loader.prototype.add = function(success) {
         ///<summary>Call success when this template is loaded</summary>
         ///<param name="success" type="Function" optional="false">The callback</param>
-        ///<returns type="Boolean">True if the template is available, false if the template must be loaded</returns>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
         
         if (this._callbacks) {
             this._callbacks.push(success);

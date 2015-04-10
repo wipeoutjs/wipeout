@@ -7,8 +7,11 @@ Class("wipeout.template.setter", function () {
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
 		
 		this._super();
-		
+	
+		///<summary type="String">The name of the property</summary>
 		this.name = name;
+		
+		///<summary type="String">The value of the property</summary>
 		this._value = value;
 	});
 	
@@ -28,6 +31,12 @@ Class("wipeout.template.setter", function () {
     };
 	
 	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
+		///<summary>When called within a wipeout binding function, will watch for a change in the value of the setter. Also handles all disposal in this case</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
+        ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
+        ///<returns type="obsjs.diposable">A dispose function to dispose prematurely</returns>
+		
 		if (!this._caching)
 			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
 		
@@ -40,10 +49,18 @@ Class("wipeout.template.setter", function () {
 	};
 	
 	setter.prototype.execute = function (renderContext) {
+		///<summary>Return the value of this setter when applied to a renderContext</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Any">The returned value</returns>
+		
 		return this.build().apply(null, renderContext.asGetterArgs());
 	};
 	
 	setter.prototype.cacheAllWatched = function (logic) {
+		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
+        ///<param name="logic" type="Function">The logic to invoke</param>
+        ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
+		
 		if (this._caching)
 			throw "cacheAllWatched cannot be asynchronus or nested.";
 		
@@ -56,7 +73,11 @@ Class("wipeout.template.setter", function () {
 		}
 	};
 	
+	// virtual
 	setter.prototype.getValue = function () {
+		///<summary>Get the value</summary>
+        ///<returns type="String">The value</returns>
+		
 		return this._value;
 	};
 	
