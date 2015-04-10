@@ -2,12 +2,12 @@
 
 <p>Local overriding is overriding a specific instance of a class, while leaving other instances untouched.</p>
 
-<p>Say you have a view model which has a child view model, which is a <Wipeout.Rl href="'/wipeout/v1.2/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
+<p>Say you have a view model which has a child view model, which is a <Wipeout.Rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
 You want each item in the items control to have a method which removes itself.
 There are two options on how to implement this functionality:
     <ol>
         <li>Create a new class which inherits from itemsControl and override the 
-            <Wipeout.Rl href="'/wipeout/v1.2/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
+            <Wipeout.Rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
              function</li>
         <li>Get the instance of the itemsControl and locally override the create item function.</li>
 </ol>
