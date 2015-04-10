@@ -74,7 +74,7 @@ test("concurrency, ow", function() {
 			i++;
 		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
-		var timeout = 15;
+		var timeout = 15 * (obsjs.useObjectObserve ? 1 : 2);
 		
 		// act
 		//TODO: without timeouts it is messier

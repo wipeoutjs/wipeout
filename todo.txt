@@ -1,4 +1,4 @@
-Typse of todos:
+Types of todos:
 TODV: in later version
 TODE: exception handling
 TODM: document
@@ -12,8 +12,6 @@ wrap domData in htmlAttributeSetter, use to chain attrs.
 	do value binding onblur, onchange, onkeyup etc
 	do radio button and checkbox value
 
-
-look at console.logs in tests
 
 Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 
