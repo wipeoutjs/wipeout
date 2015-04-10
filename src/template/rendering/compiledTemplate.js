@@ -3,8 +3,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
-        
+        ///<param name="template" type="wipeout.xml.xmlElement">The template</param>
+		
+		///<summary type="wipeout.xml.xmlElement">The template</summary>
         this.xml = template;
+		
+		///<summary type="Array">Generated static html and modifiers</summary>
         this.html = [];
         this._addedElements = [];
         
@@ -32,13 +36,17 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 	
 	//TODM
     compiledTemplate.renderParenthesis = function(beginParenthesis, endParenthesis) {
+        ///<summary>Change the escape values to render. Default is {{ and }}</summary>
+        ///<param name="beginParenthesis" type="String">the beginnin</param>
+        ///<param name="endParenthesis" type="String">the end</param>
+		
 		begin = beginParenthesis;
 		end = endParenthesis;
 	};
 	
     compiledTemplate.prototype.addTextNode = function(node) {
         ///<summary>Add a text node to the html string scanning for dynamic functionality</summary>
-        ///<param name="node" type="Object">The node</param>
+        ///<param name="node" type="wipeout.wml.wmlString">The node</param>
         
         var html = node.serialize(), oldIndex = 0, index = 0;
         while ((index = html.indexOf(begin, oldIndex)) !== -1) {
@@ -79,6 +87,10 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     };
 	
 	compiledTemplate.getAttributeName = function (attributeName) {
+        ///<summary>Returns the name of the wipeout attribute that this attributeName is pointing to. Sometimes wipeout modifies the actual attribute, for instance, "wo-attr-value" will be modified to "wo-attr"</summary>
+        ///<param name="attributeName" type="String">The attribute name</param>
+        ///<returns type="String">The altered attribute name, or null if the attribute is not a wipeout attribute</returns>
+		
 		if (wipeout.template.rendering.htmlAttributes[attributeName])
 			return attributeName;
 		
@@ -89,6 +101,8 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 	};
     
     compiledTemplate.prototype.addAttributes = function(attributes) {
+        ///<summary>Add a group of attributes</summary>
+        ///<param name="attributes" type="Object">The attributes</param>
         
         var modifications;
         
@@ -160,6 +174,9 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     
     compiledTemplate.prototype.quickBuild = function(htmlAddCallback, renderContext) {
         ///<summary>Add html and execute dynamic content. Ensures synchronocity so reuses the same builder</summary>
+        ///<param name="htmlAddCallback" type="Function">A function to add html to the DOM</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">A disposable</returns>
         
         var builder = this._builder || (this._builder = this.getBuilder());
 		
@@ -169,6 +186,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     
     compiledTemplate.prototype.getBuilder = function() {
         ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
+        ///<returns type="wipeout.template.rendering.builder">Get a builder for this template</returns>
         
         return new wipeout.template.rendering.builder(this);
     };

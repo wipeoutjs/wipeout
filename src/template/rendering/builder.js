@@ -6,14 +6,18 @@ Class("wipeout.template.rendering.builder", function () {
     builder.uniqueIdGenerator = (function() {
         var i = Math.floor(Math.random() * 1000000000);
         return function() {
+			///<summary>Get a unique html id</summary>
+			///<returns type="String">The id</returns>
+			
             return wipeoutPlaceholder + (++i);
         }
     }());
     
     function builder(compiledTemplate) {
         ///<summary>Build html and execute logic giving the html functionality</summary>
-        ///<param name="template" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
+        ///<param name="compiledTemplate" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
         
+        ///<summary type="Array">A list of processors to add dynamic content</summary>
         this.elements = [];
         
         var htmlFragments = [];
@@ -33,13 +37,15 @@ Class("wipeout.template.rendering.builder", function () {
             }
         }, this);
         
+        ///<summary type="String">The static html for this builder</summary>
         this.html = htmlFragments.join("");
-    }
-    
-    builder.prototype.execute = function(renderContext) {
+    };
+	
+	builder.prototype.execute = function(renderContext) {
         ///<summary>Add dynamic content to the html</summary>
         ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The context of the dynamic content</param>
-        
+		///<returns type="Function">A dispose function</returns>
+		
         var output = [];
         enumerateArr(this.elements, function(elementAction) {
             // get the element
