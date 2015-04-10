@@ -1,6 +1,11 @@
 Class("wipeout.htmlBindingTypes.tw", function () {  
     
     return function tw(viewModel, setter, renderContext) {
+		///<summary>Bind from parent property to child and from child property to parent</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.propertySetter">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
 		var val;
         if (setter.getParser(viewModel) ||

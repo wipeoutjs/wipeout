@@ -279,20 +279,3 @@ testUtils.testWithUtils("initialize", null, false, function(methods, classes, su
     // assert
 	invoker(vm, rc)();
 });
-
-testUtils.testWithUtils("getAutoParser", null, true, function(methods, classes, subject, invoker) {
-		
-    // arrange
-	var value = "val1 + value + propertyName + renderContext.val2",
-		propertyName = "KJBKJBJKB",
-		renderContext = {
-			val1: "LKNLKNLKN",
-			val2: "324234ws"
-		};
-	
-    // act
-	var output = invoker(value)(value, propertyName, renderContext);
-	
-    // assert
-	strictEqual(renderContext.val1 + value + propertyName + renderContext.val2, output);
-});

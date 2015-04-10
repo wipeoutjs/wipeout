@@ -1,6 +1,15 @@
 {
     "jscodehints.detectedExclusions": [
         "C:/Dev/Apps/obsjs/bower_components/",
-        "C:/Dev/Apps/obsjs/node_modules/"
+        "C:/Dev/Apps/obsjs/node_modules/",
+        "C:/Dev/Apps/wipeout/src/template/initialization/propertySetter.js",
+        "C:/Dev/Apps/wipeout/src/polyfills/Array.js",
+        "C:/Dev/Apps/wipeout/src/template/initialization/parsers.js",
+        "C:/Dev/Apps/wipeout/src/polyfills/Function.js",
+        "C:/Dev/Apps/wipeout/src/htmlBindingTypes/ow.js",
+        "C:/Dev/Apps/wipeout/bower_components/objjs/tools/end.js",
+        "C:/Dev/Apps/wipeout/src/htmlBindingTypes/setTemplateToTemplateId.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/viewModelId.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/base/bindable.js"
     ]
 }

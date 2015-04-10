@@ -2,6 +2,9 @@
 Class("wipeout.template.initialization.compiledInitializer", function () {
 	    
     compiledInitializer.getPropertyFlags = function(name) {
+		///<summary>Seperate name from flags by "--"</summary>
+        ///<param name="name" type="String">The combined name and flags</param>
+        ///<returns type="Object">The name and flags</returns>
         
         var flags = name.indexOf("--");
         if (flags === -1)
@@ -17,6 +20,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     };
     
 	function compiledInitializer(template) {
+		///<summary>Given a piece of template xml, compile all of the setters for a view model</summary>
+        ///<param name="template" type="wipeout.wml.wmlElement">The xml</param>
         
         this.setters = {};
 		
@@ -33,6 +38,9 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     };
     
     compiledInitializer.prototype.addElement = function (element) {
+		///<summary>Create and cache all of the setters from an element and its children if applicable</summary>
+        ///<param name="element" type="wipeout.wml.wmlElement">The element</param>
+		
         if (element.nodeType !== 1) return;
         
         var name = wipeout.utils.viewModels.getElementName(element);
@@ -86,6 +94,9 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     };
     
     compiledInitializer.prototype.addAttribute = function (attribute, name) {
+		///<summary>Add a setter from a wml attribute</summary>
+        ///<param name="attribute" type="wipeout.wml.wmlAttribute">The element</param>
+        ///<param name="name" type="String">The element name</param>
         
         // spit name and flags
         name = compiledInitializer.getPropertyFlags(name);
@@ -95,6 +106,10 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
+		///<summary>Initialize a view model with the cached setter in this compiledInitializer</summary>
+        ///<param name="viewModel" type="Any">The view model</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">Dispose of initialization</returns>
 		
 		// only auto set model if model wasn't already set
         var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
@@ -111,14 +126,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					d.dispose();
 			});
 		}
-    }; 
-    
-    compiledInitializer.getAutoParser = function (value) {
-		
-        var output = new Function("value", "propertyName", "renderContext", "with (renderContext) return " + value + ";");
-        output.wipeoutAutoParser = true;
-        
-        return output;
     };
         
     return compiledInitializer;
