@@ -17,8 +17,6 @@ Class("wipeout.wml.wmlElementBase", function () {
 		
 		this.length = 0;
     });
-	
-	obsjs.observeTypes.computed.nonArrayType(wmlElementBase);
     
     wmlElementBase.extend = wipeout.base.object.extend;
     wmlElementBase.prototype._super = wipeout.base.object.prototype._super;
