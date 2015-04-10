@@ -17,6 +17,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         // create actual view model
         this.createdViewModel = new vm.constructor();
 		
+		///<summary type="wipeout.template.context">The context for the view model</summary>
         this.renderContext = parentRenderContext ?
 			parentRenderContext.contextFor(this.createdViewModel) :
 			new wipeout.template.context(this.createdViewModel);

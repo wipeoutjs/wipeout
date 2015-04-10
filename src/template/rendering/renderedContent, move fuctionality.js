@@ -16,6 +16,8 @@
 	}
     
     renderedContent.prototype.prepend = function (content) {
+		///<summary>Prepend content to the renderedContent</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
               
 		content = getNodesAndRemoveDetatched(content);
 		
@@ -25,7 +27,7 @@
 			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
     };
     
-	/* this is not tested
+	/* this is not needed or tested
     renderedContent.prototype.append = function (content) {
               
 		var nodes = getNodesAndRemoveDetatched(content);
@@ -37,6 +39,8 @@
     };*/
     
     renderedContent.prototype.insertBefore = function (content) {
+		///<summary>Insert content before this</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
 		
 		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
 			this.parentNode.insertBefore(node, this);
@@ -44,6 +48,8 @@
     };
     
     renderedContent.prototype.insertAfter = function (content) {
+		///<summary>Insert content after this</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
               
 		content = getNodesAndRemoveDetatched(content);
 		
@@ -57,6 +63,8 @@
     };
     
     renderedContent.prototype.detatch = function() {
+		///<summary>This renderedContent and all of it's html from the DOM</summary>
+        ///<returns type="Array" generic0="Element">The html</retruns>
 		
 		if (!this.detatched) {		
 			var current = this.openingTag;
@@ -72,6 +80,9 @@
     };
     
     renderedContent.prototype.allHtml = function() {
+		///<summary>Get all of the html for this</summary>
+        ///<returns type="Array" generic0="Element">The html</retruns>
+		
 		if (this.detatched) return this.detatch();
 		
         var output = [this.openingTag], current = this.openingTag;

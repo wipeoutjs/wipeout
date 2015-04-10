@@ -2,13 +2,22 @@
 Class("wipeout.template.rendering.renderedArray", function () {
     
 	var renderedArray = obsjs.disposable.extend(function renderedArray (array, parent) {
+		///<summary>Helper for rendering arrays</summary>
+        ///<param name="array" type="Array">The array</param>
+        ///<param name="parent" type="wipeout.template.rendering.renderedContent">The renderedContent to help</param>
+				
 		this._super();
 		
+		///<summary type="wipeout.template.rendering.renderedContent">The parent to help</summary>
 		this.parent = parent;
+		
+		///<summary type="Array">The array</summary>
 		this.array = array;
 		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
+			///<summary type="wo.itemsControl">The items control if the array belongs to one</summary>
 			this.itemsControl = this.parent.parentRenderContext.$this;
 		
+		///<summary type="Array">Cache the child renderedContents </summary>
 		this.children = [];
         
         if (this.itemsControl) {
@@ -29,7 +38,10 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		}
 	});
 	
-	renderedArray.prototype.remove = function (item) {                   
+	renderedArray.prototype.remove = function (item) {
+		///<summary>Clean up item before removal</summary>
+        ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
+		
 		if (this.itemsControl)
 			this.itemsControl.onItemRemoved(item.renderedChild);
 
@@ -41,6 +53,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	
 	var mysteryItem = {};
 	renderedArray.prototype.render = function (changes) {
+		///<summary>Alter the DOM based on array changes</summary>
+        ///<param name="changes" type="Array">The array changes</param>
 		
 		var removed = [];
 		enumerateArr(changes, function (change) {
@@ -109,6 +123,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	};
 	
 	renderedArray.prototype.dispose = function () {
+		///<summary>Dispose of this helper</summary>
+		
 		this._super();
 
 		enumerateArr(this.children, this.remove, this);

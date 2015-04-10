@@ -17,8 +17,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
         //this.openingTag = document.createElement("script");
 		
         // create opening and closing tags and link to this
+		///<summary type="Comment">The opening tag</summary>
         this.openingTag = document.createComment(" " + name + " ");
         this.openingTag.wipeoutOpening = this;
+		///<summary type="Comment">The closing tag</summary>
         this.closingTag = document.createComment(" /" + name + " ");
         this.closingTag.wipeoutClosing = this;
         
@@ -29,11 +31,16 @@ Class("wipeout.template.rendering.renderedContent", function () {
     });
 	
 	renderedContent.prototype.rename = function (name) {
+		///<summary>Rename the opeining and closing tags</summary>
+        ///<param name="name" type="String">The new name</param>
+		
 		this.openingTag.nodeValue = " " + name + " ";
 		this.closingTag.nodeValue = " /" + name + " ";
 	};
 	    
     renderedContent.prototype.renderArray = function (array) {
+		///<summary>Render an array</summary>
+        ///<param name="array" type="Array">The array to render</param>
         
         // if a previous request is pending, cancel it
         if (this.asynchronous) {
@@ -58,6 +65,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
 	};
 	
     renderedContent.prototype.render = function (object, arrayIndex) {
+		///<summary>Render a view model</summary>
+        ///<param name="object" type="Any">The The view model</param>
+        ///<param name="arrayIndex" type="Number" optional="true">The array index if the item is part of an array</param>
 		
         if (object instanceof Array) {
             this.renderArray(object);
@@ -90,7 +100,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
 	renderedContent.prototype.templateHasChanged = function () {
-        ///<summary>Re-render</summary>
+        ///<summary>Re-template the view model</summary>
+		
 		this.template(this.viewModel.templateId);
 	};
     
@@ -103,6 +114,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
 	renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
+		///<summary>Dispose of all items created during the rendering process</summary>
+        ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, the un-render will not lear down the DOM. This is a performance optimization</param>
+		
         this.unTemplate(leaveDeadChildNodes);
         
 		if (this.templateObserved) {
@@ -213,9 +227,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
     renderedContent.prototype.appendHtml = function (html) {
+		///<summary>Append a html string to this renderContext</summary>
+        ///<param name="html" type="String">The current html</param>
+		
 		if (this.openingTag && this.openingTag.nodeType === 1) {
 			this.openingTag.insertAdjacentHTML('afterend', html);
-			console.log(this.openingTag.parentNode.innerHTML);
 		} else {
         	//TODV: see todv in constructor
 			var scr = document.createElement("script");
@@ -226,6 +242,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
     
     renderedContent.getParentElement = function(forHtmlElement) {
+		///<summary>Get the parent element of a html element, keeping in mind that it might be a wipeout opeing comment</summary>
+        ///<param name="forHtmlElement" type="Element">The element</param>
+        ///<returns type="Node">The parent element</returns>
+		
         var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
         while (current = current.previousSibling) {
             if (current.wipeoutClosing)
