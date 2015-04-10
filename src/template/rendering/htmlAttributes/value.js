@@ -71,6 +71,11 @@ HtmlAttr("value", function () {
 	}
 	
 	return function value (element, attribute, renderContext) { //TODE
+        ///<summary>Bind to the value of a htl element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlAttributeSetter">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (element.type === "checkbox")
 			return checkbox(element, attribute, renderContext);
