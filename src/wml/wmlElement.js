@@ -1,4 +1,7 @@
 var getParentElement = function() {
+	///<summary>Get the parent element of this node</summary>
+	///<returns type="wipeout.wml.wmlElement">The element</returns>
+	
     if (this._parentElement) {
 		for (var i in this._parentElement)
 			if (this._parentElement[i] === this)
@@ -13,8 +16,11 @@ var getParentElement = function() {
 Class("wipeout.wml.wmlElementBase", function () {
     
     var wmlElementBase = wipeout.base.object.extend(function wmlElementBase() {
+        ///<summary>A wml element base</summary>
+		
         this._super();
 		
+        ///<summary type="Number">The number of child nodes</summary>
 		this.length = 0;
     });
     
@@ -22,6 +28,10 @@ Class("wipeout.wml.wmlElementBase", function () {
     wmlElementBase.prototype._super = wipeout.base.object.prototype._super;
     
     wmlElementBase.prototype.push = function(obj) {
+        ///<summary>Add an element child</summary>
+        ///<param name="obj" type="wipeout.xml.xmlElement">The element</param>
+        ///<returns type="Number">The new length</returns>
+		
         if(obj.getParentElement !== getParentElement)
             throw "Invalid template node";
         if(obj.getParentElement())
@@ -34,6 +44,8 @@ Class("wipeout.wml.wmlElementBase", function () {
     };
     
     wmlElementBase.prototype.splice = function() {
+        ///<summary>Not implemented</summary>	TODO
+		
         throw "not implemented";
 		
         for(var i = 2, ii = arguments.length; i < ii; i++) {
@@ -53,6 +65,8 @@ Class("wipeout.wml.wmlElementBase", function () {
     };
     
     wmlElementBase.prototype.serializeContent = function() {
+        ///<summary>Serialize all of the child elements of this element</summary>
+        ///<returns type="String">The value</returns>
         
         var output = [];        
         wipeout.utils.obj.enumerateArr(this, function(i) {
@@ -65,38 +79,44 @@ Class("wipeout.wml.wmlElementBase", function () {
     return wmlElementBase;
 });
 
-Class("wipeout.wml.rootWmlElement", function () {
-    
-    var rootWmlElement = wipeout.wml.wmlElementBase.extend(function rootWmlElement() {
-        this._super();
-		
-		this.nodeType = 9;
-    });
-    
-    return rootWmlElement;
-});
-
 Class("wipeout.wml.wmlElement", function () {
     
-    var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline /*optional*/) {
+    var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline) {
+        ///<summary>A wml element</summary>
+        ///<param name="name" type="String">The element name</param>
+        ///<param name="inlien" optional="true type="Boolean">Determines whether the element has a closing tag</param>
+		
         this._super();
         
+        ///<summary type="String">The element name</summary>
         this.name = name;
         
-        this.attributes = {};        
+        ///<summary type="Object">A list of attributes</summary>
+        this.attributes = {};
+		
+        ///<summary type="Boolean">Determines whether the element has a closing tag</summary>
         this.inline = !!inline;
+		
+        ///<summary type="Number">1</summary>
         this.nodeType = 1;
     });
     
     wmlElement.prototype.getParentElement = getParentElement;
     
 	wmlElement.prototype.getAttribute = function (attributeName) {
+        ///<summary>Get attribute value by name</summary>
+        ///<param name="attributeName" type="String">The attribute</param>
+        ///<returns type="String">The value</returns>
+		
 		return this.attributes[attributeName] ?
 			this.attributes[attributeName].value :
 			null;
 	};
 	
     wmlElement.prototype.serialize = function() {
+        ///<summary>Serialize the element</summary>
+        ///<returns type="String">Serialize the element</returns>
+		
         var output = [];
         
         output.splice(0, 0, "<", this.name);
@@ -124,16 +144,26 @@ Class("wipeout.wml.wmlElement", function () {
 Class("wipeout.wml.wmlAttribute", function () {
     
     function wmlAttribute(value) {
+        ///<summary>An attribute</summary>
+        ///<param name="value" type="String">The attribute value</param>
+		
+        ///<summary type="String">The value</summary>
         this.value = value;
+		
+        ///<summary type="Number">2</summary>
         this.nodeType = 2;
     };
     
     wmlAttribute.prototype.serializeValue = function() {
+        ///<summary>Serialize the attribute from "=" onwards</summary>
+        ///<returns type="String">The value</returns>
 		
         return '="' + this.value.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"';
     };    
     
     wmlAttribute.prototype.serializeContent = function() {
+        ///<summary>Serialize the value</summary>
+        ///<returns type="String">The value</returns>
                 
         return this.value;
     };
@@ -143,12 +173,21 @@ Class("wipeout.wml.wmlAttribute", function () {
 
 Class("wipeout.wml.wmlComment", function () {
     
-    var wmlComment = function wmlComment(commentText) {        
+    var wmlComment = function wmlComment(commentText) {
+        ///<summary>A comment</summary>
+        ///<param name="commentText" type="String">The comment</param>
+		
+        ///<summary type="String">The comment</summary>
         this.commentText = commentText;
+		
+        ///<summary type="Number">8</summary>
         this.nodeType = 8;
     };
     
     wmlComment.prototype.serialize = function() {
+        ///<summary>Serialize</summary>
+        ///<returns type="String">The value</returns>
+		
         return "<!--" + this.commentText + "-->";
     };
     
@@ -160,11 +199,20 @@ Class("wipeout.wml.wmlComment", function () {
 Class("wipeout.wml.wmlString", function () {
     
     var wmlString = function wmlString(text) {
+        ///<summary>A text node</summary>
+        ///<param name="text" type="String">The value</param>
+		
+        ///<summary type="String">The text</summary>
         this.text = text;
+		
+        ///<summary type="Number">3</summary>
         this.nodeType = 3;
     };
     
     wmlString.prototype.serialize = function() {
+        ///<summary>Serialize</summary>
+        ///<returns type="String">The value</returns>
+		
         return this.text;
     }
     
