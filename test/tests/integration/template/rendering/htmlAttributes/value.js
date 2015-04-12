@@ -31,9 +31,11 @@ test("textbox", function() {
 			input.focus();
 			input.blur();
 			
-			strictEqual(model.theVal, "678");
-			
-			start();
+			// sometimes these events are asynchronus???
+			setTimeout(function () {
+				strictEqual(model.theVal, "678");
+				start();
+			}, 10);
 		});
 	});
 	
