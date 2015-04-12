@@ -13,6 +13,15 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		this.action = action;
 	});
 	
+	//<input wo-value="$this.theDate, 'DD-MMM-YYYY' => dateParser" />
+	htmlAttributeSetter.splitValue = function (theValue) {
+		///<summary>Splits an attribute string into various parts</summary>
+        ///<param name="theValue" type="String">The value</param>
+        ///<returns type="Object">The split data</returns>
+		
+		
+	};
+	
 	htmlAttributeSetter.prototype.setData = function (element, name, data) {
 		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>	//TODO: document and expose wo.htmlAttributes
         ///<param name="element" type="Element">The html element</param>

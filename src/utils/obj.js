@@ -270,6 +270,77 @@ Class("wipeout.utils.obj", function () {
         return extend;
     };
     
+	function quoteIsEscaped (input, tokenIndex) {
+		var number = 0;
+		while (input[tokenIndex - 1 - number] === "\\")
+			number++;
+
+		return number % 2 != 0;
+	}
+	
+	var pull = [{
+		open: /'/g,
+		close: /'/g,
+		tokenize: true,
+		isEscaped: isEsceped
+	}, {
+		open: /"/g,
+		close: /"/g,
+		tokenize: true,
+		isEscaped: quoteIsEscaped
+	}, {
+		open: /\/\//g,
+		close: /$/g,
+		tokenize: false
+	}, {
+		open: /\/\*/g,
+		close: /\*\//g,
+		tokenize: false
+	}];
+	pull.getFirst = function (input, beginAt) {
+		var tmp, beginning, token;
+		for (var i = 0, ii = this.length; i < ii; i++) {
+		
+			this[i].open.lastIndex = beginAt;
+			tmp = this[i].open.execute(input);
+			if (tmp && (!beginning || tmp.index < beginning.index)) {
+				beginning = tmp;
+				token = this[i];
+			}
+		}
+		
+		if (!beginning)
+			return;
+		
+		token.close.lastIndex = token.open.lastIndex;
+		while ((tmp = token.close.execute(input)) && tmp.isEscaped && tmp.isEscaped(input, tmp.index));
+		if (!tmp)
+			throw "Invalid function string: " + input;	//TODE
+		
+		return {
+			token: token,
+			begin: beginning.index,
+			end: tmp.index
+		};
+	};
+	
+	var removeCommentsTokenStrings = function(input) {
+        ///<summary>Takes a function string and removes comments and strings</summary>
+        ///<param name="input" type="String|Function">The function</param>
+        ///<returns type="Object">The output</returns>
+		
+		if (input instanceof Function)
+			input = input.toString();
+		
+		for (var i = 0, ii = pull.length; i < ii; i++)
+			pull[i].open.lastIndex = 0;
+		
+		var val;
+		//while (
+    };
+			
+			
+    
     var obj = function obj() { };
     obj.extend = extend;
     obj.camelCase = camelCase;
@@ -285,5 +356,6 @@ Class("wipeout.utils.obj", function () {
     obj.joinPropertyName = joinPropertyName;
     obj.copyArray = copyArray;
     obj.random = random;
+    obj.removeCommentsTokenStrings = removeCommentsTokenStrings;
     return obj;
 });

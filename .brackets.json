@@ -4,6 +4,23 @@
         "C:/Dev/Apps/obsjs/node_modules/",
         "C:/Dev/Apps/wipeout/bower_components/objjs/tools/end.js",
         "C:/Dev/Apps/wipeout/build/wipeout.raw.debug.js",
-        "C:/Dev/Apps/wipeout/build/wipeout.debug.js"
+        "C:/Dev/Apps/wipeout/build/wipeout.debug.js",
+        "C:/Dev/Apps/wipeout/src/debug.js",
+        "C:/Dev/Apps/wipeout/src/settings.js",
+        "C:/Dev/Apps/wipeout/src/viewModel.js",
+        "C:/Dev/Apps/wipeout/src/wo.js",
+        "C:/Dev/Apps/wipeout/test/lib/qunit/qunit-1.17.1.js",
+        "C:/Dev/Apps/wipeout/test/lib/blanket.min.js",
+        "C:/Dev/Apps/wipeout/test/lib/testUtils.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/base/bindable.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/events/routedEvent.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/events/routedEventModel.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/ow.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/owts.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/templateElementSetter.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/tw.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/htmlBindingTypes/viewModelId.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/template/initialization/compiledInitializer.js",
+        "C:/Dev/Apps/wipeout/test/tests/integration/template/rendering/htmlAttributes/attr.js"
     ]
 }
