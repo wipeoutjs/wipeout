@@ -118,10 +118,11 @@ Class("wipeout.wml.wmlParser", function () {
         parent.innerHTML = htmlString;
 		return parent;
 	};
-    		
+    
+	var inline = ["area", "base", "br", "col", "hr", "img", "input", "link", "meta", "param", "command", "keygen", "source"];		
 	function parse (htmlElement) {
 
-		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName);
+		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName, inline.indexOf(htmlElement.localName) !== -1);
 		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
 			if (htmlElement.childNodes[i].nodeType === 1)
 				output.push(parse(htmlElement.childNodes[i]));
