@@ -35,7 +35,7 @@ test("textbox", function() {
 			setTimeout(function () {
 				strictEqual(model.theVal, "678");
 				start();
-			}, 10);
+			}, 20);
 		});
 	});
 	
