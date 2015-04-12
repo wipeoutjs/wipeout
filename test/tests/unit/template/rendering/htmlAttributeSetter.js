@@ -88,3 +88,32 @@ testUtils.testWithUtils("applyToElement", null, false, function(methods, classes
 	
 	output[0].dispose();
 });
+	
+testUtils.testWithUtils("splitValue", "no filter", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var input = "KJBKJBKJB";
+	subject.getValue = function () { return input; };
+	
+	// act
+	var output = invoker(input);
+	
+    // assert
+    strictEqual(output.filter, "passthrough");
+    strictEqual(output.inputs.length, 1);
+    strictEqual(output.inputs[0], input);
+});
+	
+testUtils.testWithUtils("splitValue", "filter and args", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var input1 = "KJBKJBKJB", input2 = "dada'eterte'sdad", filter = "fdsfsdff";
+	subject.getValue = function () { return input1 + ", " + input2 + " => " + filter; };
+	
+	// act
+	var output = invoker();
+	
+    // assert
+    strictEqual(output.filter, filter);
+    strictEqual(output.inputs.length, 2);
+    strictEqual(output.inputs[0], input1);
+    strictEqual(output.inputs[1], input2);
+});

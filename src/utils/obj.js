@@ -348,7 +348,7 @@ Class("wipeout.utils.obj", function () {
 		
 		found.push({end: input.length});
 		
-		var op = [], output = {}, token;
+		var op = [], output = new splitter(), token;
 		for (var i = 1, ii = found.length; i < ii; i++) {
 			op.push(input.substring(found[i - 1].end, found[i].begin));
 			
@@ -360,7 +360,16 @@ Class("wipeout.utils.obj", function () {
 		
 		output.output = op.join("");
 		return output;
-    };		
+    };
+	
+	var splitter = function () {}
+	splitter.prototype.addTokens = function (toString) {
+		for (var i in this)
+			if (this.hasOwnProperty(i) && i !== "output")
+				toString = toString.replace(i, this[i]);
+		
+		return toString;
+	};
     
     var obj = function obj() { };
     obj.extend = extend;

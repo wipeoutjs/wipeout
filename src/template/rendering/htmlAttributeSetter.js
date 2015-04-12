@@ -13,15 +13,6 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		this.action = action;
 	});
 	
-	//<input wo-value="$this.theDate, 'DD-MMM-YYYY' => dateParser" />
-	htmlAttributeSetter.splitValue = function (theValue) {
-		///<summary>Splits an attribute string into various parts</summary>
-        ///<param name="theValue" type="String">The value</param>
-        ///<returns type="Object">The split data</returns>
-		
-		
-	};
-	
 	htmlAttributeSetter.prototype.setData = function (element, name, data) {
 		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>	//TODO: document and expose wo.htmlAttributes
         ///<param name="element" type="Element">The html element</param>
@@ -110,6 +101,33 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		}).bind(this)));
 		
 		return op;
+	};
+	
+	htmlAttributeSetter.prototype.splitValue = function () {
+		///<summary>Splits an attribute string into various parts</summary>
+        ///<returns type="Object|String">The split data, or the original input if the data does not need to be split</returns>
+		
+		var splitValue = wipeout.utils.obj.removeCommentsTokenStrings(this.getValue());
+		var split = splitValue.output.split("=>");
+		if (split.length === 1)
+			return {
+				inputs: [this.getValue()],
+				filter: "passthrough"
+			};
+		
+		if (split.length !== 2)
+			throw "Invalid attribute value: " + splitValue + ". You may only include 1 filter.";	//TODE
+		
+		var output = {
+			filter: trim(splitValue.addTokens(split[1])),
+			inputs: []
+		};
+		
+		enumerateArr(split[0].split(","), function (item) {
+			output.inputs.push(trim(splitValue.addTokens(item)));
+		});
+		
+		return output;
 	};
 	
 	return htmlAttributeSetter;
