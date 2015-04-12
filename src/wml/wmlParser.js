@@ -119,7 +119,7 @@ Class("wipeout.wml.wmlParser", function () {
 		return parent;
 	};
     
-	var inline = ["area", "base", "br", "col", "hr", "img", "input", "link", "meta", "param", "command", "keygen", "source"];		
+	var inline = ["area", "base", "br", "col", "command", "hr", "img", "input", "keygen", "link", "meta", "param", "source"];		
 	function parse (htmlElement) {
 
 		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName, inline.indexOf(htmlElement.localName) !== -1);
