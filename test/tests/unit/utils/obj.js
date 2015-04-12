@@ -147,23 +147,42 @@ testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, 
 
 testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods, classes, subject, invoker) {
     // arrange
-	function tester (arg1, /*something\\"'*/arg2) {
-		// something "'/*
+	function tester (arg1, /*something//"'*/arg2) {
 		/*and again //'"*/
 		
 		/*erterter*///asdasdasd
 		
-		var ttt = "kjsdbklsdjbfljkb\\/*";
-		var yyy = 'ddsssddkjsdbklsdjbfljkb\\/*';
+		var ttt = "kjsdbklsdjbfljkb///*";
+		var yyy = 'ddsssddkjsdbklsdjbfljkb///*';
 	}
     
     // act
-	debugger;
     var output = invoker(tester);
-	debugger;
-	var tokenNumber = /##token\d*##/.exec(output)
+	var tokenNumber = /\d+/.exec(/##token\d*##/.exec(output.output)[0]);
+	var doItMyself = tester.toString()
+				.replace("/*something//\"'*/", "")
+				.replace("// something \"'/*", "")
+				.replace("/*and again //'\"*/", "")
+				.replace("/*erterter*///asdasdasd", "")
+				.replace('"kjsdbklsdjbfljkb///*"', "##token" + tokenNumber[0] + "##")
+				.replace("'ddsssddkjsdbklsdjbfljkb///*'", "##token" + (parseInt(tokenNumber[0]) + 1) + "##");
+	
+	for (var i = 0, ii = output.output.length; i < ii; i++)
+		if (output.output[i] !== doItMyself[i]) {
+			if (output.output[i] === "\r")
+				output.output = output.output.substring(0, i) + output.output.substring(0, i + 1);
+			else if (doItMyself[i] === "\r")
+				doItMyself = doItMyself.substring(0, i) + doItMyself.substring(i + 1);
+			else {
+				ok(false);
+				return;
+			}
+		}
     
-    // assert    
-    strictEqual(out, obj1);
-    strictEqual(out.aaa, obj2.aaa);
+    // assert
+	console.log(output.output.length);
+	console.log(doItMyself.length);
+    equal(output.output, doItMyself);
+    equal(output["##token" + tokenNumber[0] + "##"], '"kjsdbklsdjbfljkb///*"');
+    equal(output["##token" + (parseInt(tokenNumber[0]) + 1) + "##"], "'ddsssddkjsdbklsdjbfljkb///*'");
 });

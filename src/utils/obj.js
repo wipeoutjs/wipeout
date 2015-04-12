@@ -290,7 +290,7 @@ Class("wipeout.utils.obj", function () {
 		isEscaped: quoteIsEscaped
 	}, {
 		open: /\/\//gm,
-		close: /$/g,
+		close: /(?=\n)/gm,
 		tokenize: false
 	}, {
 		open: /\/\*/gm,
@@ -320,7 +320,7 @@ Class("wipeout.utils.obj", function () {
 		return {
 			token: token,
 			begin: beginning.index,
-			end: tmp.index
+			end: token.close.lastIndex
 		};
 	};
 	
@@ -348,17 +348,17 @@ Class("wipeout.utils.obj", function () {
 		
 		found.push({end: input.length});
 		
-		var output = {output: ""}, token;
-		for (var i = 1, ii = found.length; i > ii; i++) {
-			if (found[i].tokenize) {
-				output[token = uniqueToken()] = output.output.substring(found[i].begin, found[i].end);
-			} else {
-				token = "";
-			}
+		var op = [], output = {}, token;
+		for (var i = 1, ii = found.length; i < ii; i++) {
+			op.push(input.substring(found[i - 1].end, found[i].begin));
 			
-			output.output += input.substring(found[i - 1].end, found[i].begin);
+			if (found[i].token && found[i].token.tokenize) {
+				output[token = uniqueToken()] = input.substring(found[i].begin, found[i].end);
+				op.push(token);
+			}
 		}
 		
+		output.output = op.join("");
 		return output;
     };		
     
