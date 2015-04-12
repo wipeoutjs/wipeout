@@ -144,3 +144,26 @@ testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, 
     strictEqual(out, obj1);
     strictEqual(out.aaa, obj2.aaa);
 });
+
+testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods, classes, subject, invoker) {
+    // arrange
+	function tester (arg1, /*something\\"'*/arg2) {
+		// something "'/*
+		/*and again //'"*/
+		
+		/*erterter*///asdasdasd
+		
+		var ttt = "kjsdbklsdjbfljkb\\/*";
+		var yyy = 'ddsssddkjsdbklsdjbfljkb\\/*';
+	}
+    
+    // act
+	debugger;
+    var output = invoker(tester);
+	debugger;
+	var tokenNumber = /##token\d*##/.exec(output)
+    
+    // assert    
+    strictEqual(out, obj1);
+    strictEqual(out.aaa, obj2.aaa);
+});

@@ -279,22 +279,22 @@ Class("wipeout.utils.obj", function () {
 	}
 	
 	var pull = [{
-		open: /'/g,
-		close: /'/g,
-		tokenize: true,
-		isEscaped: isEsceped
-	}, {
-		open: /"/g,
-		close: /"/g,
+		open: /'/gm,
+		close: /'/gm,
 		tokenize: true,
 		isEscaped: quoteIsEscaped
 	}, {
-		open: /\/\//g,
+		open: /"/gm,
+		close: /"/gm,
+		tokenize: true,
+		isEscaped: quoteIsEscaped
+	}, {
+		open: /\/\//gm,
 		close: /$/g,
 		tokenize: false
 	}, {
-		open: /\/\*/g,
-		close: /\*\//g,
+		open: /\/\*/gm,
+		close: /\*\//gm,
 		tokenize: false
 	}];
 	pull.getFirst = function (input, beginAt) {
@@ -302,7 +302,7 @@ Class("wipeout.utils.obj", function () {
 		for (var i = 0, ii = this.length; i < ii; i++) {
 		
 			this[i].open.lastIndex = beginAt;
-			tmp = this[i].open.execute(input);
+			tmp = this[i].open.exec(input);
 			if (tmp && (!beginning || tmp.index < beginning.index)) {
 				beginning = tmp;
 				token = this[i];
@@ -313,7 +313,7 @@ Class("wipeout.utils.obj", function () {
 			return;
 		
 		token.close.lastIndex = token.open.lastIndex;
-		while ((tmp = token.close.execute(input)) && tmp.isEscaped && tmp.isEscaped(input, tmp.index));
+		while ((tmp = token.close.exec(input)) && tmp.isEscaped && tmp.isEscaped(input, tmp.index)) ;
 		if (!tmp)
 			throw "Invalid function string: " + input;	//TODE
 		
@@ -324,6 +324,14 @@ Class("wipeout.utils.obj", function () {
 		};
 	};
 	
+	var uniqueToken = (function () {
+		var i = 0;
+		
+		return function () {
+			return "##token" + (++i) + "##"
+		};
+	}());
+	
 	var removeCommentsTokenStrings = function(input) {
         ///<summary>Takes a function string and removes comments and strings</summary>
         ///<param name="input" type="String|Function">The function</param>
@@ -332,14 +340,27 @@ Class("wipeout.utils.obj", function () {
 		if (input instanceof Function)
 			input = input.toString();
 		
-		for (var i = 0, ii = pull.length; i < ii; i++)
-			pull[i].open.lastIndex = 0;
+		var found = [{end: 0}], i = 0, token;
+		while (token = pull.getFirst(input, i)) {
+			i = token.token.close.lastIndex;
+			found.push(token);
+		}
 		
-		var val;
-		//while (
-    };
+		found.push({end: input.length});
+		
+		var output = {output: ""}, token;
+		for (var i = 1, ii = found.length; i > ii; i++) {
+			if (found[i].tokenize) {
+				output[token = uniqueToken()] = output.output.substring(found[i].begin, found[i].end);
+			} else {
+				token = "";
+			}
 			
-			
+			output.output += input.substring(found[i - 1].end, found[i].begin);
+		}
+		
+		return output;
+    };		
     
     var obj = function obj() { };
     obj.extend = extend;
