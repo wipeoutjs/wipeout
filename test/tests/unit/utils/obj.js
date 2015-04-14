@@ -158,14 +158,14 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
     
     // act
     var output = invoker(tester);
-	var tokenNumber = /\d+/.exec(/##token\d*##/.exec(output.output)[0]);
+	var tokenNumber = parseInt(/\d+/.exec(/##token\d*##/.exec(output.output)[0])[0]);
 	var doItMyself = tester.toString()
 				.replace("/*something//\"'*/", "")
 				.replace("// something \"'/*", "")
 				.replace("/*and again //'\"*/", "")
 				.replace("/*erterter*///asdasdasd", "")
-				.replace('"kjsdbkls\\"djbfljkb///*"', "##token" + tokenNumber[0] + "##")
-				.replace("'ddsssddkjsdbklsdjbfljkb///*'", "##token" + (parseInt(tokenNumber[0]) + 1) + "##");
+				.replace('"kjsdbkls\\"djbfljkb///*"', "##token" + tokenNumber + "##")
+				.replace("'ddsssddkjsdbklsdjbfljkb///*'", "##token" + (tokenNumber + 1) + "##");
 	
 	for (var i = 0, ii = output.output.length; i < ii; i++)
 		if (output.output[i] !== doItMyself[i]) {
@@ -181,8 +181,8 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
     
     // assert
     equal(output.output, doItMyself);
-    equal(output["##token" + tokenNumber[0] + "##"], '"kjsdbkls\\"djbfljkb///*"');
-    equal(output["##token" + (parseInt(tokenNumber[0]) + 1) + "##"], "'ddsssddkjsdbklsdjbfljkb///*'");
+    equal(output["##token" + tokenNumber + "##"], '"kjsdbkls\\"djbfljkb///*"');
+    equal(output["##token" + (tokenNumber + 1) + "##"], "'ddsssddkjsdbklsdjbfljkb///*'");
 });
 
 testUtils.testWithUtils("removeCommentsTokenStringsAndBrackets", "", true, function(methods, classes, subject, invoker) {
@@ -192,8 +192,11 @@ testUtils.testWithUtils("removeCommentsTokenStringsAndBrackets", "", true, funct
     
     // act
     var output = invoker(b1 + b2 + b3);
-	var tokenNumber = /\d+/.exec(/##token\d*##/.exec(output.output)[0]);
+	var tokenNumber = parseInt(/\d+/.exec(/##token\d*##/.exec(output.output)[0])[0]);
     
     // assert
-    equal(output.output, "##token" + tokenNumber + "##" + "##token" + (parseInt(tokenNumber) + 1) + "##" + "##token" + (parseInt(tokenNumber) + 2) + "##");
+    strictEqual(output.output, "##token" + tokenNumber + "##" + "##token" + (tokenNumber + 1) + "##" + "##token" + (tokenNumber + 2) + "##");
+    strictEqual(output["##token" + tokenNumber + "##"], b1);
+    strictEqual(output["##token" + (tokenNumber + 1) + "##"], b2);
+    strictEqual(output["##token" + (tokenNumber + 2) + "##"], b3);
 });
