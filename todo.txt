@@ -1,9 +1,30 @@
+
+
+Remove all bindingType/applyToViewModel stuff from propertySetter
+Remove applyToElement stuff from htmlAttributeSetter
+Move parser functionality to setters class. Add canSet functionality. Test parsers for htmlAttributeSetter (content)
+
+Redesign -
+Common elements:	name parsing (something--s-tw)
+					parsers
+					filters
+					getValue
+					canSet
+					setValue
+					onValueChanged
+
+Properties:			bindingType
+					onPropertyChange
+
+Element:			on elmement event
+
+
+
+
 Types of todos:
 TODV: in later version
 TODE: exception handling
 TODM: document
-
-Expose stuff
 
 view model constructor context (defualt = window)
 
