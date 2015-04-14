@@ -270,7 +270,10 @@ Class("wipeout.utils.obj", function () {
         return extend;
     };
     
-	function quoteIsEscaped (input, tokenIndex) {
+	function quoteIsEscaped (input, tokenIndex, isOpeningTag) {
+		if (isOpeningTag)
+			return false;
+		
 		var number = 0;
 		while (input[tokenIndex - 1 - number] === "\\")
 			number++;
@@ -278,7 +281,7 @@ Class("wipeout.utils.obj", function () {
 		return number % 2 != 0;
 	}
 	
-	var pull = [{
+	var stringsAndComments = [{
 		open: /'/gm,
 		close: /'/gm,
 		tokenize: true,
@@ -297,7 +300,25 @@ Class("wipeout.utils.obj", function () {
 		close: /\*\//gm,
 		tokenize: false
 	}];
-	pull.getFirst = function (input, beginAt) {
+	
+	var brackets = [{
+		open: /\{/gm,
+		close: /\}/gm,
+		tokenize: true,
+		nested: true
+	}, {
+		open: /\(/gm,
+		close: /\)/gm,
+		tokenize: true,
+		nested: true
+	}, {
+		open: /\[/gm,
+		close: /\]/gm,
+		tokenize: true,
+		nested: true
+	}];
+	
+	brackets.getFirst = stringsAndComments.getFirst = function (input, beginAt) {
 		var tmp, beginning, token;
 		for (var i = 0, ii = this.length; i < ii; i++) {
 		
@@ -312,10 +333,22 @@ Class("wipeout.utils.obj", function () {
 		if (!beginning)
 			return;
 		
-		token.close.lastIndex = token.open.lastIndex;
-		while ((tmp = token.close.exec(input)) && tmp.isEscaped && tmp.isEscaped(input, tmp.index)) ;
-		if (!tmp)
-			throw "Invalid function string: " + input;	//TODE
+		var index = 1, fOpen, fClose;
+		do {
+			token.close.lastIndex = token.open.lastIndex;
+			while (token.nested && (fOpen = token.open.exec(input)) && token.isEscaped && token.isEscaped(input, fOpen.index, true)) ;
+			while ((fClose = token.close.exec(input)) && token.isEscaped && token.isEscaped(input, fClose.index, false)) ;
+
+			if (!fClose)
+				throw "Invalid function string: " + input;	//TODE
+
+			if (fOpen && fOpen.index < fClose.index)
+				index++;
+			else {
+				token.open.lastIndex = token.close.lastIndex;
+				index--;
+			}
+		} while (token.nested && index > 0);
 		
 		return {
 			token: token,
@@ -332,16 +365,13 @@ Class("wipeout.utils.obj", function () {
 		};
 	}());
 	
-	var removeCommentsTokenStrings = function(input) {
-        ///<summary>Takes a function string and removes comments and strings</summary>
-        ///<param name="input" type="String|Function">The function</param>
-        ///<returns type="Object">The output</returns>
+	function removeAndToken (input, tokens) {
 		
 		if (input instanceof Function)
 			input = input.toString();
 		
 		var found = [{end: 0}], i = 0, token;
-		while (token = pull.getFirst(input, i)) {
+		while (token = tokens.getFirst(input, i)) {
 			i = token.token.close.lastIndex;
 			found.push(token);
 		}
@@ -360,6 +390,28 @@ Class("wipeout.utils.obj", function () {
 		
 		output.output = op.join("");
 		return output;
+	}
+	
+	var removeCommentsTokenStrings = function(input) {
+        ///<summary>Takes a function string and removes comments and strings</summary>
+        ///<param name="input" type="String|Function">The function</param>
+        ///<returns type="Object">The output</returns>
+		
+		return removeAndToken(input, stringsAndComments);
+    };
+	
+	var removeCommentsTokenStringsAndBrackets = function(input) {
+        ///<summary>Takes a function string and removes comments, strings and anything within brackets</summary>
+        ///<param name="input" type="String|Function">The function</param>
+        ///<returns type="Object">The output</returns>
+		
+		var op1 = removeCommentsTokenStrings(input);
+		var op2 = removeAndToken(op1.output, brackets);
+		for (var i in op2)
+			if (op2.hasOwnProperty(i) && i !== "output")
+				op2[i] = op1.addTokens(op2[i]);
+		
+		return op2;
     };
 	
 	var splitter = function () {}
@@ -387,5 +439,6 @@ Class("wipeout.utils.obj", function () {
     obj.copyArray = copyArray;
     obj.random = random;
     obj.removeCommentsTokenStrings = removeCommentsTokenStrings;
+    obj.removeCommentsTokenStringsAndBrackets = removeCommentsTokenStringsAndBrackets;
     return obj;
 });

@@ -152,7 +152,7 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
 		
 		/*erterter*///asdasdasd
 		
-		var ttt = "kjsdbklsdjbfljkb///*";
+		var ttt = "kjsdbkls\"djbfljkb///*";
 		var yyy = 'ddsssddkjsdbklsdjbfljkb///*';
 	}
     
@@ -164,7 +164,7 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
 				.replace("// something \"'/*", "")
 				.replace("/*and again //'\"*/", "")
 				.replace("/*erterter*///asdasdasd", "")
-				.replace('"kjsdbklsdjbfljkb///*"', "##token" + tokenNumber[0] + "##")
+				.replace('"kjsdbkls\\"djbfljkb///*"', "##token" + tokenNumber[0] + "##")
 				.replace("'ddsssddkjsdbklsdjbfljkb///*'", "##token" + (parseInt(tokenNumber[0]) + 1) + "##");
 	
 	for (var i = 0, ii = output.output.length; i < ii; i++)
@@ -174,15 +174,26 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
 			else if (doItMyself[i] === "\r")
 				doItMyself = doItMyself.substring(0, i) + doItMyself.substring(i + 1);
 			else {
-				ok(false);
+				ok(false, 'Invalid char: output.output[' + i + ']: "' + output.output[i] + '", doItMyself[' + i + ']: ' + doItMyself[i]);
 				return;
 			}
 		}
     
     // assert
-	console.log(output.output.length);
-	console.log(doItMyself.length);
     equal(output.output, doItMyself);
-    equal(output["##token" + tokenNumber[0] + "##"], '"kjsdbklsdjbfljkb///*"');
+    equal(output["##token" + tokenNumber[0] + "##"], '"kjsdbkls\\"djbfljkb///*"');
     equal(output["##token" + (parseInt(tokenNumber[0]) + 1) + "##"], "'ddsssddkjsdbklsdjbfljkb///*'");
+});
+
+testUtils.testWithUtils("removeCommentsTokenStringsAndBrackets", "", true, function(methods, classes, subject, invoker) {
+	
+    // arrange
+	var b1 = "{{{hello 'something'}}}", b2 = "(((hello)))", b3 = "[[no no no[]]]";
+    
+    // act
+    var output = invoker(b1 + b2 + b3);
+	var tokenNumber = /\d+/.exec(/##token\d*##/.exec(output.output)[0]);
+    
+    // assert
+    equal(output.output, "##token" + tokenNumber + "##" + "##token" + (parseInt(tokenNumber) + 1) + "##" + "##token" + (parseInt(tokenNumber) + 2) + "##");
 });
