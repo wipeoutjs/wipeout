@@ -63,8 +63,10 @@ testUtils.testWithUtils("getValue", "has val", false, function(methods, classes,
 testUtils.testWithUtils("getValue", "no val", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = "KJBKJBKJBKJBJ";
-	subject._value = {
-		serializeContent: methods.method([], val)
+	subject._super = function () {
+		return {
+			serializeContent: methods.method([], val)
+		};
 	};
     
 	// act

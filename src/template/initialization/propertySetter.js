@@ -55,7 +55,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		
         return this.hasOwnProperty("_valueAsString") ?
             this._valueAsString :
-            (this._valueAsString = this._value.serializeContent());
+            (this._valueAsString = this._super().serializeContent());
     };
 	
 	propertySetter.prototype.getParser = function(forViewModel) {
