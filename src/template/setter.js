@@ -3,17 +3,38 @@ Class("wipeout.template.setter", function () {
 	
 	/*
 	Redesign
-	Common elements:	parsers
+	Common elements:	name parsing (something--s-tw)
+						parsers
 						filters
 						getValue
+						canSet
 						setValue
 						onValueChanged
+						
+	Properties:			bindingType
+						onPropertyChange
 	
+	Element:			on elmement event
 	*/
 	
 	
 	
+	
 	//var build, watch, execute (get), getValue
+	
+	var setter1 = objjs.object.extend(function setter (name, value) {
+		///<summary>Base class for vm property setters and html attribute setters</summary>
+        ///<param name="name" type="String">The name of the item to set</param>
+        ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
+		
+		this._super();
+	
+		///<summary type="String">The name of the property</summary>
+		this.name = name;
+		
+		///<summary type="String">The value of the property</summary>
+		this._value = value;
+	});
 		
 	
 	
