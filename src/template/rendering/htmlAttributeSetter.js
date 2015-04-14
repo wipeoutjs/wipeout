@@ -107,7 +107,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		///<summary>Splits an attribute string into various parts</summary>
         ///<returns type="Object|String">The split data, or the original input if the data does not need to be split</returns>
 		
-		var splitValue = wipeout.utils.obj.removeCommentsTokenStrings(this.getValue());
+		var splitValue = wipeout.utils.jsParse.removeCommentsTokenStrings(this.getValue());
 		var split = splitValue.output.split("=>");
 		if (split.length === 1)
 			return {
