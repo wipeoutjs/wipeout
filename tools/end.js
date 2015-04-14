@@ -1,12 +1,23 @@
+//TODM: all exposed items
+function expose (name, value) {
+	if (!name || value == null) throw "Invalid input";
+	if (wo[name]) throw name + " is already taken!";
+	wo[name] = value;
+}
 
-wo.viewModel = viewModel;
+expose("viewModel", viewModel);
 
-wo.routedEvent = wipeout.events.routedEvent;
-wo.array = wipeout.base.array;
-wo.observe = obsjs.observable.observe;
+expose("routedEvent", wipeout.events.routedEvent);
+expose("array", wipeout.base.array);
+expose("observable", obsjs.observable);
+
+expose("bindings", wipeout.htmlBindingTypes);
+expose("parsers", wipeout.template.initialization.parsers);
+
+expose("addHtmlAttribute", HtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
-    wo[name] = vm;
+	expose(name, vm);
 });
 
 }());

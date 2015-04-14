@@ -78,7 +78,7 @@ var Class = function(classFullName, accessorFunction) {
 	return current[classFullName[classFullName.length - 1]] = accessorFunction();
 };
 
-//TODO: expose and document. This is the only way attributes with "test" can be searched for
+//TODM: the "test" property
 var HtmlAttr = function(attributeName, accessorFunction) {
 	///<summary>Create a wipeout html attribute</summary>
 	///<param name="attributeName" type="String">The name of the attribute</param>

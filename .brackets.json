@@ -37,6 +37,12 @@
         "C:/Dev/Apps/wipeout/test/tests/integration/template/setter.js",
         "C:/Dev/Apps/wipeout/test/tests/integration/viewModels/itemsControl.js",
         "C:/Dev/Apps/wipeout/test/tests/unit/utils/obj.js",
-        "C:/Dev/Apps/wipeout/test/tests/integration/utils/domData.js"
+        "C:/Dev/Apps/wipeout/test/tests/integration/utils/domData.js",
+        "C:/Dev/Apps/wipeout/src/template/setter.js",
+        "C:/Dev/Apps/wipeout/src/template/rendering/builder.js",
+        "C:/Dev/Apps/wipeout/src/base/bindable.js",
+        "C:/Dev/Apps/wipeout/test/tests/unit/htmlBindingTypes/ow.js",
+        "C:/Dev/Apps/wipeout/src/template/initialization/parsers.js",
+        "C:/Dev/Apps/wipeout/test/tests/unit/htmlBindingTypes/templateProperty.js"
     ]
 }
