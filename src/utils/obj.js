@@ -85,15 +85,14 @@ var HtmlAttr = function(attributeName, accessorFunction) {
 	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
 	
 	Class("wipeout.template.rendering.htmlAttributes." + "wo-" + attributeName, accessorFunction);
+	accessorFunction = function () {
+		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
+	};
 	
 	if (wipeout.template.rendering.htmlAttributes["wo-" + attributeName].test instanceof Function)
-		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, function () {
-			return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
-		});
+		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, accessorFunction);
 	
-	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, function () {
-		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
-	});
+	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, accessorFunction);
 };
     
 var _trimString = /^\s+|\s+$/g;
