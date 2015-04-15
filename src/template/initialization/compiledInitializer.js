@@ -133,9 +133,13 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 	//TODO: look at this method, its args and applications and can it be trimmed?
     compiledInitializer.prototype.applyToViewModel = function (name, viewModel, renderContext) {
         ///<summary>Apply this setter to a view model</summary>
+        ///<param name="name" type="String">The name of the property to apply</param>
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Array">An array of disposables</returns>
+		
+		if (!this.setters[name])
+			return [];
 		
 		var bindingType = this.setters[name].getBindingType(viewModel);
 		
