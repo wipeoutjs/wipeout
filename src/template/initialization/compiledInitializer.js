@@ -47,7 +47,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         var name = wipeout.utils.viewModels.getElementName(element);
 		name = compiledInitializer.getPropertyFlags(name).name;
-        if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\"has been set more than once.";
+        if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\" has been set more than once.";
         
         for (var val in element.attributes) {
             if (val === "value" || val.indexOf("value--") === 0) {
