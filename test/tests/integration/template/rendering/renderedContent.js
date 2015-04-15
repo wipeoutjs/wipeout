@@ -215,9 +215,9 @@ test("render, template change", function() {
 });
 	
 test("un render", function() {
+	
     // arrange
-    
-    var vms = [application, new wo.contentControl(), new wo.contentControl()];
+	var vms = [application, new wo.contentControl(), new wo.contentControl()];
     
     application.hello = vms[1];
     application.hello.helloAgain = vms[2];
