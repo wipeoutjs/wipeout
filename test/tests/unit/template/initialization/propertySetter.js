@@ -123,36 +123,3 @@ testUtils.testWithUtils("parseOrExecute", "no parser", false, function(methods, 
     // assert
     strictEqual(op, output);
 });
-
-testUtils.testWithUtils("getBindingType", "has bindingType", false, function(methods, classes, subject, invoker) {
-    // arrange
-	subject.bindingType = {};
-	
-	// act
-	var output = invoker();
-	
-    // assert
-    strictEqual(subject.bindingType, output);
-});
-
-testUtils.testWithUtils("getBindingType", "has global bindingType", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var vm = new (wipeout.base.bindable.extend(function () {}))();
-	vm.addGlobalBindingType("aaa", "tw");
-	subject.name = "aaa";
-	
-	// act
-	var output = invoker(vm);
-	
-    // assert
-    strictEqual("tw", output);
-});
-
-testUtils.testWithUtils("getBindingType", "default", false, function(methods, classes, subject, invoker) {
-    // arrange	
-	// act
-	var output = invoker();
-	
-    // assert
-    strictEqual("ow", output);
-});

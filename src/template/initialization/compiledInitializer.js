@@ -141,7 +141,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		if (!this.setters[name])
 			return [];
 		
-		var bindingType = this.setters[name].getBindingType(viewModel);
+		var bindingType = compiledInitializer.getBindingType(this.setters[name], viewModel);
 		
 		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + name + "\".";
 		
@@ -155,6 +155,16 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		}).bind(this)));
 		
 		return op;
+	};
+		
+	compiledInitializer.getBindingType = function (setter, viewModel) {
+        ///<summary>Get the binding type or global binding type</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<returns type="String">the binding type</returns>
+		
+		return setter.bindingType || 
+				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(setter.name)) || 
+				"ow";
 	};
         
     return compiledInitializer;

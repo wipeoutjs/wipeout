@@ -286,13 +286,14 @@ testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, funct
     // arrange
 	var vm = {};
 	subject.setters = {
-		aaa: {
-			getBindingType: methods.method([vm], "invalid")
-		}
-	}
+		aaa: {}
+	};
 	
-	// act
-    // assert
+	classes.mock("wipeout.template.initialization.compiledInitializer.getBindingType", function () {
+		methods.method([subject.setters.aaa, vm]).apply(null, arguments);
+		return "invalid";
+	});
+	
 	throws(function () {
 		invoker("aaa", vm);
 	});
@@ -303,10 +304,15 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 	var vm = {}, rc = {};
 	subject.setters = {
 		aaa: {
-			getBindingType: methods.method([vm], "theBinding"),
 			cacheAllWatched: function (input) { input.apply(this, arguments); }
 		}
 	};
+	
+	classes.mock("wipeout.template.initialization.compiledInitializer.getBindingType", function () {
+		methods.method([subject.setters.aaa, vm]).apply(null, arguments);
+		return "theBinding";
+	});
+	
 	classes.mock("wipeout.htmlBindingTypes.theBinding", function () {
 		methods.method([vm, subject.setters.aaa, rc]).apply(null, arguments);
 		return methods.method();
@@ -321,4 +327,38 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 	
 	
 	output[0].dispose();
+});
+
+testUtils.testWithUtils("getBindingType", "has bindingType", true, function(methods, classes, subject, invoker) {
+    // arrange
+	var setter = {
+		bindingType: {}
+	};
+	
+	// act
+	var output = invoker(setter);
+	
+    // assert
+    strictEqual(setter.bindingType, output);
+});
+
+testUtils.testWithUtils("getBindingType", "has global bindingType", true, function(methods, classes, subject, invoker) {
+    // arrange
+	var vm = new (wipeout.base.bindable.extend(function () {}))();
+	vm.addGlobalBindingType("aaa", "tw");
+	
+	// act
+	var output = invoker({name: "aaa"}, vm);
+	
+    // assert
+    strictEqual("tw", output);
+});
+
+testUtils.testWithUtils("getBindingType", "default", true, function(methods, classes, subject, invoker) {
+    // arrange	
+	// act
+	var output = invoker({}, {});
+	
+    // assert
+    strictEqual("ow", output);
 });

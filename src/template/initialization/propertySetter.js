@@ -80,16 +80,6 @@ Class("wipeout.template.initialization.propertySetter", function () {
 			parser(parser.useRawXmlValue ? this._value : this.getValue(), this.name, renderContext) :
 			this.build().apply(null, renderContext.asGetterArgs());
 	};
-		
-	propertySetter.prototype.getBindingType = function (viewModel) {
-        ///<summary>Get the binding type or global binding type</summary>
-        ///<param name="viewModel" type="Any">The current view model</param>
-        ///<returns type="String">the binding type</returns>
-		
-		return this.bindingType || 
-				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(this.name)) || 
-				"ow";
-	};
 	
 	return propertySetter;
 });
