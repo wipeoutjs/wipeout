@@ -14,7 +14,9 @@ test("binding", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
 	
 	// act
-	var dispose = setter.applyToViewModel(viewModel, renderContext);
+	var dispose = setter.cacheAllWatched(function () {
+		setter._caching.push(wipeout.htmlBindingTypes.tw(viewModel, setter, renderContext));
+	});
 	
 	// assert
 	strictEqual(viewModel[name], val1);

@@ -23,7 +23,7 @@ Class("wipeout.utils.jsParse", function () {
 		isEscaped: quoteIsEscaped
 	}, {
 		open: /\/\//gm,
-		close: /(?=\n)/gm,
+		close: /(?=\n)/gm,	//TODO: /(?=\r?\n)/gm
 		tokenize: false
 	}, {
 		open: /\/\*/gm,

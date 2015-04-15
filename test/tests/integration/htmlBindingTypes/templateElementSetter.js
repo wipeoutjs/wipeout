@@ -20,7 +20,9 @@ test("binding", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.applyToViewModel(viewModel, renderContext);
+	var disp = setter.cacheAllWatched(function () {
+		setter._caching.push(wipeout.htmlBindingTypes.templateElementSetter(viewModel, setter, renderContext));
+	});
 	
 	// assert
 	strictEqual(viewModel[name].val.val1, val1);

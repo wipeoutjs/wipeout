@@ -281,3 +281,44 @@ testUtils.testWithUtils("initialize", null, false, function(methods, classes, su
     // assert
 	invoker(vm, rc)();
 });
+
+testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var vm = {};
+	subject.setters = {
+		aaa: {
+			getBindingType: methods.method([vm], "invalid")
+		}
+	}
+	
+	// act
+    // assert
+	throws(function () {
+		invoker("aaa", vm);
+	});
+});
+
+testUtils.testWithUtils("applyToViewModel", null, false, function(methods, classes, subject, invoker) {
+    // arrange
+	var vm = {}, rc = {};
+	subject.setters = {
+		aaa: {
+			getBindingType: methods.method([vm], "theBinding"),
+			cacheAllWatched: function (input) { input.apply(this, arguments); }
+		}
+	};
+	classes.mock("wipeout.htmlBindingTypes.theBinding", function () {
+		methods.method([vm, subject.setters.aaa, rc]).apply(null, arguments);
+		return methods.method();
+	}, 1);
+	subject.cacheAllWatched = function () { arguments[0](); return []; };
+	
+	// act
+	var output = invoker("aaa", vm, rc);
+	
+    // assert
+    strictEqual(output.length, 1);
+	
+	
+	output[0].dispose();
+});

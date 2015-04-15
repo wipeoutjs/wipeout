@@ -4,13 +4,14 @@ module("integration: wipeout.htmlBindingTypes.ow", {
     teardown: integrationTestTeardown
 });
 	
+/*
 //TODO: HACK!!!
 wipeout.template.initialization.propertySetter.prototype.applyToViewModel = function (vm, rc) {
 	var _this = {};
 	_this.setters = {};
 	_this.setters[this.name] = this;
 	return wipeout.template.initialization.compiledInitializer.prototype.applyToViewModel.call(_this, this.name, vm, rc);
-}
+}*/
 
 test("binding, nb", function () {
 	// arrange
@@ -20,7 +21,7 @@ test("binding, nb", function () {
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	// act
-	setter.applyToViewModel(viewModel, renderContext);
+	wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	
 	// assert
 	strictEqual(viewModel[name], true);
@@ -40,7 +41,9 @@ test("binding, bindOneWay", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.applyToViewModel(viewModel, renderContext);
+	var disp = setter.cacheAllWatched(function () {
+		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
+	});
 	
 	// assert
 	strictEqual(viewModel[name], val1);

@@ -156,35 +156,3 @@ testUtils.testWithUtils("getBindingType", "default", false, function(methods, cl
     // assert
     strictEqual("ow", output);
 });
-
-testUtils.testWithUtils("applyToViewModel", "invalid binding type", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var vm = {};
-	subject.getBindingType = methods.method([vm], "invalid");
-	
-	// act
-    // assert
-	throws(function () {
-		invoker(vm);
-	});
-});
-
-testUtils.testWithUtils("applyToViewModel", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-	var vm = {}, rc = {};
-	subject.getBindingType = methods.method([vm], "theBinding");
-	classes.mock("wipeout.htmlBindingTypes.theBinding", function () {
-		methods.method([vm, subject, rc]).apply(null, arguments);
-		return methods.method();
-	}, 1);
-	subject.cacheAllWatched = function () { arguments[0](); return []; };
-	
-	// act
-	var output = invoker(vm, rc);
-	
-    // assert
-    strictEqual(output.length, 1);
-	
-	
-	output[0].dispose();
-});
