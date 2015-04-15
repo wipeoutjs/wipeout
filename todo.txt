@@ -1,6 +1,6 @@
 
 
-Remove all bindingType/applyToViewModel stuff from propertySetter
+Remove all bindingType stuff from propertySetter
 Remove applyToElement stuff from htmlAttributeSetter
 Move parser functionality to setters class. Add canSet functionality. Test parsers for htmlAttributeSetter (content)
 
