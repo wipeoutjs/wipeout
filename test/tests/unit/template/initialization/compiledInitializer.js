@@ -267,13 +267,15 @@ testUtils.testWithUtils("initialize", null, false, function(methods, classes, su
 	var vm = {}, rc = {};
 	
 	subject.setters = {
-		model: {
-			applyToViewModel: methods.method([vm, rc], [{dispose: methods.method()}])
-		},
-		p1: {
-			applyToViewModel: methods.method([vm, rc], [{dispose: methods.method()}])
-		}
+		model: true,
+		p1: true
 	};
+	
+	subject.applyToViewModel = methods.customMethod(function () {
+		methods.method(["model", vm, rc]).apply(null, arguments);
+		subject.applyToViewModel = methods.method(["p1", vm, rc], [{dispose: methods.method()}]);
+		return [{dispose: methods.method()}];
+	});
 	
     // act
     // assert

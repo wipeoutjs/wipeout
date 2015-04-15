@@ -116,11 +116,11 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		// only auto set model if model wasn't already set
         var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
 			[] :
-			this.setters.model.applyToViewModel(viewModel, renderContext);
+			this.applyToViewModel("model", viewModel, renderContext);
         
 		for (var name in this.setters)
             if (name !== "model")
-            	disposal.push.apply(disposal, this.setters[name].applyToViewModel(viewModel, renderContext));
+            	disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -129,6 +129,29 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 			});
 		}
     };
+    
+	//TODO: look at this method, its args and applications and can it be trimmed?
+    compiledInitializer.prototype.applyToViewModel = function (name, viewModel, renderContext) {
+        ///<summary>Apply this setter to a view model</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Array">An array of disposables</returns>
+		
+		var bindingType = this.setters[name].getBindingType(viewModel);
+		
+		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + name + "\".";
+		
+		var op = [];
+		op.push.apply(op, this.setters[name].cacheAllWatched((function () {
+			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this.setters[name], renderContext)
+			if (o && o.dispose instanceof Function)
+				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
+		}).bind(this)));
+		
+		return op;
+	};
         
     return compiledInitializer;
 });

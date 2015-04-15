@@ -91,27 +91,5 @@ Class("wipeout.template.initialization.propertySetter", function () {
 				"ow";
 	};
 	
-	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
-        ///<summary>Apply this setter to a view model</summary>
-        ///<param name="viewModel" type="Any">The current view model</param>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="Array">An array of disposables</returns>
-		
-		var bindingType = this.getBindingType(viewModel);
-		
-		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + this.name + "\".";
-		
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this, renderContext)
-			if (o && o.dispose instanceof Function)
-				op.push(o);
-			else if (o instanceof Function)
-				op.push({ dispose: o });
-		}).bind(this)));
-		
-		return op;
-	};
-	
 	return propertySetter;
 });

@@ -4,6 +4,14 @@ module("integration: wipeout.htmlBindingTypes.ow", {
     teardown: integrationTestTeardown
 });
 	
+//TODO: HACK!!!
+wipeout.template.initialization.propertySetter.prototype.applyToViewModel = function (vm, rc) {
+	var _this = {};
+	_this.setters = {};
+	_this.setters[this.name] = this;
+	return wipeout.template.initialization.compiledInitializer.prototype.applyToViewModel.call(_this, this.name, vm, rc);
+}
+
 test("binding, nb", function () {
 	// arrange
 	var viewModel = new obsjs.observable(),
