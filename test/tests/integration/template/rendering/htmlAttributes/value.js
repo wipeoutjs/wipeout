@@ -13,8 +13,8 @@ test("textbox", function() {
 		attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = onEvent.applyToElement(input, new wipeout.template.context(model));
-	disp.push.apply(disp, attribute.applyToElement(input, new wipeout.template.context(model)));
+	var disp = wipeout.template.rendering.builder.applyToElement(onEvent, input, new wipeout.template.context(model));
+	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
 	
 	// assert
 	strictEqual(input.value, "234");
@@ -50,7 +50,7 @@ test("disposal", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) {
+	enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) {
 		d.dispose();
 	});
 	
@@ -80,8 +80,8 @@ test("radio", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = attribute.applyToElement(input1, new wipeout.template.context(model));
-	disp.push.apply(disp, attribute.applyToElement(input2, new wipeout.template.context(model)))
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input1, new wipeout.template.context(model));
+	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input2, new wipeout.template.context(model)))
 	
 	// assert
 	strictEqual(input1.attributes.checked.value, "checked");
@@ -117,7 +117,7 @@ test("checkbox", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
@@ -151,7 +151,7 @@ test("checkbox, with value", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
@@ -187,9 +187,9 @@ test("checkbox, with data", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = new wipeout.template.rendering.htmlAttributeSetter("wo-data", "'something'")
-		.applyToElement(input, new wipeout.template.context(model));
-	disp.push.apply(disp, attribute.applyToElement(input, new wipeout.template.context(model)));
+	var disp = wipeout.template.rendering.builder.applyToElement(
+		new wipeout.template.rendering.htmlAttributeSetter("wo-data", "'something'"), input, new wipeout.template.context(model));
+	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
 	
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
@@ -226,9 +226,9 @@ test("checkbox, with data === null", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	var disp = new wipeout.template.rendering.htmlAttributeSetter("wo-data", "null")
-		.applyToElement(input, new wipeout.template.context(model));
-	disp.push.apply(disp, attribute.applyToElement(input, new wipeout.template.context(model)));
+	var disp = wipeout.template.rendering.builder.applyToElement(
+		new wipeout.template.rendering.htmlAttributeSetter("wo-data", "null"), input, new wipeout.template.context(model));
+	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
 	
 	// assert
 	ok(!input.attributes.checked);
@@ -264,7 +264,7 @@ test("disposal", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
 	
 	// act
-	enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) {
+	enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) {
 		d.dispose();
 	});
 	

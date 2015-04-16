@@ -12,7 +12,7 @@ test("success", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("id", "hellooo");
 	
 	// act
-	var disp = attribute.applyToElement(button, new wipeout.template.context(vm));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context(vm));
 	
 	// act
 	strictEqual(button.id, "hellooo");

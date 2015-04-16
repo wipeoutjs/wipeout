@@ -30,7 +30,7 @@
 			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", "wo-class");
 
 			// act
-			var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+			var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 
 			// assert
 			strictEqual(input.className, "");
@@ -74,7 +74,7 @@
 			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class0", "$this.theVal", "wo-class");
 
 			// act
-			enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) { d.dispose(); });
+			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });
 			
 			strictEqual(input.className, "class1 class2");
 		});
@@ -88,7 +88,7 @@
 			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", "wo-class");
 
 			// act
-			enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) { d.dispose(); });
+			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });
 			
 			strictEqual(input.className, "class0 class2");
 		});
@@ -102,7 +102,7 @@
 			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class2", "$this.theVal", "wo-class");
 
 			// act
-			enumerateArr(attribute.applyToElement(input, new wipeout.template.context(model)), function (d) { d.dispose(); });
+			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });
 			
 			strictEqual(input.className, "class0 class1");
 		});

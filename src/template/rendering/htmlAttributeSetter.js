@@ -85,24 +85,6 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return output.dispose.bind(output);
     };
 	
-	htmlAttributeSetter.prototype.applyToElement = function (element, renderContext) {
-		///<summary>Apply this attribute to an element/summary>
-        ///<param name="element" type="Element">The element</param>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="Array">An array of disposables</returns>
-		
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](element, this, renderContext);
-			if (o && o.dispose instanceof Function)
-				op.push(o);
-			else if (o instanceof Function)
-				op.push({ dispose: o });
-		}).bind(this)));
-		
-		return op;
-	};
-	
 	htmlAttributeSetter.prototype.splitValue = function () {
 		///<summary>Splits an attribute string into various parts</summary>
         ///<returns type="Object|String">The split data, or the original input if the data does not need to be split</returns>

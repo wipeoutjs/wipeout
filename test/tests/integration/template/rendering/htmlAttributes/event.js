@@ -12,7 +12,7 @@ test("standard call", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method", "wo-event");
 	
 	// act
-	var disp = attribute.applyToElement(button, new wipeout.template.context({
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context({
 		method: function (e, el) {
 			strictEqual(button, el);
 			ok(e);
@@ -37,7 +37,7 @@ test("standard call, with args", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method(e, element, 333)", "wo-event");
 	
 	// act
-	var disp = attribute.applyToElement(button, new wipeout.template.context({
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context({
 		method: function (e, el, number) {
 			strictEqual(button, el);
 			strictEqual(number, 333);
@@ -72,7 +72,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 		var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-" + event, "$this.method()");
 
 		// act
-		var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+		var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 
 		var ev = document.createEvent("UIEvents");
 		ev.initUIEvent(event, true, true, null, 1);

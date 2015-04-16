@@ -69,26 +69,6 @@ testUtils.testWithUtils("onElementEvent", null, true, function(methods, classes,
 	ok(executed);
 });
 	
-testUtils.testWithUtils("applyToElement", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-	var element = {}, rc = {};
-	subject.action = "theAttr";
-	classes.mock("wipeout.template.rendering.htmlAttributes.theAttr", function () {
-		methods.method([element, subject, rc]).apply(null, arguments);
-		return methods.method();
-	}, 1);
-	subject.cacheAllWatched = function () { arguments[0](); return []; };
-	
-	// act
-	var output = invoker(element, rc);
-	
-    // assert
-    strictEqual(output.length, 1);
-	
-	
-	output[0].dispose();
-});
-	
 testUtils.testWithUtils("splitValue", "no filter", false, function(methods, classes, subject, invoker) {
     // arrange
 	var input = "KJBKJBKJB";

@@ -12,7 +12,7 @@ test("success", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-content", "$this.theVal");
 	
 	// act
-	var disp = attribute.applyToElement(div, new wipeout.template.context(model));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, div, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(div.innerHTML, "234");

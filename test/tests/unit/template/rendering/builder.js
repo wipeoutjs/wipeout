@@ -42,3 +42,23 @@ testUtils.testWithUtils("execute", null, false, function(methods, classes, subje
 	// assert
 	invoker(rc)();
 });
+	
+testUtils.testWithUtils("applyToElement", null, true, function(methods, classes, subject, invoker) {
+    // arrange
+	var setter = {}, element = {}, rc = {};
+	setter.action = "theAttr";
+	classes.mock("wipeout.template.rendering.htmlAttributes.theAttr", function () {
+		methods.method([element, setter, rc]).apply(null, arguments);
+		return methods.method();
+	}, 1);
+	setter.cacheAllWatched = function () { arguments[0](); return []; };
+	
+	// act
+	var output = invoker(setter, element, rc);
+	
+    // assert
+    strictEqual(output.length, 1);
+	
+	
+	output[0].dispose();
+});

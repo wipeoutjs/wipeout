@@ -28,7 +28,7 @@ test("class, add remove test", function() {
 	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-style-display", "$this.theVal", "wo-style");
 
 	// act
-	var disp = attribute.applyToElement(input, new wipeout.template.context(model));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 
 	// assert
 	strictEqual(input.style.display, model.theVal);
