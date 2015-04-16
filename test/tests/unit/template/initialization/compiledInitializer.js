@@ -224,6 +224,46 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	delete window.tempClass;
 });
 
+testUtils.testWithUtils("createPropertySetter", "parser and binding type", true, function(methods, classes, subject, invoker) {
+		
+    // arrange
+	var name = {}, wml = {}
+	classes.mock("wipeout.template.initialization.propertySetter", function () {
+		strictEqual(arguments[0], name);
+		strictEqual(arguments[1], wml);
+		strictEqual(arguments[2], "s")
+		
+		setter = this;
+	}, 1);
+	
+    // act
+	var output = invoker(name, wml, ["s", "tw"]);
+    
+    // assert
+	strictEqual(output, setter);
+	strictEqual(output.$wipeout_binding_type, "tw");
+});
+
+testUtils.testWithUtils("createPropertySetter", "2 parsers", true, function(methods, classes, subject, invoker) {
+		
+    // arrange
+    // act
+    // assert
+	throws(function () {
+		invoker({}, {}, ["s", "s"]);
+	});
+});
+
+testUtils.testWithUtils("createPropertySetter", "2 binding types", true, function(methods, classes, subject, invoker) {
+		
+    // arrange
+    // act
+    // assert
+	throws(function () {
+		invoker({}, {}, ["ow", "ow"]);
+	});
+});
+
 testUtils.testWithUtils("addAttribute", "attr set twice", false, function(methods, classes, subject, invoker) {
 		
     // arrange
