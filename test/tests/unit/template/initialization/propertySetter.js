@@ -9,13 +9,10 @@ module("wipeout.template.initialization.propertySetter", {
 testUtils.testWithUtils("constructor", "parser", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = {}, name = {};
-	subject._super = methods.method([name, val]);
+	subject._super = methods.method([name, val, "i"]);
     
 	// act
-	invoker(name, val, ["i"]);
-	
-    // assert
-    strictEqual(subject.parser("234"), 234);
+	invoker(name, val, "i");
 });
 
 testUtils.testWithUtils("getParser", "has parser", false, function(methods, classes, subject, invoker) {

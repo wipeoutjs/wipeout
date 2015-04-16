@@ -7,23 +7,11 @@ Class("wipeout.template.initialization.propertySetter", function () {
         ///<param name="value" type="wipeout.wml.wmlElement|wipeout.wml.wmlAttribute">The setter value</param>
         ///<param name="parser" type="String|Function">the parser or a pointer to it</param>
 		
-		this._super(name, value);
-        
-        ///<summary type="Function">The parser if any</summary>
-        this.parser = null;
+		this._super(name, value, parser);
 		
         ///<summary type="String">The binding type if any</summary>
         this.bindingType = null;
-		
-		if (parser instanceof Function) {
-			this.parser = parser;
-		} else if (parser) {
-            if (wipeout.template.initialization.parsers[parser])
-                this.parser = wipeout.template.initialization.parsers[parser];
-			else
-				throw "Invalid parser: " + parser;	//TODE
-		}
-    });
+	});
 	
 	// override
 	propertySetter.prototype.getValue = function() {

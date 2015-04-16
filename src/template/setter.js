@@ -1,10 +1,11 @@
 
 Class("wipeout.template.setter", function () {
 	
-	var setter = objjs.object.extend(function setter (name, value) {
+	var setter = objjs.object.extend(function setter (name, value, parser) {
 		///<summary>Base class for vm property setters and html attribute setters</summary>
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
+        ///<param name="parser" type="String|Function">The parser or a pointer to it</param>
 		
 		this._super();
 	
@@ -13,6 +14,18 @@ Class("wipeout.template.setter", function () {
 		
 		///<summary type="String">The value of the property</summary>
 		this._value = value;
+        
+        ///<summary type="Function">The parser if any</summary>
+        this.parser = null;
+		
+		if (parser instanceof Function) {
+			this.parser = parser;
+		} else if (parser) {
+            if (wipeout.template.initialization.parsers[parser])
+                this.parser = wipeout.template.initialization.parsers[parser];
+			else
+				throw "Invalid parser: " + parser;	//TODE
+		}
 	});
 	
 	setter.prototype.build = function () {

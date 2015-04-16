@@ -5,6 +5,18 @@ module("wipeout.template.setter", {
     }
 });
 
+testUtils.testWithUtils("constructor", "parser", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var val = {}, name = {};
+	subject._super = methods.method();
+    
+	// act
+	invoker(name, val, "i");
+	
+    // assert
+    strictEqual(subject.parser("234"), 234);
+});
+
 testUtils.testWithUtils("build", "has existing", false, function(methods, classes, subject, invoker) {
 	// arrange
 	subject._built = {};

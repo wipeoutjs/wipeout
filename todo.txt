@@ -1,6 +1,4 @@
 
-
-Remove applyToElement stuff from htmlAttributeSetter
 Move parser functionality to setters class. Add canSet functionality. Test parsers for htmlAttributeSetter (content)
 
 Redesign -
