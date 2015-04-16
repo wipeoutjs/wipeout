@@ -332,14 +332,14 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 testUtils.testWithUtils("getBindingType", "has bindingType", true, function(methods, classes, subject, invoker) {
     // arrange
 	var setter = {
-		bindingType: {}
+		$wipeout_binding_type: {}
 	};
 	
 	// act
 	var output = invoker(setter);
 	
     // assert
-    strictEqual(setter.bindingType, output);
+    strictEqual(setter.$wipeout_binding_type, output);
 });
 
 testUtils.testWithUtils("getBindingType", "has global bindingType", true, function(methods, classes, subject, invoker) {

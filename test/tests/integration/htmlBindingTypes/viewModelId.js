@@ -10,7 +10,7 @@ test("binding and disposal", function () {
 		viewModel = {}, 
 		renderContext = new wipeout.template.context(parent),
 		name = "id",
-		setter = new wipeout.template.initialization.propertySetter(name, {serializeContent: function () { return "theId"; } }, "s");
+		setter = new wipeout.template.initialization.propertySetter(name, {serializeContent: function () { return "theId"; } }, ["s"]);
 	
 	// act
 	var disp = wipeout.htmlBindingTypes.viewModelId(viewModel, setter, renderContext);

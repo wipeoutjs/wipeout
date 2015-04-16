@@ -35,7 +35,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
             this.setters.model = compiledInitializer.modelSetter ||
-				(compiledInitializer.modelSetter = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
+				(compiledInitializer.modelSetter = compiledInitializer.createPropertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
         }
     };
     
@@ -56,7 +56,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODE
                 });
 				
-                this.setters[name] = new wipeout.template.initialization.propertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
+                this.setters[name] = compiledInitializer.createPropertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -75,7 +75,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = new wipeout.template.initialization.propertySetter(name, {
+                    this.setters[name] = compiledInitializer.createPropertySetter(name, {
 						xml: element[i],
 						constructor: vm.constructor
                     }, ["templateElementSetter"]);
@@ -86,14 +86,30 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         }
 
         if (p && p.constructor === Function) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertySetter(name, element);
             this.setters[name].parser = p;
         } else if (p) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+            this.setters[name] = compiledInitializer.createPropertySetter(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
         } else {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertySetter(name, element);
         }
     };
+    
+	//TODO: test
+	var wipeoutBindingType = "$wipeout_binding_type";
+    compiledInitializer.createPropertySetter = function (name, wml, flags) {
+		var output = new wipeout.template.initialization.propertySetter(name, wml, flags);
+		if (flags)
+			for (var i = 0, ii = flags.length; i < ii; i++)
+				if (wipeout.htmlBindingTypes[flags[i]]) {
+					if (output[wipeoutBindingType])
+						throw "The binding type has already been set for this element"; //TODE
+						
+					output[wipeoutBindingType] = flags[i];
+				}
+		
+		return output;
+	};
     
     compiledInitializer.prototype.addAttribute = function (attribute, name) {
 		///<summary>Add a setter from a wml attribute</summary>
@@ -104,7 +120,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = new wipeout.template.initialization.propertySetter(name.name, attribute, name.flags);
+        this.setters[name.name] = compiledInitializer.createPropertySetter(name.name, attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
@@ -162,7 +178,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<returns type="String">the binding type</returns>
 		
-		return setter.bindingType || 
+		return setter[wipeoutBindingType] || 
 				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(setter.name)) || 
 				"ow";
 	};

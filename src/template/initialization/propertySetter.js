@@ -22,11 +22,6 @@ Class("wipeout.template.initialization.propertySetter", function () {
                     throw "A parser is already specified for this property.";
 				
                 this.parser = wipeout.template.initialization.parsers[flag];
-            } else if (wipeout.htmlBindingTypes[flag]) {
-                if (this.bindingType)
-                    throw "A binding type is already specified for this property.";
-                
-                this.bindingType = flag;
             }
         }, this);
     });
