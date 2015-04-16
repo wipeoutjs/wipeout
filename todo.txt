@@ -18,7 +18,7 @@ Properties:			bindingType
 Element:			on elmement event
 
 
-
+checked binding/value refactor
 
 Types of todos:
 TODV: in later version
