@@ -6,13 +6,13 @@ module("wipeout.template.initialization.propertySetter", {
     }
 });
 
-testUtils.testWithUtils("constructor", "2 parsers and a binding type", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("constructor", "parser and binding type", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = {}, name = {};
 	subject._super = methods.method([name, val]);
     
 	// act
-	invoker(name, val, ["ow", "s", "i"]);
+	invoker(name, val, ["ow", "i"]);
 	
     // assert
     strictEqual(subject.bindingType, "ow");

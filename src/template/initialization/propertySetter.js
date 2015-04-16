@@ -10,7 +10,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		this._super(name, value);
         
         ///<summary type="Function">The parser if any</summary>
-        this.parser = [];
+        this.parser = null;
 		
         ///<summary type="String">The binding type if any</summary>
         this.bindingType = null;
@@ -18,7 +18,10 @@ Class("wipeout.template.initialization.propertySetter", function () {
         // process parseing and binding flags
         enumerateArr(flags || [], function (flag) {
             if (wipeout.template.initialization.parsers[flag]) {
-                this.parser.push(wipeout.template.initialization.parsers[flag]);
+                if (this.parser)
+                    throw "A parser is already specified for this property.";
+				
+                this.parser = wipeout.template.initialization.parsers[flag];
             } else if (wipeout.htmlBindingTypes[flag]) {
                 if (this.bindingType)
                     throw "A binding type is already specified for this property.";
@@ -26,26 +29,6 @@ Class("wipeout.template.initialization.propertySetter", function () {
                 this.bindingType = flag;
             }
         }, this);
-        
-        // if parser has already been processed
-        if (!(this.parser instanceof Array))
-            return;
-                
-        if (this.parser.length === 1) {
-            this.parser = this.parser[0];
-        } else if (this.parser.length) {
-        	var p = this.parser;
-            this.parser = function (value, propertyName, renderContext) {
-                for(var i = 0, ii = p.length; i < ii; i++)
-                    value = p[i](value, propertyName, renderContext);
-
-                return value;
-            };
-            
-            this.parser.useRawXmlValue = p[0].useRawXmlValue;
-        } else {
-            this.parser = null;
-        }
     });
 	
 	// override
