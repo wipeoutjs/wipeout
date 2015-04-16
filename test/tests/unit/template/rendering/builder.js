@@ -26,14 +26,17 @@ testUtils.testWithUtils("execute", null, false, function(methods, classes, subje
 	// arange
 	var id = "asdasd", rc = {}, val = {};
 	$("#qunit-fixture").html('<div id="' + id + '"></div>');
+	var element = $("#" + id)[0];
 	subject.elements = [{
 		id: id,
-		actions: [{
-			applyToElement: methods.method([$("#" + id)[0], rc], [{
-				dispose: methods.method()
-			}])
-		}]
+		actions: [{}]
 	}];
+	classes.mock("wipeout.template.rendering.builder.applyToElement", function () {
+		methods.method([subject.elements[0].actions[0], element, rc]).apply(null, arguments);
+		return [{
+			dispose: methods.method()
+		}];
+	});
 	
 	// act
 	// assert

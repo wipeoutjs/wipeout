@@ -95,9 +95,14 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         }
     };
     
-	//TODO: test
 	var wipeoutBindingType = "$wipeout_binding_type";
     compiledInitializer.createPropertySetter = function (name, wml, flags) {
+		///<summary>Create a property setter with a parser and binding type</summary>
+        ///<param name="name" type="String">The name</param>
+        ///<param name="wml" type="wipeout.wml.wmlElement">The content</param>
+        ///<param name="flags" type="[String]">Parsers and binding types</param>
+		///<returns type="wipeout.template.initialization.propertySetter">The setter</returns>
+		
 		var parser, bindingType;
 		if (flags) {
 			for (var i = 0, ii = flags.length; i < ii; i++) {

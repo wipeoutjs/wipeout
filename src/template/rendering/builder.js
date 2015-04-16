@@ -41,6 +41,25 @@ Class("wipeout.template.rendering.builder", function () {
         this.html = htmlFragments.join("");
     };
 	
+	builder.applyToElement = function (setter, element, renderContext) {
+		///<summary>Apply this attribute to an element/summary>
+        ///<param name="setter" type="wipeout.template.rendering.htmlAttributeSetter">The setter</param>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Array">An array of disposables</returns>
+		
+		var op = [];
+		op.push.apply(op, setter.cacheAllWatched(function () {
+			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
+			if (o && o.dispose instanceof Function)
+				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
+		}));
+		
+		return op;
+	};
+	
 	builder.prototype.execute = function(renderContext) {
         ///<summary>Add dynamic content to the html</summary>
         ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The context of the dynamic content</param>
@@ -54,7 +73,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(setter) {				
-				output.push.apply(output, setter.applyToElement(element, renderContext));
+				output.push.apply(output, builder.applyToElement(setter, element, renderContext));
             });
         }, this);
     
