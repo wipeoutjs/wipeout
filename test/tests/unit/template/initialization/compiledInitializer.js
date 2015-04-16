@@ -149,11 +149,11 @@ testUtils.testWithUtils("addElement", "no parser, text setter", false, function(
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act
@@ -174,11 +174,11 @@ testUtils.testWithUtils("addElement", "with parser function", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act
