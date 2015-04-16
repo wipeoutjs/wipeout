@@ -98,15 +98,25 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 	//TODO: test
 	var wipeoutBindingType = "$wipeout_binding_type";
     compiledInitializer.createPropertySetter = function (name, wml, flags) {
-		var output = new wipeout.template.initialization.propertySetter(name, wml, flags);
-		if (flags)
-			for (var i = 0, ii = flags.length; i < ii; i++)
+		var parser, bindingType;
+		if (flags) {
+			for (var i = 0, ii = flags.length; i < ii; i++) {
 				if (wipeout.htmlBindingTypes[flags[i]]) {
-					if (output[wipeoutBindingType])
+					if (bindingType)
 						throw "The binding type has already been set for this element"; //TODE
 						
-					output[wipeoutBindingType] = flags[i];
+					bindingType = flags[i];
+				} else if (wipeout.template.initialization.parsers[flags[i]]) {
+					if (parser)
+						throw "The parser has already been set for this element"; //TODE
+						
+					parser = flags[i];
 				}
+			}
+		}
+		
+		var output = new wipeout.template.initialization.propertySetter(name, wml, parser);
+		output[wipeoutBindingType] = bindingType;
 		
 		return output;
 	};

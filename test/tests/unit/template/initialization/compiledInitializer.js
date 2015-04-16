@@ -70,13 +70,13 @@ testUtils.testWithUtils("addElement", "has attribute value with flags", false, f
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], attr);
 		strictEqual(arguments[2][0], "f1");
 		strictEqual(arguments[2][1], "f2");
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act
@@ -123,13 +123,13 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1].xml, element[0]);
 		strictEqual(arguments[1].constructor, Array);
 		strictEqual(arguments[2][0], "templateElementSetter");
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act
@@ -207,11 +207,11 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act
@@ -245,13 +245,13 @@ testUtils.testWithUtils("addAttribute", "with global parser", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
 		strictEqual(arguments[0], "name");
 		strictEqual(arguments[1], attr);
 		strictEqual(arguments[2][0], "f1");
 		strictEqual(arguments[2][1], "f2");
 		
-		setter = this;
+		return setter = {};
 	}, 1);
 	
     // act

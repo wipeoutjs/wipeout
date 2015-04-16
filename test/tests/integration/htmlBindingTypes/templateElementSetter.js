@@ -14,7 +14,7 @@ test("binding", function () {
 		setter = new wipeout.template.initialization.propertySetter(name, {
 			xml: xml,
 			constructor: Object
-		}, ["templateElementSetter"]),
+		}),
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {};

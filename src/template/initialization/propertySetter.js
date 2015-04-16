@@ -1,11 +1,11 @@
 
 Class("wipeout.template.initialization.propertySetter", function () {
 	
-    var propertySetter = wipeout.template.setter.extend(function propertySetter (name, value, flags) {
+    var propertySetter = wipeout.template.setter.extend(function propertySetter (name, value, parser) {
         ///<summary>A setter for a view model property</summary>
         ///<param name="name" type="String">The name of the property</param>
         ///<param name="value" type="wipeout.wml.wmlElement|wipeout.wml.wmlAttribute">The setter value</param>
-        ///<param name="flags" type="Array">Binding or parser flags</param>
+        ///<param name="parser" type="String|Function">the parser or a pointer to it</param>
 		
 		this._super(name, value);
         
@@ -14,16 +14,15 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		
         ///<summary type="String">The binding type if any</summary>
         this.bindingType = null;
-        
-        // process parseing and binding flags
-        enumerateArr(flags || [], function (flag) {
-            if (wipeout.template.initialization.parsers[flag]) {
-                if (this.parser)
-                    throw "A parser is already specified for this property.";
-				
-                this.parser = wipeout.template.initialization.parsers[flag];
-            }
-        }, this);
+		
+		if (parser instanceof Function) {
+			this.parser = parser;
+		} else if (parser) {
+            if (wipeout.template.initialization.parsers[parser])
+                this.parser = wipeout.template.initialization.parsers[parser];
+			else
+				throw "Invalid parser: " + parser;	//TODE
+		}
     });
 	
 	// override
