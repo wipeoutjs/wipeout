@@ -27,7 +27,7 @@ Class("wipeout.template.initialization.propertySetter", function () {
 			callback(undefined, wipeout.utils.obj.getValue(name, viewModel));
 		
 		return !!op;
-	});
+	};
 	
 	// override
 	propertySetter1.prototype.value = function() {
