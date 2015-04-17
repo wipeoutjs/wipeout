@@ -20,18 +20,17 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.value()));
 	};
 	
-	htmlAttributeSetter1.prototype.onElementEvent = function (element, event, renderContext, callback, capture) { //TODE
+	htmlAttributeSetter1.prototype.onElementEvent = function (event, renderContext, callback, capture) { //TODE
 		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
-        ///<param name="element" type="Element">The element</param>
         ///<param name="event" type="String">The event</param>
         ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
         ///<param name="callback" type="Function">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventGetter</param>
         ///<param name="capture" type="Boolean">Capture the event within this element</param>
         ///<returns type="Function">A dispose function to dispose prematurely</returns>
 		
-		if (!this._caching)
-			throw "The onElementEvent function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
+		this.primed();
 		
+		var element = this.propertyOwner;
 		callback = callback || (function (e) {
 			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
 		}).bind(this);

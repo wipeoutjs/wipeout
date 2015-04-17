@@ -10,20 +10,19 @@ Class("wipeout.template.initialization.propertySetter", function () {
 		this._super(name, value, parser);
 	});
 	
-	propertySetter1.prototype.onPropertyChanged = function (viewModel, callback, evaluateImmediately) {
+	propertySetter1.prototype.onPropertyChanged = function (callback, evaluateImmediately) {
         ///<summary>A setter for a view model property</summary>
         ///<param name="viewModel" type="Any">The view model which has the property</param>
         ///<param name="callback" type="Function">A callback to execute when the value changes</param>
         ///<param name="evaluateImmediately" type="Boolean">Execute the callback now</param>
         ///<returns type="Boolean">Whether the property could be subscribed to or not</returns>
 		
-		if (!this._caching)
-			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+		this.primed();
 		
-		var op = obsjs.tryObserve(viewModel, this.name, callback);
+		var op = obsjs.tryObserve(this.propertyOwner, this.name, callback);
 		if (op) this._caching.push(op);
 		if (evaluateImmediately)
-			callback(undefined, wipeout.utils.obj.getObject(this.name, viewModel));
+			callback(undefined, wipeout.utils.obj.getObject(this.name, this.propertyOwner));
 		
 		return !!op;
 	};
@@ -37,15 +36,6 @@ Class("wipeout.template.initialization.propertySetter", function () {
             this._valueAsString :
             (this._valueAsString = this._super().serializeContent());
     };
-	
-	// override
-	propertySetter1.prototype.getParser = function (propertyOwner) {
-		///<summary>Return the parser for the </summary>
-        ///<param name="propertyOwner" type="Any">The object (or Element) which this property is being applied to</param>
-        ///<returns type="Function">The parser</returns>
-		
-		return this._super() || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
-	};
 	
 	return propertySetter1;
 	

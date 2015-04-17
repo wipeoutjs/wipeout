@@ -7,7 +7,7 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		viewModel[setter.name] = new setter._value.constructor;
+		viewModel[setter.name] = new setter._value.constructor();
 
 		var output = new obsjs.disposable(wipeout.template.engine.instance
 			.getVmInitializer(setter._value.xml)

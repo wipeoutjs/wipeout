@@ -62,7 +62,11 @@ Class("wipeout.template.setter", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Any">The returned value</returns>
 		
-		return this.buildGetter().apply(null, renderContext.asGetterArgs());
+		var parser = this.getParser();
+		
+		return parser ? 
+			(parser(parser.useRawXmlValue ? this._value : this.value(), this.name, renderContext)) : 
+			this.buildGetter().apply(null, renderContext.asGetterArgs());
 	};
 	
 	setter1.prototype.buildSetter = function () {
@@ -98,7 +102,7 @@ Class("wipeout.template.setter", function () {
 	
 	setter1.prototype.canSet = function (propertyOwner) {
 		///<summary>Return whether this setter can set a value</summary>
-        ///<param name="propertyOwner" type="Any">The object (or Element) which this property is being applied to</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
 		return !this.getParser(propertyOwner) && !!this.buildSetter();
@@ -106,16 +110,19 @@ Class("wipeout.template.setter", function () {
 	
 	setter1.prototype.getParser = function (propertyOwner) {
 		///<summary>Return the parser for the </summary>
-        ///<param name="propertyOwner" type="Any">The object (or Element) which this property is being applied to</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Function">The parser</returns>
 		
-		return this.parser;
+		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
+		
+		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
 	};
 	
-	setter1.prototype.set = function (propertyOwner, renderContext, value) {
+	setter1.prototype.set = function (renderContext, value, propertyOwner) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="value" type="Any">The value to set</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the property. If null, the propertyValue must be primed</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
 		if (!this.canSet(propertyOwner))
@@ -131,8 +138,14 @@ Class("wipeout.template.setter", function () {
         ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
         ///<returns type="obsjs.diposable">A dispose function to dispose prematurely</returns>
 		
-		if (!this._caching)
-			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+		this.primed();
+		
+		if (this.getParser() || /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/.+))\s*$/.test(this.value())) {
+			if (evaluateImmediately)
+				callback(undefined, this.get(renderContext));
+			
+			return;
+		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
 			new obsjs.observeTypes.pathObserver(renderContext, this.value()) :
@@ -142,8 +155,10 @@ Class("wipeout.template.setter", function () {
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};
 	
-	setter1.prototype.cacheAllWatched = function (logic) {
+	//TODO: rename to "prime"
+	setter1.prototype.cacheAllWatched = function (propertyOwner, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
+        ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
 		
@@ -152,11 +167,19 @@ Class("wipeout.template.setter", function () {
 		
 		try {
 			this._caching = [];
+			this.propertyOwner = propertyOwner;
 			logic();
 			return this._caching;
 		} finally {
 			delete this._caching;
+			delete this.propertyOwner;
 		}
+	};
+	
+	setter1.prototype.primed = function () {
+		
+		if (!this._caching)
+			throw "The setter must be primed to make this call. Use the \"prime(...)\" function and pass in the logic to execute in a primed context.";
 	};
 	
 	return setter1;

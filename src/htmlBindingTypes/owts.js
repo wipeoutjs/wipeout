@@ -7,11 +7,11 @@ Class("wipeout.htmlBindingTypes.owts", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
-		if (!setter.canSet(viewModel))
+		if (!setter.canSet())
             throw "Setter \"" + viewModel.value() + "\" cannot be set.";	//TODE
 		
-		setter.onPropertyChanged(viewModel, function (oldVal, newVal) {
-			setter.set(viewModel, renderContext, newVal);
+		setter.onPropertyChanged(function (oldVal, newVal) {
+			setter.set(renderContext, newVal, viewModel);
 		}, true);
     };
 });
