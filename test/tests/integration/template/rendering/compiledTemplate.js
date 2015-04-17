@@ -5,6 +5,29 @@ module("integration: wipeout.template.rendering.compiledTemplate", {
     }
 });
 
+test("parser", function() {
+	
+	try {
+		integrationTestSetup();
+		
+		// arrange
+		application.setTemplate = '<div id="theDiv1" wo-content--s="Something"></div><div id="theDiv2" wo-content="$this.something"></div>'
+		application.something = "Something else";
+		
+		// act
+		application.onRendered = function () {
+			strictEqual($("#theDiv1")[0].innerHTML, "Something");
+			strictEqual($("#theDiv2")[0].innerHTML, "Something else");
+			start();
+			integrationTestTeardown();
+		};
+
+		// assert
+		stop();
+	} finally {
+	}
+});
+
 test("success", function() {
 	
 	// arrange

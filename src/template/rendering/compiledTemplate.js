@@ -1,5 +1,23 @@
 
 Class("wipeout.template.rendering.compiledTemplate", function () {
+	    
+    compiledTemplate.getPropertyFlags = function(name) {
+		///<summary>Seperate name from flags by "--"</summary>
+        ///<param name="name" type="String">The combined name and flags</param>
+        ///<returns type="Object">The name and flags</returns>
+        
+        var flags = name.indexOf("--");
+        if (flags === -1)
+            return {
+                flags: [],
+                name: name
+            };
+        
+        return {
+            flags: name.substr(flags + 2).toLowerCase().split("-"),
+            name: name.substr(0, flags)
+        };
+    };
         
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
@@ -107,7 +125,11 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
 		var attr;
         enumerateObj(attributes, function (attribute, name) {
-			        
+			     
+			var flags = compiledTemplate.getPropertyFlags(name);
+			name = flags.name;
+			flags = flags.flags;
+			
             // if it is a special attribute
 			attr = false;
             if (attr = compiledTemplate.getAttributeName(name)) {
@@ -115,14 +137,24 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                 // if it is the first special attribute for this element
                 if (!modifications)
                     this.html.push(modifications = []);
+					
+				var parser;
+				for (var i = 0, ii = flags.length; i < ii; i++) {
+					if (wipeout.template.initialization.parsers[flags[i]]) {
+						if (parser)
+							throw "The parser has already been set for this element"; //TODE
+
+						parser = flags[i];
+					}
+				}
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, null, attr));
+					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value)) :
-						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser)) :
+						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser));
 				}
             } else {
                 // add non special attribute
