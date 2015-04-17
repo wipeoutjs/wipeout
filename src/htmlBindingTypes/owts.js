@@ -7,11 +7,11 @@ Class("wipeout.htmlBindingTypes.owts", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
-        var val;
-        if (setter.getParser(viewModel) ||
-			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
-            throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
+		if (!setter.canSet(viewModel))
+            throw "Setter \"" + viewModel.value() + "\" cannot be set.";	//TODE
 		
-		return obsjs.tryBind(viewModel, setter.name, renderContext, val);
+		setter.onPropertyChanged(viewModel, function (oldVal, newVal) {
+			setter.set(viewModel, renderContext, newVal);
+		}, true);
     };
 });

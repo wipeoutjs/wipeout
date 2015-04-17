@@ -48,7 +48,7 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return output.dispose.bind(output);
     };
 	
-	
+	return htmlAttributeSetter1;
 	
 	
 	

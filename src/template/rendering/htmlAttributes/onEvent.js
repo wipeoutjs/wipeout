@@ -8,6 +8,6 @@ HtmlAttr("on-event", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		attribute.setData(element, "wo-on-event", attribute.getValue());
+		attribute.setData(element, "wo-on-event", attribute.value());
     }
 });

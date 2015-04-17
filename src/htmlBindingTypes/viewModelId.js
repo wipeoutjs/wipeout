@@ -11,13 +11,13 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
 		var parent = renderContext.$this === viewModel ? renderContext.$parent : renderContext.$this;
 		
 		if (parent instanceof wipeout.viewModels.view)
-			parent.templateItems[setter.getValue()] = viewModel;
+			parent.templateItems[setter.value()] = viewModel;
 		
 		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new obsjs.disposable();
 		output.registerDisposeCallback(function () {		
 			if (parent instanceof wipeout.viewModels.view &&
-			   parent.templateItems[setter.getValue()] === viewModel)
-				delete parent.templateItems[setter.getValue()];
+			   parent.templateItems[setter.value()] === viewModel)
+				delete parent.templateItems[setter.value()];
 		});
 		
 		return output;

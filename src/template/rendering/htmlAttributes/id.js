@@ -7,7 +7,7 @@ Class("wipeout.template.rendering.htmlAttributes.id", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		var val = attribute.getValue();
+		var val = attribute.value();
         if (renderContext.$this instanceof wipeout.viewModels.view)
         	renderContext.$this.templateItems[val] = element;
 		

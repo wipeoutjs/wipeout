@@ -9,7 +9,7 @@ Class("wipeout.htmlBindingTypes.tw", function () {
 		
 		var val;
         if (setter.getParser(viewModel) ||
-			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
+			!/^([\$\w\s\.]|(\[\d+\]))+$/.test(val = setter.value()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		
 		// skip to first observable object, only paths one level off renderContext

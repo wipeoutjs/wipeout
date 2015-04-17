@@ -7,7 +7,7 @@ Class("wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel", functi
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-        var op = new wipeout.template.rendering.viewModelElement(element, attribute.getValue(), renderContext);
+        var op = new wipeout.template.rendering.viewModelElement(element, attribute.value(), renderContext);
         
         return function () {
             op.dispose(true);

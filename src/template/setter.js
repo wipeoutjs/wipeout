@@ -1,4 +1,4 @@
-
+//TODO: rename to propertyValue
 Class("wipeout.template.setter", function () {
 	
 	var setter1 = objjs.object.extend(function setter (name, value, parser) {
@@ -51,7 +51,7 @@ Class("wipeout.template.setter", function () {
 			if (split.length === 2)
 				val = split[1] + "(" + split[0] + ")";
 			
-			this._getter = wipeout.template.context.buildGetter(split.addTokens(val))
+			this._getter = wipeout.template.context.buildGetter(splitValue.addTokens(val))
 		}
 		
 		return this._getter;
@@ -78,7 +78,7 @@ Class("wipeout.template.setter", function () {
 				throw "Invalid attribute value: " + val + ". You may only include 1 filter.";	//TODE
 			
 			if (split.length === 2)
-				val = split.addTokens(split[0].split(",")[0]);
+				val = splitValue.addTokens(split[0].split(",")[0]);
 			
 			var property = /\.?\s*[\w\$]+\s*$/.exec(val);
 			if (!property) {
@@ -96,18 +96,30 @@ Class("wipeout.template.setter", function () {
 		return this._setter;
 	};
 	
-	setter1.prototype.canSet = function () {
+	setter1.prototype.canSet = function (propertyOwner) {
 		///<summary>Return whether this setter can set a value</summary>
+        ///<param name="propertyOwner" type="Any">The object (or Element) which this property is being applied to</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
-		return !this.parser && !!this.buildSetter();
+		return !this.getParser(propertyOwner) && !!this.buildSetter();
 	};
 	
-	setter1.prototype.set = function (renderContext, value) {
+	setter1.prototype.getParser = function (propertyOwner) {
+		///<summary>Return the parser for the </summary>
+        ///<param name="propertyOwner" type="Any">The object (or Element) which this property is being applied to</param>
+        ///<returns type="Function">The parser</returns>
+		
+		return this.parser;
+	};
+	
+	setter1.prototype.set = function (propertyOwner, renderContext, value) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="value" type="Any">The value to set</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
+		
+		if (!this.canSet(propertyOwner))
+			throw "You cannot set the value of: " + this.value() + ".";	//TODE
 		
 		return this.buildSetter()(renderContext, value);
 	};
@@ -122,8 +134,8 @@ Class("wipeout.template.setter", function () {
 		if (!this._caching)
 			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
 		
-		var watched = setter.isSimpleBindingProperty(this.getValue()) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.getValue()) :
+		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
+			new obsjs.observeTypes.pathObserver(renderContext, this.value()) :
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);
@@ -146,6 +158,8 @@ Class("wipeout.template.setter", function () {
 			delete this._caching;
 		}
 	};
+	
+	return setter1;
 	
 	/*TESTS
 	

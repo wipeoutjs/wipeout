@@ -1,6 +1,6 @@
 Class("wipeout.htmlBindingTypes.ow", function () {  
 	
-	var boolNumberOrRegex = /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/.*\/))\s*$/
+	var boolNumberOrRegex = /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/.+))\s*$/
 	
 	return function ow (viewModel, setter, renderContext) {
 		///<summary>Bind for parent property to child property</summary>
@@ -9,7 +9,7 @@ Class("wipeout.htmlBindingTypes.ow", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
 		// cannot bind to xml definition or a parsed value
-		if (setter.getParser(viewModel) || boolNumberOrRegex.test(setter.getValue()))
+		if (setter.getParser(viewModel) || boolNumberOrRegex.test(setter.value()))
             return wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext);
 		
 		setter.watch(renderContext, function (oldVal, newVal) {
