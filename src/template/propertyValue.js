@@ -1,6 +1,6 @@
 //TODO: rename to propertyValue
 //TODO: full test audit
-Class("wipeout.template.setter", function () {
+Class("wipeout.template.propertyValue", function () {
 	
 	var propertyValue = objjs.object.extend(function setter (name, value, parser) {
 		///<summary>Base class for vm property setters and html attribute setters</summary>

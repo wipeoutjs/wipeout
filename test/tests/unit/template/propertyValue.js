@@ -1,4 +1,4 @@
-module("wipeout.template.setter", {
+module("wipeout.template.propertyValue", {
     setup: function() {
     },
     teardown: function() {

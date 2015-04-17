@@ -2,7 +2,7 @@
 //TODO: full test audit
 Class("wipeout.template.initialization.propertySetter", function () {
 	
-    var viewModelPropertyValue = wipeout.template.setter.extend(function propertySetter (name, value, parser) {
+    var viewModelPropertyValue = wipeout.template.propertyValue.extend(function propertySetter (name, value, parser) {
         ///<summary>A setter for a view model property</summary>
         ///<param name="name" type="String">The name of the property</param>
         ///<param name="value" type="wipeout.wml.wmlElement|wipeout.wml.wmlAttribute">The setter value</param>

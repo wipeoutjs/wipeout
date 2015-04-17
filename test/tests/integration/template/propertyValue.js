@@ -1,4 +1,4 @@
-module("integration: wipeout.template.setter", {
+module("integration: wipeout.template.propertyValue", {
     setup: function() {
     },
     teardown: function() {
@@ -7,7 +7,7 @@ module("integration: wipeout.template.setter", {
 
 test("cacheAllWatched and watch: computed", function() {
 	// arrange
-	var subject = new wipeout.template.setter("hello", "$this.value || 555");
+	var subject = new wipeout.template.propertyValue("hello", "$this.value || 555");
 	var model = obsjs.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
@@ -47,7 +47,7 @@ test("cacheAllWatched and watch: computed", function() {
 
 test("cacheAllWatched and watch: pathObserver", function() {
 	// arrange
-	var subject = new wipeout.template.setter("hello", "$this.value");
+	var subject = new wipeout.template.propertyValue("hello", "$this.value");
 	var model = obsjs.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
@@ -88,7 +88,7 @@ test("cacheAllWatched and watch: pathObserver", function() {
 test("execute, $context", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.setter("hello", "$context");
+	var subject = new wipeout.template.propertyValue("hello", "$context");
 	
 	// act
 	// assert
@@ -100,7 +100,7 @@ test("execute, $context", function() {
 test("execute, $this", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.setter("hello", "$this");
+	var subject = new wipeout.template.propertyValue("hello", "$this");
 	
 	// act
 	// assert
@@ -113,7 +113,7 @@ test("execute, $this", function() {
 test("execute, $parent", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.setter("hello", "$parent");
+	var subject = new wipeout.template.propertyValue("hello", "$parent");
 	
 	// act
 	// assert
@@ -126,7 +126,7 @@ test("execute, $parent", function() {
 test("execute, $parents", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.setter("hello", "$parents");
+	var subject = new wipeout.template.propertyValue("hello", "$parents");
 	
 	// act
 	// assert
@@ -139,7 +139,7 @@ test("execute, $parents", function() {
 test("execute, $index", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.setter("hello", "$index");
+	var subject = new wipeout.template.propertyValue("hello", "$index");
 	
 	// act
 	// assert

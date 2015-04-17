@@ -4,7 +4,7 @@ HtmlAttr("value", function () {
 	function radio (radio, attribute, renderContext) { 
 		
 		var val = attribute.value();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+        if (!wipeout.template.propertyValue.isSimpleBindingProperty(val))
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		var tmpData;		
@@ -42,7 +42,7 @@ HtmlAttr("value", function () {
 	function checkbox (checkbox, attribute, renderContext) { 
 		
 		var val = attribute.value();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+        if (!wipeout.template.propertyValue.isSimpleBindingProperty(val))
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		// set default
@@ -84,7 +84,7 @@ HtmlAttr("value", function () {
 			return radio(element, attribute, renderContext);
 		
 		var val = attribute.value();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+        if (!wipeout.template.propertyValue.isSimpleBindingProperty(val))
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
