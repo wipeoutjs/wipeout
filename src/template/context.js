@@ -106,6 +106,7 @@ Class("wipeout.template.context", function () {
         ///<returns type="Function">A getter</returns>
 		
 		try {
+			//if this changes, look at propertyValue, it uses and arguments[x] argument
 			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
 		} catch (e) {
 			// TODV: try to take into account some of these cases

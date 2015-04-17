@@ -75,30 +75,66 @@ Class("wipeout.template.propertyValue", function () {
         ///<returns type="Function">A function to get the value from render context parts</returns>
 		
 		if (!this.hasOwnProperty("_setter")) {
-			var val;
+			var val, getter;
 			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(val = this.value());
 			var split = splitValue.output.split("=>");
 			
 			if (split.length > 2)
 				throw "Invalid attribute value: " + val + ". You may only include 1 filter.";	//TODE
 			
-			if (split.length === 2)
-				val = splitValue.addTokens(split[0].split(",")[0]);
+			if (split.length === 2) {
+				getter = split[1];
+				split = split[0].split(",");
+				val = splitValue.addTokens(split[0]);
+				split[0] = "arguments[5]";
+				getter += "(" + split.join(",") + ")";
+			}
 			
 			var property = /\.?\s*[\w\$]+\s*$/.exec(val);
 			if (!property) {
 				this._setter = null;
 			} else {
-				var getter = wipeout.template.context.buildGetter(val.substring(0, val.length - property[0].length));
+				var getSetterRoot = wipeout.template.context.buildGetter(val.substring(0, val.length - property[0].length));
 				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
-				this._setter = function (renderContext, value) {
-					var part1 = getter.apply(null, renderContext.asGetterArgs());
-					return part1 ? ((part1[property] = value), true) : false;
-				};
+				if (getter) {
+					getter = wipeout.template.context.context.buildGetter(getter);
+					this._setter = function (renderContext, value) {
+						var args = renderContext.asGetterArgs();
+						var part1 = getSetterRoot.apply(null, args);
+						args.push(value);
+						return part1 ? ((part1[property] = getter.apply(null, args)), true) : false;
+					};
+				} else {
+					this._setter = function (renderContext, value) {
+						var part1 = getSetterRoot.apply(null, renderContext.asGetterArgs());
+						return part1 ? ((part1[property] = value), true) : false;
+					};
+				}
 			}
 		}
 		
 		return this._setter;
+	};
+	
+	propertyValue.prototype.buildGetter = function () {
+		///<summary>Build a getter for this._value</summary>
+        ///<returns type="Function">A function to get the value from render context parts</returns>
+		
+		if (!this._getter) {
+			var val;
+			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStrings(val = this.value());
+			var split = splitValue.output.split("=>");
+			
+			if (split.length > 2)
+				throw "Invalid attribute value: " + val + ". You may only include 1 filter.";	//TODE
+			
+			if (split.length === 2)
+				val = split[1] + "(" + split[0] + ")";
+			
+			this._getter = wipeout.template.context.buildGetter(splitValue.addTokens(val))
+		}
+		
+		return this._getter;
 	};
 	
 	propertyValue.prototype.canSet = function (propertyOwner) {
