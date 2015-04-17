@@ -109,9 +109,6 @@ Class("wipeout.template.setter", function () {
         ///<param name="value" type="Any">The value to set</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
-		if (!this.canSet())
-			throw "You cannot set the value of: " + this.value();
-		
 		return this.buildSetter()(renderContext, value);
 	};
 	
