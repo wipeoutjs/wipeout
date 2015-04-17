@@ -26,7 +26,7 @@ test("existing attribute", function() {
 	$("#qunit-fixture").html("<div id='hello' style='display: block'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", null, "wo-attr");
 	
 	// act
 	wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
@@ -54,7 +54,7 @@ test("non existing attribute", function() {
 	$("#qunit-fixture").html("<div id='hello'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", null, "wo-attr");
 	
 	// act
 	wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
@@ -82,7 +82,7 @@ test("disposal", function() {
 	$("#qunit-fixture").html("<div id='hello' style='display: block'></div>")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({visible: "display: none"});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", "wo-attr");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-attr-style", "$this.visible", null, "wo-attr");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));

@@ -9,7 +9,7 @@ test("standard call", function() {
 	// arrange
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello"), called = false;
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method", "wo-event");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method", null, "wo-event");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context({
@@ -34,7 +34,7 @@ test("standard call, with args", function() {
 	// arrange
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello"), called = false;
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method(e, element, 333)", "wo-event");
+	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-event-click", "$this.method(e, element, 333)", null, "wo-event");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context({

@@ -1,13 +1,14 @@
 //TODO: rename
 Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	
-	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlAttributeSetter (name, value, action) {
+	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlAttributeSetter (name, value, parser, action) {
 		///<summary>Set html attributes</summary>
         ///<param name="name" type="String">The name of the attribute</param>
         ///<param name="value" type="String">The value of the attribute</param>
+        ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
         ///<param name="action" type="String" optional="true">The wipoeut html attribute to use. If null, use "name"</param>
 		
-		this._super(name, value);
+		this._super(name, value, parser);
 		
 		///<summary type="String">The wipoeut html attribute to use. If null, use "name"</summary>
 		this.action = action;

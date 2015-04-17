@@ -27,7 +27,7 @@
 			$("#qunit-fixture").html("<input type='text' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
-			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", "wo-class");
+			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", null, "wo-class");
 
 			// act
 			var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
@@ -71,7 +71,7 @@
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
-			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class0", "$this.theVal", "wo-class");
+			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class0", "$this.theVal", null, "wo-class");
 
 			// act
 			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });
@@ -85,7 +85,7 @@
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
-			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", "wo-class");
+			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class1", "$this.theVal", null, "wo-class");
 
 			// act
 			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });
@@ -99,7 +99,7 @@
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
 			var model = obsjs.makeObservable({theVal: false});
-			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class2", "$this.theVal", "wo-class");
+			var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-class-class2", "$this.theVal", null, "wo-class");
 
 			// act
 			enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) { d.dispose(); });

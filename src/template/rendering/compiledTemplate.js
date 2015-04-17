@@ -60,8 +60,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.html.push("<script");
 
             // add the id flag and the id generator
-            this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render",
-									  html.substring(oldIndex, index))]);
+            this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render", html.substring(oldIndex, index))]);
 
             // add the end of the placeholder
             this.html.push(' type="placeholder"></script>');
@@ -118,7 +117,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                     this.html.push(modifications = []);
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, attr));
+					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, null, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?

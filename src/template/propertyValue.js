@@ -6,7 +6,7 @@ Class("wipeout.template.propertyValue", function () {
 		///<summary>Base class for vm property setters and html attribute setters</summary>
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
-        ///<param name="parser" type="String|Function">The parser or a pointer to it</param>
+        ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
 		
 		this._super();
 	
