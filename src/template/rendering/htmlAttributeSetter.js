@@ -17,14 +17,14 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		///<summary>Build an event invoker for this._value</summary>
         ///<returns type="Function">A function to get the value from render context parts</returns>
 		
-		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.value()));
+		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventCallback(this.value()));
 	};
 	
 	htmlPropertyValue.prototype.onElementEvent = function (event, renderContext, callback, capture) { //TODE
 		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
         ///<param name="event" type="String">The event</param>
         ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
-        ///<param name="callback" type="Function">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventGetter</param>
+        ///<param name="callback" type="Function">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback</param>
         ///<param name="capture" type="Boolean">Capture the event within this element</param>
         ///<returns type="Function">A dispose function to dispose prematurely</returns>
 		

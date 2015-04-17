@@ -82,7 +82,7 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.asEventArgs = function (e, element) {
-		///<summary>Return a version of this to be plugged into a function creted by context.buildEventGetter(...)</summary>
+		///<summary>Return a version of this to be plugged into a function creted by context.buildEventCallback(...)</summary>
         ///<returns type="Array">the arguments</returns>
 		
 		var args = this.asGetterArgs().slice();
@@ -113,13 +113,17 @@ Class("wipeout.template.context", function () {
 		}	
 	};
 	
-	//TODV: handle logic like this "$this.set = true; $this.unset = false;"
-	context.buildEventGetter = function (logic) {
+	//TODO: Test "logic:"
+	context.buildEventCallback = function (logic) {
 		///<summary>Build a function around a logic string, specifically for html events</summary>
         ///<param name="logic" type="String">The logic</param>
         ///<returns type="Function">A getter</returns>
 		
-		if (!/\)[\s;]*$/.test(logic))
+		//TODM
+		var notFunctionCall = /^\s*[Ll]ogic\s*:/;
+		if (notFunctionCall.test(logic))
+			logic = logic.replace(notFunctionCall, "");
+		else if (!/\)[\s;]*$/.test(logic))
 			logic += "(e, element)";
 			
 		try {
