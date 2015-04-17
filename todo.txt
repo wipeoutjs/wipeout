@@ -16,7 +16,7 @@ Properties:			bindingType
 Element:			on elmement event
 
 
-checked binding/value refactor
+wo-checked htmlAttr/wo-value refactor
 
 Types of todos:
 TODV: in later version

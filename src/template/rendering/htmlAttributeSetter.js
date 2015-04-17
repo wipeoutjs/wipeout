@@ -85,32 +85,5 @@ Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 		return output.dispose.bind(output);
     };
 	
-	htmlAttributeSetter.prototype.splitValue = function () {
-		///<summary>Splits an attribute string into various parts</summary>
-        ///<returns type="Object|String">The split data, or the original input if the data does not need to be split</returns>
-		
-		var splitValue = wipeout.utils.jsParse.removeCommentsTokenStrings(this.getValue());
-		var split = splitValue.output.split("=>");
-		if (split.length === 1)
-			return {
-				inputs: [this.getValue()],
-				filter: "passthrough"
-			};
-		
-		if (split.length !== 2)
-			throw "Invalid attribute value: " + splitValue + ". You may only include 1 filter.";	//TODE
-		
-		var output = {
-			filter: trim(splitValue.addTokens(split[1])),
-			inputs: []
-		};
-		
-		enumerateArr(split[0].split(","), function (item) {
-			output.inputs.push(trim(splitValue.addTokens(item)));
-		});
-		
-		return output;
-	};
-	
 	return htmlAttributeSetter;
 });
