@@ -31,9 +31,9 @@ HtmlAttr("class", function () {
 	function old_class(element, attribute, renderContext) {
 		var attr, has;
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (!(has = hasClass(element, className)) && attribute.execute(renderContext))
+		if (!(has = hasClass(element, className)) && attribute.get(renderContext))
 			addClass(element, className);
-		else if (has && !attribute.execute(renderContext))
+		else if (has && !attribute.get(renderContext))
 			removeClass(element, className);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
@@ -57,7 +57,7 @@ HtmlAttr("class", function () {
 			return old_class(element, attribute, renderContext);
 		
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (attribute.execute(renderContext))
+		if (attribute.get(renderContext))
 			element.classList.add(className);
 		else
 			element.classList.remove(className);

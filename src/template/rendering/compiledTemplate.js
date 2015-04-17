@@ -108,7 +108,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         
 		var attr;
         enumerateObj(attributes, function (attribute, name) {
-        
+			        
             // if it is a special attribute
 			attr = false;
             if (attr = compiledTemplate.getAttributeName(name)) {

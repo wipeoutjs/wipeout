@@ -8,7 +8,7 @@ Class("wipeout.htmlBindingTypes.owts", function () {
         ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
 		if (!setter.canSet())
-            throw "Setter \"" + viewModel.value() + "\" cannot be set.";	//TODE
+            throw "Setter \"" + setter.value() + "\" cannot be set.";	//TODE
 		
 		setter.onPropertyChanged(function (oldVal, newVal) {
 			setter.set(renderContext, newVal, viewModel);

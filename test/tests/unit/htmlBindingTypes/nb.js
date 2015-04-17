@@ -9,7 +9,7 @@ module("wipeout.htmlBindingTypes.nb", {
 testUtils.testWithUtils("binding", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	var vm = {}, rc = {}, val = {}, setter = {
-		parseOrExecute: methods.method([vm, rc], val),
+		get: methods.method([rc], val),
 		name: "AAA"
 	};
 	

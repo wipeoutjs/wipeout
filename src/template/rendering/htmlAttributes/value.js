@@ -15,7 +15,7 @@ HtmlAttr("value", function () {
 				radio.removeAttribute("checked");
         }, true);
 		
-		attribute.onElementEvent(radio, "change", renderContext, function () {			
+		attribute.onElementEvent("change", renderContext, function () {			
 			wipeout.utils.obj.setObject(val, renderContext, getRadioButtonVal(radio, attribute, renderContext));
         });
 	}
@@ -24,7 +24,7 @@ HtmlAttr("value", function () {
 	function getCheckboxVal(element, attribute, renderContext) {
 		var tmpData;
 		if (tmpData = attribute.getData(element, "wo-data"))
-			return tmpData.execute(renderContext);
+			return tmpData.get(renderContext);
 		if ((tmpData = element.getAttribute("value")) != null)
 			return tmpData;
 		
@@ -57,7 +57,7 @@ HtmlAttr("value", function () {
 				checkbox.removeAttribute("checked");
         }, true);
 		
-		attribute.onElementEvent(checkbox, "change", renderContext, function () {
+		attribute.onElementEvent("change", renderContext, function () {
 			tmpData = getCheckboxVal(checkbox, attribute, renderContext);
 			if (checkbox.getAttribute("checked") != null) {
 				if (tmpData === noVal)
@@ -92,7 +92,7 @@ HtmlAttr("value", function () {
                 element.value = newVal;
         }, true);
 		
-		attribute.onElementEvent(element, attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
+		attribute.onElementEvent(attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
 			wipeout.utils.obj.setObject(val, renderContext, element.value);
         });
     }

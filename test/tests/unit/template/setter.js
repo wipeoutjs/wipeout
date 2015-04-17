@@ -4,7 +4,7 @@ module("wipeout.template.setter", {
     teardown: function() {
     }
 });
-
+/*
 testUtils.testWithUtils("constructor", "parser", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = {}, name = {};
@@ -102,4 +102,4 @@ testUtils.testWithUtils("getValue", null, false, function(methods, classes, subj
 	// act
 	// assert
 	strictEqual(subject._value = {}, invoker());
-});
+});*/

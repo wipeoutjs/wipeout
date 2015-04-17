@@ -5,7 +5,7 @@ module("wipeout.template.initialization.propertySetter", {
     teardown: function() {
     }
 });
-
+/*
 testUtils.testWithUtils("constructor", "parser", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = {}, name = {};
@@ -106,4 +106,4 @@ testUtils.testWithUtils("parseOrExecute", "no parser", false, function(methods, 
 	
     // assert
     strictEqual(op, output);
-});
+});*/

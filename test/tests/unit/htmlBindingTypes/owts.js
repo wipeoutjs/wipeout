@@ -7,47 +7,30 @@ module("wipeout.htmlBindingTypes.owts", {
 
 testUtils.testWithUtils("binding", "", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {OUOUO: {}},
-		setter = {
-			getParser: methods.method([vm], null),
-			getValue: methods.method([], "hello"),
-			name: "OUOUO"
-		},
-		rc = {};
-		
-	classes.mock("obsjs.tryObserve", function () {
-		
-		strictEqual(vm, arguments[0]);
-		strictEqual(setter.name, arguments[1]);
-	}, 1);
-	
-	// act
-	var op = wipeout.htmlBindingTypes.owts(vm, setter, rc);
-	
-	// assert
-	strictEqual(rc.hello, vm.OUOUO);
-});
-
-testUtils.testWithUtils("binding", "has parser", false, function(methods, classes, subject, invoker) {
-    // arrange
 	var vm = {},
+		rc = {},
 		setter = {
-			getParser: methods.method([vm], {})
+			canSet: methods.method([], true),
+			onPropertyChanged: methods.customMethod(function () {
+				strictEqual(arguments[1], true);
+				var val = {};
+				setter.set = methods.method([rc, val, vm]);
+				arguments[0](null, val);
+			})
 		};
 	
 	// act
+	wipeout.htmlBindingTypes.owts(vm, setter, rc);
+	
 	// assert
-	throws(function () {
-		wipeout.htmlBindingTypes.owts(vm, setter);
-	});
 });
 
-testUtils.testWithUtils("binding", "not simple binding property", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("binding", "cannot set", false, function(methods, classes, subject, invoker) {
     // arrange
 	var vm = {},
 		setter = {
-			getParser: methods.method([vm], null),
-			getValue: methods.method([], "(")
+			canSet: methods.method([], false),
+			value: methods.method([])
 		};
 	
 	// act

@@ -17,7 +17,7 @@ testUtils.testWithUtils("eventBuild", "has existing", false, function(methods, c
 testUtils.testWithUtils("eventBuild", "create", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var tmp;
-	subject.getValue = function () { return "$context.theMethod" };
+	subject.value = function () { return "$context.theMethod" };
 	
 	// act
 	// assert
@@ -53,8 +53,8 @@ testUtils.testWithUtils("onElementEvent", null, true, function(methods, classes,
 	var executed = false;	
 	$("#qunit-fixture").html("<button></button>");
 	var button = $("#qunit-fixture")[0].firstChild;
-	var disp = subject.cacheAllWatched(function () {
-		subject.onElementEvent(button, "click", new wipeout.template.context({}), function () {
+	var disp = subject.cacheAllWatched(button, function () {
+		subject.onElementEvent("click", new wipeout.template.context({}), function () {
 			ok(!executed);
 			executed = true;
 		});
