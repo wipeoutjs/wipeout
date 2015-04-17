@@ -168,37 +168,24 @@ testUtils.testWithUtils("getComputed", null, false, function(methods, classes, s
 	arg1.something = "yesyes";
 });
 
-testUtils.testWithUtils("buildGetter", null, true, function(methods, classes, subject, invoker) {
-    // arrange
-	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {};
-	
-	// act
-	var output1 = invoker("[$context, $this, $parent, $parents, $index]")(arg1, arg2, arg3, arg4, arg5);
-	
-	// assert
-	deepEqual(output1, [arg1, arg2, arg3, arg4, arg5]);
-});
-
 testUtils.testWithUtils("buildEventGetter", "no added brackets", true, function(methods, classes, subject, invoker) {
     // arrange
-	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {}, output = {};
-	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7], output);
+	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
+	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
 	
 	// act
-	var output1 = invoker("$context.theFunction($context, $this, $parent, $parents, $index, e, element)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	invoker("$context.theFunction($context, $this, $parent, $parents, $index, e, element)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	
 	// assert
-	deepEqual(output1, output);
 });
 
 testUtils.testWithUtils("buildEventGetter", "with added brackets", true, function(methods, classes, subject, invoker) {
     // arrange
-	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {}, output = {};
-	arg1.theFunction = methods.method([arg6, arg7], output);
+	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
+	arg1.theFunction = methods.method([arg6, arg7]);
 	
 	// act
-	var output1 = invoker("$context.theFunction")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	invoker("$context.theFunction")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	
 	// assert
-	deepEqual(output1, output);
 });

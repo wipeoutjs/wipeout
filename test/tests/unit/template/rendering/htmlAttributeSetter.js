@@ -20,8 +20,9 @@ testUtils.testWithUtils("eventBuild", "create", false, function(methods, classes
 	subject.value = function () { return "$context.theMethod" };
 	
 	// act
+	(tmp = invoker())({theMethod: methods.method()})
+	
 	// assert
-	strictEqual(555, (tmp = invoker())({theMethod: function () {return 555;}}));
 	strictEqual(subject._eventBuilt, tmp);
 });
 

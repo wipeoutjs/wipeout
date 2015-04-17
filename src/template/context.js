@@ -123,7 +123,7 @@ Class("wipeout.template.context", function () {
 			logic += "(e, element)";
 			
 		try {
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", "return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", logic);
 		} catch (e) {
 			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
