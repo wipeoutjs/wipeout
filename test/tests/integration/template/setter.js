@@ -32,7 +32,7 @@ test("cacheAllWatched and watch: computed", function() {
 	
 	// act
 	// assert
-	var disp = subject.cacheAllWatched(function () {
+	var disp = subject.cacheAllWatched(model, function () {
 		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
@@ -72,7 +72,7 @@ test("cacheAllWatched and watch: pathObserver", function() {
 	
 	// act
 	// assert
-	var disp = subject.cacheAllWatched(function () {
+	var disp = subject.cacheAllWatched(model, function () {
 		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
@@ -92,7 +92,9 @@ test("execute, $context", function() {
 	
 	// act
 	// assert
-	strictEqual(context, subject.execute(context));
+	subject.cacheAllWatched({}, function () {
+		strictEqual(context, subject.get(context));
+	});
 });
 
 test("execute, $this", function() {
@@ -102,8 +104,10 @@ test("execute, $this", function() {
 	
 	// act
 	// assert
-	ok(context.$this);
-	strictEqual(context.$this, subject.execute(context));
+	subject.cacheAllWatched({}, function () {
+		ok(context.$this);
+		strictEqual(context.$this, subject.get(context));
+	});
 });
 
 test("execute, $parent", function() {
@@ -113,8 +117,10 @@ test("execute, $parent", function() {
 	
 	// act
 	// assert
-	ok(context.$parent);
-	strictEqual(context.$parent, subject.execute(context));
+	subject.cacheAllWatched({}, function () {
+		ok(context.$parent);
+		strictEqual(context.$parent, subject.get(context));
+	});
 });
 
 test("execute, $parents", function() {
@@ -124,8 +130,10 @@ test("execute, $parents", function() {
 	
 	// act
 	// assert
-	ok(context.$parents);
-	strictEqual(context.$parents, subject.execute(context));
+	subject.cacheAllWatched({}, function () {
+		ok(context.$parents);
+		strictEqual(context.$parents, subject.get(context));
+	});
 });
 
 test("execute, $index", function() {
@@ -135,6 +143,8 @@ test("execute, $index", function() {
 	
 	// act
 	// assert
-	ok(context.$index);
-	strictEqual(context.$index, subject.execute(context));
+	subject.cacheAllWatched({}, function () {
+		ok(context.$index);
+		strictEqual(context.$index, subject.get(context));
+	});
 });

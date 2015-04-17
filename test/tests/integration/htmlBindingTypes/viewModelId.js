@@ -13,7 +13,10 @@ test("binding and disposal", function () {
 		setter = new wipeout.template.initialization.propertySetter(name, {serializeContent: function () { return "theId"; } }, "s");
 	
 	// act
-	var disp = wipeout.htmlBindingTypes.viewModelId(viewModel, setter, renderContext);
+	var disp;
+	setter.cacheAllWatched(viewModel, function () {
+		disp = wipeout.htmlBindingTypes.viewModelId(viewModel, setter, renderContext);
+	});
 	
 	// assert
 	strictEqual(viewModel.id, "theId");

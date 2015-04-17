@@ -1,4 +1,5 @@
 
+//TODO: full test audit
 Class("wipeout.template.rendering.htmlAttributeSetter", function () {
 	
 	var htmlPropertyValue = wipeout.template.setter.extend(function htmlAttributeSetter (name, value, action) {

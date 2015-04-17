@@ -1,4 +1,5 @@
 
+//TODO: full test audit
 Class("wipeout.template.initialization.propertySetter", function () {
 	
     var viewModelPropertyValue = wipeout.template.setter.extend(function propertySetter (name, value, parser) {

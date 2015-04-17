@@ -14,7 +14,9 @@ test("binding, bindOneWay", function () {
 	var val1 = viewModel[name] = {}, val2 = {};
 	
 	// act
-	var disp = wipeout.htmlBindingTypes.owts(viewModel, setter, renderContext);
+	var disp = setter.cacheAllWatched(viewModel, function () {
+		wipeout.htmlBindingTypes.owts(viewModel, setter, renderContext);
+	});
 	
 	// assert
 	strictEqual(renderContext.$parent.val, val1);
@@ -24,7 +26,10 @@ test("binding, bindOneWay", function () {
 		strictEqual(renderContext.$parent.val, val2);
 		start();
 		
-		disp.dispose();
+		enumerateArr(disp, function (disp) {
+			disp.dispose();
+		});
+		
 		viewModel[name] = {};
 	});
 	

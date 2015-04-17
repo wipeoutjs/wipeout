@@ -21,7 +21,9 @@ test("binding, nb", function () {
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	// act
-	wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
+	var disp = setter.cacheAllWatched(viewModel, function () {
+		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
+	});
 	
 	// assert
 	strictEqual(viewModel[name], true);
@@ -41,7 +43,7 @@ test("binding, bindOneWay", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.cacheAllWatched(function () {
+	var disp = setter.cacheAllWatched(viewModel, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	

@@ -23,6 +23,8 @@ TODV: in later version
 TODE: exception handling
 TODM: document
 
+refactor _caching to use disposable
+
 view model constructor context (defualt = window)
 
 html event handled

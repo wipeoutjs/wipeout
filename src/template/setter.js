@@ -1,4 +1,5 @@
 //TODO: rename to propertyValue
+//TODO: full test audit
 Class("wipeout.template.setter", function () {
 	
 	var propertyValue = objjs.object.extend(function setter (name, value, parser) {

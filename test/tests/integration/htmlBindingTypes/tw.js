@@ -14,7 +14,7 @@ test("binding", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
 	
 	// act
-	var dispose = setter.cacheAllWatched(function () {
+	var dispose = setter.cacheAllWatched(viewModel, function () {
 		setter._caching.push(wipeout.htmlBindingTypes.tw(viewModel, setter, renderContext));
 	});
 	
