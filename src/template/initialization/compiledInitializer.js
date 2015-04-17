@@ -15,7 +15,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		///<summary>Given a piece of template xml, compile all of the setters for a view model</summary>
         ///<param name="template" type="wipeout.wml.wmlElement">The xml</param>
         
-	
 		///<summary type="Object">Cached setters from the template</summary>
         this.setters = {};
 		
