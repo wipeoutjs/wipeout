@@ -6,17 +6,9 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         ///<param name="name" type="String">The combined name and flags</param>
         ///<returns type="Object">The name and flags</returns>
         
-        var flags = name.indexOf("--");
-        if (flags === -1)
-            return {
-                flags: [],
-                name: wipeout.utils.obj.camelCase(name)
-            };
-        
-        return {
-            flags: name.substr(flags + 2).toLowerCase().split("-"),
-            name: wipeout.utils.obj.camelCase(name.substr(0, flags))
-        };
+        var op = wipeout.template.rendering.compiledTemplate.getPropertyFlags(name);
+		op.name = wipeout.utils.obj.camelCase(op.name);
+		return op;
     };
     
 	function compiledInitializer(template) {
