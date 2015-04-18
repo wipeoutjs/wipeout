@@ -179,6 +179,17 @@ testUtils.testWithUtils("buildEventCallback", "no added brackets", true, functio
 	// assert
 });
 
+testUtils.testWithUtils("buildEventCallback", "logic:", true, function(methods, classes, subject, invoker) {
+    // arrange
+	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
+	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7, 5]);
+	
+	// act
+	invoker("logic: var t = 5; $context.theFunction($context, $this, $parent, $parents, $index, e, element, t)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	
+	// assert
+});
+
 testUtils.testWithUtils("buildEventCallback", "with added brackets", true, function(methods, classes, subject, invoker) {
     // arrange
 	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
