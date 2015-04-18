@@ -5,9 +5,6 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
     }
 });
 
-//TODO: tests
-
-/*
 test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
@@ -295,4 +292,4 @@ test("disposal", function() {
 	
 	model.theVal = false;
 	stop();
-});*/
+});

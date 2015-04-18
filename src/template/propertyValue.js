@@ -66,12 +66,13 @@ Class("wipeout.template.propertyValue", function () {
 		return this._getter;
 	};
 	
-	propertyValue.prototype.get = function (renderContext) {
+	propertyValue.prototype.get = function (renderContext, propertyOwner) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Any">The returned value</returns>
 		
-		var parser = this.getParser();
+		var parser = this.getParser(propertyOwner);
 		
 		return parser ? 
 			(parser(parser.useRawXmlValue ? this._value : this.value(), this.name, renderContext)) : 
