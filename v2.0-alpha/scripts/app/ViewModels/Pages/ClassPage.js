@@ -1,7 +1,7 @@
 
-    compiler.registerClass("Wipeout.Docs.ViewModels.Pages.ClassPage", "wo.view", function() {
+    compiler.registerClass("wipeoutDocs.viewModels.pages.classPage", "wo.view", function() {
         var classPage = function() {
-            this._super("Wipeout.Docs.ViewModels.Pages.ClassPage");
+            this._super("wipeoutDocs.viewModels.pages.classPage");
 
             this.usagesTemplateId = ko.computed(function() {
                 if(this.model()) {

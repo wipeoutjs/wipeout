@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Components.ApiBuilder", "wo.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "wo.object", function() {    
     
     function apiBuilder(root, rootNamespace) {
         this._super();
@@ -9,7 +9,7 @@ compiler.registerClass("Wipeout.Docs.Models.Components.ApiBuilder", "wo.object",
     apiBuilder.prototype.build = function(settings) {
         settings = settings ||{};
         
-        var api = new Wipeout.Docs.Models.Components.Api();
+        var api = new wipeoutDocs.models.components.api();
         
         var classes = apiBuilder.toArray(this.classes);
         if(settings.knownParents)

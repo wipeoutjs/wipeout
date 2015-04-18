@@ -2,12 +2,12 @@
 
 <p>Local overriding is overriding a specific instance of a class, while leaving other instances untouched.</p>
 
-<p>Say you have a view model which has a child view model, which is a <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
+<p>Say you have a view model which has a child view model, which is a <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
 You want each item in the items control to have a method which removes itself.
 There are two options on how to implement this functionality:
     <ol>
         <li>Create a new class which inherits from itemsControl and override the 
-            <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
+            <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
              function</li>
         <li>Get the instance of the itemsControl and locally override the create item function.</li>
 </ol>
@@ -16,7 +16,7 @@ Using local overrides looks like this:
 
     <div class="columns">
         <div class="column-2 main-example-code">
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>window.myViewModel = 
     wo.contentControl.extend(function myViewModel() {
         this._super();
@@ -52,10 +52,10 @@ myViewModel.prototype.onRendered =
             }
         };
 };</code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
             </div>
         <div class="column-2 main-example-code">
-            <Wipeout.Docs.ViewModels.Components.CodeBlock>
+            <wipeout-docs.view-models.components.code-block>
     <code>&lt;myViewModel>
     &lt;template>
         &lt;!-- provide an id to 
@@ -73,6 +73,6 @@ myViewModel.prototype.onRendered =
         &lt;/wo.items-control>
     &lt;/template>
 &lt;/myViewModel></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
             </div>
         </div>

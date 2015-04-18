@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Pages.LandingPage", "Wipeout.Docs.Models.Pages.DisplayItem", function() {
+compiler.registerClass("wipeoutDocs.models.pages.landingPage", "wipeoutDocs.models.pages.displayItem", function() {
     return function(title) {
        this._super(title); 
     }

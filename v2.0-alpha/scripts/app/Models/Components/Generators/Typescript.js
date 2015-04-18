@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Components.Generators.Typescript", "Wipeout.Docs.Models.Components.Generators.CodeHelperGenerator", function() {
+compiler.registerClass("wipeoutDocs.models.components.generators.typescript", "wipeoutDocs.models.components.generators.codeHelperGenerator", function() {
     
     var defaultIndentation = "\t";
     

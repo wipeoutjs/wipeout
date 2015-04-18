@@ -4,7 +4,7 @@
 In order to keep clean contextual boundaries, the model property of a child view model can be bound to a property of its parent's model
 </p>
 
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'bind-to-parents-model-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-parents-model-script-1'">
         <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;template>
         &lt;wo.content-control model="$parent.model().value">
@@ -14,12 +14,12 @@ In order to keep clean contextual boundaries, the model property of a child view
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-parents-model-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 
 <p>
     In this example there is a parent view model which has a child view model. 
     The model of the child is bound to a property of the model of the parent. <a href="http://knockoutjs.com/documentation/binding-context.html">$parent</a> points to the scope of the view model 1 level up

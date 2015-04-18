@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Descriptions.Property", "Wipeout.Docs.Models.Descriptions.ClassItem", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.models.descriptions.classItem", function() {
     var property = function(constructorFunction, propertyName, classFullName, isStatic) {
         this._super(propertyName, property.getPropertySummary(constructorFunction, propertyName, classFullName), isStatic);
         

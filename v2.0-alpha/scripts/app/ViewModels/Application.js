@@ -1,5 +1,5 @@
 
-compiler.registerClass("Wipeout.Docs.ViewModels.Application", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.application", "wo.view", function() {
     
     function Application(templateId) {
         if(this.constructor === Application) throw "Cannot create an instance of an abstract class";

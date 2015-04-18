@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Components.TreeViewBranch", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.view", function() {
     var treeViewBranch = function() {
         this._super(treeViewBranch.nullTemplate);
         
@@ -18,8 +18,8 @@ compiler.registerClass("Wipeout.Docs.ViewModels.Components.TreeViewBranch", "wo.
         }, this);
     };
     
-    treeViewBranch.branchTemplate = "Wipeout.Docs.ViewModels.Components.TreeViewBranch_branch";
-    treeViewBranch.leafTemplate = "Wipeout.Docs.ViewModels.Components.TreeViewBranch_leaf";
+    treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
+    treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
     treeViewBranch.nullTemplate = wo.visual.getBlankTemplateId();
     
     treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  

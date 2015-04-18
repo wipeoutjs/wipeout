@@ -1,8 +1,8 @@
 <h1>Binding in code</h1>
 
-    <p>You can also bind values in javascript using the <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=bind&amp;isStatic=false'" text="'bind'" /> function.</p>
+    <p>You can also bind values in javascript using the <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=bind&amp;isStatic=false'" text="'bind'" /> function.</p>
 
-    <Wipeout.Docs.ViewModels.Components.CodeBlock newScriptId="'bind-in-code-script-1'">
+    <wipeout-docs.view-models.components.code-block newScriptId="'bind-in-code-script-1'">
         <code>var objectToBindTo = ko.observable("Hello wipeout!");
 var myView = new wo.view();
 myView.bind("model", objectToBindTo, false);
@@ -14,4 +14,4 @@ objectToBindTo("Goodbye wipeout!");
             
 // Will log: "Goodbye wipeout!"
 console.log(myView.model());</code>
-    </Wipeout.Docs.ViewModels.Components.CodeBlock>
+    </wipeoutDocs.viewModels.components.codeBlock>

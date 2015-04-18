@@ -1,6 +1,6 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Pages.PropertyPage", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", function() {
     function propertyPage() {
-        this._super("Wipeout.Docs.ViewModels.Pages.PropertyPage");
+        this._super("wipeoutDocs.viewModels.pages.propertyPage");
         
         this.usagesTemplateId = ko.computed(function() {
             if(this.model()) {

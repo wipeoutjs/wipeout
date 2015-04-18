@@ -1,19 +1,19 @@
 
-compiler.registerClass("Wipeout.Docs.ViewModels.HowDoIApplication", "Wipeout.Docs.ViewModels.Application", function() {
+compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.viewModels.application", function() {
     
     var apiTemplateId;
     var staticConstructor= function() {
         if(apiTemplateId)
             return;
         
-        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $find(Wipeout.Docs.ViewModels.HowDoIApplication).apiPlaceholderName"></h1>\
-<Wipeout.Docs.ViewModels.Components.DynamicRender model="$find(Wipeout.Docs.ViewModels.HowDoIApplication).apiPlaceholder" />');
+        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
+<wipeout-docs.view-models.components.dynamic-render model="$find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
     };
     
     function HowDoIApplication() {
         staticConstructor();
         
-        this._super("Wipeout.Docs.ViewModels.HowDoIApplication");
+        this._super("wipeoutDocs.viewModels.howDoIApplication");
         
         this.contentTemplate = ko.observable(wo.contentControl.getBlankTemplateId());
         
@@ -39,9 +39,9 @@ compiler.registerClass("Wipeout.Docs.ViewModels.HowDoIApplication", "Wipeout.Doc
         if(query.article) {
             this.openArticle(query.article);
         } else if (query.type === "api") {
-            this.apiPlaceholder(Wipeout.Docs.Models.ApiApplication.getModel(query));
+            this.apiPlaceholder(wipeoutDocs.models.apiApplication.getModel(query));
             if(this.apiPlaceholder()) {
-                this.apiPlaceholderName(this.apiPlaceholder() instanceof Wipeout.Docs.Models.Descriptions.Class ? this.apiPlaceholder().classFullName : "")
+                this.apiPlaceholderName(this.apiPlaceholder() instanceof wipeoutDocs.models.descriptions.class ? this.apiPlaceholder().classFullName : "")
                 this.contentTemplate(apiTemplateId);
             }
         } else {

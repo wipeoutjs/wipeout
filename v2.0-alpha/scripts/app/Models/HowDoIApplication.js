@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.HowDoIApplication", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.howDoIApplication", "wo.object", function() {
     
     function articleLink(title, article) {
         this.text = title;

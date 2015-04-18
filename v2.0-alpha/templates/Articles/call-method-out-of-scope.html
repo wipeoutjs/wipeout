@@ -3,7 +3,7 @@
     <p>Using knockout event bindings always sets the context of your functions to the current scope. However, when using ancestors function, it is 
     generally more useful to have ancestor obect as the scope. The $call API will do this</p>
 
-    <Wipeout.Docs.ViewModels.Components.JsCodeBlock>
+    <wipeout-docs.view-models.components.js-js-code-block>
         <code>// create a custom class to distinguish type
 window.myType = wo.contentControl.extend(function myType() {
     this._super();
@@ -14,8 +14,8 @@ window.myType = wo.contentControl.extend(function myType() {
 myType.prototype.click = function(text) {
     alert(this.example + text);
 };</code>
-    </Wipeout.Docs.ViewModels.Components.JsCodeBlock>
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'call-method-out-of-scope-script-1'">
+    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'call-method-out-of-scope-script-1'">
         <code>&lt;myType model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control>
@@ -25,12 +25,12 @@ myType.prototype.click = function(text) {
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myType></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'call-method-out-of-scope-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
-There is <code>$call</code>, documented  <Wipeout.Rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'here'" />.
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+There is <code>$call</code>, documented  <wipeout.rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'here'" />.
 <br/>
 <br/>

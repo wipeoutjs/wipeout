@@ -8,7 +8,7 @@
         <span data-bind="text:model().propertyType.type"></span>
         <wo.if condition="model().propertyType.genericTypes &amp;&amp; model().propertyType.genericTypes.length">
             <template>                
-                <wo.itemsControl templateId="'Wipeout.Docs.ViewModels.Pages.PropertyPage_GenericTypes'" itemSource="model().propertyType.genericTypes">
+                <wo.itemsControl templateId="'wipeoutDocs.viewModels.pages.propertyPage_GenericTypes'" itemSource="model().propertyType.genericTypes">
                     <itemTemplate>
                         <wo.if condition="$index() !== 0" template="', '" />
                         <span data-bind="text: model()"></span>

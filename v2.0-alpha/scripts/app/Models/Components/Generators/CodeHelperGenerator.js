@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Components.Generators.CodeHelperGenerator", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "wo.object", function() {
     
     function select(input, converter, context) {
         var output = [];
@@ -90,7 +90,7 @@ compiler.registerClass("Wipeout.Docs.Models.Components.Generators.CodeHelperGene
         this.indentation++;
         
         for(var item in namespaceObject) {
-            if(namespaceObject[item] instanceof Wipeout.Docs.Models.Components.ApiClass) {
+            if(namespaceObject[item] instanceof wipeoutDocs.models.components.apiClass) {
                 this.convertClass(namespaceObject[item].classDescription);
             } else {
                 this.convertNamespace(item, namespaceObject[item]);

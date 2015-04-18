@@ -1,10 +1,10 @@
 <h1>Custom $find filters</h1>
 
     <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the 
-    	<Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wipeout.utils.find'" text="'wo.find'" /> function.
+    	<wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wipeout.utils.find'" text="'wo.find'" /> function.
     	You can add your own filter by adding a custom method. For example:</p>
 
-    <Wipeout.Docs.ViewModels.Components.CodeBlock>
+    <wipeout-docs.view-models.components.code-block>
         <code>// find a viewmodel is a specific namespace
 wo.find.$namespace = function(currentItem, searchTerm, index) {
 	// searchTerm will be the namespace passed in
@@ -16,11 +16,11 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 	
 	return false;
 }</code>
-    </Wipeout.Docs.ViewModels.Components.CodeBlock>
+    </wipeoutDocs.viewModels.components.codeBlock>
 
 <p>And then using the filter</p>
     
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>&lt;my-namespace.my-view-model model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control my-view-model-ancestor="$find({$namespace: myNamespace})">
@@ -30,6 +30,6 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-namespace.my-view-model></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>

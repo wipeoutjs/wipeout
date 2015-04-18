@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Components.DynamicRender", "wo.contentControl", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.contentControl", function() {
     var dynamicRender = function() {
         this._super();
         
@@ -17,17 +17,17 @@ compiler.registerClass("Wipeout.Docs.ViewModels.Components.DynamicRender", "wo.c
         } else {
             var newVm = null;
             
-            if(newVal instanceof Wipeout.Docs.Models.Pages.LandingPage) {
-                newVm = new Wipeout.Docs.ViewModels.Pages.LandingPage();
-            } else if(newVal instanceof Wipeout.Docs.Models.Descriptions.Class) {
-                newVm = new Wipeout.Docs.ViewModels.Pages.ClassPage();
-            } else if(newVal instanceof Wipeout.Docs.Models.Descriptions.Event) {
-                newVm = new Wipeout.Docs.ViewModels.Pages.EventPage();
-            } else if(newVal instanceof Wipeout.Docs.Models.Descriptions.Property) {
-                newVm = new Wipeout.Docs.ViewModels.Pages.PropertyPage();
-            } else if(newVal instanceof Wipeout.Docs.Models.Descriptions.Function) {
-                newVm = new Wipeout.Docs.ViewModels.Pages.FunctionPage();
-            } else if(newVal instanceof Wipeout.Docs.Models.Components.StaticPageTreeViewBranchTemplate) {
+            if(newVal instanceof wipeoutDocs.models.pages.landingPage) {
+                newVm = new wipeoutDocs.viewModels.pages.landingPage();
+            } else if(newVal instanceof wipeoutDocs.models.descriptions.class) {
+                newVm = new wipeoutDocs.viewModels.pages.classPage();
+            } else if(newVal instanceof wipeoutDocs.models.descriptions.event) {
+                newVm = new wipeoutDocs.viewModels.pages.eventPage();
+            } else if(newVal instanceof wipeoutDocs.models.descriptions.property) {
+                newVm = new wipeoutDocs.viewModels.pages.propertyPage();
+            } else if(newVal instanceof wipeoutDocs.models.descriptions.function) {
+                newVm = new wipeoutDocs.viewModels.pages.functionPage();
+            } else if(newVal instanceof wipeoutDocs.models.components.StaticPageTreeViewBranchTemplate) {
                 newVm = new wo.view(newVal.templateId);
             } else {
                 throw "Unknown model type";

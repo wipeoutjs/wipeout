@@ -1,4 +1,4 @@
-<div  data-bind="wipeout: Wipeout.Docs.ViewModels.HowDoIApplication" id="PageRoot">
+<div  data-bind="wipeout: wipeoutDocs.viewModels.howDoIApplication" id="PageRoot">
 </div>
 
 ## insert: templates ##
@@ -6,7 +6,7 @@
 <script type="text/javascript">
     window.bootstrapApplication = function() {
                // wipeout.profile.profile();
-        window.model = new Wipeout.Docs.Models.HowDoIApplication();
+        window.model = new wipeoutDocs.models.howDoIApplication();
         
         wipeout.profile.profile();        
         ko.applyBindings(window.model, document.getElementById("PageRoot"));

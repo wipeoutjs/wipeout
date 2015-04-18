@@ -8,21 +8,21 @@
     Within the MVVM pattern it is recommended that you only select items from within the cotext of the 
     view model you are using. NOT from it's children and NOT from the entire document.
         <br/>
-    Wipeout uses the <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.visual&amp;propertyName=templateItems&amp;isStatic=false'" text="'templateItems'" />
+    Wipeout uses the <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.visual&amp;propertyName=templateItems&amp;isStatic=false'" text="'templateItems'" />
         property to automatically grab items you want to manipulate at a later stage based on their ids.
 </p>
 
 <div class="columns">
     <div class="column-2 main-example-code">
-        <Wipeout.Docs.ViewModels.Components.CodeBlock>
+        <wipeout-docs.view-models.components.code-block>
             <code>&lt;script type="text/xml" id="theTemplate">
     &lt;div id="myDiv">&lt;/div>
     &lt;wo.view id="myViewModel" />
 &lt;/script></code>
-        </Wipeout.Docs.ViewModels.Components.CodeBlock>
+        </wipeoutDocs.viewModels.components.codeBlock>
     </div>
     <div class="column-2 main-example-code">
-        <Wipeout.Docs.ViewModels.Components.CodeBlock>
+        <wipeout-docs.view-models.components.code-block>
             <code>var customViewModel = wo.view.extend({
     constructor: function customViewModel() {
         this._super("theTemplate");
@@ -36,12 +36,12 @@
         // manipulate the templateItems here
     }
 });</code>
-        </Wipeout.Docs.ViewModels.Components.CodeBlock>
+        </wipeoutDocs.viewModels.components.codeBlock>
     </div>
 </div>
 
 <p>If you give a html element or view model within a template an id, that item will be appended to the templateItems of the view model which has been templated. 
-   The <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.visual&amp;functionName=onRendered&amp;isStatic=false'" text="'onRendered'" /> method is the place to do dom
+   The <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.visual&amp;functionName=onRendered&amp;isStatic=false'" text="'onRendered'" /> method is the place to do dom
 manipulation within a view model, as it is called after the view model has been fully templated and rendered</p>
 <p>Notice that the id property on the view model does not require inner quotations like other string properties. Id is a special property which does not go through the same property setting process</p>
 

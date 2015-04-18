@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Components.Api", "wo.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.api", "wo.object", function() {    
     
     var api = function() {
         this._super();
@@ -19,8 +19,8 @@ compiler.registerClass("Wipeout.Docs.Models.Components.Api", "wo.object", functi
         if(result)
             return result;
         
-        var desc = new Wipeout.Docs.Models.Descriptions.Class(className, this);
-        this.classes.push(new Wipeout.Docs.Models.Components.ApiClass(desc, classConstructor));
+        var desc = new wipeoutDocs.models.descriptions.class(className, this);
+        this.classes.push(new wipeoutDocs.models.components.apiClass(desc, classConstructor));
         
         return desc;
     };
@@ -38,7 +38,7 @@ compiler.registerClass("Wipeout.Docs.Models.Components.Api", "wo.object", functi
     }
     
     api.prototype.codeHelper = function(codeHelperGenerator) {
-        if(!(codeHelperGenerator instanceof Wipeout.Docs.Models.Components.Generators.CodeHelperGenerator))
+        if(!(codeHelperGenerator instanceof wipeoutDocs.models.components.generators.codeHelperGenerator))
             throw "Invalid input";
         
         return codeHelperGenerator.generate(this);

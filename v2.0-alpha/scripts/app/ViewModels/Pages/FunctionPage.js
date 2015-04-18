@@ -1,6 +1,6 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Pages.FunctionPage", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", function() {
     var functionPage = function() {
-        this._super("Wipeout.Docs.ViewModels.Pages.FunctionPage");
+        this._super("wipeoutDocs.viewModels.pages.functionPage");
         
         this.showCode = ko.observable(false);
         

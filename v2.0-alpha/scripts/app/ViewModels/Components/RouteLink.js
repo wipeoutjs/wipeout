@@ -1,6 +1,6 @@
-compiler.registerClass("Wipeout.Rl", "wo.view", function() {
+compiler.registerClass("wipeout.rl", "wo.view", function() {
     var RouteLink = function() {
-        this._super("Wipeout.Docs.ViewModels.Components.RouteLink");
+        this._super("wipeoutDocs.viewModels.components.routeLink");
     };
     
     RouteLink.prototype.onRendered = function(oldValues, newValues) {

@@ -1,18 +1,18 @@
 <h1>Content Control</h1>
 
 <p>The content control is a wipeout base class which allows you to set the template explicicitly, rather than having to set a template id.   
-    <Wipeout.Docs.ViewModels.Components.CodeBlock>
+    <wipeout-docs.view-models.components.code-block>
         <code>&lt;wo.content-control>
     &lt;template>
         Hello wipeout!
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.CodeBlock>
+    </wipeoutDocs.viewModels.components.codeBlock>
 </p>
 <p>
     The content control has a
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> and
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=template&amp;isStatic=false'" text="'template'" />
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> and
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=template&amp;isStatic=false'" text="'template'" />
     propery which are bound together. 
     
     <ul>
@@ -23,12 +23,12 @@
 </p>
 <p>
     You can mimic template/templateId functionality on a custom vie model by using the 
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;functionName=createTemplatePropertyFor&amp;isStatic=true'" text="'createTemplatePropertyFor'" /> function.
-    <Wipeout.Docs.ViewModels.Components.CodeBlock>
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.contentControl&amp;functionName=createTemplatePropertyFor&amp;isStatic=true'" text="'createTemplatePropertyFor'" /> function.
+    <wipeout-docs.view-models.components.code-block>
         <code>var myViewModel = wo.view.extend(function myViewModel() {
     this._super();
             
     this.myTemplate = wo.contentControl.createTemplatePropertyFor(this.templateId, this);
 });</code>
-    </Wipeout.Docs.ViewModels.Components.CodeBlock>
+    </wipeoutDocs.viewModels.components.codeBlock>
 </p>

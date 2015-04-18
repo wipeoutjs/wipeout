@@ -4,18 +4,18 @@
 Unless you are building generic components, most bindnigs will point to the model. Binding to the model is as follows
 </p>
 
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'bind-to-model-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-model-script-1'">
         <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;template>
         Binding to current scope: &lt;span data-bind="text: model().value">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-model-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 
 <p>
     The <code>model()</code> notation comes from the fact that <code>model</code> is a property on the view model which is a <a href="http://knockoutjs.com/documentation/observables.html">ko.observable</a>
     

@@ -3,7 +3,7 @@
 <p>Complex properties with multiple levels can also be set in xml. If there is no parser to go with the <code>constructor</code> property, then
 the constructor is used as an actual constructor with the <code>new</code> keyword</p>
 
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'set-complex-properties-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'set-complex-properties-script-1'">
         <code>&lt;wo.content-control> &lt;!-- outer contentControl -->
     &lt;my-val constructor="wo.contentControl" inner-value="'Hello wipeout'"> &lt;!-- inner contentControl -->
         &lt;template>
@@ -14,12 +14,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Rendering view model: &lt;div data-bind="render: myVal">&lt;/div>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-complex-properties-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 
 <p>This is a fairly complex piece of functionality.
     <ol>
         <li>We constructed an outer wo.contenentControl</li>
@@ -28,7 +28,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         <li>We set the template property of the inner contentControl.</li>
         <li>We set the myVal property of the outer contentControl to the innerContentControl</li>
         <li>We set the template property of the outer contentControl.</li>
-        <li>Within the template of the outer content conrol, we use the <Wipeout.Rl href="'/wipeout/how-do-i.html?article=render-binding'" text="'render'" /> binding to render its myVal property.</li>
+        <li>Within the template of the outer content conrol, we use the <wipeout.rl href="'/wipeout/how-do-i.html?article=render-binding'" text="'render'" /> binding to render its myVal property.</li>
 </ol>
     
 </p>

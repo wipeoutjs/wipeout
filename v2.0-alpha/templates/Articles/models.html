@@ -8,7 +8,7 @@ role of a model is beyond the scope of this document.</p>
         <li>
             Unless explicitely set to null, every view model is gaurenteed to have a model. This is because models cascade downwards. If you do not have the model set on a view model, it will 
             be assigned the model of it's parent.
-            <Wipeout.Docs.ViewModels.Components.CodeBlock>
+            <wipeout-docs.view-models.components.code-block>
         <code>&lt;wo.content-control model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control>
@@ -18,11 +18,11 @@ role of a model is beyond the scope of this document.</p>
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.CodeBlock>
+    </wipeoutDocs.viewModels.components.codeBlock>
             In this example the second contentControl has bee automatically given the model of its parent
         </li>
         <li>
-            There is a pre defined hook <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=onModelChanged&amp;isStatic=false'" text="'onModelChanged'" /> which 
+            There is a pre defined hook <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=onModelChanged&amp;isStatic=false'" text="'onModelChanged'" /> which 
             can be overridden in derived view models to get a notification each time a model changes.
         </li>
     </ol>

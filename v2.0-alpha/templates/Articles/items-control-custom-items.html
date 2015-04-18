@@ -2,10 +2,10 @@
 
 <p>
 With a custom itemsControl you can control
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'the types of items which are created'" />.
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'the types of items which are created'" />.
 </p>
     
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>var myItemsControl = wo.itemsControl.extend({
     constructor: function myItemsControl() {
         this._super();
@@ -19,6 +19,6 @@ With a custom itemsControl you can control
         return item;
     }
 });</code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <p>With a regular items control, all items are plain wo.view objects. If you override the createItem method you can alter this.</p>

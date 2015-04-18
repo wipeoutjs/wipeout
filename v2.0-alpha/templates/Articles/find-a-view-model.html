@@ -8,7 +8,7 @@
 
 <p>You can select an ancestor view model by passing a view model type into the find block.</p>
 
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>&lt;myViewModel model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control my-view-model-ancestor="$find(myViewModel)">
@@ -18,14 +18,14 @@
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myViewModel></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <h2>Search for an ancestor</h2>
 
 <p>You can select an ancestor by passing a string into the find block. 
 	The string must be of the form 'parent', 'grandparent', 'greatgrandparent', 'greatgreatgrandparent', etc...</p>
 
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control my-view-model-ancestor="$find('parent')">
@@ -35,13 +35,13 @@
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-view-model></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <h2>Using more complex filters</h2>
 
 <p>You can pass a filters object into <code>$call</code> for a targeted search. </p>
 
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
         &lt;wo.content-control my-view-model-ancestor="$find({$instanceof: myViewModel})">
@@ -51,7 +51,7 @@
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-view-model></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <table class="table table-striped">
 	<thead>

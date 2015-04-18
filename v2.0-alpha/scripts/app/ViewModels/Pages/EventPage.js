@@ -1,5 +1,5 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Pages.EventPage", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.pages.eventPage", "wo.view", function() {
     return function() {
-        this._super("Wipeout.Docs.ViewModels.Pages.EventPage");
+        this._super("wipeoutDocs.viewModels.pages.eventPage");
     };
 });

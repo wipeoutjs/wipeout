@@ -2,7 +2,7 @@
 
     <p>Dom events are handled by standard knockout <a href="http://knockoutjs.com/documentation/introduction.html">event bindings</a>. The context of the event handler will always be the current view model, even if it resides on another object</p>
 
-    <Wipeout.Docs.ViewModels.Components.JsCodeBlock>
+    <wipeout-docs.view-models.components.js-js-code-block>
         <code>
 window.myType = wo.contentControl.extend(function myType() {
     this._super();
@@ -20,19 +20,19 @@ window.aStaticObject = {
         alert(this.name);
     }
 };</code>
-    </Wipeout.Docs.ViewModels.Components.JsCodeBlock>
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'call-a-method-script-1'">
+    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'call-a-method-script-1'">
         <code>&lt;my-type>
     &lt;template>
         &lt;button data-bind="click: eventHandler1">Test1&lt;/button>
         &lt;button data-bind="click: aStaticObject.eventHandler2">Test2&lt;/button>
     &lt;/template>
 &lt;/my-type></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'call-a-method-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 
 <br/>
 <br/>

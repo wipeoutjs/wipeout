@@ -1,6 +1,6 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Components.CodeBlock", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view", function() {
     var codeBlock = function(templateId) {
-        this._super(templateId || "Wipeout.Docs.ViewModels.Components.CodeBlock");        
+        this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = ko.observable();
         
         this.code.subscribe(this.onCodeChanged, this);        

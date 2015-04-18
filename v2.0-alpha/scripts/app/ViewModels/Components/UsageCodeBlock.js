@@ -1,7 +1,7 @@
 
-compiler.registerClass("Wipeout.Docs.ViewModels.Components.UsageCodeBlock", "Wipeout.Docs.ViewModels.Components.CodeBlock", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipeoutDocs.viewModels.components.codeBlock", function() {
     var usageCodeBlock = function() {
-        this._super("Wipeout.Docs.ViewModels.Components.UsageCodeBlock");
+        this._super("wipeoutDocs.viewModels.components.usageCodeBlock");
         
         this.usage = ko.observable();
         

@@ -1,10 +1,10 @@
 <h1>Working with lists</h1>
 
-<p>Within wipeout, lists are handled by the <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> view model. Regular javascript objects cannot be rendered by
+<p>Within wipeout, lists are handled by the <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> view model. Regular javascript objects cannot be rendered by
     wipeout, as they are not view models. The purpose of the itemsControl class is to translate between model and view model layers for lists of items.
 </p>
     
-<Wipeout.Docs.ViewModels.Components.CodeBlock>
+<wipeout-docs.view-models.components.code-block>
     <code>&lt;wo.items-control itemSource="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;item-template>
         &lt;div>
@@ -13,7 +13,7 @@
         &lt;/div>
     &lt;/item-template>
 &lt;/wo.items-control></code>
-</Wipeout.Docs.ViewModels.Components.CodeBlock>
+</wipeoutDocs.viewModels.components.codeBlock>
 
 <p>In the itemTemplate, you access an object from the itemSource using the model property. You can also access the object's index using $index.
 </p>

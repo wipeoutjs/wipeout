@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.ViewModels.Components.TemplateCodeBlock", "Wipeout.Docs.ViewModels.Components.CodeBlock", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.templateCodeBlock", "wipeoutDocs.viewModels.components.codeBlock", function() {
     var templateCodeBlock = function() {
         templateCodeBlock.staticConstructor();
         this._super.apply(this, arguments);

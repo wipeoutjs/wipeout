@@ -1,9 +1,9 @@
-compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.apiApplication", "wo.object", function() {
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
         
-        wipeoutApi = new Wipeout.Docs.Models.Components.ApiBuilder(wipeout, "wipeout")
+        wipeoutApi = new wipeoutDocs.models.components.apiBuilder(wipeout, "wipeout")
             .build({
                 knownParents: [{key:"ko.templateEngine", value: ko.templateEngine}], 
                 filter: function(i) {
@@ -11,21 +11,21 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
                 }
             });     
          
-        woApi = new Wipeout.Docs.Models.Components.ApiBuilder(wo, "wo").build();
+        woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build();
     };
     
     ApiApplication.routableUrl = function(item) {
         staticContructor();
         
-        if(item instanceof Wipeout.Docs.Models.Descriptions.Class)
+        if(item instanceof wipeoutDocs.models.descriptions.class)
             output = "type=api&className=" + item.classFullName;
-        else if(item instanceof Wipeout.Docs.Models.Descriptions.Event)
+        else if(item instanceof wipeoutDocs.models.descriptions.event)
             output = "type=api&className=" + item.classFullName + "&eventName=" + item.eventName + "&isStatic=" + item.isStatic;
-        else if(item instanceof Wipeout.Docs.Models.Descriptions.Property)
+        else if(item instanceof wipeoutDocs.models.descriptions.property)
             output = "type=api&className=" + item.classFullName + "&propertyName=" + item.propertyName + "&isStatic=" + item.isStatic;
-        else if(item instanceof Wipeout.Docs.Models.Descriptions.Function)
+        else if(item instanceof wipeoutDocs.models.descriptions.function)
             output = "type=api&className=" + item.classFullName + "&functionName=" + item.functionName + "&isStatic=" + item.isStatic;
-        else if(item instanceof Wipeout.Docs.Models.Descriptions.Class)
+        else if(item instanceof wipeoutDocs.models.descriptions.class)
             output = "type=Home";
         else
             throw "Unknown page type";
@@ -78,27 +78,27 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
         var output = [];
         
         enumerate(classDescription.staticEvents, function(event) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(event.eventName, ApiApplication.routableUrl(event)));            
+            output.push(new wipeoutDocs.models.components.treeViewBranch(event.eventName, ApiApplication.routableUrl(event)));            
         });
         
         enumerate(classDescription.staticProperties, function(property) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(property.propertyName, ApiApplication.routableUrl(property)));
+            output.push(new wipeoutDocs.models.components.treeViewBranch(property.propertyName, ApiApplication.routableUrl(property)));
         });
         
         enumerate(classDescription.staticFunctions, function(_function) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(_function.functionName, ApiApplication.routableUrl(_function)));
+            output.push(new wipeoutDocs.models.components.treeViewBranch(_function.functionName, ApiApplication.routableUrl(_function)));
         });
         
         enumerate(classDescription.events, function(event) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(event.eventName, ApiApplication.routableUrl(event)));            
+            output.push(new wipeoutDocs.models.components.treeViewBranch(event.eventName, ApiApplication.routableUrl(event)));            
         });
         
         enumerate(classDescription.properties, function(property) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(property.propertyName, ApiApplication.routableUrl(property)));            
+            output.push(new wipeoutDocs.models.components.treeViewBranch(property.propertyName, ApiApplication.routableUrl(property)));            
         });
         
         enumerate(classDescription.functions, function(_function) {
-            output.push(new Wipeout.Docs.Models.Components.TreeViewBranch(_function.functionName, ApiApplication.routableUrl(_function)));            
+            output.push(new wipeoutDocs.models.components.treeViewBranch(_function.functionName, ApiApplication.routableUrl(_function)));            
         });
         
         output.sort(function() { return arguments[0].name.localeCompare(arguments[1].name); });
@@ -116,7 +116,7 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
             if(definition.staticProperties[i].name === "__woName")
                 definition.staticProperties.splice(i, 1);
         
-        return new Wipeout.Docs.Models.Components.TreeViewBranch(
+        return new wipeoutDocs.models.components.treeViewBranch(
             friendlyName, 
             ApiApplication.routableUrl(definition), 
             ApiApplication.getSubBranches(definition));
@@ -127,9 +127,9 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
         
         this._super();
         
-        this.content = ko.observable(new Wipeout.Docs.Models.Pages.LandingPage());
-        var _wipeout = new Wipeout.Docs.Models.Components.TreeViewBranch("wipeout", null, [
-            new Wipeout.Docs.Models.Components.TreeViewBranch("base", null, [
+        this.content = ko.observable(new wipeoutDocs.models.pages.landingPage());
+        var _wipeout = new wipeoutDocs.models.components.treeViewBranch("wipeout", null, [
+            new wipeoutDocs.models.components.treeViewBranch("base", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.contentControl"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.event"),
@@ -143,7 +143,7 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.view"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.visual")
             ]),
-            new Wipeout.Docs.Models.Components.TreeViewBranch("bindings", null, [
+            new wipeoutDocs.models.components.treeViewBranch("bindings", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.bindingBase"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.ic-render"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.itemsControl"),
@@ -152,12 +152,12 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.wipeout-type"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.wo")
             ]),
-            new Wipeout.Docs.Models.Components.TreeViewBranch("template", null, [
+            new wipeoutDocs.models.components.treeViewBranch("template", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.asyncLoader"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.engine"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.htmlBuilder")
             ]),
-            new Wipeout.Docs.Models.Components.TreeViewBranch("utils", null, [
+            new wipeoutDocs.models.components.treeViewBranch("utils", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.bindingDomManipulationWorker"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.call"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.domData"),
@@ -171,7 +171,7 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
             ])
         ]);
         
-        var _wo = new Wipeout.Docs.Models.Components.TreeViewBranch("wo", null, [
+        var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
             ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
             ApiApplication.treeViewBranchFor(wipeoutApi, "wo.call"),
             ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
@@ -196,7 +196,7 @@ compiler.registerClass("Wipeout.Docs.Models.ApiApplication", "wo.object", functi
             ApiApplication.treeViewBranchFor(woApi, "wo.visual")
         ]);
         
-        this.menu = new Wipeout.Docs.Models.Components.TreeViewBranch("API", null, [
+        this.menu = new wipeoutDocs.models.components.treeViewBranch("API", null, [
             _wo,
             _wipeout
         ]);

@@ -1,9 +1,9 @@
 <h1>Add a custom parser</h1>
 
-<p>You can also add a custom parser by adding to the <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=objectParser&amp;isStatic=true'" text="'wo.view.objectParser'" /> object.</p>
+<p>You can also add a custom parser by adding to the <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=objectParser&amp;isStatic=true'" text="'wo.view.objectParser'" /> object.</p>
 <p>Custom parsers must have names all in lower case.</p>
 
-    <Wipeout.Docs.ViewModels.Components.JsCodeBlock newScriptId="'set-json-property-script-1'">
+    <wipeout-docs.view-models.components.js-js-code-block newScriptId="'set-json-property-script-1'">
         <code>wo.view.objectParser["name"] = function(nameString) {
     // trim whitespace characters and seperate words by spaces
     var nameParts = wo.obj.trim(nameString).split(/\s+/);
@@ -13,9 +13,9 @@
     }
 };
 		</code>
-    </Wipeout.Docs.ViewModels.Components.JsCodeBlock>
+    </wipeoutDocs.viewModels.components.JsCodeBlock>
 
-    <Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock newScriptId="'add-a-property-parser-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'add-a-property-parser-script-1'">
         <code>&lt;wo.content-control>
     &lt;my-val constructor="name">
         William Wallace
@@ -25,9 +25,9 @@
         Last name: &lt;span data-bind="text: myVal.lastName">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </Wipeout.Docs.ViewModels.Components.NewTemplateCodeBlock>
+    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
 
     
-    <Wipeout.Docs.ViewModels.Components.UsageCodeBlock showDefinitionCode="false">
+    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'add-a-property-parser-script-1'" /></code>
-    </Wipeout.Docs.ViewModels.Components.UsageCodeBlock> 
+    </wipeoutDocs.viewModels.components.usageCodeBlock> 

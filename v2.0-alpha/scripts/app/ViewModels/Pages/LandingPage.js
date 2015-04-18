@@ -1,6 +1,6 @@
 
-compiler.registerClass("Wipeout.Docs.ViewModels.Pages.LandingPage", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.viewModels.pages.landingPage", "wo.view", function() {
     return function() {
-        this._super("Wipeout.Docs.ViewModels.Pages.LandingPage");
+        this._super("wipeoutDocs.viewModels.pages.landingPage");
     };
 });

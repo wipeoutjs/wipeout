@@ -1,8 +1,8 @@
 
-compiler.registerClass("Wipeout.Docs.ViewModels.ApiApplication", "Wipeout.Docs.ViewModels.Application", function() {
+compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.viewModels.application", function() {
     
     function ApiApplication() {
-        this._super("Wipeout.Docs.ViewModels.ApiApplication");
+        this._super("wipeoutDocs.viewModels.apiApplication");
         
         this.registerDisposable(ko.computed(function() {
             var tmp;
@@ -13,13 +13,13 @@ compiler.registerClass("Wipeout.Docs.ViewModels.ApiApplication", "Wipeout.Docs.V
     };
     
     ApiApplication.prototype.route = function(query) { 
-        var temp = Wipeout.Docs.Models.ApiApplication.getModel(query);        
+        var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)
             this.model().content(temp);
     };
     
     ApiApplication.prototype.routeTo = function(item) {
-        history.pushState(null, '', Wipeout.Docs.Models.ApiApplication.routableUrl(item));
+        history.pushState(null, '', wipeoutDocs.models.apiApplication.routableUrl(item));
         crossroads.parse(location.pathname + location.search);
     };
     

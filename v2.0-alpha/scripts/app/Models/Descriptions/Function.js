@@ -1,4 +1,4 @@
-compiler.registerClass("Wipeout.Docs.Models.Descriptions.Function", "Wipeout.Docs.Models.Descriptions.ClassItem", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.models.descriptions.classItem", function() {
     
     var functionDescription = function(theFunction, functionName, classFullName, isStatic) {
         this._super(functionName, functionDescription.getFunctionSummary(theFunction), isStatic);
@@ -34,7 +34,7 @@ compiler.registerClass("Wipeout.Docs.Models.Descriptions.Function", "Wipeout.Doc
             return [];
         
         for(var i = 0, ii = result.length; i < ii; i++) {
-            result[i] = new Wipeout.Docs.Models.Descriptions.Argument(functionDescription.getArgumentSummary(result[i], xmlSummary));
+            result[i] = new wipeoutDocs.models.descriptions.argument(functionDescription.getArgumentSummary(result[i], xmlSummary));
         }
         
         return result;

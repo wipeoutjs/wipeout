@@ -2,8 +2,8 @@
 
 <p>
 Wipeout view models alone do not have an appearance, for this we need templates. At it's most basic, a view model inherits from the 
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> class and the view class has a 
-    <Wipeout.Rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> property.
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> class and the view class has a 
+    <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> property.
     <br />
     Template id's reference the id of a html <code>&lt;script>&lt;/script></code> tag with an xml template. It is not strictly html, as
     <ol>
@@ -18,11 +18,11 @@ Wipeout view models alone do not have an appearance, for this we need templates.
 <p>
     In most cases, you will not want the the template of a view model to change. For this case you can set the template id in the constructor of the view model.
     
-        <Wipeout.Docs.ViewModels.Components.CodeBlock>
+        <wipeout-docs.view-models.components.code-block>
             <code>var myViewModel = wo.view.extend(function myViewModel() {
     this._super('MyTemplateId');
                 
     // more constructor logic
 });</code>
-        </Wipeout.Docs.ViewModels.Components.CodeBlock>
+        </wipeoutDocs.viewModels.components.codeBlock>
 </p>
