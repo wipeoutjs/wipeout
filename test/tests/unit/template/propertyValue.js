@@ -182,7 +182,7 @@ testUtils.testWithUtils("buildSetter", "no filter", false, function(methods, cla
 
 
 
-
+/*
 
 
 
@@ -228,7 +228,7 @@ testUtils.testWithUtils("buildSetter", "good filter, with to child part", false,
 	delete wo.filters["good-filter"];
 });
 
-
+*/
 
 
 
