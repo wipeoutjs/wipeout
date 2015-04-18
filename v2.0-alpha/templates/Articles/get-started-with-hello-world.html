@@ -10,7 +10,7 @@ window.helloWipeout = {};
 helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
     this._super("helloWipeout.rootApplication");
 });</code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 
 <p>Here, we are creating a view model class. The view model has to inherit from <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> or one of its derived classes. 
     The call to <code>_super(...)</code> calls the constructor of the parent class, in this case wo.view. The constructor for a wo.view takes a template id as an argument
@@ -24,7 +24,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
         Hello &lt;span data-bind="text: model().name">&lt;/span>!
     &lt;/div>
 &lt;/script></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 <p>The context or scope of the template is always going to be the view model, in this case a <code>helloWipeout.rootApplication</code> object. Because <code>helloWipeout.rootApplication</code> 
     inherits from <wipeout.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'" />, it has a <code>model</code> proerty which is a 
     <a href="http://knockoutjs.com/documentation/observables.html">ko.observable</a>. We are going to bind to the name property on the model.
@@ -36,7 +36,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
     var rootApp = document.getElementById("helloWipeoutApp");    
     ko.applyBindings({ name: "Wipeout" }, rootApp);
 &lt;/script></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 <p>Within the html document, we now specify a placeholder for our application and tell it which view model type to use using the 
     <wipeout.rl href="'/wipeout/how-do-i.html?article=wipeout-binding'" text="'wipeout'" /> binding.
     <br/>
@@ -48,7 +48,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
             <code>&lt;div>
     Hello &lt;span>Wipeout&lt;/span>!
 &lt;/div></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
         </p>
         <p>When you apply the wipeout binding, it will search for the view model "helloWipeout.rootApplication". An instance of this view model is created and it's model property will be set with the value passed into ko.applyBindings. This is where the "Wipeout" in "Hello Wipeout!" comes from.</p>
         <h3>So, all together:</h3>
@@ -90,4 +90,4 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
         &lt;/script>
     &lt;/body>    
 &lt;/html></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>

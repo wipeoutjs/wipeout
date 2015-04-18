@@ -6,7 +6,7 @@
     
     <wipeout-docs.view-models.components.code-block>
         <code>wipeout.settings.asynchronousTemplates = true;</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 </p>
 <p>
     Afterwards, you just use templates as usual, however you set the template id to a url instead of an id.    
@@ -14,7 +14,7 @@
         <code>var myViewModel = wo.view.extend(function myViewModel() {
     this._super("/templates/myTemplate.html");
 });</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
     
     This method will first, see if the template with the id "/templates/myTemplate.html" exists in the application. If it does, it will use the template rather than sending another ajax request.<br />
     If the template does not exist, a temporary (placeholder) template will be used, while the specified template is loaded. Once loaded the new template is appliced and appended to the DOM so that it

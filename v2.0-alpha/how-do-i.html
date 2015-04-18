@@ -51,7 +51,7 @@
     }
 };
 		</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
 
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'add-a-property-parser-script-1'">
         <code>&lt;wo.content-control>
@@ -63,12 +63,12 @@
         Last name: &lt;span data-bind="text: myVal.lastName">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'add-a-property-parser-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.advanced-events" type="text/template">
@@ -113,7 +113,7 @@
         }
     }
 });</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 <p>Using this syntax
     <ul>
         <li>The <code>constructor</code> property will be the class constructor
@@ -137,7 +137,7 @@ They will be appended to the prototype, effectively making them static. Put inst
     
     <wipeout-docs.view-models.components.code-block>
         <code>wipeout.settings.asynchronousTemplates = true;</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 </p>
 <p>
     Afterwards, you just use templates as usual, however you set the template id to a url instead of an id.    
@@ -145,7 +145,7 @@ They will be appended to the prototype, effectively making them static. Put inst
         <code>var myViewModel = wo.view.extend(function myViewModel() {
     this._super("/templates/myTemplate.html");
 });</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
     
     This method will first, see if the template with the id "/templates/myTemplate.html" exists in the application. If it does, it will use the template rather than sending another ajax request.<br />
     If the template does not exist, a temporary (placeholder) template will be used, while the specified template is loaded. Once loaded the new template is appliced and appended to the DOM so that it
@@ -175,7 +175,7 @@ objectToBindTo("Goodbye wipeout!");
             
 // Will log: "Goodbye wipeout!"
 console.log(myView.model());</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.bind-in-scope" type="text/template">
@@ -191,12 +191,12 @@ You can bind properties of a view model to itself
         Binding to current scope: &lt;span data-bind="text: myInnerValue">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-in-scope-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     This particular example works because <code>myValue</code> was bound before <code>myInnerValue</code>. Therefore, <code>myInnerValue</code> could point to a property on <code>myValue</code>. 
     This method is far more useful in binding to properties explicitly defined in the view model constructor.
@@ -268,7 +268,7 @@ There are lots of ways to bind items and set properties within a template:
 window.myType = wo.contentControl.extend(function myType() {
     this._super();
 });</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-ancestor-script-1'">
         <code>&lt;myType model="'Hello wipeout!'">
     &lt;template>
@@ -279,12 +279,12 @@ window.myType = wo.contentControl.extend(function myType() {
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myType></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-ancestor-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 <p>There is a full customisable api for finding ancestors, documented <wipeout.rl href="'/wipeout/how-do-i.html?article=bind-to-specific-view-model'" text="'here'" /></p>
@@ -299,19 +299,19 @@ window.myType = wo.contentControl.extend(function myType() {
         <code>window.exampleValue = {
     innerValue: "Hello wipeout!"
 };</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-global-script-1'">
         <code>&lt;wo.content-control model="exampleValue.innerValue">
     &lt;template>
         Binding to global: &lt;span data-bind="text: model">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-global-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -329,12 +329,12 @@ Unless you are building generic components, most bindnigs will point to the mode
         Binding to current scope: &lt;span data-bind="text: model().value">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-model-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     The <code>model()</code> notation comes from the fact that <code>model</code> is a property on the view model which is a <a href="http://knockoutjs.com/documentation/observables.html">ko.observable</a>
     
@@ -360,12 +360,12 @@ In order to keep clean contextual boundaries, the model property of a child view
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-parents-model-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     In this example there is a parent view model which has a child view model. 
     The model of the child is bound to a property of the model of the parent. <a href="http://knockoutjs.com/documentation/binding-context.html">$parent</a> points to the scope of the view model 1 level up
@@ -392,12 +392,12 @@ You may wish to bind to someting 1 level up in the view model hierarchy
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-parents-view-model-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -433,12 +433,12 @@ The item you want the template to bind to can be set in the template.
         Binding to static value: &lt;span data-bind="text: model().value">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-to-static-value-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -462,11 +462,11 @@ By default, all bindings are one way. This means that the object where the prope
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-two-way-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>
         Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>.
@@ -492,12 +492,12 @@ By default, all bindings are one way. This means that the object where the prope
         Binding to element value: &lt;span data-bind="text: myJson.text">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'bind-with-elements-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <p>There is more info on setting properties in this manner <wipeout.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'" />.
     
 </p>
@@ -526,7 +526,7 @@ window.aStaticObject = {
         alert(this.name);
     }
 };</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'call-a-method-script-1'">
         <code>&lt;my-type>
     &lt;template>
@@ -534,12 +534,12 @@ window.aStaticObject = {
         &lt;button data-bind="click: aStaticObject.eventHandler2">Test2&lt;/button>
     &lt;/template>
 &lt;/my-type></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'call-a-method-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -566,7 +566,7 @@ the expected args (such as the event args) passed in by knockout.
         &lt;button data-bind="click: $call($parent).dot('model').dot('submit').args(true)">Submit&lt;/button>
     &lt;/template>
 &lt;/wo.content-control></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.call-method-out-of-scope" type="text/template">
@@ -586,7 +586,7 @@ window.myType = wo.contentControl.extend(function myType() {
 myType.prototype.click = function(text) {
     alert(this.example + text);
 };</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'call-method-out-of-scope-script-1'">
         <code>&lt;myType model="'Hello wipeout!'">
     &lt;template>
@@ -597,12 +597,12 @@ myType.prototype.click = function(text) {
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myType></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'call-method-out-of-scope-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 There is <code>$call</code>, documented  <wipeout.rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'here'" />.
 <br/>
 <br/>
@@ -625,12 +625,12 @@ If the model property of a view model is not explicitly set, it recieves the mod
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'cascading-models-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -654,7 +654,7 @@ If the model property of a view model is not explicitly set, it recieves the mod
         // custom logic here
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 
 <p>
@@ -723,7 +723,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 	
 	return false;
 }</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 
 <p>And then using the filter</p>
     
@@ -737,7 +737,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-namespace.my-view-model></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
 </script>
@@ -783,7 +783,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
         }
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 </script>
 
@@ -810,7 +810,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
         }
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.events" type="text/template">
@@ -838,7 +838,7 @@ dispose.dispose();
 theEvent.trigger("Hello wipeout!");
         
         </code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
 </script>
 
 <script id="Articles.find-a-view-model" type="text/template">
@@ -862,7 +862,7 @@ theEvent.trigger("Hello wipeout!");
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myViewModel></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <h2>Search for an ancestor</h2>
 
@@ -879,7 +879,7 @@ theEvent.trigger("Hello wipeout!");
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-view-model></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <h2>Using more complex filters</h2>
 
@@ -895,7 +895,7 @@ theEvent.trigger("Hello wipeout!");
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/my-view-model></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <table class="table table-striped">
 	<thead>
@@ -961,7 +961,7 @@ theEvent.trigger("Hello wipeout!");
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/myViewModel></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.forcing-disposal" type="text/template">
@@ -998,7 +998,7 @@ theEvent.trigger("Hello wipeout!");
         }
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.get-started-with-custom-components" type="text/template">
@@ -1026,7 +1026,7 @@ theEvent.trigger("Hello wipeout!");
         this.show(!this.show());
     }
 });</code>
-            </wipeoutDocs.viewModels.components.JsCodeBlock>
+            </wipeout-docs.view-models.components.js-js-code-block>
         </div>
         <div class="column-2 main-example-code">
             <h3>The component template</h3>
@@ -1035,7 +1035,7 @@ theEvent.trigger("Hello wipeout!");
     &lt;a data-bind="text: model().header, click: toggleContent" href="#">&lt;/a>
     &lt;div data-bind="text: model().content, visible: show">&lt;/div>
 &lt;/script></code>
-            </wipeoutDocs.viewModels.components.templateCodeBlock>
+            </wipeout-docs.view-models.components.template-code-block>
         </div>
     </div>
 
@@ -1094,7 +1094,7 @@ theEvent.trigger("Hello wipeout!");
             model="$parent.model().collapsibleContent" />
     &lt;/div>
 &lt;/script></code>       
-            </wipeoutDocs.viewModels.components.templateCodeBlock>
+            </wipeout-docs.view-models.components.template-code-block>
         </div>
         <div class="column-2 main-example-code">            
             <h3>Modify the application definition</h3>    
@@ -1111,7 +1111,7 @@ theEvent.trigger("Hello wipeout!");
         }
     }, rootApp);
 &lt;/script></code>       
-            </wipeoutDocs.viewModels.components.codeBlock>  
+            </wipeout-docs.view-models.components.code-block>  
         </div>
     </div>
     <div class="columns">
@@ -1149,7 +1149,7 @@ theEvent.trigger("Hello wipeout!");
         
         <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
             <code>&lt;wo.content-control templateId="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content-control></code>
-        </wipeoutDocs.viewModels.components.usageCodeBlock> 
+        </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
 </script>
@@ -1167,7 +1167,7 @@ window.helloWipeout = {};
 helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
     this._super("helloWipeout.rootApplication");
 });</code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 
 <p>Here, we are creating a view model class. The view model has to inherit from <wipeout.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> or one of its derived classes. 
     The call to <code>_super(...)</code> calls the constructor of the parent class, in this case wo.view. The constructor for a wo.view takes a template id as an argument
@@ -1181,7 +1181,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
         Hello &lt;span data-bind="text: model().name">&lt;/span>!
     &lt;/div>
 &lt;/script></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 <p>The context or scope of the template is always going to be the view model, in this case a <code>helloWipeout.rootApplication</code> object. Because <code>helloWipeout.rootApplication</code> 
     inherits from <wipeout.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" />, it has a <code>model</code> proerty which is a 
     <a href="http://knockoutjs.com/documentation/observables.html">ko.observable</a>. We are going to bind to the name property on the model.
@@ -1193,7 +1193,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
     var rootApp = document.getElementById("helloWipeoutApp");    
     ko.applyBindings({ name: "Wipeout" }, rootApp);
 &lt;/script></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 <p>Within the html document, we now specify a placeholder for our application and tell it which view model type to use using the 
     <wipeout.rl href="'/wipeout/how-do-i.html?article=wipeout-binding'" text="'wipeout'" /> binding.
     <br/>
@@ -1205,7 +1205,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
             <code>&lt;div>
     Hello &lt;span>Wipeout&lt;/span>!
 &lt;/div></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
         </p>
         <p>When you apply the wipeout binding, it will search for the view model "helloWipeout.rootApplication". An instance of this view model is created and it's model property will be set with the value passed into ko.applyBindings. This is where the "Wipeout" in "Hello Wipeout!" comes from.</p>
         <h3>So, all together:</h3>
@@ -1247,7 +1247,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
         &lt;/script>
     &lt;/body>    
 &lt;/html></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.get-started-with-knockout" type="text/template">
@@ -1271,7 +1271,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
         &lt;div data-bind="text: model().itemText">&lt;/div>
     &lt;/itemTemplate>
 &lt;/wo.items-control></code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 <br/>
 <br/>
 </script>
@@ -1317,7 +1317,7 @@ wo.view.prototype.dispose = function() {
         
     return dispose.apply(this, arguments);
 };</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.if-control" type="text/template">
@@ -1336,7 +1336,7 @@ wo.view.prototype.dispose = function() {
         The condition is false
     &lt;/else-template>
 &lt;/wo.if></code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 
 <p>
     One thing to note, is that <wipeout.rl href="'/wipeout/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other view models.
@@ -1366,7 +1366,7 @@ var CurrentAccount = Account.extend(function CurrentAccount(balance) {
         
 var account = new CurrentAccount(100);
 console.log(account.balance);</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
 <p>Passing in named function is not mandatory, but will help in debugging.</p>
 <p>It is extremely important to always call the constructor of the base class as the first line of code in your new constructor.</p>
 <br/>
@@ -1393,12 +1393,12 @@ console.log(account.balance);</code>
         &lt;/li>
     &lt;/item-template>
 &lt;/wo.items-control></code>
-</wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+</wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'items-control-binding-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock>   
+    </wipeout-docs.view-models.components.usage-code-block>   
 </script>
 
 <script id="Articles.items-control-custom-items" type="text/template">
@@ -1423,7 +1423,7 @@ With a custom itemsControl you can control
         return item;
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>With a regular items control, all items are plain wo.view objects. If you override the createItem method you can alter this.</p>
 </script>
@@ -1454,7 +1454,7 @@ With a custom itemsControl you can control
         // do cleanup logic here
     }
 });</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 </script>
 
@@ -1479,11 +1479,11 @@ With a custom itemsControl you can control
         &lt;/li>
     &lt;/item-template>
 &lt;/wo.items-control></code>
-</wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+</wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
     <code>&lt;wo.view templateId="'items-control-list-template-script-1'" /></code>
-</wipeoutDocs.viewModels.components.usageCodeBlock> 
+</wipeout-docs.view-models.components.usage-code-block> 
 
 <p>The <wipeout.rl href="'/wipeout/how-do-i.html?article=items-control-binding'" text="'itemsControl'" /> binding is used to inform the template engine where to insert the items from the itemsControl. It does not need an argument.
 </p>
@@ -1571,7 +1571,7 @@ myViewModel.prototype.onRendered =
             }
         };
 };</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
             </div>
         <div class="column-2 main-example-code">
             <wipeout-docs.view-models.components.code-block>
@@ -1592,7 +1592,7 @@ myViewModel.prototype.onRendered =
         &lt;/wo.items-control>
     &lt;/template>
 &lt;/myViewModel></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
             </div>
         </div>
 </script>
@@ -1618,7 +1618,7 @@ role of a model is beyond the scope of this document.</p>
         &lt;/wo.content-control>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
             In this example the second contentControl has bee automatically given the model of its parent
         </li>
         <li>
@@ -1656,7 +1656,7 @@ role of a model is beyond the scope of this document.</p>
         return this._uniqueId;
     };
 }());</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>Now every class which inherits from wo.view has a uniqueId function</p>
 </script>
@@ -1710,7 +1710,7 @@ console.log(account.canWithdrawMoney());
         
 var currentAccount = new CurrentAccount(-50, 100);
 console.log(currentAccount.canWithdrawMoney());</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 <br/>
 <p>It is generally a good idea to call the method on the parent class which you are overriding as part of the child class. For this you can use the 
     <wipeout.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.object&amp;functionName=_super&amp;isStatic=false'" text="'_super'" /> method again.</p>
@@ -1722,7 +1722,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
         
 var currentAccount = new CurrentAccount(-50, 100);
 console.log(currentAccount.canWithdrawMoney());</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 <p>The _super method is magic. Or rather, it is context aware and will always point to correct method on the prototype of an ancestor class</p>
 <br/>
 <br/>
@@ -1766,7 +1766,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
     &lt;div id="myDiv">&lt;/div>
     &lt;wo.view id="myViewModel" />
 &lt;/script></code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
     </div>
     <div class="column-2 main-example-code">
         <wipeout-docs.view-models.components.code-block>
@@ -1783,7 +1783,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
         // manipulate the templateItems here
     }
 });</code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
     </div>
 </div>
 
@@ -1807,7 +1807,7 @@ manipulation within a view model, as it is called after the view model has been 
     this.innerItem = new wo.contentControl();
     this.innerItem.template("Hello wipeout!");
 });</code>
-</wipeoutDocs.viewModels.components.JsCodeBlock>
+</wipeout-docs.view-models.components.js-js-code-block>
 
 <wipeout-docs.view-models.components.new-template-code-block newScriptId="'render-binding-script-1'">
     <code>&lt;render-vm>
@@ -1815,12 +1815,12 @@ manipulation within a view model, as it is called after the view model has been 
         &lt;div data-bind="render: innerItem">&lt;/div>
     &lt;/template>
 &lt;/render-vm></code>
-</wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+</wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'render-binding-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock>   
+    </wipeout-docs.view-models.components.usage-code-block>   
 </script>
 
 <script id="Articles.reserved-tags" type="text/template">
@@ -1831,7 +1831,7 @@ some custom tags in html markup you can register the tag with <wipeout.rl href="
     
 <wipeout-docs.view-models.components.code-block>
     <code>wo.visual.reservedTags["my-tag"] = true;</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.routed-event-models" type="text/template">
@@ -1882,7 +1882,7 @@ window.subscribeToEvent = wo.contentControl.extend({
         this.routedEventTriggered(this.routedEventTriggered() + 1);
     }
 });</code>
-    </wipeoutDocs.viewModels.components.JsCodeBlock>
+    </wipeout-docs.view-models.components.js-js-code-block>
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'routed-events-script-1'">
         <code>&lt;subscribe-to-event>
     &lt;template>
@@ -1896,12 +1896,12 @@ window.subscribeToEvent = wo.contentControl.extend({
         &lt;/trigger-event>
     &lt;/template>
 &lt;/subscribe-to-event></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'routed-events-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-boolean-property" type="text/template">
@@ -1918,12 +1918,12 @@ window.subscribeToEvent = wo.contentControl.extend({
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-boolean-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-complex-properties" type="text/template">
@@ -1943,12 +1943,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Rendering view model: &lt;div data-bind="render: myVal">&lt;/div>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-complex-properties-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 <p>This is a fairly complex piece of functionality.
     <ol>
         <li>We constructed an outer wo.contenentControl</li>
@@ -1977,12 +1977,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-date-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-float-property" type="text/template">
@@ -1998,12 +1998,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value + 1: &lt;span data-bind="text: myVal + 1">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-float-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-int-property" type="text/template">
@@ -2019,12 +2019,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value + 1: &lt;span data-bind="text: myVal + 1">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-int-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-json-property" type="text/template">
@@ -2041,12 +2041,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value: &lt;span data-bind="text: myVal.innerVal">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-json-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.set-properties-using-xml-elements" type="text/template">
@@ -2062,12 +2062,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Hello wipeout!
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-properties-using-xml-elements-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
     
 </script>
 
@@ -2086,12 +2086,12 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'set-string-property-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.share-parent-scope" type="text/template">
@@ -2122,12 +2122,12 @@ of un-needed scope.</p>
         &lt;/div>
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.newTemplateCodeBlock>
+    </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
         <code>&lt;wo.view templateId="'share-parent-scope-script-1'" /></code>
-    </wipeoutDocs.viewModels.components.usageCodeBlock> 
+    </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>By default, the shareParentScope property of a <wipeout.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'wo.if'" /> control is true.</p>
 </script>
@@ -2143,7 +2143,7 @@ of un-needed scope.</p>
         
     // continue with method override here
 }</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>The _super function will always be able to find the parent constructor.</p>
 </script>
@@ -2165,7 +2165,7 @@ of un-needed scope.</p>
         &lt;wo.view model="$parent.model().subModel" template-id="'myTemplateId'" />
     &lt;/template>
 &lt;/wo.content-control></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>Notice the single quotes surrounding the template id property. Anything defined in a property on a view model or a "data-bind" property on a html element is compiled into javascript, so the single quotes denote a string.</p>
 
@@ -2182,7 +2182,7 @@ of un-needed scope.</p>
         Hello wipeout!
     &lt;/template>
 &lt;/wo.content-control></code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 </p>
 <p>
     The content control has a
@@ -2205,7 +2205,7 @@ of un-needed scope.</p>
             
     this.myTemplate = wo.contentControl.createTemplatePropertyFor(this.templateId, this);
 });</code>
-    </wipeoutDocs.viewModels.components.codeBlock>
+    </wipeout-docs.view-models.components.code-block>
 </p>
 </script>
 
@@ -2236,7 +2236,7 @@ Wipeout view models alone do not have an appearance, for this we need templates.
                 
     // more constructor logic
 });</code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 </p>
 </script>
 
@@ -2265,18 +2265,18 @@ window.rootApplication = wo.contentControl.extend(function rootApplication() {
                 
     this.template("Hello Wipeout!");
 });</code>
-        </wipeoutDocs.viewModels.components.codeBlock>
+        </wipeout-docs.view-models.components.code-block>
 
 Create an application placeholder
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;div data-bind="wipeout: rootApplication" id="root">&lt;/div></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 Render the application
 <wipeout-docs.view-models.components.code-block>
         <code>var root = document.getElementById("root");
 ko.applyBindings({}, root);</code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>There is a full example of this application 
     <wipeout.rl text="'here'" href="'/wipeout/how-do-i.html?article=get-started-with-hello-world'" />.</p>
@@ -2392,7 +2392,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
         &lt;/div>
     &lt;/item-template>
 &lt;/wo.items-control></code>
-</wipeoutDocs.viewModels.components.codeBlock>
+</wipeout-docs.view-models.components.code-block>
 
 <p>In the itemTemplate, you access an object from the itemSource using the model property. You can also access the object's index using $index.
 </p>
@@ -2585,7 +2585,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
     <a href="javascript:void(0)" data-bind="click: function() { showCode(!showCode()); }"><small>(show/hide)</small></a>
     <wo.if condition="showCode">
         <template>
-            <wipeout-docs.view-models.components.code-block code="model()['function'].toString()"></wipeoutDocs.viewModels.components.codeBlock>
+            <wipeout-docs.view-models.components.code-block code="model()['function'].toString()"></wipeout-docs.view-models.components.code-block>
         </template>
     </wo.if>
 </div>
