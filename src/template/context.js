@@ -114,14 +114,13 @@ Class("wipeout.template.context", function () {
 		}	
 	};
 	
-	//TODO: Test "logic:"
+	//TODM
+	var notFunctionCall = /^\s*[Ll]ogic\s*:/;
 	context.buildEventCallback = function (logic) {
 		///<summary>Build a function around a logic string, specifically for html events</summary>
         ///<param name="logic" type="String">The logic</param>
         ///<returns type="Function">A getter</returns>
 		
-		//TODM
-		var notFunctionCall = /^\s*[Ll]ogic\s*:/;
 		if (notFunctionCall.test(logic))
 			logic = logic.replace(notFunctionCall, "");
 		else if (!/\)[\s;]*$/.test(logic))
