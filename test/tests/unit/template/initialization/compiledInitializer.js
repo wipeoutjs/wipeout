@@ -36,7 +36,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     
     // assert
 	strictEqual(subject.setters.constructor, Object);
-	ok(subject.setters.model instanceof wipeout.template.initialization.propertySetter);
+	ok(subject.setters.model instanceof wipeout.template.initialization.viewModelPropertyValue);
 	strictEqual(subject.setters.model._value.value,  "$parent ? $parent.model : null");
 });
 
@@ -70,7 +70,7 @@ testUtils.testWithUtils("addElement", "has attribute value with flags", false, f
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], attr);
 		strictEqual(arguments[2][0], "f1");
@@ -123,7 +123,7 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1].xml, element[0]);
 		strictEqual(arguments[1].constructor, Array);
@@ -149,7 +149,7 @@ testUtils.testWithUtils("addElement", "no parser, text setter", false, function(
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
@@ -174,7 +174,7 @@ testUtils.testWithUtils("addElement", "with parser function", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
@@ -207,7 +207,7 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
 		strictEqual(arguments[1], element);
 		
@@ -224,11 +224,11 @@ testUtils.testWithUtils("addElement", "with global parser", false, function(meth
 	delete window.tempClass;
 });
 
-testUtils.testWithUtils("createPropertySetter", "parser and binding type", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createPropertyValue", "parser and binding type", true, function(methods, classes, subject, invoker) {
 		
     // arrange
-	var name = {}, wml = {}
-	classes.mock("wipeout.template.initialization.propertySetter", function () {
+	var name = {}, wml = {}, setter;
+	classes.mock("wipeout.template.initialization.viewModelPropertyValue", function () {
 		strictEqual(arguments[0], name);
 		strictEqual(arguments[1], wml);
 		strictEqual(arguments[2], "s")
@@ -244,7 +244,7 @@ testUtils.testWithUtils("createPropertySetter", "parser and binding type", true,
 	strictEqual(output.$wipeout_binding_type, "tw");
 });
 
-testUtils.testWithUtils("createPropertySetter", "2 parsers", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createPropertyValue", "2 parsers", true, function(methods, classes, subject, invoker) {
 		
     // arrange
     // act
@@ -254,7 +254,7 @@ testUtils.testWithUtils("createPropertySetter", "2 parsers", true, function(meth
 	});
 });
 
-testUtils.testWithUtils("createPropertySetter", "2 binding types", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createPropertyValue", "2 binding types", true, function(methods, classes, subject, invoker) {
 		
     // arrange
     // act
@@ -285,7 +285,7 @@ testUtils.testWithUtils("addAttribute", "with global parser", false, function(me
 	
 	subject.setters = {};
 	
-	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertySetter", function () {
+	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], "name");
 		strictEqual(arguments[1], attr);
 		strictEqual(arguments[2][0], "f1");

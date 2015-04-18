@@ -26,7 +26,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
             this.setters.model = compiledInitializer.modelSetter ||
-				(compiledInitializer.modelSetter = compiledInitializer.createPropertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
+				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
         }
     };
     
@@ -47,7 +47,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODE
                 });
 				
-                this.setters[name] = compiledInitializer.createPropertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
+                this.setters[name] = compiledInitializer.createPropertyValue(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -66,7 +66,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = compiledInitializer.createPropertySetter(name, {
+                    this.setters[name] = compiledInitializer.createPropertyValue(name, {
 						xml: element[i],
 						constructor: vm.constructor
                     }, ["templateElementSetter"]);
@@ -77,22 +77,22 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         }
 
         if (p && p.constructor === Function) {
-            this.setters[name] = compiledInitializer.createPropertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element);
             this.setters[name].parser = p;
         } else if (p) {
-            this.setters[name] = compiledInitializer.createPropertySetter(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
         } else {
-            this.setters[name] = compiledInitializer.createPropertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element);
         }
     };
     
 	var wipeoutBindingType = "$wipeout_binding_type";
-    compiledInitializer.createPropertySetter = function (name, wml, flags) {
+    compiledInitializer.createPropertyValue = function (name, wml, flags) {
 		///<summary>Create a property setter with a parser and binding type</summary>
         ///<param name="name" type="String">The name</param>
         ///<param name="wml" type="wipeout.wml.wmlElement">The content</param>
         ///<param name="flags" type="[String]">Parsers and binding types</param>
-		///<returns type="wipeout.template.initialization.propertySetter">The setter</returns>
+		///<returns type="wipeout.template.initialization.viewModelPropertyValue">The setter</returns>
 		
 		var parser, bindingType;
 		if (flags) {
@@ -111,7 +111,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 			}
 		}
 		
-		var output = new wipeout.template.initialization.propertySetter(name, wml, parser);
+		var output = new wipeout.template.initialization.viewModelPropertyValue(name, wml, parser);
 		output[wipeoutBindingType] = bindingType;
 		
 		return output;
@@ -126,7 +126,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = compiledInitializer.createPropertySetter(name.name, attribute, name.flags);
+        this.setters[name.name] = compiledInitializer.createPropertyValue(name.name, attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) {

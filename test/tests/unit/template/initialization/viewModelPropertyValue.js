@@ -1,5 +1,5 @@
 
-module("wipeout.template.initialization.propertySetter", {
+module("wipeout.template.initialization.viewModelPropertyValue", {
     setup: function() {
     },
     teardown: function() {

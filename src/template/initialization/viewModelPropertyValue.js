@@ -1,8 +1,8 @@
 
 //TODO: rename
-Class("wipeout.template.initialization.propertySetter", function () {
+Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 	
-    var viewModelPropertyValue = wipeout.template.propertyValue.extend(function propertySetter (name, value, parser) {
+    var viewModelPropertyValue = wipeout.template.propertyValue.extend(function viewModelPropertyValue (name, value, parser) {
         ///<summary>A setter for a view model property</summary>
         ///<param name="name" type="String">The name of the property</param>
         ///<param name="value" type="wipeout.wml.wmlElement|wipeout.wml.wmlAttribute">The setter value</param>
