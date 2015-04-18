@@ -141,6 +141,10 @@ Class("wipeout.utils.jsParse", function () {
 			if (op2.hasOwnProperty(i) && i !== "output")
 				op2[i] = op1.addTokens(op2[i]);
 		
+		for (var i in op1)
+			if (i !== "output")
+				op2[i] = op1[i];
+		
 		return op2;
     };
 	

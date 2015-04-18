@@ -25,7 +25,7 @@ bug, handle null template id better
 
 window.requestAnimationFrame
 
-shadow DOM
+shadow DOM/DocumentFragment
 
 profiler
 

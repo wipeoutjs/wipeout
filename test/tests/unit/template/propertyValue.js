@@ -24,6 +24,62 @@ testUtils.testWithUtils("value", null, false, function(methods, classes, subject
 	strictEqual(subject._value = {}, invoker());
 });
 
+testUtils.testWithUtils("buildGetter", "has getter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+	strictEqual(subject._getter = {}, invoker());
+});
+
+testUtils.testWithUtils("buildGetter", "no filter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	subject.value = methods.method([], "'hello shane'");
+	
+	// act
+	strictEqual(invoker(), subject._getter);
+	
+	// assert
+	strictEqual(subject._getter(), "hello shane");
+});
+
+testUtils.testWithUtils("buildGetter", "invalid filter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	subject.value = methods.method([], "'hello shane' => invalid-filter");
+	
+	// assert
+	// act
+	throws(function () {
+		invoker();
+	});
+});
+
+testUtils.testWithUtils("buildGetter", "good filter, no to child part", false, function(methods, classes, subject, invoker) {
+	// arrange
+	wo.filters["good-filter"] = {};
+	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	
+	// assert
+	// act
+	strictEqual(invoker()(), "hello shane");
+	
+	delete wo.filters["good-filter"];
+});
+
+testUtils.testWithUtils("buildGetter", "good filter, with to child part", false, function(methods, classes, subject, invoker) {
+	// arrange
+	var op = {};
+	wo.filters["good-filter"] = {
+		parentToChild: methods.method(['hello shane', 'another hello'], op)
+	};
+	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	
+	// assert
+	// act
+	strictEqual(invoker()(), op);
+	
+	delete wo.filters["good-filter"];
+});
+
 testUtils.testWithUtils("get", "no parser", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var op = {}, getterArgs = {};

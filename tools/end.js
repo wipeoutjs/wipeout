@@ -13,6 +13,7 @@ expose("observable", obsjs.observable);
 
 expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
+expose("filters", wipeout.template.filters);
 
 expose("addHtmlAttribute", HtmlAttr);
 
