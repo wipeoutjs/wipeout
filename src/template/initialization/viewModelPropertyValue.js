@@ -1,5 +1,4 @@
 
-//TODO: rename
 Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 	
     var viewModelPropertyValue = wipeout.template.propertyValue.extend(function viewModelPropertyValue (name, value, parser) {

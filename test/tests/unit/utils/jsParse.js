@@ -26,18 +26,6 @@ testUtils.testWithUtils("removeCommentsTokenStrings", "", true, function(methods
 				.replace("/*erterter*///asdasdasd", "")
 				.replace('"kjsdbkls\\"djbfljkb///*"', "##token" + tokenNumber + "##")
 				.replace("'ddsssddkjsdbklsdjbfljkb///*'", "##token" + (tokenNumber + 1) + "##");
-	
-	for (var i = 0, ii = output.output.length; i < ii; i++)
-		if (output.output[i] !== doItMyself[i]) {
-			if (output.output[i] === "\r")
-				output.output = output.output.substring(0, i) + output.output.substring(0, i + 1);
-			else if (doItMyself[i] === "\r")
-				doItMyself = doItMyself.substring(0, i) + doItMyself.substring(i + 1);
-			else {
-				ok(false, 'Invalid char: output.output[' + i + ']: "' + output.output[i] + '", doItMyself[' + i + ']: ' + doItMyself[i]);
-				return;
-			}
-		}
     
     // assert
     equal(output.output, doItMyself);

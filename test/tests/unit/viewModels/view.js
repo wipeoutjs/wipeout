@@ -10,9 +10,9 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     var templateId = {};
     var model = {};
     subject._super = methods.method([templateId]);
-    subject.onModelChanged = {};
+    subject._onModelChanged = {};
 	subject.observe = methods.customMethod(function () {
-		methods.method(["model", subject.onModelChanged, subject]).apply(null, Array.prototype.slice.call(arguments, 0, 3));
+		methods.method(["model", subject._onModelChanged, subject]).apply(null, Array.prototype.slice.call(arguments, 0, 3));
 		ok(arguments[3].activateImmediately);
 	});
 	
@@ -55,7 +55,7 @@ testUtils.testWithUtils("onModelChanged", "", false, function(methods, classes, 
 	};
 	
 	// act
-	invoker(null, input);
+	invoker(input);
     
     // assert   
     strictEqual(subject.$modelRoutedEventKey, key);

@@ -1,4 +1,4 @@
-//TODO: rename
+
 Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	
 	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlPropertyValue (name, value, parser, action) {
@@ -48,7 +48,6 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		return output.dispose.bind(output);
     };
 	
-	//TODO: is this used?
 	htmlPropertyValue.prototype.setData = function (element, name, data) {
 		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>	//TODM
         ///<param name="element" type="Element">The html element</param>
@@ -67,7 +66,6 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		return wipeout.utils.domData.set(element, name, data);
 	};
 	
-	//TODO: is this used?
 	htmlPropertyValue.prototype.getData = function (element, name) {
 		///<summary>Get data saved against a html element</summary>
         ///<param name="element" type="Element">the element</param>
@@ -77,7 +75,6 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		return wipeout.utils.domData.get(element, name);
 	};
 	
-	//TODO: is this used?
 	htmlPropertyValue.prototype.dataExists = function (element, name) {
 		///<summary>Determine whether an element has a data key</summary>
         ///<param name="element" type="Element">The element</param>

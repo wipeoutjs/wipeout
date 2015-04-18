@@ -152,7 +152,6 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		}
     };
     
-	//TODO: look at this method, its args and applications and can it be trimmed?
     compiledInitializer.prototype.applyToViewModel = function (name, viewModel, renderContext) {
         ///<summary>Apply this setter to a view model</summary>
         ///<param name="name" type="String">The name of the property to apply</param>

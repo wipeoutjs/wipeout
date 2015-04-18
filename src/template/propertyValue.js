@@ -1,5 +1,4 @@
-//TODO: rename to propertyValue
-//TODO: full test audit
+
 Class("wipeout.template.propertyValue", function () {
 	
 	var propertyValue = objjs.object.extend(function setter (name, value, parser) {
@@ -187,8 +186,7 @@ Class("wipeout.template.propertyValue", function () {
 		this._caching.push(watched);
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};
-	
-	//TODO: rename to "prime"
+
 	propertyValue.prototype.prime = function (propertyOwner, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>

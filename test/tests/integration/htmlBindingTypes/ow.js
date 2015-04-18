@@ -3,15 +3,6 @@ module("integration: wipeout.htmlBindingTypes.ow", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
-	
-/*
-//TODO: HACK!!!
-wipeout.template.initialization.viewModelPropertyValue.prototype.applyToViewModel = function (vm, rc) {
-	var _this = {};
-	_this.setters = {};
-	_this.setters[this.name] = this;
-	return wipeout.template.initialization.compiledInitializer.prototype.applyToViewModel.call(_this, this.name, vm, rc);
-}*/
 
 test("binding, nb", function () {
 	// arrange

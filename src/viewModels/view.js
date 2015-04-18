@@ -17,7 +17,7 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
         this.templateId = templateId;
         
-        this.observe("model", this.onModelChanged, this, {activateImmediately: true});
+        this.observe("model", this._onModelChanged, this, {activateImmediately: true});
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
@@ -65,20 +65,26 @@ Class("wipeout.viewModels.view", function () {
 		return (this.$domRoot && this.$domRoot.renderContext) || null;
     };
         
-    view.prototype.onModelChanged = function (oldValue, newValue) {
+    view.prototype._onModelChanged = function (oldValue, newValue) {
         ///<summary>Called when the model has changed</summary>
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
+        
+        if(oldValue !== newValue)
+			this.onModelChanged(newValue);
+	};
+	
+    view.prototype.onModelChanged = function (newValue) {
+        ///<summary>Called when the model has changed</summary>
+        ///<param name="newValue" type="Any" optional="false">The new mode</param>
 		
-        if(oldValue !== newValue) {
-            this.disposeOf(this.$modelRoutedEventKey);
-            delete this.$modelRoutedEventKey;
-            
-            if(newValue instanceof wipeout.events.routedEventModel) {
-                var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
-                this.$modelRoutedEventKey = this.registerDisposable(d1);
-            }
-        }
+		this.disposeOf(this.$modelRoutedEventKey);
+		this.$modelRoutedEventKey = null;
+
+		if(newValue instanceof wipeout.events.routedEventModel) {
+			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+			this.$modelRoutedEventKey = this.registerDisposable(d1);
+		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
