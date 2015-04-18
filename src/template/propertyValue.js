@@ -83,34 +83,42 @@ Class("wipeout.template.propertyValue", function () {
         ///<returns type="Function">A function to get the value from render context parts</returns>
 		
 		if (!this.hasOwnProperty("_setter")) {
-			var val, getter;
-			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(val = this.value());
+			var attributeValue, prcessedAttributeValue;
+			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(attributeValue = this.value());
 			var split = splitValue.output.split("=>");
 			
 			if (split.length > 2)
-				throw "Invalid attribute value: " + val + ". You may only include 1 filter.";	//TODE
+				throw "Invalid attribute value: " + attributeValue + ". You may only include 1 filter.";	//TODE
 			
 			if (split.length === 2) {
-				getter = split[1];
-				split = split[0].split(",");
-				val = splitValue.addTokens(split[0]);
-				split[0] = "arguments[5]";
-				getter += "(" + split.join(",") + ")";
+				split[1] = trim(split[1]);
+				if (!wipeout.template.filters[split[1]])
+					throw "Invalid filter: " + split[1];	//TODE
+				
+				if (wipeout.template.filters[split[1]].childToParent) {	//TODM (childToParent). TODO: rename childToParent
+					prcessedAttributeValue = "wipeout.template.filters[\"" + split[1] + "\"].childToParent";
+					split = split[0].split(",");
+					attributeValue = splitValue.addTokens(split[0]);
+					split[0] = "arguments[5]";
+					prcessedAttributeValue += "(" + split.join(",") + ")";
+				} else {
+					attributeValue = splitValue.addTokens(split[0].split(",")[0]);
+				}
 			}
 			
-			var property = /\.?\s*[\w\$]+\s*$/.exec(val);
+			var property = /\.\s*[\w\$]+\s*$/.exec(attributeValue);
 			if (!property) {
 				this._setter = null;
 			} else {
-				var getSetterRoot = wipeout.template.context.buildGetter(val.substring(0, val.length - property[0].length));
+				var getSetterRoot = wipeout.template.context.buildGetter(attributeValue.substring(0, attributeValue.length - property[0].length));
 				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
-				if (getter) {
-					getter = wipeout.template.context.context.buildGetter(getter);
+				if (prcessedAttributeValue) {
+					prcessedAttributeValue = wipeout.template.context.buildGetter(splitValue.addTokens(prcessedAttributeValue));
 					this._setter = function (renderContext, value) {
-						var args = renderContext.asGetterArgs();
+						var args = renderContext.asGetterArgs().slice();
 						var part1 = getSetterRoot.apply(null, args);
 						args.push(value);
-						return part1 ? ((part1[property] = getter.apply(null, args)), true) : false;
+						return part1 ? ((part1[property] = prcessedAttributeValue.apply(null, args)), true) : false;
 					};
 				} else {
 					this._setter = function (renderContext, value) {

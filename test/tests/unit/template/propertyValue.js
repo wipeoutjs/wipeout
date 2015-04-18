@@ -176,71 +176,59 @@ testUtils.testWithUtils("buildSetter", "no filter", false, function(methods, cla
 	strictEqual(ctxt.val, "hello shane");
 });
 
-
-
-
-
-
-
-/*
-
-
-
-
-
-//Not all tests are present here
-
 testUtils.testWithUtils("buildSetter", "invalid filter", false, function(methods, classes, subject, invoker) {
 	// arrange
 	subject.value = methods.method([], "$context.val => invalid-filter");
 	
 	// assert
 	// act
-	//throws(function () {
+	throws(function () {
 		invoker();
-	//});
+	});
 });
 
 testUtils.testWithUtils("buildSetter", "good filter, no to child part", false, function(methods, classes, subject, invoker) {
 	// arrange
+	var ctxt = {asGetterArgs: function() { return [this]; }}, val = {};
 	wo.filters["good-filter"] = {};
-	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	subject.value = methods.method([], "$context.val, 'another hello' => good-filter");
+	
+	// act
+	ok(invoker()(ctxt, val))
 	
 	// assert
-	// act
-	strictEqual(invoker()(), "hello shane");
+	strictEqual(ctxt.val, val);
 	
 	delete wo.filters["good-filter"];
 });
 
 testUtils.testWithUtils("buildSetter", "good filter, with to child part", false, function(methods, classes, subject, invoker) {
 	// arrange
-	var op = {};
+	var ctxt = {asGetterArgs: function() { return [this, null, null, null, null]; }}, input = {}, output = {};
 	wo.filters["good-filter"] = {
-		parentToChild: methods.method(['hello shane', 'another hello'], op)
+		childToParent: methods.method([input, 'another hello'], output)
 	};
-	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	subject.value = methods.method([], "$context.val, 'another hello' => good-filter");
+	
+	// act
+	ok(invoker()(ctxt, input));
 	
 	// assert
-	// act
-	strictEqual(invoker()(), op);
+	strictEqual(ctxt.val, output);
 	
 	delete wo.filters["good-filter"];
 });
 
-*/
-
-
-
-
-
-
-
-
-
-
-
-
+testUtils.testWithUtils("buildSetter", "cannot set", false, function(methods, classes, subject, invoker) {
+	// arrange
+	subject.value = methods.method([], "$context");
+	
+	// act
+	ok(!invoker());
+	
+	// assert
+	strictEqual(subject._setter, null);
+});
 
 testUtils.testWithUtils("set", "cannot set", false, function(methods, classes, subject, invoker) {
 	// arrange
