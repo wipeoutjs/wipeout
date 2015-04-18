@@ -14,7 +14,7 @@ test("binding, bindOneWay", function () {
 	var val1 = viewModel[name] = {}, val2 = {};
 	
 	// act
-	var disp = setter.cacheAllWatched(viewModel, function () {
+	var disp = setter.prime(viewModel, function () {
 		wipeout.htmlBindingTypes.owts(viewModel, setter, renderContext);
 	});
 	

@@ -263,7 +263,7 @@ testUtils.testWithUtils("watch", "not caching. Other logic tested in integration
 	});
 });
 
-testUtils.testWithUtils("cacheAllWatched", "already caching", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("prime", "already caching", false, function(methods, classes, subject, invoker) {
 	// arrange
 	subject._caching = true;
 	
@@ -274,7 +274,7 @@ testUtils.testWithUtils("cacheAllWatched", "already caching", false, function(me
 	});
 });
 
-testUtils.testWithUtils("cacheAllWatched", "not caching", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("prime", "not caching", false, function(methods, classes, subject, invoker) {
 	// arrange	
 	var tmp;
 	

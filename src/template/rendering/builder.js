@@ -49,7 +49,7 @@ Class("wipeout.template.rendering.builder", function () {
         ///<returns type="Array">An array of disposables</returns>
 		
 		var op = [];
-		op.push.apply(op, setter.cacheAllWatched(element, function () {
+		op.push.apply(op, setter.prime(element, function () {
 			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
 			if (o && o.dispose instanceof Function)
 				op.push(o);

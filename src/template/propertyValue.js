@@ -189,14 +189,14 @@ Class("wipeout.template.propertyValue", function () {
 	};
 	
 	//TODO: rename to "prime"
-	propertyValue.prototype.cacheAllWatched = function (propertyOwner, logic) {
+	propertyValue.prototype.prime = function (propertyOwner, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
 		
 		if (this._caching)
-			throw "cacheAllWatched cannot be asynchronus or nested.";
+			throw "prime cannot be asynchronus or nested.";
 		
 		try {
 			this._caching = [];

@@ -21,7 +21,7 @@ test("binding, nb", function () {
 		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
 	
 	// act
-	var disp = setter.cacheAllWatched(viewModel, function () {
+	var disp = setter.prime(viewModel, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	
@@ -43,7 +43,7 @@ test("binding, bindOneWay", function () {
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.cacheAllWatched(viewModel, function () {
+	var disp = setter.prime(viewModel, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	

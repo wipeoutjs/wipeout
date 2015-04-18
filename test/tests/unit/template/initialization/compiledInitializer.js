@@ -344,7 +344,7 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 	var vm = {}, rc = {};
 	subject.setters = {
 		aaa: {
-			cacheAllWatched: function (x, input) { input.apply(this, arguments); }
+			prime: function (x, input) { input.apply(this, arguments); }
 		}
 	};
 	
@@ -357,7 +357,7 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 		methods.method([vm, subject.setters.aaa, rc]).apply(null, arguments);
 		return methods.method();
 	}, 1);
-	subject.cacheAllWatched = function () { arguments[1](); return []; };
+	subject.prime = function () { arguments[1](); return []; };
 	
 	// act
 	var output = invoker("aaa", vm, rc);

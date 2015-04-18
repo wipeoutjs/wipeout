@@ -5,7 +5,7 @@ module("integration: wipeout.template.propertyValue", {
     }
 });
 
-test("cacheAllWatched and watch: computed", function() {
+test("prime and watch: computed", function() {
 	// arrange
 	var subject = new wipeout.template.propertyValue("hello", "$this.value || 555");
 	var model = obsjs.makeObservable({value: 666});
@@ -32,7 +32,7 @@ test("cacheAllWatched and watch: computed", function() {
 	
 	// act
 	// assert
-	var disp = subject.cacheAllWatched(model, function () {
+	var disp = subject.prime(model, function () {
 		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
@@ -45,7 +45,7 @@ test("cacheAllWatched and watch: computed", function() {
 	stop();
 });
 
-test("cacheAllWatched and watch: pathObserver", function() {
+test("prime and watch: pathObserver", function() {
 	// arrange
 	var subject = new wipeout.template.propertyValue("hello", "$this.value");
 	var model = obsjs.makeObservable({value: 666});
@@ -72,7 +72,7 @@ test("cacheAllWatched and watch: pathObserver", function() {
 	
 	// act
 	// assert
-	var disp = subject.cacheAllWatched(model, function () {
+	var disp = subject.prime(model, function () {
 		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
@@ -92,7 +92,7 @@ test("execute, $context", function() {
 	
 	// act
 	// assert
-	subject.cacheAllWatched({}, function () {
+	subject.prime({}, function () {
 		strictEqual(context, subject.get(context));
 	});
 });
@@ -104,7 +104,7 @@ test("execute, $this", function() {
 	
 	// act
 	// assert
-	subject.cacheAllWatched({}, function () {
+	subject.prime({}, function () {
 		ok(context.$this);
 		strictEqual(context.$this, subject.get(context));
 	});
@@ -117,7 +117,7 @@ test("execute, $parent", function() {
 	
 	// act
 	// assert
-	subject.cacheAllWatched({}, function () {
+	subject.prime({}, function () {
 		ok(context.$parent);
 		strictEqual(context.$parent, subject.get(context));
 	});
@@ -130,7 +130,7 @@ test("execute, $parents", function() {
 	
 	// act
 	// assert
-	subject.cacheAllWatched({}, function () {
+	subject.prime({}, function () {
 		ok(context.$parents);
 		strictEqual(context.$parents, subject.get(context));
 	});
@@ -143,7 +143,7 @@ test("execute, $index", function() {
 	
 	// act
 	// assert
-	subject.cacheAllWatched({}, function () {
+	subject.prime({}, function () {
 		ok(context.$index);
 		strictEqual(context.$index, subject.get(context));
 	});
