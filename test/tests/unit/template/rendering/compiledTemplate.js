@@ -62,7 +62,7 @@ testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, s
     strictEqual(subject.html[0], before);
     strictEqual(subject.html[1], "<script");
     strictEqual(subject.html[2].length, 1);
-    strictEqual(subject.html[2][0].constructor, wipeout.template.rendering.htmlAttributeSetter);
+    strictEqual(subject.html[2][0].constructor, wipeout.template.rendering.htmlPropertyValue);
     strictEqual(subject.html[2][0].name, "wo-render");
     strictEqual(subject.html[2][0]._value, inner);
     strictEqual(subject.html[3], ' type="placeholder"></script>');
@@ -80,7 +80,7 @@ testUtils.testWithUtils("addViewModel", null, false, function(methods, classes, 
     // assert
     strictEqual(subject.html.length, 3);
     strictEqual(subject.html[0], "<script");
-    strictEqual(subject.html[1][0].constructor, wipeout.template.rendering.htmlAttributeSetter);
+    strictEqual(subject.html[1][0].constructor, wipeout.template.rendering.htmlPropertyValue);
     strictEqual(subject.html[1][0].name, "wipeoutCreateViewModel");
     strictEqual(subject.html[1][0]._value, input);
     strictEqual(subject.html[2], ' type="placeholder"></script>');
@@ -111,7 +111,7 @@ testUtils.testWithUtils("addAttributes", "special attribute", false, function(me
     
     // assert
     strictEqual(subject.html.length, 1);
-    strictEqual(subject.html[0][0].constructor, wipeout.template.rendering.htmlAttributeSetter);
+    strictEqual(subject.html[0][0].constructor, wipeout.template.rendering.htmlPropertyValue);
     strictEqual(subject.html[0][0].name, name);
     strictEqual(subject.html[0][0]._value, val.value);
 });

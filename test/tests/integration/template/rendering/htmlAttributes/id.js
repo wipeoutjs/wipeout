@@ -9,7 +9,7 @@ test("success", function() {
 	$("#qunit-fixture").html("<button id='hello'></button>")
 	var button = document.getElementById("hello");
 	var vm = new wipeout.viewModels.view();
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("id", "hellooo");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("id", "hellooo");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, button, new wipeout.template.context(vm));

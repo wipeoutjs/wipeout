@@ -8,7 +8,7 @@ HtmlAttr("event", function () {
     function event (element, attribute, renderContext) { //TODE
         ///<summary>Subscribe to a html event</summary>
         ///<param name="element" type="Element">The element</param>
-        ///<param name="attribute" type="wipeout.template.rendering.htmlAttributeSetter">The setter object</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
@@ -28,7 +28,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 		return function (element, attribute, renderContext) { //TODE
 			///<summary>Subscribe to a html event</summary>
 			///<param name="element" type="Element">The element</param>
-			///<param name="attribute" type="wipeout.template.rendering.htmlAttributeSetter">The setter object</param>
+			///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
 			///<param name="renderContext" type="wipeout.template.context">The current context</param>
 			///<returns type="Function">A dispose function</returns>
 			

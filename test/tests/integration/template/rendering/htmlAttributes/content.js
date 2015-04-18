@@ -9,7 +9,7 @@ test("success", function() {
 	$("#qunit-fixture").html("<div id='hello'></div>")
 	var div = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-content", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-content", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, div, new wipeout.template.context(model));

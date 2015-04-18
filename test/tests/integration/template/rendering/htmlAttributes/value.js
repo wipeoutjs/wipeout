@@ -12,8 +12,8 @@ test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
-	var onEvent = new wipeout.template.rendering.htmlAttributeSetter("wo-on-event", "blur"),
-		attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var onEvent = new wipeout.template.rendering.htmlPropertyValue("wo-on-event", "blur"),
+		attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(onEvent, input, new wipeout.template.context(model));
@@ -50,7 +50,7 @@ test("disposal", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: 234});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) {
@@ -80,7 +80,7 @@ test("radio", function() {
 	$("#qunit-fixture").html("<input type='radio' id='hello1' value='1' /><input type='radio' id='hello2' value='2' />")
 	var input1 = document.getElementById("hello1"), input2 = document.getElementById("hello2");
 	var model = obsjs.makeObservable({theVal: "1"});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input1, new wipeout.template.context(model));
@@ -117,7 +117,7 @@ test("checkbox", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: true});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
@@ -151,7 +151,7 @@ test("checkbox, with value", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' value='something' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: true});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
@@ -187,11 +187,11 @@ test("checkbox, with data", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: true});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(
-		new wipeout.template.rendering.htmlAttributeSetter("wo-data", "'something'"), input, new wipeout.template.context(model));
+		new wipeout.template.rendering.htmlPropertyValue("wo-data", "'something'"), input, new wipeout.template.context(model));
 	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
 	
 	// assert
@@ -226,11 +226,11 @@ test("checkbox, with data === null", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: true});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(
-		new wipeout.template.rendering.htmlAttributeSetter("wo-data", "null"), input, new wipeout.template.context(model));
+		new wipeout.template.rendering.htmlPropertyValue("wo-data", "null"), input, new wipeout.template.context(model));
 	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
 	
 	// assert
@@ -264,7 +264,7 @@ test("disposal", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: true});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
 	enumerateArr(wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)), function (d) {

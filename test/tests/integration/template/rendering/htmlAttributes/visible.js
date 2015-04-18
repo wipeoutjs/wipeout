@@ -26,7 +26,7 @@ test("visible", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: false});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-visible", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-visible", "$this.theVal");
 	
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));

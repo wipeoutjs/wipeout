@@ -1,21 +1,4 @@
 
-Move parser functionality to setters class. Add canSet functionality. Test parsers for htmlAttributeSetter (content)
-
-Redesign -
-Common elements:	name parsing (something--s-tw)
-					parsers
-					filters
-					getValue
-					canSet
-					setValue
-					onValueChanged
-
-Properties:			bindingType
-					onPropertyChange
-
-Element:			on elmement event
-
-
 wo-checked htmlAttr/wo-value refactor
 
 Types of todos:

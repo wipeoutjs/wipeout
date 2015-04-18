@@ -1,4 +1,4 @@
-module("wipeout.template.rendering.htmlAttributeSetter", {
+module("wipeout.template.rendering.htmlPropertyValue", {
     setup: function() {
     },
     teardown: function() {
@@ -30,7 +30,7 @@ testUtils.testWithUtils("setData, getData", null, true, function(methods, classe
 	
 	// arrange
 	var element = {}, name = "LKJBKJBKJBJK", data = {};
-	subject = new wipeout.template.rendering.htmlAttributeSetter();
+	subject = new wipeout.template.rendering.htmlPropertyValue();
 	subject._caching = [];
 	
 	// act
@@ -50,7 +50,7 @@ testUtils.testWithUtils("setData, getData", null, true, function(methods, classe
 testUtils.testWithUtils("onElementEvent", null, true, function(methods, classes, subject, invoker) {
 	
 	// arrange
-	subject = new wipeout.template.rendering.htmlAttributeSetter();
+	subject = new wipeout.template.rendering.htmlPropertyValue();
 	var executed = false;	
 	$("#qunit-fixture").html("<button></button>");
 	var button = $("#qunit-fixture")[0].firstChild;

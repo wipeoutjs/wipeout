@@ -25,7 +25,7 @@ test("class, add remove test", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
 	var model = obsjs.makeObservable({theVal: "none"});
-	var attribute = new wipeout.template.rendering.htmlAttributeSetter("wo-style-display", "$this.theVal", null, "wo-style");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-style-display", "$this.theVal", null, "wo-style");
 
 	// act
 	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));

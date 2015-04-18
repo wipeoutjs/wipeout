@@ -78,7 +78,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.html.push("<script");
 
             // add the id flag and the id generator
-            this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render", html.substring(oldIndex, index))]);
+            this.html.push([new wipeout.template.rendering.htmlPropertyValue("wo-render", html.substring(oldIndex, index))]);
 
             // add the end of the placeholder
             this.html.push(' type="placeholder"></script>');
@@ -97,7 +97,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wipeoutCreateViewModel", vmNode)]);
+        this.html.push([new wipeout.template.rendering.htmlPropertyValue("wipeoutCreateViewModel", vmNode)]);
         
         // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
@@ -149,12 +149,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 				}
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser, attr));
+					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser)) :
-						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, parser));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser)) :
+						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser));
 				}
             } else {
                 // add non special attribute

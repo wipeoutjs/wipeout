@@ -1,7 +1,7 @@
 //TODO: rename
-Class("wipeout.template.rendering.htmlAttributeSetter", function () {
+Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	
-	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlAttributeSetter (name, value, parser, action) {
+	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlPropertyValue (name, value, parser, action) {
 		///<summary>Set html attributes</summary>
         ///<param name="name" type="String">The name of the attribute</param>
         ///<param name="value" type="String">The value of the attribute</param>
