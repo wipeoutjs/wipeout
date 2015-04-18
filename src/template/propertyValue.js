@@ -83,7 +83,7 @@ Class("wipeout.template.propertyValue", function () {
         ///<returns type="Function">A function to get the value from render context parts</returns>
 		
 		if (!this.hasOwnProperty("_setter")) {
-			var attributeValue, prcessedAttributeValue;
+			var attributeValue, getter;
 			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(attributeValue = this.value());
 			var split = splitValue.output.split("=>");
 			
@@ -96,11 +96,11 @@ Class("wipeout.template.propertyValue", function () {
 					throw "Invalid filter: " + split[1];	//TODE
 				
 				if (wipeout.template.filters[split[1]].childToParent) {	//TODM (childToParent). TODO: rename childToParent
-					prcessedAttributeValue = "wipeout.template.filters[\"" + split[1] + "\"].childToParent";
-					split = split[0].split(",");
+					getter = "wipeout.template.filters[\"" + split[1] + "\"].childToParent";
+					split = split[0].split(/\s*\,\s*/);
 					attributeValue = splitValue.addTokens(split[0]);
 					split[0] = "arguments[5]";
-					prcessedAttributeValue += "(" + split.join(",") + ")";
+					getter += "(" + split.join(", ") + ")";
 				} else {
 					attributeValue = splitValue.addTokens(split[0].split(",")[0]);
 				}
@@ -112,13 +112,13 @@ Class("wipeout.template.propertyValue", function () {
 			} else {
 				var getSetterRoot = wipeout.template.context.buildGetter(attributeValue.substring(0, attributeValue.length - property[0].length));
 				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
-				if (prcessedAttributeValue) {
-					prcessedAttributeValue = wipeout.template.context.buildGetter(splitValue.addTokens(prcessedAttributeValue));
+				if (getter) {
+					getter = wipeout.template.context.buildGetter(splitValue.addTokens(getter));
 					this._setter = function (renderContext, value) {
 						var args = renderContext.asGetterArgs().slice();
 						var part1 = getSetterRoot.apply(null, args);
 						args.push(value);
-						return part1 ? ((part1[property] = prcessedAttributeValue.apply(null, args)), true) : false;
+						return part1 ? ((part1[property] = getter.apply(null, args)), true) : false;
 					};
 				} else {
 					this._setter = function (renderContext, value) {
