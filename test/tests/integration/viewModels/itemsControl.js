@@ -50,6 +50,63 @@ test("getViewModel/getViewModels", function() {
 	stop();
 });
 
+test("basic items control with filters", function() {
+    // arrange
+	wo.filters.divisibleBy = {
+		parentToChild: function (items, divisibleBy) {
+			var op = [];
+			for (var i = 0, ii = items.length; i < ii; i++)
+				if (items[i] % divisibleBy === 0)
+					op.push(items[i]);
+			
+			return op;
+		}
+	};
+	application.items = new obsjs.array([1,2,3,4,5]);
+	application.filter = 1;
+	application.setTemplate = '<wo.items-control id="myItems" items="$parent.items, $parent.filter => divisibleBy">\
+	<item-template>\
+		<div wo-attr-id="\'theId\' + $this.model" wo-content="$this.model"></div>\
+	</item-template>\
+</wo.items-control>';
+	
+	// act
+	application.onRendered = function () {
+		var myItems = application.templateItems.myItems;
+		assert(5);
+		
+		var d = myItems.observe("items", function () {
+			d.dispose();
+			assert(4);
+			
+			d = myItems.observe("items", function () {
+				d.dispose();
+				assert(2);
+				
+				delete wo.filters.divisibleBy;
+				start();
+			});
+			
+			application.filter = 2;
+		});
+		
+		application.items.pop();
+	};
+	
+	// assert
+	function assert(length) {
+		strictEqual(length, application.templateItems.myItems.items.length);
+		
+		for (var i = 0, ii = application.items.length; i < ii; i++)
+			if (application.items[i] % application.filter === 0)
+				equal(document.getElementById("theId" + application.items[i]).innerHTML, application.items[i]);
+			else
+				ok(!document.getElementById("theId" + application.items[i]));
+	}
+	
+	stop();
+});
+
 test("basic items control. initial, add, remove, re-arrange", function() {
     // arrange
     var id1 = "JBKJBLKJBKJLBLKJB";
