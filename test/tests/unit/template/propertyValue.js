@@ -156,6 +156,92 @@ testUtils.testWithUtils("getParser", "not primed, has global parser", false, fun
 	strictEqual(wo.parsers.s , invoker(vm));
 });
 
+testUtils.testWithUtils("buildSetter", "has setter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+	strictEqual(subject._setter = {}, invoker());
+});
+
+testUtils.testWithUtils("buildSetter", "no filter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	var ctxt = {asGetterArgs: function() { return [this]; }};
+	subject.value = methods.method([], "$context.val");
+	
+	// act
+	strictEqual(invoker(), subject._setter);
+	subject._setter(ctxt, "hello shane");
+	
+	// assert
+	strictEqual(ctxt.val, "hello shane");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Not all tests are present here
+
+testUtils.testWithUtils("buildSetter", "invalid filter", false, function(methods, classes, subject, invoker) {
+	// arrange
+	subject.value = methods.method([], "$context.val => invalid-filter");
+	
+	// assert
+	// act
+	//throws(function () {
+		invoker();
+	//});
+});
+
+testUtils.testWithUtils("buildSetter", "good filter, no to child part", false, function(methods, classes, subject, invoker) {
+	// arrange
+	wo.filters["good-filter"] = {};
+	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	
+	// assert
+	// act
+	strictEqual(invoker()(), "hello shane");
+	
+	delete wo.filters["good-filter"];
+});
+
+testUtils.testWithUtils("buildSetter", "good filter, with to child part", false, function(methods, classes, subject, invoker) {
+	// arrange
+	var op = {};
+	wo.filters["good-filter"] = {
+		parentToChild: methods.method(['hello shane', 'another hello'], op)
+	};
+	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
+	
+	// assert
+	// act
+	strictEqual(invoker()(), op);
+	
+	delete wo.filters["good-filter"];
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 testUtils.testWithUtils("set", "cannot set", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var op = {};
