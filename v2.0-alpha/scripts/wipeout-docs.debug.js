@@ -205,8 +205,8 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
                 filter: function(i) {
                     return i.key.indexOf("wipeout.debug") !== 0 && i.key.indexOf("wipeout.profile") !== 0;
                 }
-            });     
-         debugger;
+            });
+		
         woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build({knownParents: parents});
     };
     
@@ -1682,7 +1682,7 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     ApiApplication.prototype.route = function(query) { 
         var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)
-            this.model.content(temp);
+            this.model.content = temp;
     };
     
     ApiApplication.prototype.routeTo = function(item) {
@@ -1725,10 +1725,9 @@ compiler.registerClass("wipeoutDocs.viewModels.application", "wo.view", function
     Application.prototype.onRendered = function() {
         this._super.apply(this, arguments);
         
-        if (this.templateItems.content)
-            this.registerDisposable(this.templateItems.content.model.subscribe(function() {                
-                window.scrollTo(0,0);
-            }));
+		this.observe("templateItems.content.model", function() {                
+			window.scrollTo(0,0);
+		});
     };
     
     return Application;
@@ -1899,6 +1898,17 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
             
             return "";
         });
+		
+		this.observe("model", function(oldVal, newVal) {
+
+			if(newVal && (newVal.branches || newVal.href)) {
+				this.templateId = treeViewBranch.branchTemplate;
+			} else if(newVal) {
+				this.templateId = treeViewBranch.leafTemplate;
+			} else {
+				this.templateId = treeViewBranch.nullTemplate;
+			}
+		}, this);
     };
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
@@ -1909,18 +1919,6 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
         this._super(oldValues, newValues);
                 
         this.isOpen = !!$(this.templateItems.content).filter(":visible").length;
-    };
-    
-    treeViewBranch.prototype.onModelChanged = function(oldVal, newVal) {  
-        this._super(oldVal, newVal);
-        
-        if(newVal && (newVal.branches || newVal.href)) {
-            this.templateId(treeViewBranch.branchTemplate);
-        } else if(newVal) {
-            this.templateId(treeViewBranch.leafTemplate);
-        } else {
-            this.templateId(treeViewBranch.nullTemplate);
-        }
     };
 	
     treeViewBranch.prototype.select = function() {
@@ -1970,8 +1968,8 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(apiTemplateId)
             return;
         
-        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
-<wipeout-docs.view-models.components.dynamic-render model="$find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
+        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
+<wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
     };
     
     function HowDoIApplication() {

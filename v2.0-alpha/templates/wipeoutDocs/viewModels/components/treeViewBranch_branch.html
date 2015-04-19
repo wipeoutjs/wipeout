@@ -1,0 +1,18 @@
+<wo.items-control items="$model.branches" id="content">
+    <set-template>
+        <div>
+            <a wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"
+			   wo-content="$model.name"
+			   wo-attr-href="$model.href || 'javascript:void(0)'"></a>
+                <small style="color: #158cba; cursor: pointer" 
+					   wo-attr-class="$parent.glyphClass"
+					   wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"></small>
+            <ul wo-render="console.log($this.items), $this.items" style="display: none" id="content"></ul>
+        </div>
+    </set-template>
+    <item-template>
+        <li>
+            <wipeout-docs.view-models.components.tree-view-branch />
+        </li>
+    </item-template>
+</wo.items-control>        

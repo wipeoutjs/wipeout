@@ -15,7 +15,7 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     ApiApplication.prototype.route = function(query) { 
         var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)
-            this.model.content(temp);
+            this.model.content = temp;
     };
     
     ApiApplication.prototype.routeTo = function(item) {

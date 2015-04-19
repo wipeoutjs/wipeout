@@ -11,7 +11,7 @@
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;myViewModel model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find(myViewModel)">
+        &lt;wo.content-control my-view-model-ancestor="$context.find(myViewModel)">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -28,7 +28,7 @@
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find('parent')">
+        &lt;wo.content-control my-view-model-ancestor="$context.find('parent')">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -44,7 +44,7 @@
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find({$instanceof: myViewModel})">
+        &lt;wo.content-control my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -75,7 +75,7 @@
 		<tr>
 			<td>$ancestory</td>
 			<td>$a</td>
-			<td>Find the parent, grandparent ect... Is the same as passing a string into the $find() method.</td>
+			<td>Find the parent, grandparent ect... Is the same as passing a string into the $context.find() method.</td>
 		</tr>
 		<tr>
 			<td>$number</td>

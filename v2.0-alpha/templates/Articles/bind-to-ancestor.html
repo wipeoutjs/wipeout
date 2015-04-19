@@ -11,7 +11,7 @@ window.myType = wo.contentControl.extend(function myType() {
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-ancestor-script-1'">
         <code>&lt;myType model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control model="$find(myType).model">
+        &lt;wo.content-control model="$context.find(myType).model">
             &lt;template>
                 Binding to a specific ancestor: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>

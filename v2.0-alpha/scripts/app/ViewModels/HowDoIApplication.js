@@ -6,8 +6,8 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(apiTemplateId)
             return;
         
-        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
-<wipeout-docs.view-models.components.dynamic-render model="$find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
+        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
+<wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
     };
     
     function HowDoIApplication() {

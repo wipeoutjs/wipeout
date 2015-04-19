@@ -23,10 +23,9 @@ compiler.registerClass("wipeoutDocs.viewModels.application", "wo.view", function
     Application.prototype.onRendered = function() {
         this._super.apply(this, arguments);
         
-        if (this.templateItems.content)
-            this.registerDisposable(this.templateItems.content.model.subscribe(function() {                
-                window.scrollTo(0,0);
-            }));
+		this.observe("templateItems.content.model", function() {                
+			window.scrollTo(0,0);
+		});
     };
     
     return Application;

@@ -16,6 +16,17 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
             
             return "";
         });
+		
+		this.observe("model", function(oldVal, newVal) {
+
+			if(newVal && (newVal.branches || newVal.href)) {
+				this.templateId = treeViewBranch.branchTemplate;
+			} else if(newVal) {
+				this.templateId = treeViewBranch.leafTemplate;
+			} else {
+				this.templateId = treeViewBranch.nullTemplate;
+			}
+		}, this);
     };
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
@@ -26,18 +37,6 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
         this._super(oldValues, newValues);
                 
         this.isOpen = !!$(this.templateItems.content).filter(":visible").length;
-    };
-    
-    treeViewBranch.prototype.onModelChanged = function(oldVal, newVal) {  
-        this._super(oldVal, newVal);
-        
-        if(newVal && (newVal.branches || newVal.href)) {
-            this.templateId(treeViewBranch.branchTemplate);
-        } else if(newVal) {
-            this.templateId(treeViewBranch.leafTemplate);
-        } else {
-            this.templateId(treeViewBranch.nullTemplate);
-        }
     };
 	
     treeViewBranch.prototype.select = function() {

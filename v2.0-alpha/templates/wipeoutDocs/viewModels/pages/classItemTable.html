@@ -1,0 +1,12 @@
+<div wo-visible="$this.items.length">
+    <h2 wo-content="$this.title"></h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th wo-content="$this.itemType"></th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody wo-render="$this.items"></tbody>
+    </table>
+</div>

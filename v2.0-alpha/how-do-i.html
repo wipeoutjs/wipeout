@@ -272,7 +272,7 @@ window.myType = wo.contentControl.extend(function myType() {
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-ancestor-script-1'">
         <code>&lt;myType model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control model="$find(myType).model">
+        &lt;wo.content-control model="$context.find(myType).model">
             &lt;template>
                 Binding to a specific ancestor: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>
@@ -413,7 +413,7 @@ You may wish to bind to someting 1 level up in the view model hierarchy
     	four mechanisms for doing this:
 <ol>
     <li><wipeout.rl href="'/wipeout/how-do-i.html?article=knockout-binding-context'" text="'Knockout binding context'" /></li>
-    <li><wipeout.rl href="'/wipeout/how-do-i.html?article=find-a-view-model'" text="'$find(...)'" /></li>
+    <li><wipeout.rl href="'/wipeout/how-do-i.html?article=find-a-view-model'" text="'$context.find(...)'" /></li>
     <li><wipeout.rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'$call(...)'" /></li>
     <li><wipeout.rl href="'/wipeout/how-do-i.html?article=find-and-call-a-view-model-method'" text="'$findAndCall(...)'" /></li>
 </ol> 
@@ -730,7 +730,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;my-namespace.my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find({$namespace: myNamespace})">
+        &lt;wo.content-control my-view-model-ancestor="$context.find({$namespace: myNamespace})">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -855,7 +855,7 @@ theEvent.trigger("Hello wipeout!");
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;myViewModel model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find(myViewModel)">
+        &lt;wo.content-control my-view-model-ancestor="$context.find(myViewModel)">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -872,7 +872,7 @@ theEvent.trigger("Hello wipeout!");
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find('parent')">
+        &lt;wo.content-control my-view-model-ancestor="$context.find('parent')">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -888,7 +888,7 @@ theEvent.trigger("Hello wipeout!");
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;my-view-model model="'Hello wipeout!'">
     &lt;template>
-        &lt;wo.content-control my-view-model-ancestor="$find({$instanceof: myViewModel})">
+        &lt;wo.content-control my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
             &lt;template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/template>
@@ -919,7 +919,7 @@ theEvent.trigger("Hello wipeout!");
 		<tr>
 			<td>$ancestory</td>
 			<td>$a</td>
-			<td>Find the parent, grandparent ect... Is the same as passing a string into the $find() method.</td>
+			<td>Find the parent, grandparent ect... Is the same as passing a string into the $context.find() method.</td>
 		</tr>
 		<tr>
 			<td>$number</td>
@@ -946,7 +946,7 @@ theEvent.trigger("Hello wipeout!");
 <h1>Find and call</h1>
 
 <p>
-<code>$findAndCall(args)</code> is shorthand for <code>$call($find(args))</code>
+<code>$findAndCall(args)</code> is shorthand for <code>$call($context.find(args))</code>
 </p>
 
 <wipeout-docs.view-models.components.code-block>
@@ -2398,7 +2398,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </p>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.ApiApplication" type="text/template">
+<script id="wipeoutDocs.viewModels.apiApplication" type="text/template">
           
 <div class="leftNav leftNav-width" style="background-color: white">
     <div class="staticHeader-height"></div>
@@ -2411,7 +2411,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.HowDoIApplication" type="text/template">
+<script id="wipeoutDocs.viewModels.howDoIApplication" type="text/template">
    
 <div class="leftNav leftNav-width" style="background-color: white" id="leftNav">
     <div class="staticHeader-height"></div>
@@ -2451,39 +2451,43 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Components.CodeBlock" type="text/template">
+<script id="wipeoutDocs.viewModels.components.codeBlock" type="text/template">
 
         <div id="codeBlock">
             <pre class="prettyprint" data-bind="html: renderCode"></pre>
         </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Components.RouteLink" type="text/template">
+<script id="wipeoutDocs.viewModels.components.routeLink" type="text/template">
 <a data-bind="attr: { class: $data['class'], href: href, style: $data.style }, text: text" id="link"></a>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Components.TreeViewBranch_branch" type="text/template">
-<wo.itemsControl itemSource="model().branches" id="content">
-    <template>
+<script id="wipeoutDocs.viewModels.components.treeViewBranch_branch" type="text/template">
+<wo.items-control items="$model.branches" id="content">
+    <set-template>
         <div>
-            <a data-bind="click: $findAndCall(wipeoutDocs.viewModels.components.treeViewBranch).dot('select'), text: model().name, attr: { href: model().href || 'javascript:void(0)'}"></a>
-                <small style="color: #158cba; cursor: pointer" data-bind="attr: { 'class': $parent.glyphClass }, click: $findAndCall(wipeoutDocs.viewModels.components.treeViewBranch).dot('select')"></small>
-            <ul data-bind="itemsControl: null" style="display: none" id="content"></ul>
+            <a wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"
+			   wo-content="$model.name"
+			   wo-attr-href="$model.href || 'javascript:void(0)'"></a>
+                <small style="color: #158cba; cursor: pointer" 
+					   wo-attr-class="$parent.glyphClass"
+					   wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"></small>
+            <ul wo-render="console.log($this.items), $this.items" style="display: none" id="content"></ul>
         </div>
-    </template>
-    <itemTemplate>
+    </set-template>
+    <item-template>
         <li>
             <wipeout-docs.view-models.components.tree-view-branch />
         </li>
-    </itemTemplate>
-</wo.itemsControl>        
+    </item-template>
+</wo.items-control>        
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Components.TreeViewBranch_leaf" type="text/template">
+<script id="wipeoutDocs.viewModels.components.treeViewBranch_leaf" type="text/template">
 <div data-bind="text: model().name"></div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Components.UsageCodeBlock" type="text/template">
+<script id="wipeoutDocs.viewModels.components.usageCodeBlock" type="text/template">
 
         <div data-bind="visible: showDefinitionCode" id="codeBlock">
             <pre class="prettyprint" data-bind="html: renderCode"></pre>
@@ -2494,7 +2498,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
         </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.ClassItemRow" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.classItemRow" type="text/template">
 <tr>
     <td>
         <wipeout.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="model().name" />
@@ -2503,7 +2507,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </tr>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.ClassItemTable" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.classItemTable" type="text/template">
 <div data-bind="visible: itemSource().length">
     <h2 data-bind="html: title"></h2>
     <table class="table table-striped">
@@ -2518,7 +2522,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.ClassPage" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.classPage" type="text/template">
 
 <wipeout-docs.view-models.pages.function-page 
                         model="$parent.model.classConstructor" 
@@ -2538,13 +2542,13 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <wipeout-docs.view-models.pages.class-item-table itemSource="model().staticEvents" title="'Static Events'" itemType="'Event'" />
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.EventPage" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.eventPage" type="text/template">
 
 <h2 data-bind="text: model().fullyQualifiedName"></h2>
 <div data-bind="html: model().summary"></div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.FunctionPage" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.functionPage" type="text/template">
 
 <h2 data-bind="text: $data.title || model().fullyQualifiedName"></h2>
 <div data-bind="html: model().summary"></div>
@@ -2591,11 +2595,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.LandingPage" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.landingPage" type="text/template">
 Welcome to wipeout. Browser the API on the left hand side
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.PropertyPage" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.propertyPage" type="text/template">
 
 <h2 data-bind="text: model().fullyQualifiedName"></h2>
 <div data-bind="html: model().summary"></div>
@@ -2625,7 +2629,7 @@ Welcome to wipeout. Browser the API on the left hand side
 </div>
 </script>
 
-<script id="Wipeout.Docs.ViewModels.Pages.PropertyPage_GenericTypes" type="text/template">
+<script id="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" type="text/template">
 &lt;<!-- ko itemsControl: null --><!-- /ko -->&gt;
 </script>
 
