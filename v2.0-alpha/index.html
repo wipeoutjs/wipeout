@@ -96,10 +96,10 @@ collapsible.toggleContent = function() {
         class="panel-heading"
         style="cursor: pointer">
     &lt;h3 class="panel-title"
-        wo-content="model.header">&lt;/h3>
+        wo-content="$model.header">&lt;/h3>
 &lt;/div>
 &lt;div class="panel-body">
-    &lt;div wo-content="model.content" wo-visible="show">
+    &lt;div wo-content="$model.content" wo-visible="show">
     &lt;/div>
 &lt;/div></pre>
                 </div>
@@ -127,8 +127,8 @@ wo.viewModel("app.rootApplication")
                     View model Template (/app-rootApplication.html)<br />
                     <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-rootApplication.html">&lt;div style="width: 300px; margin: 50px"
      class="panel panel-primary">
-    &lt;h4 data-bind="text: model().applicationName">&lt;/h4>
-    &lt;app.collapsible model="$parent.model().collapsibleContent">
+    &lt;h4 wo-content="$model.applicationName">&lt;/h4>
+    &lt;app.collapsible model="$parent.model.collapsibleContent">
     &lt;/app.collapsible>
 &lt;/div></pre>
                 </div>
@@ -143,8 +143,8 @@ wo.viewModel("app.rootApplication")
                     Inline html definiton
                     <pre class="prettyprint" data-html="true">&lt;!-- html definition -->
                     
-&lt;div data-bind="wipeout: app.rootApplication" id="wipeoutApp">
-&lt;/div></pre>
+&lt;app.root-application>
+&lt;/app.root-application></pre>
                 </div>
             </div>
             
