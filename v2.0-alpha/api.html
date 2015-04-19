@@ -1268,7 +1268,7 @@ helloWipeout.rootApplication = wo.view.extend(function rootApplication() {
     </p>
 
     <wipeout-docs.view-models.components.code-block>
-        <code>&lt;wo.items-control itemSource="[{itemText: 'Item 1'}, {itemText: 'Item 2'}]">
+        <code>&lt;wo.items-control items="[{itemText: 'Item 1'}, {itemText: 'Item 2'}]">
     &lt;itemTemplate>
         &lt;div data-bind="text: model().itemText">&lt;/div>
     &lt;/itemTemplate>
@@ -1470,7 +1470,7 @@ With a custom itemsControl you can control
     
   
 <wipeout-docs.view-models.components.new-template-code-block newScriptId="'items-control-list-template-script-1'">
-    <code>&lt;wo.items-control itemSource="['Hello wipeout 1', 'Hello wipeout 2']">
+    <code>&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;template>
         &lt;ul data-bind="itemsControl: null">&lt;/ul>
     &lt;/template>
@@ -2386,7 +2386,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </p>
     
 <wipeout-docs.view-models.components.code-block>
-    <code>&lt;wo.items-control itemSource="['Hello wipeout 1', 'Hello wipeout 2']">
+    <code>&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;item-template>
         &lt;div>
             &lt;span data-bind="text: model">&lt;/span>
@@ -2419,32 +2419,26 @@ without breaking anything you wouldn't expect to break in javascript.</p>
     <div class="staticHeader-height"></div>
     <h2>How do I?</h2>
     
-    <wo.itemsControl itemSource="model().leftHandNav" id="articles">
-        <template>
-            <!-- ko itemsControl: null --><!-- /ko -->
-        </template>
-        <itemTemplate>
+    <wo.items-control items="$model.leftHandNav" id="articles">
+        <item-template>
             <div class="list-group">
-                <wo.if condition="model().header &amp;&amp; model().header.visible()">
-                    <template>
-                        <wipeout.rl text="model().header.text" href="model().header.href" class="'list-group-item active'" id="header" />
-                    </template>
+                <wo.if condition="$model.header.visible">
+                    <set-template>
+                        <wipeout.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header" />
+                    </set-template>
                 </wo.if>
-                <wo.itemsControl itemSource="model().items" id="items">
-                    <template>
-                        <!-- ko itemsControl: null --><!-- /ko -->
-                    </template>
-                    <itemTemplate>
-                        <wo.if condition="model().visible">
-                            <template>
-                                <wipeout.rl text="model().text" href="model().href" class="'list-group-item'" style="'padding-left: 30px'" />
-                            </template>
+                <wo.items-control items="$model.items" id="items">
+                    <item-template>
+                        <wo.if condition="model.visible">
+                            <set-template>
+                                <wipeout.rl text="$model.text" href="$model.href" class="'list-group-item'" style="'padding-left: 30px'" />
+                            </set-template>
                         </wo.if>
-                    </itemTemplate>
-                </wo.itemsControl>
+                    </item-template>
+                </wo.items-control>
             </div> 
-        </itemTemplate>
-    </wo.itemsControl>
+        </item-template>
+    </wo.items-control>
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
@@ -2474,7 +2468,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                 <small style="color: #158cba; cursor: pointer" 
 					   wo-attr-class="$parent.glyphClass"
 					   wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"></small>
-            <ul wo-render="console.log($this.items), $this.items" style="display: none" id="content"></ul>
+            <ul wo-render="$this.items" style="display: none" id="content"></ul>
         </div>
     </set-template>
     <item-template>
@@ -2486,40 +2480,40 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </script>
 
 <script id="wipeoutDocs.viewModels.components.treeViewBranch_leaf" type="text/template">
-<div data-bind="text: model().name"></div>
+<div wo-content="$model.name"></div>
 </script>
 
 <script id="wipeoutDocs.viewModels.components.usageCodeBlock" type="text/template">
 
-        <div data-bind="visible: showDefinitionCode" id="codeBlock">
-            <pre class="prettyprint" data-bind="html: renderCode"></pre>
-        </div>
-        <p data-bind="visible: showDefinitionCode">Renders:</p>
-        <div style="border: 1px solid #888; padding: 5px;">
-            <wo.contentControl template="$parent.usage"></wo.contentControl>
-        </div>
+<div wo-visible="$this.showDefinitionCode" id="codeBlock">
+	<pre class="prettyprint" wo-content="$this.renderCode"></pre>
+</div>
+<p wo-visible="$this.showDefinitionCode">Renders:</p>
+<div style="border: 1px solid #888; padding: 5px;">
+	<wo.contentControl set-template--s="TEMP: $parent.usage"></wo.contentControl>
+</div>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.classItemRow" type="text/template">
 <tr>
     <td>
-        <wipeout.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="model().name" />
+        <wipeout.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="model.name" />
     </td>
-    <td data-bind="text: model().summary"></td>
+    <td wo-content="model.summary"></td>
 </tr>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.classItemTable" type="text/template">
-<div data-bind="visible: itemSource().length">
-    <h2 data-bind="html: title"></h2>
+<div wo-visible="$this.items.length">
+    <h2 wo-content="$this.title"></h2>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th data-bind="text: itemType"></th>
+                <th wo-content="$this.itemType"></th>
                 <th>Summary</th>
             </tr>
         </thead>
-        <tbody data-bind="itemsControl: null"></tbody>
+        <tbody wo-render="$this.items"></tbody>
     </table>
 </div>
 </script>
@@ -2528,37 +2522,37 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <wipeout-docs.view-models.pages.function-page 
                         model="$parent.model.classConstructor" 
-                        title="'Constructor'" 
-                        showReturnValue="false"
-                        functionDefinitionText="'Constructor definition'" />
+                        title--s="Constructor" 
+                        show-return-value="false"
+                        function-definition-text--s="Constructor definition" />
 
 <hr style="border: 0; border-top: 4px solid #E7E7E7;"/>
 
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().properties" title="'Properties'" itemType="'Property'" />
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().functions" title="'Functions'" itemType="'Function'" />
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().events" title="'Events'" itemType="'Event'" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.properties" title--s="Properties" item-type="Property" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.functions" title--s="Functions" item-type="Function" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.events" title--s="Events" item-type="Event" />
 
 <hr style="border: 0; border-top: 4px solid #E7E7E7;"/>
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().staticProperties" title="'Static Properties'" itemType="'Property'" />
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().staticFunctions" title="'Static Functions'" itemType="'Function'" />
-<wipeout-docs.view-models.pages.class-item-table itemSource="model().staticEvents" title="'Static Events'" itemType="'Event'" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.staticProperties" title--s="Static Properties" item-type="Property" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.staticFunctions" title--s="Static Functions" item-type="Function" />
+<wipeout-docs.view-models.pages.class-item-table items="$model.staticEvents" title--s="Static Events" item-type="Event" />
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.eventPage" type="text/template">
 
-<h2 data-bind="text: model().fullyQualifiedName"></h2>
-<div data-bind="html: model().summary"></div>
+<h2 wo-content="$model.fullyQualifiedName"></h2>
+<div wo-content="$model.summary"></div>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.functionPage" type="text/template">
 
-<h2 data-bind="text: $data.title || model().fullyQualifiedName"></h2>
-<div data-bind="html: model().summary"></div>
-<wo.if condition="model().arguments.length">
-    <template>
+<h2 wo-content="$data.title || $model.fullyQualifiedName"></h2>
+<div wo-content="$model.summary"></div>
+<wo.if condition="$model.arguments.length">
+    <set-template>
         <h3>Arguments</h3>
-        <wo.itemsControl itemSource="model().arguments">
-            <template>
+        <wo.items-control items="$model.arguments">
+            <set-template>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -2568,31 +2562,31 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                             <th>Optional</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="itemsControl: null"></tbody>
+                    <tbody wo-render="$this.items"></tbody>
                 </table>
-            </template>
-            <itemTemplate>
+            </set-template>
+            <item-template>
                 <tr>
-                    <td data-bind="text: model().name"></td>
-                    <td data-bind="text: model().description"></td>
-                    <td data-bind="text: model().type"></td>
-                    <td data-bind="text: model().optional ? 'Yes' : 'No'"></td>
+                    <td wo-content="$model.name"></td>
+                    <td wo-content="$model.description"></td>
+                    <td wo-content="$model.type"></td>
+                    <td wo-content="$model.optional ? 'Yes' : 'No'"></td><td>TODO: use a filter here</td>
                 </tr>
-            </itemTemplate>
-        </wo.itemsControl>
-    </template>
+            </item-template>
+        </wo.items-control>
+    </set-template>
 </wo.if>
-<h2 data-bind="visible: showReturnValue">
-    Returns: <span data-bind="text: model().returns.type"></span>
+<h2 wo-visible="$this.showReturnValue">
+    Returns: <span wo-content="$model.returns.type"></span>
 </h2>
-<span data-bind="text: model().returns.summary"></span>
+<span wo-content="$model.returns.summary"></span>
 <div>
-    <h3 style="display: inline-block" data-bind="text: $data.functionDefinitionText || 'Function definition'"></h3>
-    <a href="javascript:void(0)" data-bind="click: function() { showCode(!showCode()); }"><small>(show/hide)</small></a>
-    <wo.if condition="showCode">
-        <template>
-            <wipeout-docs.view-models.components.code-block code="model()['function'].toString()"></wipeout-docs.view-models.components.code-block>
-        </template>
+    <h3 style="display: inline-block" wo-content="$this.functionDefinitionText || 'Function definition'"></h3>
+    <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
+    <wo.if condition="$this.showCode">
+        <set-template>
+            <wipeout-docs.view-models.components.code-block code="$model['function'].toString()"></wipeout-docs.view-models.components.code-block>
+        </set-template>
     </wo.if>
 </div>
 </script>
@@ -2603,36 +2597,36 @@ Welcome to wipeout. Browser the API on the left hand side
 
 <script id="wipeoutDocs.viewModels.pages.propertyPage" type="text/template">
 
-<h2 data-bind="text: model().fullyQualifiedName"></h2>
-<div data-bind="html: model().summary"></div>
-<wo.if condition="model().propertyType">
-    <template>
+<h2 wo-content="$model.fullyQualifiedName"></h2>
+<div wo-content="$model.summary"></div>
+<wo.if condition="$model.propertyType">
+    <set-template>
         <br/>
         <b>Type:</b>
-        <span data-bind="text:model().propertyType.type"></span>
-        <wo.if condition="model().propertyType.genericTypes &amp;&amp; model().propertyType.genericTypes.length">
-            <template>                
-                <wo.itemsControl templateId="'wipeoutDocs.viewModels.pages.propertyPage_GenericTypes'" itemSource="model().propertyType.genericTypes">
-                    <itemTemplate>
-                        <wo.if condition="$index() !== 0" template="', '" />
-                        <span data-bind="text: model()"></span>
-                    </itemTemplate>
-                </wo.itemsControl>
-            </template>
+        <span wo-content="$model.propertyType.type"></span>
+        <wo.if condition="$model.propertyType.genericTypes && $model.propertyType.genericTypes.length">
+            <set-template>                
+                <wo.items-control template-id--s="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" items="$model.propertyType.genericTypes">
+                    <item-template>
+                        <wo.if condition="$index.value !== 0" set-template--s=", " />
+                        <span wo-content="$model"></span>
+                    </item-template>
+                </wo.items-control>
+            </set-template>
         </wo.if>
-    </template>
+    </set-template>
 </wo.if>
-<div data-bind="visible: usagesTemplateId() !== wo.contentControl.createAnonymousTemplate("")">
+<div wo-visible="$this.usagesTemplateId !== wo.contentControl.createAnonymousTemplate('')">
     <h2>
         <span>Using</span>
-        <span data-bind="html: model().propertyName"></span>
+        <span wo-content="$model.propertyName"></span>
     </h2>
-    <wo.view templateId="$parent.usagesTemplateId" model="$parent.model.classConstructor" />
+    <wo.view template-id="$parent.usagesTemplateId" model="$parent.model.classConstructor" />
 </div>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" type="text/template">
-&lt;<!-- ko itemsControl: null --><!-- /ko -->&gt;
+&lt;{{$this.items}}&gt;
 </script>
 
 <script type="text/javascript">

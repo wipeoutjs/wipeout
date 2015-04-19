@@ -1,8 +1,8 @@
 
-        <div data-bind="visible: showDefinitionCode" id="codeBlock">
-            <pre class="prettyprint" data-bind="html: renderCode"></pre>
-        </div>
-        <p data-bind="visible: showDefinitionCode">Renders:</p>
-        <div style="border: 1px solid #888; padding: 5px;">
-            <wo.contentControl template="$parent.usage"></wo.contentControl>
-        </div>
+<div wo-visible="$this.showDefinitionCode" id="codeBlock">
+	<pre class="prettyprint" wo-content="$this.renderCode"></pre>
+</div>
+<p wo-visible="$this.showDefinitionCode">Renders:</p>
+<div style="border: 1px solid #888; padding: 5px;">
+	<wo.contentControl set-template--s="TEMP: $parent.usage"></wo.contentControl>
+</div>
