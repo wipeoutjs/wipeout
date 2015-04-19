@@ -1,7 +1,7 @@
 (function () {
 
-window.Wipeout = {};
-Wipeout.compiler = (function () {
+window.wipeoutDocs = {};
+wipeoutDocs.compiler = (function () {
     
     var innerCompiler = function(classes, baseClasses) {        
         this.classes = [];
@@ -160,8 +160,8 @@ Wipeout.compiler = (function () {
     
 })();
 
-var compiler = new Wipeout.compiler("Wipeout", "wo.object", [
-    "wo.visual", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+var compiler = new wipeoutDocs.compiler("Wipeout", "objjs.object", [
+    "obsjs.disposable", "wipeout.base.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
 ]);
 
 
@@ -183,7 +183,7 @@ var get = function(item, root) {
     return current;
 };
 
-compiler.registerClass("wipeoutDocs.models.apiApplication", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", function() {
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
@@ -390,7 +390,7 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "wo.object", functio
     return ApiApplication;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.api", "wo.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.api", "objjs.object", function() {    
     
     var api = function() {
         this._super();
@@ -449,7 +449,7 @@ compiler.registerClass("wipeoutDocs.models.components.api", "wo.object", functio
     return api;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "wo.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object", function() {    
     
     function apiBuilder(root, rootNamespace) {
         this._super();
@@ -526,14 +526,14 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "wo.object", 
     return apiBuilder;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.apiClass", "wo.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiClass", "objjs.object", function() {    
     return function(classDescription, classConstructor) {
         this.classDescription= classDescription;
         this.classConstructor = classConstructor;
     }
 });
 
-compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "objjs.object", function() {
     
     function select(input, converter, context) {
         var output = [];
@@ -820,7 +820,7 @@ compiler.registerClass("wipeoutDocs.models.components.generators.typescript", "w
     return typescript;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "objjs.object", function() {
     var treeViewBranch = function(name, href, branches) {
         this._super();
             
@@ -832,7 +832,7 @@ compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "wo.objec
     return treeViewBranch;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.argument", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.argument", "objjs.object", function() {
     function argument(itemDetails) {
         this._super();
         
@@ -847,7 +847,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.argument", "wo.object", 
     return argument;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.class", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", function() {
     var classDescription = function(classFullName, api) {
         this._super();
         
@@ -1045,7 +1045,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "wo.object", fun
     return classDescription;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "objjs.object", function() {
     return function(itemName, itemSummary, isStatic) {
         this._super();
         
@@ -1309,7 +1309,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         return current;
     };
         
-    property.descriptionOverrides = {
+    /*property.descriptionOverrides = {
         wo: {},
         wipeout: {
             base: {
@@ -1433,11 +1433,11 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     
     for(var i in property.descriptionOverrides.wipeout.utils)
         property.descriptionOverrides.wo[i] = property.descriptionOverrides.wipeout.utils[i];
-    
+    */
     return property;  
 }); 
 
-compiler.registerClass("wipeoutDocs.models.howDoIApplication", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", function() {
     
     function articleLink(title, article) {
         this.text = title;
@@ -1642,7 +1642,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "wo.object", func
     return HowDoIApplication;
 });
 
-compiler.registerClass("wipeoutDocs.models.pages.displayItem", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.pages.displayItem", "objjs.object", function() {
     return function(name) {
         this._super();
         
@@ -1895,7 +1895,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
-    treeViewBranch.nullTemplate = wo.visual.getBlankTemplateId();
+    treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
     
     treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  
         this._super(oldValues, newValues);
@@ -2136,6 +2136,6 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", f
     return propertyPage;
 });
 
-	compiler.compile(window.Wipeout);
+	compiler.compile(window.wipeoutDocs);
 	delete compiler;
 }());

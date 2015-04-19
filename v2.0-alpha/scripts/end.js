@@ -1,3 +1,3 @@
-	compiler.compile(window.Wipeout);
+	compiler.compile(window.wipeoutDocs);
 	delete compiler;
 }());

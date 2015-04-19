@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.pages.displayItem", "wo.object", function() {
+compiler.registerClass("wipeoutDocs.models.pages.displayItem", "objjs.object", function() {
     return function(name) {
         this._super();
         

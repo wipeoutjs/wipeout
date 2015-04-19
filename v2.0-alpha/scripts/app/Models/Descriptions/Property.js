@@ -79,7 +79,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         return current;
     };
         
-    property.descriptionOverrides = {
+    /*property.descriptionOverrides = {
         wo: {},
         wipeout: {
             base: {
@@ -203,6 +203,6 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     
     for(var i in property.descriptionOverrides.wipeout.utils)
         property.descriptionOverrides.wo[i] = property.descriptionOverrides.wipeout.utils[i];
-    
+    */
     return property;  
 }); 

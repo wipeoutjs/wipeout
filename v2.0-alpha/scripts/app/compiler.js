@@ -1,5 +1,5 @@
-window.Wipeout = {};
-Wipeout.compiler = (function () {
+window.wipeoutDocs = {};
+wipeoutDocs.compiler = (function () {
     
     var innerCompiler = function(classes, baseClasses) {        
         this.classes = [];
@@ -158,6 +158,6 @@ Wipeout.compiler = (function () {
     
 })();
 
-var compiler = new Wipeout.compiler("Wipeout", "wo.object", [
-    "wo.visual", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+var compiler = new wipeoutDocs.compiler("Wipeout", "objjs.object", [
+    "obsjs.disposable", "wipeout.base.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
 ]);

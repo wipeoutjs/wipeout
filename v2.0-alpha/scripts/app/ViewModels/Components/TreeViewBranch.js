@@ -20,7 +20,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
-    treeViewBranch.nullTemplate = wo.visual.getBlankTemplateId();
+    treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
     
     treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  
         this._super(oldValues, newValues);

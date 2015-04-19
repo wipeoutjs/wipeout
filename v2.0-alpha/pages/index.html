@@ -43,34 +43,29 @@
             <div class="columns">
                 <div class="column-2 main-example-code">
                     View model class
-                    <pre class="prettyprint" data-script-type="text/javascript">// create a namespace for our application
-window.app = {};
-
-// inherit from the wo.view class
-app.collapsible = wo.view.extend({
-    constructor: function() {
-        // call the base constructor with the default template id.
-        this._super("/app-collapsible.html");
-        
-        // defines whether the content is visible
-        this.show = ko.observable(false);
-    },                    
-    // a function which will show or hide the collapsible content
-    toggleContent: function() {
-        this.show(!this.show());
-    }
-});</pre>
+                    <pre class="prettyprint" data-script-type="text/javascript">// Create a view model
+var collapsible = wo.viewModel("app.collapsible")
+	.templateId("/app-collapsible.html")
+	.onInitialized(function () {
+		// defines whether the content is visible
+		this.show = false;
+	});
+	
+// a function which will show or hide the collapsible content
+collapsible.toggleContent = function() {
+	this.show = !this.show;
+};</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     View model Template (/app-collapsible.html)<br/>
-                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-collapsible.html">&lt;div   data-bind="click: toggleContent"
+                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-collapsible.html">&lt;div wo-click="toggleContent"
         class="panel-heading"
         style="cursor: pointer">
     &lt;h3 class="panel-title"
-        data-bind="text: model().header">&lt;/h3>
+        wo-content="$model.header">&lt;/h3>
 &lt;/div>
 &lt;div class="panel-body">
-    &lt;div data-bind="text: model().content, visible: show">
+    &lt;div wo-content="$model.content" wo-visible="show">
     &lt;/div>
 &lt;/div></pre>
                 </div>
@@ -81,21 +76,25 @@ app.collapsible = wo.view.extend({
             <div class="columns">
                 <div class="column-2 main-example-code">
                     View model class
-                    <pre class="prettyprint" data-script-type="text/javascript">
-// inherit from the wo.view class
-app.rootApplication = wo.view.extend({
-    constructor: function () {
-        // call the base constructor with the default template id.
-        this._super("/app-rootApplication.html");
-    }
-});</pre>
+                    <pre class="prettyprint" data-script-type="text/javascript">// root application component
+wo.viewModel("app.rootApplication")
+	.templateId("/app-rootApplication.html")
+	.onInitialized(function () {
+		this.model = {
+			applicationName: "Wipeout demo",
+			collapsibleContent: {
+				header: "Open/close",
+				content: "This is content for the component"
+			}
+		}
+	});</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     View model Template (/app-rootApplication.html)<br />
                     <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-rootApplication.html">&lt;div style="width: 300px; margin: 50px"
      class="panel panel-primary">
-    &lt;h4 data-bind="text: model().applicationName">&lt;/h4>
-    &lt;app.collapsible model="$parent.model().collapsibleContent">
+    &lt;h4 wo-content="$model.applicationName">&lt;/h4>
+    &lt;app.collapsible model="$parent.model.collapsibleContent">
     &lt;/app.collapsible>
 &lt;/div></pre>
                 </div>
@@ -104,22 +103,14 @@ app.rootApplication = wo.view.extend({
             <div class="columns">
                 <div class="column-2 main-example-code">
                     Model and setup
-                    <pre class="prettyprint" data-script-type="text/javascript">var rootApp = document.getElementById("wipeoutApp");  
-var model = {
-    applicationName: "Wipeout demo",
-    collapsibleContent: {
-        header: "Open/close",
-        content: "This is content for the component"
-    }
-};
-ko.applyBindings(model, rootApp);</pre>
+                    <pre class="prettyprint" data-script-type="text/javascript">Not needed</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     Inline html definiton
                     <pre class="prettyprint" data-html="true">&lt;!-- html definition -->
                     
-&lt;div data-bind="wipeout: app.rootApplication" id="wipeoutApp">
-&lt;/div></pre>
+&lt;app.root-application>
+&lt;/app.root-application></pre>
                 </div>
             </div>
             
