@@ -106,8 +106,10 @@ Class("wipeout.template.context", function () {
         ///<returns type="Function">A getter</returns>
 		
 		try {
+			var model = /\$model/.test(logic) ? "var $model = $this ? $this.model : null;\n" : "";
+			
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", model + "return " + logic + ";");
 		} catch (e) {
 			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
@@ -127,7 +129,8 @@ Class("wipeout.template.context", function () {
 			logic += "(e, element)";
 			
 		try {
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", logic);
+			var model = /\$model/.test(logic) ? "var $model = $this ? $this.model : null;\n" : "";
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", model + logic);
 		} catch (e) {
 			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";

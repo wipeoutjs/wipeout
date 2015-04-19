@@ -168,13 +168,24 @@ testUtils.testWithUtils("getComputed", null, false, function(methods, classes, s
 	arg1.something = "yesyes";
 });
 
-testUtils.testWithUtils("buildEventCallback", "no added brackets", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("buildGetter", "$model", true, function(methods, classes, subject, invoker) {
     // arrange
-	var arg1 = {}, arg2 = {}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
-	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+	var $this = {model: {}};
 	
 	// act
-	invoker("$context.theFunction($context, $this, $parent, $parents, $index, e, element)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	var mod = invoker("$model")(null, $this);
+	
+	// assert
+	strictEqual($this.model, mod);
+});
+
+testUtils.testWithUtils("buildEventCallback", "no added brackets, with $model", true, function(methods, classes, subject, invoker) {
+    // arrange
+	var arg1 = {}, arg2 = {model: {}}, arg3 = {}, arg4 = {}, arg5 = {}, arg6 = {}, arg7 = {};
+	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg2.model]);
+	
+	// act
+	invoker("$context.theFunction($context, $this, $parent, $parents, $index, e, element, $model)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	
 	// assert
 });
