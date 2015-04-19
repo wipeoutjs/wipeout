@@ -7,7 +7,7 @@ In order to keep clean contextual boundaries, the model property of a child view
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-parents-model-script-1'">
         <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;template>
-        &lt;wo.content-control model="$parent.model().value">
+        &lt;wo.content-control model="$parent.model.value">
             &lt;template>
                 Binding to a property on parent's model: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>

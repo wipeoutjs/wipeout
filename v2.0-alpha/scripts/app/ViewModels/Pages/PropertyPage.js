@@ -2,15 +2,15 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", f
     function propertyPage() {
         this._super("wipeoutDocs.viewModels.pages.propertyPage");
         
-        this.usagesTemplateId = ko.computed(function() {
-            if(this.model()) {
-                var name = this.model().fullyQualifiedName() + propertyPage.classUsagesTemplateSuffix;
+        this.computed("usagesTemplateId", function() {
+            if(this.model) {
+                var name = this.model.fullyQualifiedName + propertyPage.classUsagesTemplateSuffix;
                 if(document.getElementById(name))
                     return name;
             }
 
-            return wo.contentControl.getBlankTemplateId();
-        }, this);
+            return wo.contentControl.createAnonymousTemplate("");
+        });
     };
     
     propertyPage.classUsagesTemplateSuffix = "_PropertyUsages";

@@ -10,9 +10,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         var xml = property.getPropertySummaryXml(constructorFunction, propertyName, classFullName);
         this.propertyType = xml ? property.getPropertyType(xml) : null;
                 
-        this.fullyQualifiedName = ko.computed(function() {
+        this.computed("fullyQualifiedName", function() {
             return this.classFullName + "." + this.propertyName;
-        }, this);
+        });
     };
     
     var summary = /^\/\/\/<[sS]ummary\s*type=".+".*>.*<\/[sS]ummary>/;

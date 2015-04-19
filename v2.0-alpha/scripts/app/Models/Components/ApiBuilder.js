@@ -17,7 +17,7 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object
                 classes.push(settings.knownParents[i]);
         
         
-        var done = wo.obj.copyArray(settings.knownParents || []);
+        var done = (settings.knownParents || []).slice();
         done.push(Object);
         
         if(settings.filter)

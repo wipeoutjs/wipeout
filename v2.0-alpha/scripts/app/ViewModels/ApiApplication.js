@@ -4,18 +4,18 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     function ApiApplication() {
         this._super("wipeoutDocs.viewModels.apiApplication");
         
-        this.registerDisposable(ko.computed(function() {
+		this.computed("title", function () {
             var tmp;
-            if( (tmp = this.model()) &&
-                (tmp = tmp.content()))
+            if((tmp = this.model) &&
+                (tmp = tmp.content))
                     $("#headerText").html(tmp.title);
-        }, this));
+        });
     };
     
     ApiApplication.prototype.route = function(query) { 
         var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)
-            this.model().content(temp);
+            this.model.content(temp);
     };
     
     ApiApplication.prototype.routeTo = function(item) {

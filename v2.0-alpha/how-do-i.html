@@ -169,12 +169,12 @@ var myView = new wo.view();
 myView.bind("model", objectToBindTo, false);
 
 // Will log: "Hello wipeout!"
-console.log(myView.model());
+console.log(myView.model);
             
 objectToBindTo("Goodbye wipeout!");
             
 // Will log: "Goodbye wipeout!"
-console.log(myView.model());</code>
+console.log(myView.model);</code>
     </wipeout-docs.view-models.components.code-block>
 </script>
 
@@ -353,7 +353,7 @@ In order to keep clean contextual boundaries, the model property of a child view
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-parents-model-script-1'">
         <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;template>
-        &lt;wo.content-control model="$parent.model().value">
+        &lt;wo.content-control model="$parent.model.value">
             &lt;template>
                 Binding to a property on parent's model: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>
@@ -455,7 +455,7 @@ By default, all bindings are one way. This means that the object where the prope
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-two-way-script-1'">
         <code>&lt;wo.content-control model="{ value: ko.observable('Hello wipeout!') }">
     &lt;template>
-        &lt;wo.content-control model-tw="$parent.model().value">
+        &lt;wo.content-control model-tw="$parent.model.value">
             &lt;template>
                 Two way bindings: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>
@@ -1091,7 +1091,7 @@ theEvent.trigger("Hello wipeout!");
         Hello &lt;span data-bind="text: model().name">&lt;/span>!
         &lt;br />
         &lt;hello-wipeout.collapsible 
-            model="$parent.model().collapsibleContent" />
+            model="$parent.model.collapsibleContent" />
     &lt;/div>
 &lt;/script></code>       
             </wipeout-docs.view-models.components.template-code-block>
@@ -1509,7 +1509,7 @@ With a custom itemsControl you can control
 
 <ol>
 	<li><code>$parent</code>: refers to the parent view model. This property is very important when setting the model of view model, as you 
-		will always want to set it to a property on <code>$parent.model()</code>.</li>
+		will always want to set it to a property on <code>$parent.model</code>.</li>
 	<li><code>$parents[]</code>: refers to all ancestor view models. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
@@ -2162,7 +2162,7 @@ of un-needed scope.</p>
 <wipeout-docs.view-models.components.code-block>
     <code>&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;template>
-        &lt;wo.view model="$parent.model().subModel" template-id="'myTemplateId'" />
+        &lt;wo.view model="$parent.model.subModel" template-id="'myTemplateId'" />
     &lt;/template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.code-block>
@@ -2402,11 +2402,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
           
 <div class="leftNav leftNav-width" style="background-color: white">
     <div class="staticHeader-height"></div>
-    <wipeout-docs.view-models.components.tree-view-branch id="treeView" model="$parent.model().menu" />
+    <wipeout-docs.view-models.components.tree-view-branch id="treeView" model="$parent.model.menu" />
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
-        <wipeout-docs.view-models.components.dynamic-render id="content" model="$parent.model().content" />
+        <wipeout-docs.view-models.components.dynamic-render id="content" model="$parent.model.content" />
     </div>
 </div>
 </script>
@@ -2497,7 +2497,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <script id="Wipeout.Docs.ViewModels.Pages.ClassItemRow" type="text/template">
 <tr>
     <td>
-        <wipeout.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model())" text="model().name" />
+        <wipeout.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="model().name" />
     </td>
     <td data-bind="text: model().summary"></td>
 </tr>
@@ -2521,7 +2521,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <script id="Wipeout.Docs.ViewModels.Pages.ClassPage" type="text/template">
 
 <wipeout-docs.view-models.pages.function-page 
-                        model="$parent.model().classConstructor" 
+                        model="$parent.model.classConstructor" 
                         title="'Constructor'" 
                         showReturnValue="false"
                         functionDefinitionText="'Constructor definition'" />
@@ -2616,12 +2616,12 @@ Welcome to wipeout. Browser the API on the left hand side
         </wo.if>
     </template>
 </wo.if>
-<div data-bind="visible: usagesTemplateId() !== wo.contentControl.getBlankTemplateId()">
+<div data-bind="visible: usagesTemplateId() !== wo.contentControl.createAnonymousTemplate("")">
     <h2>
         <span>Using</span>
         <span data-bind="html: model().propertyName"></span>
     </h2>
-    <wo.view templateId="$parent.usagesTemplateId" model="$parent.model().classConstructor" />
+    <wo.view templateId="$parent.usagesTemplateId" model="$parent.model.classConstructor" />
 </div>
 </script>
 

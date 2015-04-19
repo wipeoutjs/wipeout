@@ -2,18 +2,18 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
     var dynamicRender = function() {
         this._super();
         
-        this.content = ko.observable();
+        this.content = null;
         
-        this.template("<!-- ko render: content --><!-- /ko -->");
+        this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
     };
     
     dynamicRender.prototype.onModelChanged = function(oldVal, newVal) {
         this._super(oldVal, newVal);
                
-        var oldVal = this.content();
+        var oldVal = this.content;
         
         if(newVal == null) {
-            this.content(null);
+            this.content = null;
         } else {
             var newVm = null;
             
@@ -34,7 +34,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
             }
             
             newVm.model(newVal);
-            this.content(newVm);
+            this.content = newVm;
         }
     };  
     

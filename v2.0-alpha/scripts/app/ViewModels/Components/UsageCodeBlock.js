@@ -3,16 +3,16 @@ compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipe
     var usageCodeBlock = function() {
         this._super("wipeoutDocs.viewModels.components.usageCodeBlock");
         
-        this.usage = ko.observable();
+        this.usage = null;
         
-        this.showDefinitionCode = ko.observable(true);
+        this.showDefinitionCode = true;
     };
     
     usageCodeBlock.prototype.onCodeChanged = function(newVal) {  
-        this.usage(newVal
+        this.usage = newVal
             .replace(/\&lt;/g, "<")
             .replace(/\&amp;/g, "&")
-            .replace(/\&gt;/g, ">"));
+            .replace(/\&gt;/g, ">");
     };
     
     return usageCodeBlock;

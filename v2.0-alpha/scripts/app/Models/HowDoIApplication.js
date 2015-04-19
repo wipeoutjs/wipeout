@@ -4,7 +4,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
         this.text = title;
         this.article = article;
         this.href = buildHref({article: article});
-        this.visible = ko.observable(true);
+        this.visible = true;
     };
     
     var buildHref = function(parameters) {
@@ -146,8 +146,6 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
         
         this.flatList = [];
         this.index();
-        
-        window.xxx = this;
     };
     
     HowDoIApplication.prototype.search = function(searchTerm) {
@@ -165,7 +163,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
     HowDoIApplication.prototype._search = function(searchTerm) {
         if(!searchTerm) {
             wo.obj.enumerateArr(this.flatList, function(item) {
-                if(!item.visible())item.visible(true);
+                if(!item.visible)item.visible = true;
             }, this);
             
             return;
@@ -180,7 +178,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
             for(var i = 0, ii = searchTerm.length; i < ii; i++)
                 visible &= (title.indexOf(searchTerm[i]) !== -1 || item.body.indexOf(searchTerm[i]) !== -1);
             
-            item.visible(visible);
+            item.visible = visible;
         }, this);
     };
     

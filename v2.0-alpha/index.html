@@ -78,17 +78,20 @@
                 <div class="column-2 main-example-code">
                     View model class
                     <pre class="prettyprint" data-script-type="text/javascript">// Create a view model
-					
 var collapsible = wo.viewModel("app.collapsible")
-	.templateId("/app-collapsible.html")
-	.onInitialized(function () {
-		// defines whether the content is visible
-		this.show = false;
-	}).build();
+
+  .templateId("/app-collapsible.html")
+  
+  .onInitialized(function () {
+    // defines whether the content is visible or not
+    this.show = true;
+  })
+  
+  .build();
 	
 // a function which will show or hide the collapsible content
 collapsible.toggleContent = function() {
-	this.show = !this.show;
+  this.show = !this.show;
 };</pre>
                 </div>
                 <div class="column-2 main-example-code">
@@ -113,16 +116,21 @@ collapsible.toggleContent = function() {
                     View model class
                     <pre class="prettyprint" data-script-type="text/javascript">// root application component
 wo.viewModel("app.rootApplication")
-	.templateId("/app-rootApplication.html")
-	.onInitialized(function () {
-		this.model = {
-			applicationName: "Wipeout demo",
-			collapsibleContent: {
-				header: "Open/close",
-				content: "This is content for the component"
-			}
-		}
-	}).build();</pre>
+
+  .templateId("/app-rootApplication.html")
+  
+  .onInitialized(function () {
+    // add a model for our application
+    this.model = {
+      applicationName: "Wipeout demo",
+      collapsibleContent: {
+        header: "Open/close",
+        content: "This is content for the component"
+      }
+    }
+  })
+  
+  .build();</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     View model Template (/app-rootApplication.html)<br />
@@ -141,7 +149,7 @@ wo.viewModel("app.rootApplication")
                     <pre class="prettyprint" data-script-type="text/javascript">/*Not needed*/</pre>
                 </div>
                 <div class="column-2 main-example-code">
-                    Inline html definiton
+                    Html definiton
                     <pre class="prettyprint" data-html="true">&lt;!-- html definition -->
                     
 &lt;app.root-application>
@@ -229,6 +237,7 @@ wo.viewModel("app.rootApplication")
                 
         $("#example .prettyprint").each(function() { $(this).html(prettyPrintOne($(this).html())); });
         $("[data-script-type='text/xml'] span[class=tag]:contains('app.collapsible')")
+			.add($("span[class=tag]:contains('app.root-application')"))
             .css("font-weight", "bold").css("background", "yellow");
         
         $("#execute").on("click", function() {

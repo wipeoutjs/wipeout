@@ -158,6 +158,6 @@ wipeoutDocs.compiler = (function () {
     
 })();
 
-var compiler = new wipeoutDocs.compiler("Wipeout", "objjs.object", [
-    "obsjs.disposable", "wipeout.base.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+var compiler = new wipeoutDocs.compiler("wipeoutDocs", "objjs.object", [
+    "obsjs.disposable", "obsjs.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
 ]);

@@ -2,16 +2,27 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
-        
+		
+		var parents = [
+			{key: "EventTarget", value: EventTarget},	//TODO: take these out of the list
+			{key: "Window", value: Window},
+			{key: "Array", value: Array},
+			{key: "objjs.object", value: objjs.object},
+			{key: "obsjs.disposable", value: obsjs.disposable},
+			{key: "obsjs.observableBase", value: obsjs.observableBase},
+			{key: "obsjs.arrayBase", value: obsjs.arrayBase},
+			{key: "wipeout.base.bindable", value: wipeout.base.bindable}
+		];
+		
         wipeoutApi = new wipeoutDocs.models.components.apiBuilder(wipeout, "wipeout")
             .build({
-                knownParents: [{key:"ko.templateEngine", value: ko.templateEngine}], 
+                knownParents: parents, 
                 filter: function(i) {
                     return i.key.indexOf("wipeout.debug") !== 0 && i.key.indexOf("wipeout.profile") !== 0;
                 }
-            });     
-         
-        woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build();
+            });
+		
+        woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build({knownParents: parents});
     };
     
     ApiApplication.routableUrl = function(item) {
@@ -127,11 +138,11 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
         
         this._super();
         
-        this.content = ko.observable(new wipeoutDocs.models.pages.landingPage());
+        this.content = new wipeoutDocs.models.pages.landingPage();
         var _wipeout = new wipeoutDocs.models.components.treeViewBranch("wipeout", null, [
             new wipeoutDocs.models.components.treeViewBranch("base", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.contentControl"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.bindable"),
+                /*ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.event"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.if"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.itemsControl"),
@@ -167,12 +178,12 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.htmlAsync"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.ko"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.mutationObserverDomManipulationWorker"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj")
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj")*/
             ])
         ]);
         
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
+       /*     ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
             ApiApplication.treeViewBranchFor(wipeoutApi, "wo.call"),
             ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
             ApiApplication.treeViewBranchFor(woApi, "wo.disposable"),
@@ -193,7 +204,7 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEventModel"),
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEventRegistration"),                
             ApiApplication.treeViewBranchFor(woApi, "wo.view"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.visual")
+            ApiApplication.treeViewBranchFor(woApi, "wo.visual")*/
         ]);
         
         this.menu = new wipeoutDocs.models.components.treeViewBranch("API", null, [

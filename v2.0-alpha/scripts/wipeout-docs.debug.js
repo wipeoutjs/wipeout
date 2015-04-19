@@ -160,8 +160,8 @@ wipeoutDocs.compiler = (function () {
     
 })();
 
-var compiler = new wipeoutDocs.compiler("Wipeout", "objjs.object", [
-    "obsjs.disposable", "wipeout.base.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+var compiler = new wipeoutDocs.compiler("wipeoutDocs", "objjs.object", [
+    "obsjs.disposable", "obsjs.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
 ]);
 
 
@@ -187,16 +187,27 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
-        
+		
+		var parents = [
+			{key: "EventTarget", value: EventTarget},	//TODO: take these out of the list
+			{key: "Window", value: Window},
+			{key: "Array", value: Array},
+			{key: "objjs.object", value: objjs.object},
+			{key: "obsjs.disposable", value: obsjs.disposable},
+			{key: "obsjs.observableBase", value: obsjs.observableBase},
+			{key: "obsjs.arrayBase", value: obsjs.arrayBase},
+			{key: "wipeout.base.bindable", value: wipeout.base.bindable}
+		];
+		
         wipeoutApi = new wipeoutDocs.models.components.apiBuilder(wipeout, "wipeout")
             .build({
-                knownParents: [{key:"ko.templateEngine", value: ko.templateEngine}], 
+                knownParents: parents, 
                 filter: function(i) {
                     return i.key.indexOf("wipeout.debug") !== 0 && i.key.indexOf("wipeout.profile") !== 0;
                 }
             });     
-         
-        woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build();
+         debugger;
+        woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build({knownParents: parents});
     };
     
     ApiApplication.routableUrl = function(item) {
@@ -312,11 +323,11 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
         
         this._super();
         
-        this.content = ko.observable(new wipeoutDocs.models.pages.landingPage());
+        this.content = new wipeoutDocs.models.pages.landingPage();
         var _wipeout = new wipeoutDocs.models.components.treeViewBranch("wipeout", null, [
             new wipeoutDocs.models.components.treeViewBranch("base", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.contentControl"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.bindable"),
+                /*ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.event"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.if"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.itemsControl"),
@@ -352,12 +363,12 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.htmlAsync"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.ko"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.mutationObserverDomManipulationWorker"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj")
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj")*/
             ])
         ]);
         
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
+       /*     ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
             ApiApplication.treeViewBranchFor(wipeoutApi, "wo.call"),
             ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
             ApiApplication.treeViewBranchFor(woApi, "wo.disposable"),
@@ -378,7 +389,7 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", func
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEventModel"),
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEventRegistration"),                
             ApiApplication.treeViewBranchFor(woApi, "wo.view"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.visual")
+            ApiApplication.treeViewBranchFor(woApi, "wo.visual")*/
         ]);
         
         this.menu = new wipeoutDocs.models.components.treeViewBranch("API", null, [
@@ -468,7 +479,7 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object
                 classes.push(settings.knownParents[i]);
         
         
-        var done = wo.obj.copyArray(settings.knownParents || []);
+        var done = (settings.knownParents || []).slice();
         done.push(Object);
         
         if(settings.filter)
@@ -923,7 +934,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if(this.constructorFunction.hasOwnProperty(i)) {
                 if(this.constructorFunction[i] instanceof wo.event) {
                     this.staticEvents.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, true));
-                } else if(this.constructorFunction[i] instanceof Function && !ko.isObservable(this.constructorFunction[i])) {
+                } else if(this.constructorFunction[i] instanceof Function) {
                     this.staticFunctions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction[i], i, this.classFullName, true));
                 } else {
                     this.staticProperties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, true));
@@ -935,7 +946,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if(this.constructorFunction.prototype.hasOwnProperty(i)) {                    
                 if(this.constructorFunction.prototype[i] instanceof wo.event) { 
                     this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
-                } else if(this.constructorFunction.prototype[i] instanceof Function && !ko.isObservable(this.constructorFunction.prototype[i])) {
+                } else if(this.constructorFunction.prototype[i] instanceof Function) {
                     this.functions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction.prototype[i], i, this.classFullName, false));
                 } else {
                     this.properties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, false));
@@ -956,7 +967,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
                     if(anInstance.hasOwnProperty(i)) {                    
                         if(anInstance[i] instanceof wo.event) { 
                             this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
-                        } else if(anInstance[i] instanceof Function && !ko.isObservable(anInstance[i])) { 
+                        } else if(anInstance[i] instanceof Function) { 
                             this.functions.push(new wipeoutDocs.models.descriptions.function(anInstance[i], i, this.classFullName, false));
                         } else {
                             this.properties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, false));
@@ -1045,7 +1056,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
     return classDescription;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "obsjs.observable", function() {
     return function(itemName, itemSummary, isStatic) {
         this._super();
         
@@ -1087,9 +1098,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
         
         this.overrides = null;
         
-        this.fullyQualifiedName = ko.computed(function() {
+        this.computed("fullyQualifiedName", function() {
             return this.classFullName + "." + this.functionName;
-        }, this);
+		});
     };
             
     var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -1172,7 +1183,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
             return {
                 name: argument,
                 type: comment.getAttribute("type"),
-                optional: wo.view.objectParser.bool(comment.getAttribute("optional")),
+                optional: wo.parsers.bool(comment.getAttribute("optional")),
                 description: comment.innerHTML,
                 genericTypes: generics
             };  
@@ -1240,9 +1251,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         var xml = property.getPropertySummaryXml(constructorFunction, propertyName, classFullName);
         this.propertyType = xml ? property.getPropertyType(xml) : null;
                 
-        this.fullyQualifiedName = ko.computed(function() {
+        this.computed("fullyQualifiedName", function() {
             return this.classFullName + "." + this.propertyName;
-        }, this);
+        });
     };
     
     var summary = /^\/\/\/<[sS]ummary\s*type=".+".*>.*<\/[sS]ummary>/;
@@ -1443,7 +1454,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
         this.text = title;
         this.article = article;
         this.href = buildHref({article: article});
-        this.visible = ko.observable(true);
+        this.visible = true;
     };
     
     var buildHref = function(parameters) {
@@ -1585,8 +1596,6 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
         
         this.flatList = [];
         this.index();
-        
-        window.xxx = this;
     };
     
     HowDoIApplication.prototype.search = function(searchTerm) {
@@ -1604,7 +1613,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
     HowDoIApplication.prototype._search = function(searchTerm) {
         if(!searchTerm) {
             wo.obj.enumerateArr(this.flatList, function(item) {
-                if(!item.visible())item.visible(true);
+                if(!item.visible)item.visible = true;
             }, this);
             
             return;
@@ -1619,7 +1628,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
             for(var i = 0, ii = searchTerm.length; i < ii; i++)
                 visible &= (title.indexOf(searchTerm[i]) !== -1 || item.body.indexOf(searchTerm[i]) !== -1);
             
-            item.visible(visible);
+            item.visible = visible;
         }, this);
     };
     
@@ -1662,18 +1671,18 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     function ApiApplication() {
         this._super("wipeoutDocs.viewModels.apiApplication");
         
-        this.registerDisposable(ko.computed(function() {
+		this.computed("title", function () {
             var tmp;
-            if( (tmp = this.model()) &&
-                (tmp = tmp.content()))
+            if((tmp = this.model) &&
+                (tmp = tmp.content))
                     $("#headerText").html(tmp.title);
-        }, this));
+        });
     };
     
     ApiApplication.prototype.route = function(query) { 
         var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)
-            this.model().content(temp);
+            this.model.content(temp);
     };
     
     ApiApplication.prototype.routeTo = function(item) {
@@ -1728,13 +1737,12 @@ compiler.registerClass("wipeoutDocs.viewModels.application", "wo.view", function
 compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view", function() {
     var codeBlock = function(templateId) {
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
-        this.code = ko.observable();
+        this.code = null;
         
         this.code.subscribe(this.onCodeChanged, this);        
-        this.renderCode = ko.computed(function() {
-            var code = this.code();
-            return code ? code.replace(/</g, "&lt;") : code;
-        }, this);
+        this.computed("renderCode", function() {
+            return this.code ? this.code.replace(/</g, "&lt;") : this.code;
+        });
     };
     
     codeBlock.prototype.onCodeChanged = function(newVal) {
@@ -1752,18 +1760,18 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
     var dynamicRender = function() {
         this._super();
         
-        this.content = ko.observable();
+        this.content = null;
         
-        this.template("<!-- ko render: content --><!-- /ko -->");
+        this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
     };
     
     dynamicRender.prototype.onModelChanged = function(oldVal, newVal) {
         this._super(oldVal, newVal);
                
-        var oldVal = this.content();
+        var oldVal = this.content;
         
         if(newVal == null) {
-            this.content(null);
+            this.content = null;
         } else {
             var newVm = null;
             
@@ -1784,7 +1792,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
             }
             
             newVm.model(newVal);
-            this.content(newVm);
+            this.content = newVm;
         }
     };  
     
@@ -1877,20 +1885,20 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     var treeViewBranch = function() {
         this._super(treeViewBranch.nullTemplate);
         
-        this.isOpen = ko.observable();
+        this.isOpen = null;
         
-        this.glyphClass = ko.computed(function() {
-            var open = this.isOpen(),
-                model = this.model(),
+        this.computed("glyphClass", function() {
+            var open = this.isOpen,
+                model = this.model,
                 hasBranches = model && model.branches && model.branches.length;
                         
-            if(this.isOpen() && hasBranches)                
+            if(this.isOpen && hasBranches)                
                 return "glyphicon glyphicon-chevron-down";
             if(model && model.href && !hasBranches)                
                 return "glyphicon glyphicon-chevron-right";
             
             return "";
-        }, this);
+        });
     };
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
@@ -1900,7 +1908,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  
         this._super(oldValues, newValues);
                 
-        this.isOpen(!!$(this.templateItems.content).filter(":visible").length);
+        this.isOpen = !!$(this.templateItems.content).filter(":visible").length;
     };
     
     treeViewBranch.prototype.onModelChanged = function(oldVal, newVal) {  
@@ -1918,14 +1926,14 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     treeViewBranch.prototype.select = function() {
         var content = this.templateItems.content.templateItems.content;
         
-        if(this.model().branches)
+        if(this.model.branches)
             $(content).toggle();
         
-        this.isOpen(!!$(content).filter(":visible").length);
+        this.isOpen = !!$(content).filter(":visible").length;
                 
-        if(this.model().href) {  
-            if (this.isOpen() || !this.model().branches || !this.model().branches.length) {
-                history.pushState(null, "", this.model().href);
+        if(this.model.href) {  
+            if (this.isOpen || !this.model.branches || !this.model.branches.length) {
+                history.pushState(null, "", this.model.href);
                 crossroads.parse(location.pathname + location.search);
             }
         }
@@ -1939,16 +1947,16 @@ compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipe
     var usageCodeBlock = function() {
         this._super("wipeoutDocs.viewModels.components.usageCodeBlock");
         
-        this.usage = ko.observable();
+        this.usage = null;
         
-        this.showDefinitionCode = ko.observable(true);
+        this.showDefinitionCode = true;
     };
     
     usageCodeBlock.prototype.onCodeChanged = function(newVal) {  
-        this.usage(newVal
+        this.usage = newVal
             .replace(/\&lt;/g, "<")
             .replace(/\&amp;/g, "&")
-            .replace(/\&gt;/g, ">"));
+            .replace(/\&gt;/g, ">");
     };
     
     return usageCodeBlock;
@@ -1971,10 +1979,10 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         this._super("wipeoutDocs.viewModels.howDoIApplication");
         
-        this.contentTemplate = ko.observable(wo.contentControl.getBlankTemplateId());
+        this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
         
-        this.apiPlaceholder = ko.observable();
-        this.apiPlaceholderName = ko.observable();
+        this.apiPlaceholder = null;
+        this.apiPlaceholderName = null;
         
         var placeholder = document.getElementById("headerText");
         var textbox = wo.html.createElement('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>');
@@ -1982,11 +1990,11 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         var _this = this;
         textbox.addEventListener("keyup", function() {
-            _this.model().search(textbox.value);
+            _this.model.search(textbox.value);
         });
         
         textbox.addEventListener("change", function() {
-            _this.model().search(textbox.value);
+            _this.model.search(textbox.value);
         });
     };
     
@@ -1995,31 +2003,31 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(query.article) {
             this.openArticle(query.article);
         } else if (query.type === "api") {
-            this.apiPlaceholder(wipeoutDocs.models.apiApplication.getModel(query));
-            if(this.apiPlaceholder()) {
-                this.apiPlaceholderName(this.apiPlaceholder() instanceof wipeoutDocs.models.descriptions.class ? this.apiPlaceholder().classFullName : "")
-                this.contentTemplate(apiTemplateId);
+            this.apiPlaceholder = wipeoutDocs.models.apiApplication.getModel(query);
+            if(this.apiPlaceholder) {
+                this.apiPlaceholderName = this.apiPlaceholder instanceof wipeoutDocs.models.descriptions.class ? this.apiPlaceholder.classFullName : "";
+                this.contentTemplate = apiTemplateId;
             }
         } else {
-            this.contentTemplate(wo.contentControl.getBlankTemplateId());
+            this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
         }
     };
     
     HowDoIApplication.prototype.openArticle = function(article) { 
         $(".list-group-item-info", this.templateItems.leftNav).removeClass("list-group-item-info");
         
-        this.contentTemplate("Articles." + article);
+        this.contentTemplate = "Articles." + article;
         
-        var current, groups = this.templateItems.articles.items();
+        var current, groups = this.templateItems.articles.getItemViewModels();
         for(var i = 0, ii = groups.length; i < ii; i++) {
-            if(groups[i].templateItems.header && groups[i].templateItems.header.model().header.article === article) {
+            if(groups[i].templateItems.header && groups[i].templateItems.header.model.header.article === article) {
                 this.scrollToArticle(groups[i].templateItems.header);
                 return;
             }
             
-            var items = groups[i].templateItems.items ? groups[i].templateItems.items.items() : [];
+            var items = groups[i].templateItems.items ? groups[i].templateItems.items.getItemViewModels() : [];
             for (var j = 0, jj = items.length; j < jj; j++) {
-                if(items[j].model().article === article) {
+                if(items[j].model.article === article) {
                     this.scrollToArticle(items[j]);
                     return;
                 }
@@ -2063,15 +2071,15 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.classItemTable", "wo.itemsC
         var classPage = function() {
             this._super("wipeoutDocs.viewModels.pages.classPage");
 
-            this.usagesTemplateId = ko.computed(function() {
-                if(this.model()) {
-                    var className = this.model().classFullName + classPage.classUsagesTemplateSuffix;
+            this.computed("usagesTemplateId", function() {
+                if(this.model) {
+                    var className = this.model.classFullName + classPage.classUsagesTemplateSuffix;
                     if(document.getElementById(className))
                         return className;
                 }
 
-                return wo.contentControl.getBlankTemplateId();
-            }, this);
+                return wo.contentControl.createAnonymousTemplate("");
+            });
         };
 
         classPage.classUsagesTemplateSuffix = "_ClassUsages";
@@ -2089,19 +2097,19 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
     var functionPage = function() {
         this._super("wipeoutDocs.viewModels.pages.functionPage");
         
-        this.showCode = ko.observable(false);
+        this.showCode = false;
         
         this.showReturnValue = true;
                 
-        this.usagesTemplateId = ko.computed(function() {
-            if(this.model()) {
-                var name = this.model().fullyQualifiedName() + functionPage.classUsagesTemplateSuffix;
+        this.computed("usagesTemplateId", function() {
+            if(this.model) {
+                var name = this.model.fullyQualifiedName + functionPage.classUsagesTemplateSuffix;
                 if(document.getElementById(name))
                     return name;
             }
 
-            return wo.contentControl.getBlankTemplateId();
-        }, this);
+            return wo.contentControl.createAnonymousTemplate("");
+        });
     };
     
     functionPage.classUsagesTemplateSuffix = "_FunctionUsages";
@@ -2120,15 +2128,15 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", f
     function propertyPage() {
         this._super("wipeoutDocs.viewModels.pages.propertyPage");
         
-        this.usagesTemplateId = ko.computed(function() {
-            if(this.model()) {
-                var name = this.model().fullyQualifiedName() + propertyPage.classUsagesTemplateSuffix;
+        this.computed("usagesTemplateId", function() {
+            if(this.model) {
+                var name = this.model.fullyQualifiedName + propertyPage.classUsagesTemplateSuffix;
                 if(document.getElementById(name))
                     return name;
             }
 
-            return wo.contentControl.getBlankTemplateId();
-        }, this);
+            return wo.contentControl.createAnonymousTemplate("");
+        });
     };
     
     propertyPage.classUsagesTemplateSuffix = "_PropertyUsages";

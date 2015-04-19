@@ -74,7 +74,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if(this.constructorFunction.hasOwnProperty(i)) {
                 if(this.constructorFunction[i] instanceof wo.event) {
                     this.staticEvents.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, true));
-                } else if(this.constructorFunction[i] instanceof Function && !ko.isObservable(this.constructorFunction[i])) {
+                } else if(this.constructorFunction[i] instanceof Function) {
                     this.staticFunctions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction[i], i, this.classFullName, true));
                 } else {
                     this.staticProperties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, true));
@@ -86,7 +86,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if(this.constructorFunction.prototype.hasOwnProperty(i)) {                    
                 if(this.constructorFunction.prototype[i] instanceof wo.event) { 
                     this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
-                } else if(this.constructorFunction.prototype[i] instanceof Function && !ko.isObservable(this.constructorFunction.prototype[i])) {
+                } else if(this.constructorFunction.prototype[i] instanceof Function) {
                     this.functions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction.prototype[i], i, this.classFullName, false));
                 } else {
                     this.properties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, false));
@@ -107,7 +107,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
                     if(anInstance.hasOwnProperty(i)) {                    
                         if(anInstance[i] instanceof wo.event) { 
                             this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
-                        } else if(anInstance[i] instanceof Function && !ko.isObservable(anInstance[i])) { 
+                        } else if(anInstance[i] instanceof Function) { 
                             this.functions.push(new wipeoutDocs.models.descriptions.function(anInstance[i], i, this.classFullName, false));
                         } else {
                             this.properties.push(new wipeoutDocs.models.descriptions.property(this.constructorFunction, i, this.classFullName, false));

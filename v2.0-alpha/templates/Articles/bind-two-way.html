@@ -9,7 +9,7 @@ By default, all bindings are one way. This means that the object where the prope
     <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-two-way-script-1'">
         <code>&lt;wo.content-control model="{ value: ko.observable('Hello wipeout!') }">
     &lt;template>
-        &lt;wo.content-control model-tw="$parent.model().value">
+        &lt;wo.content-control model-tw="$parent.model.value">
             &lt;template>
                 Two way bindings: &lt;span data-bind="text: model">&lt;/span>
             &lt;/template>

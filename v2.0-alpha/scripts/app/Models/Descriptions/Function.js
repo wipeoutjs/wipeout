@@ -17,9 +17,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
         
         this.overrides = null;
         
-        this.fullyQualifiedName = ko.computed(function() {
+        this.computed("fullyQualifiedName", function() {
             return this.classFullName + "." + this.functionName;
-        }, this);
+		});
     };
             
     var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -102,7 +102,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
             return {
                 name: argument,
                 type: comment.getAttribute("type"),
-                optional: wo.view.objectParser.bool(comment.getAttribute("optional")),
+                optional: wo.parsers.bool(comment.getAttribute("optional")),
                 description: comment.innerHTML,
                 genericTypes: generics
             };  

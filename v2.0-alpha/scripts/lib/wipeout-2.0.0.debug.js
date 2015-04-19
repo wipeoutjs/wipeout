@@ -4737,7 +4737,7 @@ If view models have odd names ensure you are not using a minifier';
         div.innerHTML += innerHTML.join("<br />");
         
         function listener() {
-            viewVm(vm, vm.model());
+            viewVm(vm, vm.model);
         }
         
         div.firstChild.addEventListener("click", listener, false);
@@ -7751,6 +7751,8 @@ function expose (name, value) {
 	wo[name] = value;
 }
 
+expose("event", wipeout.events.event);
+	
 expose("viewModel", viewModel);
 
 expose("routedEvent", wipeout.events.routedEvent);

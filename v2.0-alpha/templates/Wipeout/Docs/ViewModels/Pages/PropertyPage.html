@@ -18,10 +18,10 @@
         </wo.if>
     </template>
 </wo.if>
-<div data-bind="visible: usagesTemplateId() !== wo.contentControl.getBlankTemplateId()">
+<div data-bind="visible: usagesTemplateId() !== wo.contentControl.createAnonymousTemplate("")">
     <h2>
         <span>Using</span>
         <span data-bind="html: model().propertyName"></span>
     </h2>
-    <wo.view templateId="$parent.usagesTemplateId" model="$parent.model().classConstructor" />
+    <wo.view templateId="$parent.usagesTemplateId" model="$parent.model.classConstructor" />
 </div>

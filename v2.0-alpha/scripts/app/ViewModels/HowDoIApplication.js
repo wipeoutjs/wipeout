@@ -15,10 +15,10 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         this._super("wipeoutDocs.viewModels.howDoIApplication");
         
-        this.contentTemplate = ko.observable(wo.contentControl.getBlankTemplateId());
+        this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
         
-        this.apiPlaceholder = ko.observable();
-        this.apiPlaceholderName = ko.observable();
+        this.apiPlaceholder = null;
+        this.apiPlaceholderName = null;
         
         var placeholder = document.getElementById("headerText");
         var textbox = wo.html.createElement('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>');
@@ -26,11 +26,11 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         var _this = this;
         textbox.addEventListener("keyup", function() {
-            _this.model().search(textbox.value);
+            _this.model.search(textbox.value);
         });
         
         textbox.addEventListener("change", function() {
-            _this.model().search(textbox.value);
+            _this.model.search(textbox.value);
         });
     };
     
@@ -39,31 +39,31 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(query.article) {
             this.openArticle(query.article);
         } else if (query.type === "api") {
-            this.apiPlaceholder(wipeoutDocs.models.apiApplication.getModel(query));
-            if(this.apiPlaceholder()) {
-                this.apiPlaceholderName(this.apiPlaceholder() instanceof wipeoutDocs.models.descriptions.class ? this.apiPlaceholder().classFullName : "")
-                this.contentTemplate(apiTemplateId);
+            this.apiPlaceholder = wipeoutDocs.models.apiApplication.getModel(query);
+            if(this.apiPlaceholder) {
+                this.apiPlaceholderName = this.apiPlaceholder instanceof wipeoutDocs.models.descriptions.class ? this.apiPlaceholder.classFullName : "";
+                this.contentTemplate = apiTemplateId;
             }
         } else {
-            this.contentTemplate(wo.contentControl.getBlankTemplateId());
+            this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
         }
     };
     
     HowDoIApplication.prototype.openArticle = function(article) { 
         $(".list-group-item-info", this.templateItems.leftNav).removeClass("list-group-item-info");
         
-        this.contentTemplate("Articles." + article);
+        this.contentTemplate = "Articles." + article;
         
-        var current, groups = this.templateItems.articles.items();
+        var current, groups = this.templateItems.articles.getItemViewModels();
         for(var i = 0, ii = groups.length; i < ii; i++) {
-            if(groups[i].templateItems.header && groups[i].templateItems.header.model().header.article === article) {
+            if(groups[i].templateItems.header && groups[i].templateItems.header.model.header.article === article) {
                 this.scrollToArticle(groups[i].templateItems.header);
                 return;
             }
             
-            var items = groups[i].templateItems.items ? groups[i].templateItems.items.items() : [];
+            var items = groups[i].templateItems.items ? groups[i].templateItems.items.getItemViewModels() : [];
             for (var j = 0, jj = items.length; j < jj; j++) {
-                if(items[j].model().article === article) {
+                if(items[j].model.article === article) {
                     this.scrollToArticle(items[j]);
                     return;
                 }
