@@ -6,6 +6,7 @@ TODV: in later version
 TODE: exception handling
 TODM: document
 
+wo() => make sure elements aren't wo'ed twice
 audit deletes
 
 refactor _caching to use disposable
