@@ -8,6 +8,7 @@ TODM: document
 
 wo() => make sure elements aren't wo'ed twice
 audit deletes
+warning if wo.viewModel(...).build() is not called
 
 refactor _caching to use disposable
 

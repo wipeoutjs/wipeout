@@ -17,16 +17,16 @@ test("success", function() {
 	div = document.getElementById("qunit-fixture");
 	
 	// assert
-	strictEqual(div.innerHTML, "<!-- $this.theVal -->234<!-- /$this.theVal -->");
+	strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->234<!-- /$this.theVal --></div>");
 	
 	
 	obsjs.observe(model, "theVal", function () {
 		setTimeout(function () {
-			strictEqual(div.innerHTML, "<!-- $this.theVal -->456<!-- /$this.theVal -->");
+			strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->456<!-- /$this.theVal --></div>");
 			enumerateArr(disp, function(disp) {
 				disp.dispose();
 			});
-			strictEqual(div.innerHTML, "");
+			strictEqual(div.innerHTML, "<div id=\"hello\"></div>");
 			start();
 		});
 	});

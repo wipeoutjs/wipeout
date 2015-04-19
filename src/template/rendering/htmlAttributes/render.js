@@ -7,6 +7,12 @@ HtmlAttr("render", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
+		//TODO: is this a hack?
+		if (element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script") {
+			element.innerHTML = '<script type="placeholder"></script>';
+			return render(element.firstChild, attribute, renderContext);
+		}
+		
         var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
