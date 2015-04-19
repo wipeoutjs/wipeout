@@ -44,12 +44,13 @@
                 <div class="column-2 main-example-code">
                     View model class
                     <pre class="prettyprint" data-script-type="text/javascript">// Create a view model
+					
 var collapsible = wo.viewModel("app.collapsible")
 	.templateId("/app-collapsible.html")
 	.onInitialized(function () {
 		// defines whether the content is visible
 		this.show = false;
-	});
+	}).build();
 	
 // a function which will show or hide the collapsible content
 collapsible.toggleContent = function() {
@@ -58,14 +59,14 @@ collapsible.toggleContent = function() {
                 </div>
                 <div class="column-2 main-example-code">
                     View model Template (/app-collapsible.html)<br/>
-                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-collapsible.html">&lt;div wo-click="toggleContent"
+                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-collapsible.html">&lt;div wo-click="$this.toggleContent"
         class="panel-heading"
         style="cursor: pointer">
     &lt;h3 class="panel-title"
         wo-content="$model.header">&lt;/h3>
 &lt;/div>
 &lt;div class="panel-body">
-    &lt;div wo-content="$model.content" wo-visible="show">
+    &lt;div wo-content="$model.content" wo-visible="$this.show">
     &lt;/div>
 &lt;/div></pre>
                 </div>
@@ -87,7 +88,7 @@ wo.viewModel("app.rootApplication")
 				content: "This is content for the component"
 			}
 		}
-	});</pre>
+	}).build();</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     View model Template (/app-rootApplication.html)<br />
@@ -103,7 +104,7 @@ wo.viewModel("app.rootApplication")
             <div class="columns">
                 <div class="column-2 main-example-code">
                     Model and setup
-                    <pre class="prettyprint" data-script-type="text/javascript">Not needed</pre>
+                    <pre class="prettyprint" data-script-type="text/javascript">/*Not needed*/</pre>
                 </div>
                 <div class="column-2 main-example-code">
                     Inline html definiton
@@ -200,6 +201,7 @@ wo.viewModel("app.rootApplication")
             var external = window.open();
             
             var content = "";
+			
             for(var i = 0, ii = scriptsAndCss.length; i < ii; i++) {
                 content += '<' + scriptsAndCss[i].tag + 
                     (scriptsAndCss[i].type ? ' type="' + scriptsAndCss[i].type + '"' : '') +
@@ -211,6 +213,8 @@ wo.viewModel("app.rootApplication")
                 + (scriptsAndCss[i].content ? scriptsAndCss[i].content : '') +
                 '<' + '/' + scriptsAndCss[i].tag + '>';
             }
+			
+			content += '<script type="text/javascript">wo();<' + "/script>";
             
             external.window.document.write("<html>\
     <head>\

@@ -2578,22 +2578,21 @@ var Class = function(classFullName, accessorFunction) {
 	return current[classFullName[classFullName.length - 1]] = accessorFunction();
 };
 
-//TODO: expose and document. This is the only way attributes with "test" can be searched for
+//TODM: the "test" property
 var HtmlAttr = function(attributeName, accessorFunction) {
 	///<summary>Create a wipeout html attribute</summary>
 	///<param name="attributeName" type="String">The name of the attribute</param>
 	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
 	
 	Class("wipeout.template.rendering.htmlAttributes." + "wo-" + attributeName, accessorFunction);
+	accessorFunction = function () {
+		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
+	};
 	
 	if (wipeout.template.rendering.htmlAttributes["wo-" + attributeName].test instanceof Function)
-		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, function () {
-			return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
-		});
+		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, accessorFunction);
 	
-	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, function () {
-		return wipeout.template.rendering.htmlAttributes["wo-" + attributeName];
-	});
+	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, accessorFunction);
 };
     
 var _trimString = /^\s+|\s+$/g;
@@ -2648,6 +2647,10 @@ var splitPropertyName = (function () {
 	
 	var arrayMatch = /\[\s*\d\s*\]$/g;
 	return function(propertyName) {
+        ///<summary>Split a property path into its component parts</summary>
+        ///<param name="propertyName" type="String">the property</param>
+        ///<returns type="Array">An array of strings and numbers</returns>
+		
 		propertyName = propertyName.split(".");
 
 		var tmp;
@@ -2674,6 +2677,10 @@ var splitPropertyName = (function () {
 Class("wipeout.utils.obj", function () {
             
     var joinPropertyName = function (propertyName) {
+        ///<summary>Join an array of strings and numbers into a property path</summary>
+        ///<param name="propertyName" type="Array">the name</param>
+        ///<returns type="String">The name</returns>
+		
         var output = [];
         enumerateArr(propertyName, function (item) {
             if (!isNaN(item))
@@ -2713,12 +2720,19 @@ Class("wipeout.utils.obj", function () {
     };
     
     var setObject = function(propertyName, context, value) {
+        ///<summary>Set an object</summary>
+        ///<param name="propertyName" type="String">The property name</param>
+        ///<param name="context" type="Any">The root</param>
+        ///<param name="value" type="Any">The value</param>
+        ///<returns type="Any">The value</returns>
+		
         propertyName = splitPropertyName(propertyName);
         if (propertyName.length > 1)
             context = _getObject(propertyName.splice(0, propertyName.length -1), context);
         
-        context[propertyName[0]] = value;
-    };   
+		if (context)
+        	return context[propertyName[0]] = value;
+    };
 
     var copyArray = function(input) {
         ///<summary>Make a deep copy of an array</summary>
@@ -2744,6 +2758,10 @@ Class("wipeout.utils.obj", function () {
     };
     
     var extend = function(extend, extendWith) {
+        ///<summary>The same as jQuery.extend</summary>
+        ///<param name="extend" type="Object"></param>
+        ///<param name="extendWith" type="Object"></param>
+		
         if(extendWith && extend)
             for(var i in extendWith)
                 extend[i] = extendWith[i];
@@ -2794,18 +2812,23 @@ Class("wipeout.settings", function() {
 Class("wipeout.htmlBindingTypes.viewModelId", function () {  
 	
     return function viewModelId (viewModel, setter, renderContext) {
+		///<summary>Binding specifically fo the id property of a view model</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
 		// if $this !== vm then $this is the parent, otherwise $parent is the parent
 		var parent = renderContext.$this === viewModel ? renderContext.$parent : renderContext.$this;
 		
 		if (parent instanceof wipeout.viewModels.view)
-			parent.templateItems[setter.getValue()] = viewModel;
+			parent.templateItems[setter.value()] = viewModel;
 		
 		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new obsjs.disposable();
 		output.registerDisposeCallback(function () {		
 			if (parent instanceof wipeout.viewModels.view &&
-			   parent.templateItems[setter.getValue()] === viewModel)
-				delete parent.templateItems[setter.getValue()];
+			   parent.templateItems[setter.value()] === viewModel)
+				delete parent.templateItems[setter.value()];
 		});
 		
 		return output;
@@ -2818,14 +2841,32 @@ Class("wipeout.template.initialization.parsers", function () {
 	function parsers () { }
 	
     parsers["json"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for JSON data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Object">A json parsed object</returns>
+		
 		return JSON.parse(value);
 	};
 	
 	parsers["string"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for string data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument, un parsed</returns>
+		
 		return value;
 	};
 	
 	parsers["bool"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for boolean data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument parsed as boolean</returns>
+		
 		var tmp = trimToLower(value);
 		return tmp ? tmp !== "false" && tmp !== "0" : false;
 	};
@@ -2835,18 +2876,42 @@ Class("wipeout.template.initialization.parsers", function () {
 	};
 	
 	parsers["float"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for int data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument parsed as an int</returns>
+		
 		return parseFloat(trim(value));
 	};
 	
 	parsers["regexp"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for float data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument parsed as a float</returns>
+		
 		return new RegExp(trim(value));
 	};
 	
 	parsers["date"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for date data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument parsed as a date</returns>
+		
 		return new Date(trim(value));
 	};
 	
 	parsers["template"] = function (value) {
+        ///<summary>A parser for xml temlpate data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument un parsed</returns>
+		
 		return value;
 	};
     
@@ -2868,22 +2933,20 @@ Class("wipeout.template.initialization.parsers", function () {
 Class("wipeout.template.initialization.compiledInitializer", function () {
 	    
     compiledInitializer.getPropertyFlags = function(name) {
+		///<summary>Seperate name from flags by "--"</summary>
+        ///<param name="name" type="String">The combined name and flags</param>
+        ///<returns type="Object">The name and flags</returns>
         
-        var flags = name.indexOf("--");
-        if (flags === -1)
-            return {
-                flags: [],
-                name: wipeout.utils.obj.camelCase(name)
-            };
-        
-        return {
-            flags: name.substr(flags + 2).toLowerCase().split("-"),
-            name: wipeout.utils.obj.camelCase(name.substr(0, flags))
-        };
+        var op = wipeout.template.rendering.compiledTemplate.getPropertyFlags(name);
+		op.name = wipeout.utils.obj.camelCase(op.name);
+		return op;
     };
     
 	function compiledInitializer(template) {
+		///<summary>Given a piece of template xml, compile all of the setters for a view model</summary>
+        ///<param name="template" type="wipeout.wml.wmlElement">The xml</param>
         
+		///<summary type="Object">Cached setters from the template</summary>
         this.setters = {};
 		
         // add attribute properties
@@ -2894,16 +2957,19 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
             this.setters.model = compiledInitializer.modelSetter ||
-				(compiledInitializer.modelSetter = new wipeout.template.initialization.propertySetter("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
+				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
         }
     };
     
     compiledInitializer.prototype.addElement = function (element) {
+		///<summary>Create and cache all of the setters from an element and its children if applicable</summary>
+        ///<param name="element" type="wipeout.wml.wmlElement">The element</param>
+		
         if (element.nodeType !== 1) return;
         
         var name = wipeout.utils.viewModels.getElementName(element);
 		name = compiledInitializer.getPropertyFlags(name).name;
-        if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\"has been set more than once.";
+        if (this.setters.hasOwnProperty(name)) throw "The property \"" + name + "\" has been set more than once.";
         
         for (var val in element.attributes) {
             if (val === "value" || val.indexOf("value--") === 0) {
@@ -2912,7 +2978,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
                         throw "You cannot set the value both in attributes and with elements." //TODE
                 });
 				
-                this.setters[name] = new wipeout.template.initialization.propertySetter(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
+                this.setters[name] = compiledInitializer.createPropertyValue(name, element.attributes[val], compiledInitializer.getPropertyFlags(val).flags);
                 return;
             }
         }
@@ -2931,7 +2997,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = new wipeout.template.initialization.propertySetter(name, {
+                    this.setters[name] = compiledInitializer.createPropertyValue(name, {
 						xml: element[i],
 						constructor: vm.constructor
                     }, ["templateElementSetter"]);
@@ -2942,34 +3008,72 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         }
 
         if (p && p.constructor === Function) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element);
             this.setters[name].parser = p;
         } else if (p) {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element, compiledInitializer.getPropertyFlags("--" + p.value).flags);
         } else {
-            this.setters[name] = new wipeout.template.initialization.propertySetter(name, element);
+            this.setters[name] = compiledInitializer.createPropertyValue(name, element);
         }
     };
     
+	var wipeoutBindingType = "$wipeout_binding_type";
+    compiledInitializer.createPropertyValue = function (name, wml, flags) {
+		///<summary>Create a property setter with a parser and binding type</summary>
+        ///<param name="name" type="String">The name</param>
+        ///<param name="wml" type="wipeout.wml.wmlElement">The content</param>
+        ///<param name="flags" type="[String]">Parsers and binding types</param>
+		///<returns type="wipeout.template.initialization.viewModelPropertyValue">The setter</returns>
+		
+		var parser, bindingType;
+		if (flags) {
+			for (var i = 0, ii = flags.length; i < ii; i++) {
+				if (wipeout.htmlBindingTypes[flags[i]]) {
+					if (bindingType)
+						throw "The binding type has already been set for this element"; //TODE
+						
+					bindingType = flags[i];
+				} else if (wipeout.template.initialization.parsers[flags[i]]) {
+					if (parser)
+						throw "The parser has already been set for this element"; //TODE
+						
+					parser = flags[i];
+				}
+			}
+		}
+		
+		var output = new wipeout.template.initialization.viewModelPropertyValue(name, wml, parser);
+		output[wipeoutBindingType] = bindingType;
+		
+		return output;
+	};
+    
     compiledInitializer.prototype.addAttribute = function (attribute, name) {
+		///<summary>Add a setter from a wml attribute</summary>
+        ///<param name="attribute" type="wipeout.wml.wmlAttribute">The element</param>
+        ///<param name="name" type="String">The element name</param>
         
         // spit name and flags
         name = compiledInitializer.getPropertyFlags(name);
         if (this.setters[name.name]) throw "The property \"" + name.name + "\" has been set more than once.";
 
-        this.setters[name.name] = new wipeout.template.initialization.propertySetter(name.name, attribute, name.flags);
+        this.setters[name.name] = compiledInitializer.createPropertyValue(name.name, attribute, name.flags);
     };
     
     compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
+		///<summary>Initialize a view model with the cached setter in this compiledInitializer</summary>
+        ///<param name="viewModel" type="Any">The view model</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">Dispose of initialization</returns>
 		
 		// only auto set model if model wasn't already set
         var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
 			[] :
-			this.setters.model.applyToViewModel(viewModel, renderContext);
+			this.applyToViewModel("model", viewModel, renderContext);
         
 		for (var name in this.setters)
             if (name !== "model")
-            	disposal.push.apply(disposal, this.setters[name].applyToViewModel(viewModel, renderContext));
+            	disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -2977,15 +3081,43 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					d.dispose();
 			});
 		}
-    }; 
-    
-    compiledInitializer.getAutoParser = function (value) {
-		
-        var output = new Function("value", "propertyName", "renderContext", "with (renderContext) return " + value + ";");
-        output.wipeoutAutoParser = true;
-        
-        return output;
     };
+    
+    compiledInitializer.prototype.applyToViewModel = function (name, viewModel, renderContext) {
+        ///<summary>Apply this setter to a view model</summary>
+        ///<param name="name" type="String">The name of the property to apply</param>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Array">An array of disposables</returns>
+		
+		if (!this.setters[name])
+			return [];
+		
+		var bindingType = compiledInitializer.getBindingType(this.setters[name], viewModel);
+		
+		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + name + "\".";
+		
+		var op = [];
+		op.push.apply(op, this.setters[name].prime(viewModel, (function () {
+			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this.setters[name], renderContext)
+			if (o && o.dispose instanceof Function)
+				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
+		}).bind(this)));
+		
+		return op;
+	};
+		
+	compiledInitializer.getBindingType = function (setter, viewModel) {
+        ///<summary>Get the binding type or global binding type</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<returns type="String">the binding type</returns>
+		
+		return setter[wipeoutBindingType] || 
+				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(setter.name)) || 
+				"ow";
+	};
         
     return compiledInitializer;
 });
@@ -2993,10 +3125,17 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 Class("wipeout.utils.dictionary", function () {
 
     var dictionary = wipeout.base.object.extend(function dictionary() {
+        ///<summary>A simple javascript dictionary</summary>
+		
         this.__keyArray = [], this.__valueArray = [];
     });
     
     dictionary.prototype.add = function (key, value) {
+        ///<summary>Add or replace an item to the dictionary</summary>
+        ///<param name="key" type="Any">The key</param>
+        ///<param name="value" type="Any">The value</param>
+        ///<returns type="Any">The value</returns>
+		
         var i = this.__keyArray.indexOf(key);
         i === -1 ? (this.__keyArray.push(key), this.__valueArray.push(value)) : this.__valueArray[i] = value;
 
@@ -3004,18 +3143,31 @@ Class("wipeout.utils.dictionary", function () {
     };
     
     dictionary.prototype.length = function () {
+        ///<summary>Get the length of the dictionary</summary>
+        ///<returns type="Number">The length</returns>
+		
         return this.__keyArray.length;
     };
     
     dictionary.prototype.keys = function () {
-        return wipeout.utils.obj.compyArray(this.keys_unsafe());
+        ///<summary>Get all of the keys in the dictionary</summary>
+        ///<returns type="Array">The keys</returns>
+		
+        return this.keys_unsafe().slice();
     };
     
     dictionary.prototype.keys_unsafe = function () {
+        ///<summary>Get all of the keys in the dictionary. DO NOT MODIFY THIS ARRAY</summary>
+        ///<returns type="Array">The keys</returns>
+		
         return this.__keyArray;
     };
     
     dictionary.prototype.remove = function (key) {
+        ///<summary>Remove a value from the dictionary</summary>
+        ///<param name="key" type="Any">The key</param>
+        ///<returns type="Boolean">Success</returns>
+		
         var i;
         if ((i = this.__keyArray.indexOf(key)) !== -1) {
             this.__valueArray.splice(i, 1);
@@ -3028,6 +3180,10 @@ Class("wipeout.utils.dictionary", function () {
     };
     
     dictionary.prototype.value = function (key) {
+        ///<summary>Get a value from the dictionary</summary>
+        ///<param name="key" type="Any">The key</param>
+        ///<returns type="Any">The value</returns>
+		
         return this.__valueArray[this.__keyArray.indexOf(key)];
     };
     
@@ -3038,7 +3194,7 @@ Class("wipeout.utils.dictionary", function () {
 Class("wipeout.base.bindable", function () {
 	
     var bindable = wipeout.base.observable.extend(function bindable() {
-        ///<summary>An object whose properties can be bound to</summary>
+        ///<summary>An object which interacts with the wipeout template parser and defines parsers and bindings for specific properties</summary>
         
         this._super();
     });
@@ -3047,6 +3203,9 @@ Class("wipeout.base.bindable", function () {
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalParser = function (forProperty, parser) {
+		///<summary>Add a global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<param name="parser" type="String|Function">The parser. Either a parser function (function (value, propertyName, renderContext) { }) or a pointer to a wipeout parser (wo.parsers)</param>
 		 
 		if (typeof parser === "string")
 			parser = wipeout.template.initialization.parsers[parser];
@@ -3067,6 +3226,10 @@ Class("wipeout.base.bindable", function () {
     };
 	
 	bindable.prototype.addGlobalParser = function (forProperty, parser) {
+		///<summary>Add a global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<param name="parser" type="String|Function">The parser. Either a parser function (function (value, propertyName, renderContext) { }) or a pointer to a wipeout parser (wo.parsers)</param>
+		
 		return bindable.addGlobalParser.apply(this.constructor, arguments);
 	};
     
@@ -3074,6 +3237,9 @@ Class("wipeout.base.bindable", function () {
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
+		///<summary>Add a global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
 		
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODE
@@ -3091,25 +3257,41 @@ Class("wipeout.base.bindable", function () {
     };
 	
 	bindable.prototype.addGlobalBindingType = function (forProperty, parser) {
+		///<summary>Add a global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
+		
 		return bindable.addGlobalBindingType.apply(this.constructor, arguments);
 	};
     
     bindable.prototype.getGlobalParser = function (forProperty) {
+		///<summary>Get the global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<returns type="Function">The parser</returns>
         
         return this[parserPrefix + forProperty];
     };
     
     bindable.prototype.getGlobalBindingType = function (forProperty) {
+		///<summary>Get the global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<returns type="String">A pointer to the binding type (wo.bindings)</returns>
         
         return this[bindingPrefix + forProperty];
     };
     
     bindable.getGlobalParser = function (forProperty) {
+		///<summary>Get the global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<returns type="Function">The parser</returns>
         
         return this.prototype[parserPrefix + forProperty];
     };
     
     bindable.getGlobalBindingType = function (forProperty) {
+		///<summary>Get the global parser for this property</summary>
+        ///<param name="forProperty" type="String">The property to add a parser for</param>
+        ///<returns type="String">A pointer to the binding type (wo.bindings)</returns>
         
         return this.prototype[bindingPrefix + forProperty];
     };
@@ -3136,7 +3318,7 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
         this.templateId = templateId;
         
-        this.observe("model", this.onModelChanged, this, {activateImmediately: true});
+        this.observe("model", this._onModelChanged, this, {activateImmediately: true});
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
@@ -3153,7 +3335,7 @@ Class("wipeout.viewModels.view", function () {
     
     view.prototype.getParent = function() {
         ///<summary>Get the parent view of this view</summary> 
-        ///<returns type="wo.view">The parent view model</returns>
+        ///<returns type="Any">The parent view model</returns>
         
 		var renderContext = this.getRenderContext();
 		if (!renderContext)
@@ -3184,20 +3366,26 @@ Class("wipeout.viewModels.view", function () {
 		return (this.$domRoot && this.$domRoot.renderContext) || null;
     };
         
-    view.prototype.onModelChanged = function (oldValue, newValue) {
+    view.prototype._onModelChanged = function (oldValue, newValue) {
         ///<summary>Called when the model has changed</summary>
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
+        
+        if(oldValue !== newValue)
+			this.onModelChanged(newValue);
+	};
+	
+    view.prototype.onModelChanged = function (newValue) {
+        ///<summary>Called when the model has changed</summary>
+        ///<param name="newValue" type="Any" optional="false">The new mode</param>
 		
-        if(oldValue !== newValue) {
-            this.disposeOf(this.$modelRoutedEventKey);
-            delete this.$modelRoutedEventKey;
-            
-            if(newValue instanceof wipeout.events.routedEventModel) {
-                var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
-                this.$modelRoutedEventKey = this.registerDisposable(d1);
-            }
-        }
+		this.disposeOf(this.$modelRoutedEventKey);
+		this.$modelRoutedEventKey = null;
+
+		if(newValue instanceof wipeout.events.routedEventModel) {
+			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+			this.$modelRoutedEventKey = this.registerDisposable(d1);
+		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
@@ -3210,6 +3398,8 @@ Class("wipeout.viewModels.view", function () {
     };
 	
 	view.prototype.dispose = function () {
+        ///<summary>Dispose of this view</summary>
+		
 		this._super();
 		
 		// dispose of routed event subscriptions
@@ -3383,8 +3573,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
         //this.openingTag = document.createElement("script");
 		
         // create opening and closing tags and link to this
+		///<summary type="Comment">The opening tag</summary>
         this.openingTag = document.createComment(" " + name + " ");
         this.openingTag.wipeoutOpening = this;
+		///<summary type="Comment">The closing tag</summary>
         this.closingTag = document.createComment(" /" + name + " ");
         this.closingTag.wipeoutClosing = this;
         
@@ -3395,11 +3587,16 @@ Class("wipeout.template.rendering.renderedContent", function () {
     });
 	
 	renderedContent.prototype.rename = function (name) {
+		///<summary>Rename the opeining and closing tags</summary>
+        ///<param name="name" type="String">The new name</param>
+		
 		this.openingTag.nodeValue = " " + name + " ";
 		this.closingTag.nodeValue = " /" + name + " ";
 	};
 	    
     renderedContent.prototype.renderArray = function (array) {
+		///<summary>Render an array</summary>
+        ///<param name="array" type="Array">The array to render</param>
         
         // if a previous request is pending, cancel it
         if (this.asynchronous) {
@@ -3424,6 +3621,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
 	};
 	
     renderedContent.prototype.render = function (object, arrayIndex) {
+		///<summary>Render a view model</summary>
+        ///<param name="object" type="Any">The The view model</param>
+        ///<param name="arrayIndex" type="Number" optional="true">The array index if the item is part of an array</param>
 		
         if (object instanceof Array) {
             this.renderArray(object);
@@ -3456,7 +3656,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
 	renderedContent.prototype.templateHasChanged = function () {
-        ///<summary>Re-render</summary>
+        ///<summary>Re-template the view model</summary>
+		
 		this.template(this.viewModel.templateId);
 	};
     
@@ -3469,6 +3670,9 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
 	renderedContent.prototype.unRender = function(leaveDeadChildNodes) {
+		///<summary>Dispose of all items created during the rendering process</summary>
+        ///<param name="leaveDeadChildNodes" type="Boolean">If set to true, the un-render will not lear down the DOM. This is a performance optimization</param>
+		
         this.unTemplate(leaveDeadChildNodes);
         
 		if (this.templateObserved) {
@@ -3579,9 +3783,11 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
 	
     renderedContent.prototype.appendHtml = function (html) {
+		///<summary>Append a html string to this renderContext</summary>
+        ///<param name="html" type="String">The current html</param>
+		
 		if (this.openingTag && this.openingTag.nodeType === 1) {
 			this.openingTag.insertAdjacentHTML('afterend', html);
-			console.log(this.openingTag.parentNode.innerHTML);
 		} else {
         	//TODV: see todv in constructor
 			var scr = document.createElement("script");
@@ -3592,6 +3798,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
     };
     
     renderedContent.getParentElement = function(forHtmlElement) {
+		///<summary>Get the parent element of a html element, keeping in mind that it might be a wipeout opeing comment</summary>
+        ///<param name="forHtmlElement" type="Element">The element</param>
+        ///<returns type="Node">The parent element</returns>
+		
         var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
         while (current = current.previousSibling) {
             if (current.wipeoutClosing)
@@ -3607,58 +3817,255 @@ Class("wipeout.template.rendering.renderedContent", function () {
 });
 
 
-Class("wipeout.template.setter", function () {
+Class("wipeout.template.propertyValue", function () {
 	
-	var setter = objjs.object.extend(function setter (name, value) {
-		this._super();
+	var propertyValue = objjs.object.extend(function setter (name, value, parser) {
+		///<summary>Base class for vm property setters and html attribute setters</summary>
+        ///<param name="name" type="String">The name of the item to set</param>
+        ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
+        ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
 		
+		this._super();
+	
+		///<summary type="String">The name of the property</summary>
 		this.name = name;
+		
+		///<summary type="String">The value of the property</summary>
 		this._value = value;
+        
+        ///<summary type="Function">The parser if any</summary>
+        this.parser = null;
+		
+		if (parser instanceof Function) {
+			this.parser = parser;
+		} else if (parser) {
+            if (wipeout.template.initialization.parsers[parser])
+                this.parser = wipeout.template.initialization.parsers[parser];
+			else
+				throw "Invalid parser: " + parser;	//TODE
+		}
 	});
 	
-	setter.prototype.build = function () {
+	// virtual
+	propertyValue.prototype.value = function () {
+		///<summary>Get the value</summary>
+        ///<returns type="String">The value</returns>
 		
-		return this._built || (this._built = wipeout.template.context.buildGetter(this.getValue()));
+		return this._value;
 	};
 	
-    setter.isSimpleBindingProperty = function (property) {
-        return /^[\$\w\s\.\[\]]+$/.test(property);
-    };
-	
-	setter.prototype.watch = function (renderContext, callback, evaluateImmediately) {
-		if (!this._caching)
-			throw "The watch function can only be called in the context of a cacheAllWatched call. Otherwise the watcher object will be lost, causing memory leaks";
+	propertyValue.prototype.buildGetter = function () {
+		///<summary>Build a getter for this._value</summary>
+        ///<returns type="Function">A function to get the value from render context parts</returns>
 		
-		var watched = setter.isSimpleBindingProperty(this.getValue()) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.getValue()) :
-			renderContext.getComputed(this.build());
+		if (!this._getter) {
+			var val;
+			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(val = this.value());
+			var split = splitValue.output.split("=>");
+			
+			if (split.length > 2)
+				throw "Invalid attribute value: " + val + ". You may only include 1 filter.";	//TODE
+			
+			if (split.length === 2) {
+				split[1] = trim(split[1]);
+				if (!wipeout.template.filters[split[1]])
+					throw "Invalid filter: " + split[1];	//TODE
+				
+				if (wipeout.template.filters[split[1]].parentToChild)	//TODM (parentToChild). TODO: rename parentToChild
+					val = "wipeout.template.filters[\"" + split[1] + "\"].parentToChild(" + split[0] + ")";
+				else
+					val = split[0].split(",")[0];
+			}
+			
+			this._getter = wipeout.template.context.buildGetter(splitValue.addTokens(val))
+		}
+		
+		return this._getter;
+	};
+	
+	propertyValue.prototype.get = function (renderContext, propertyOwner) {
+		///<summary>Return the value of this setter when applied to a renderContext</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Any">The returned value</returns>
+		
+		var parser = this.getParser(propertyOwner);
+		
+		return parser ? 
+			(parser(parser.useRawXmlValue ? this._value : this.value(), this.name, renderContext)) : 
+			this.buildGetter().apply(null, renderContext.asGetterArgs());
+	};
+	
+	propertyValue.prototype.buildSetter = function () {
+		///<summary>Build a setter for this._value</summary>
+        ///<returns type="Function">A function to get the value from render context parts</returns>
+		
+		if (!this.hasOwnProperty("_setter")) {
+			var attributeValue, getter;
+			var splitValue = wipeout.utils.jsParse.removeCommentsTokenStringsAndBrackets(attributeValue = this.value());
+			var split = splitValue.output.split("=>");
+			
+			if (split.length > 2)
+				throw "Invalid attribute value: " + attributeValue + ". You may only include 1 filter.";	//TODE
+			
+			if (split.length === 2) {
+				split[1] = trim(split[1]);
+				if (!wipeout.template.filters[split[1]])
+					throw "Invalid filter: " + split[1];	//TODE
+				
+				if (wipeout.template.filters[split[1]].childToParent) {	//TODM (childToParent). TODO: rename childToParent
+					getter = "wipeout.template.filters[\"" + split[1] + "\"].childToParent";
+					split = split[0].split(/\s*\,\s*/);
+					attributeValue = splitValue.addTokens(split[0]);
+					split[0] = "arguments[5]";
+					getter += "(" + split.join(", ") + ")";
+				} else {
+					attributeValue = splitValue.addTokens(split[0].split(",")[0]);
+				}
+			}
+			
+			var property = /\.\s*[\w\$]+\s*$/.exec(attributeValue);
+			if (!property) {
+				this._setter = null;
+			} else {
+				var getSetterRoot = wipeout.template.context.buildGetter(attributeValue.substring(0, attributeValue.length - property[0].length));
+				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
+				if (getter) {
+					getter = wipeout.template.context.buildGetter(splitValue.addTokens(getter));
+					this._setter = function (renderContext, value) {
+						var args = renderContext.asGetterArgs().slice();
+						var part1 = getSetterRoot.apply(null, args);
+						args.push(value);
+						return part1 ? ((part1[property] = getter.apply(null, args)), true) : false;
+					};
+				} else {
+					this._setter = function (renderContext, value) {
+						var part1 = getSetterRoot.apply(null, renderContext.asGetterArgs());
+						return part1 ? ((part1[property] = value), true) : false;
+					};
+				}
+			}
+		}
+		
+		return this._setter;
+	};
+	
+	propertyValue.prototype.canSet = function (propertyOwner) {
+		///<summary>Return whether this setter can set a value</summary>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Boolean">Whether the value could be set or not</returns>
+		
+		return !this.getParser(propertyOwner) && !!this.buildSetter();
+	};
+	
+	propertyValue.prototype.getParser = function (propertyOwner) {
+		///<summary>Return the parser for the </summary>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Function">The parser</returns>
+		
+		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
+		
+		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
+	};
+	
+	propertyValue.prototype.set = function (renderContext, value, propertyOwner) {
+		///<summary>Return the value of this setter when applied to a renderContext</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="value" type="Any">The value to set</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the property. If null, the propertyValue must be primed</param>
+        ///<returns type="Boolean">Whether the value could be set or not</returns>
+		
+		if (!this.canSet(propertyOwner))
+			throw "You cannot set the value of: " + this.value() + ".";	//TODE
+		
+		return this.buildSetter()(renderContext, value);
+	};
+	
+	propertyValue.prototype.watch = function (renderContext, callback, evaluateImmediately) {
+		///<summary>When called within a wipeout binding function, will watch for a change in the value of the setter. Also handles all disposal in this case</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
+        ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
+        ///<returns type="obsjs.diposable">A dispose function to dispose prematurely</returns>
+		
+		this.primed();
+		
+		if (this.getParser() || /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/(?!\/)))\s*$/.test(this.value())) {
+			if (evaluateImmediately)
+				callback(undefined, this.get(renderContext));
+			
+			return;
+		}
+		
+		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
+			new obsjs.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
+			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};
-	
-	setter.prototype.execute = function (renderContext) {
-		return this.build().apply(null, renderContext.asGetterArgs());
-	};
-	
-	setter.prototype.cacheAllWatched = function (logic) {
+
+	propertyValue.prototype.prime = function (propertyOwner, logic) {
+		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
+        ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="logic" type="Function">The logic to invoke</param>
+        ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
+		
 		if (this._caching)
-			throw "cacheAllWatched cannot be asynchronus or nested.";
+			throw "prime cannot be asynchronus or nested.";
 		
 		try {
 			this._caching = [];
+			this.propertyOwner = propertyOwner;
 			logic();
 			return this._caching;
 		} finally {
 			delete this._caching;
+			delete this.propertyOwner;
 		}
 	};
 	
-	setter.prototype.getValue = function () {
-		return this._value;
+	propertyValue.prototype.primed = function () {
+		
+		if (!this._caching)
+			throw "The setter must be primed to make this call. Use the \"prime(...)\" function and pass in the logic to execute in a primed context.";
 	};
 	
-	return setter;
+	return propertyValue;
+	
+	/*TESTS
+	
+	
+testUtils.testWithUtils("splitValue", "no filter", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var input = "KJBKJBKJB";
+	subject.getValue = function () { return input; };
+	
+	// act
+	var output = invoker(input);
+	
+    // assert
+    strictEqual(output.filter, "passthrough");
+    strictEqual(output.inputs.length, 1);
+    strictEqual(output.inputs[0], input);
+});
+	
+testUtils.testWithUtils("splitValue", "filter and args", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var input1 = "KJBKJBKJB", input2 = "dada'eterte'sdad", filter = "fdsfsdff";
+	subject.getValue = function () { return input1 + ", " + input2 + " => " + filter; };
+	
+	// act
+	var output = invoker();
+	
+    // assert
+    strictEqual(output.filter, filter);
+    strictEqual(output.inputs.length, 2);
+    strictEqual(output.inputs[0], input1);
+    strictEqual(output.inputs[1], input2);
+});
+	
+	*/
 });
 
 
@@ -3888,20 +4295,22 @@ Class("wipeout.events.routedEventModel", function () {
 Class("wipeout.htmlBindingTypes.nb", function () {  
     
     return function nb(viewModel, setter, renderContext) {
-		 
-        viewModel[setter.name] = setter.parseOrExecute(viewModel, renderContext);
+		///<summary>Do not bind, only set</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+		
+        viewModel[setter.name] = setter.get(renderContext);
     }
 });
 
 Class("wipeout.htmlBindingTypes.ow", function () {  
-	
-	var boolNumberOrRegex = /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/.*\/))\s*$/
-	
-	return function ow (viewModel, setter, renderContext) {
 		
-		// cannot bind to xml definition or a parsed value
-		if (setter.getParser(viewModel) || boolNumberOrRegex.test(setter.getValue()))
-            return wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext);
+	return function ow (viewModel, setter, renderContext) {
+		///<summary>Bind for parent property to child property</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
 		setter.watch(renderContext, function (oldVal, newVal) {
 			viewModel[setter.name] = newVal;
@@ -3912,12 +4321,18 @@ Class("wipeout.htmlBindingTypes.ow", function () {
 Class("wipeout.htmlBindingTypes.owts", function () {  
     
     return function owts (viewModel, setter, renderContext) {
-        var val;
-        if (setter.getParser(viewModel) ||
-			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
-            throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
+		///<summary>Bind from child property to parent property</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
-		return obsjs.tryBind(viewModel, setter.name, renderContext, val);
+		if (!setter.canSet())
+            throw "Setter \"" + setter.value() + "\" cannot be set.";	//TODE
+		
+		setter.onPropertyChanged(function (oldVal, newVal) {
+			setter.set(renderContext, newVal, viewModel);
+		}, true);
     };
 });
 
@@ -3925,6 +4340,10 @@ Class("wipeout.htmlBindingTypes.setTemplateToTemplateId", function () {
     
 	// shortcut (hack :) ) to set template id instead of the template property
     return function templateProperty(viewModel, setter, renderContext) {
+		///<summary>Binding specifically for setTemplate property. Sets templateId directly</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
 		viewModel.templateId = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
     }
@@ -3933,8 +4352,13 @@ Class("wipeout.htmlBindingTypes.setTemplateToTemplateId", function () {
 Class("wipeout.htmlBindingTypes.templateElementSetter", function () {  
     
     return function templateElementSetter(viewModel, setter, renderContext) {
+		///<summary>Binding to set preoperties in xml. Used internally</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
-		viewModel[setter.name] = new setter._value.constructor;
+		viewModel[setter.name] = new setter._value.constructor();
 
 		var output = new obsjs.disposable(wipeout.template.engine.instance
 			.getVmInitializer(setter._value.xml)
@@ -3951,6 +4375,10 @@ Class("wipeout.htmlBindingTypes.templateProperty", function () {
     
 	// shortcut (hack :) ) to set template id instead of the template property
     return function templateProperty(viewModel, setter, renderContext) {
+		///<summary>Set {property}Id rather than {property}. This makes setting templates faster</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
 		viewModel[setter.name + "Id"] = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
     }
@@ -3959,10 +4387,15 @@ Class("wipeout.htmlBindingTypes.templateProperty", function () {
 Class("wipeout.htmlBindingTypes.tw", function () {  
     
     return function tw(viewModel, setter, renderContext) {
+		///<summary>Bind from parent property to child and from child property to parent</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
 		
 		var val;
         if (setter.getParser(viewModel) ||
-			!wipeout.template.setter.isSimpleBindingProperty(val = setter.getValue()))
+			!/^([\$\w\s\.]|(\[\d+\]))+$/.test(val = setter.value()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		
 		// skip to first observable object, only paths one level off renderContext
@@ -4326,15 +4759,22 @@ Class("wipeout.template.context", function () {
     
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
     function context (forVm, parentContext, arrayIndex) {
+		///<summary>The context for any view model or html property set in a template</summary>
 		
 		if (forVm && forVm.shareParentScope)
 			throw "You cannot create a template context for a view model with a shared parent scope";
-        
+		
+		///<summary type="Any">The current view model</summary>
         this.$this = forVm;
         
         if (parentContext) {
+			///<summary type="Any">The parent render context</summary>
             this.$parentContext = parentContext;
+			
+			///<summary type="Any">The parent view model</summary>
             this.$parent = parentContext.$this;
+			
+			///<summary type="Array" generic0="Any">A list of all ancestor view models</summary>
             this.$parents = [parentContext.$this];
             this.$parents.push.apply(this.$parents, parentContext.$parents);
         } else {
@@ -4344,6 +4784,8 @@ Class("wipeout.template.context", function () {
 		}
 		
 		if (arrayIndex != null) {
+			
+			///<summary type="Object">An object whcih contains a "value" property. The value is the index. This property is only available for items in a rendered Array</summary>
 			this.$index = new obsjs.observable();
 			this.$index.value = arrayIndex;
 		}
@@ -4355,11 +4797,19 @@ Class("wipeout.template.context", function () {
     context.prototype = new renderContextPrototype();
     
     context.prototype.find = function (searchTermOrFilters, filters) {
+		///<summary>Find an item from the ancestor chain</summary>
+        ///<param name="searchTermOrFilters" type="String|Object">The search term if a string, search filters if an object</param>
+        ///<param name="filters" type="Object" optional="true">The filters if arg 1 is a search term</param>
+        ///<returns type="Any">The item searched for</returns>
 		
 		return (this._finder || (this._finder = new wipeout.utils.find(this))).find(searchTermOrFilters, filters);
     };
     
     context.prototype.contextFor = function (forVm, arrayIndex) {
+		///<summary>Create a child context</summary>
+        ///<param name="forVm" type="Any">The child to context</param>
+        ///<param name="arrayIndex" type="Number" optional="true">The index if this item is in an array</param>
+        ///<returns type="wipeout.template.context">The child context</returns>
         
 		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arrayIndex != null)
 			console.warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
@@ -4368,10 +4818,16 @@ Class("wipeout.template.context", function () {
     };
 	
 	context.prototype.asGetterArgs = function () {
+		///<summary>Return a version of this to be plugged into a function creted by context.buildGetter(...)</summary>
+        ///<returns type="Array">the arguments</returns>
+		
 		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
 	};
 	
 	context.prototype.asWatchVariables = function () {
+		///<summary>Return a version of this which can be plugged into the watch varialbes for a computed who's logic was taken from a context.buildGetter(...)</summary>
+        ///<returns type="Object">The watch varialbles</returns>
+        
 		return this.watchVariables || (this.watchVariables = {
 			$context: this, 
 			$this: this.$this, 
@@ -4382,6 +4838,8 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.asEventArgs = function (e, element) {
+		///<summary>Return a version of this to be plugged into a function creted by context.buildEventCallback(...)</summary>
+        ///<returns type="Array">the arguments</returns>
 		
 		var args = this.asGetterArgs().slice();
 		args.push(e);
@@ -4391,27 +4849,44 @@ Class("wipeout.template.context", function () {
 	};
 	
 	context.prototype.getComputed = function (forFunction) {
+		///<summary>Get a computed from this and a given function</summary>
+        ///<param name="forFunction" type="Function">The function</param>
+        ///<returns type="obsjs.observeTypes.computed">The computed</returns>
+		
 		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {
+		///<summary>Build a function around a logic string</summary>
+        ///<param name="logic" type="String">The logic</param>
+        ///<returns type="Function">A getter</returns>
 		
 		try {
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
+			var model = /\$model/.test(logic) ? "var $model = $this ? $this.model : null;\n" : "";
+			
+			//if this changes, look at propertyValue, it uses and arguments[x] argument
+			return new Function("$context", "$this", "$parent", "$parents", "$index", model + "return " + logic + ";");
 		} catch (e) {
 			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
 	};
 	
-	//TODV: handle logic like this "$this.set = true; $this.unset = false;"
-	context.buildEventGetter = function (logic) {
+	//TODM
+	var notFunctionCall = /^\s*[Ll]ogic\s*:/;
+	context.buildEventCallback = function (logic) {
+		///<summary>Build a function around a logic string, specifically for html events</summary>
+        ///<param name="logic" type="String">The logic</param>
+        ///<returns type="Function">A getter</returns>
 		
-		if (!/\)[\s;]*$/.test(logic))
+		if (notFunctionCall.test(logic))
+			logic = logic.replace(notFunctionCall, "");
+		else if (!/\)[\s;]*$/.test(logic))
 			logic += "(e, element)";
 			
 		try {
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", "return " + logic + ";");
+			var model = /\$model/.test(logic) ? "var $model = $this ? $this.model : null;\n" : "";
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", model + logic);
 		} catch (e) {
 			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
@@ -4425,12 +4900,20 @@ Class("wipeout.template.context", function () {
 Class("wipeout.template.engine", function () {
         
     function engine () {
+		///<summary>The wipeout template engine</summary>
+		
+		///<summary type="Object">Cached templates</summary>
         this.templates = {};
         
+		///<summary type="wipeout.utils.dictionary">Cached view model initializers</summary>
         this.xmlIntializers = new wipeout.utils.dictionary;
     }
     
     engine.prototype.setTemplate = function (templateId, template) {
+		///<summary>Associate a template string with a template id</summary>
+        ///<param name="templateId" type="String|wipeout.wml.wmlAttribute">The template</param>
+        ///<returns type="wipeout.template.rendering.compiledTemplate">The compiled template</returns>
+		
 		if (!templateId) throw "Invalid template id";
 		
         if (typeof template === "string")
@@ -4442,6 +4925,11 @@ Class("wipeout.template.engine", function () {
     };
     
     engine.prototype.getTemplateXml = function (templateId, callback) {  
+		///<summary>Load a template and pass the value to a callback. The load may be synchronus (if the template exists) or asynchronus) if the template has to be loaded.</summary>
+        ///<param name="templateId" type="String">The template id</param>
+        ///<param name="callback" type="Function">The callback</param>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
+	
 		templateId = fixTemplateId(templateId);      
         return this.compileTemplate(templateId, (function() {
             callback(this.templates[templateId].xml);
@@ -4458,6 +4946,10 @@ Class("wipeout.template.engine", function () {
 	}());
 	
     engine.prototype.compileTemplate = function (templateId, callback) {
+		///<summary>Load a template and pass the value to a callback. The load may be synchronus (if the template exists) or asynchronus) if the template has to be loaded.</summary>
+        ///<param name="templateId" type="String">The template id</param>
+        ///<param name="callback" type="Function">The callback</param>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
         
 		templateId = fixTemplateId(templateId);
 			
@@ -4496,12 +4988,15 @@ Class("wipeout.template.engine", function () {
         throw "Could not load template \"" + templateId + "\".";    //TODE
     };
     
-    engine.prototype.getVmInitializer = function (xmlInitializer) {
-        
+    engine.prototype.getVmInitializer = function (wmlInitializer) {
+		///<summary>Get a compiled initializer from a piece of wml</summary>
+        ///<param type="wipeout.wml.wmlElement" name="wmlInitializer">The xml</param>
+        ///<returns type="wipeout.template.initialization.compiledInitializer">The initializer</returns>
+		
         var tmp;
-        return (tmp = this.xmlIntializers.value(xmlInitializer)) ?
+        return (tmp = this.xmlIntializers.value(wmlInitializer)) ?
             tmp :
-            this.xmlIntializers.add(xmlInitializer, new wipeout.template.initialization.compiledInitializer(xmlInitializer));
+            this.xmlIntializers.add(wmlInitializer, new wipeout.template.initialization.compiledInitializer(wmlInitializer));
     };
     
     engine.instance = new engine();
@@ -4509,98 +5004,50 @@ Class("wipeout.template.engine", function () {
     return engine;
 });
 
+Class("wipeout.template.filters", function () {
+	return function filters() {}
+});
 
-Class("wipeout.template.initialization.propertySetter", function () {
+
+Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 	
-    var propertySetter = wipeout.template.setter.extend(function propertySetter (name, value, flags) {
+    var viewModelPropertyValue = wipeout.template.propertyValue.extend(function viewModelPropertyValue (name, value, parser) {
+        ///<summary>A setter for a view model property</summary>
+        ///<param name="name" type="String">The name of the property</param>
+        ///<param name="value" type="wipeout.wml.wmlElement|wipeout.wml.wmlAttribute">The setter value</param>
+        ///<param name="parser" type="String|Function" optional="true">the parser or a pointer to it</param>
 		
-		this._super(name, value);
-        
-        this.parser = [];
-        this.bindingType = null;
-        
-        // process parseing and binding flags
-        enumerateArr(flags || [], function (flag) {
-            if (wipeout.template.initialization.parsers[flag]) {
-                this.parser.push(wipeout.template.initialization.parsers[flag]);
-            } else if (wipeout.htmlBindingTypes[flag]) {
-                if (this.bindingType)
-                    throw "A binding type is already specified for this property.";
-                
-                this.bindingType = flag;
-            }
-        }, this);
-        
-        // if parser has already been processed
-        if (!(this.parser instanceof Array))
-            return;
-                
-        if (this.parser.length === 1) {
-            this.parser = this.parser[0];
-        } else if (this.parser.length) {
-        	var p = this.parser;
-            this.parser = function (value, propertyName, renderContext) {
-                for(var i = 0, ii = p.length; i < ii; i++)
-                    value = p[i](value, propertyName, renderContext);
-
-                return value;
-            };
-            
-            this.parser.useRawXmlValue = p[0].useRawXmlValue;
-        } else {
-            this.parser = null;
-        }
-    });
+		this._super(name, value, parser);
+	});
+	
+	viewModelPropertyValue.prototype.onPropertyChanged = function (callback, evaluateImmediately) {
+        ///<summary>A setter for a view model property</summary>
+        ///<param name="viewModel" type="Any">The view model which has the property</param>
+        ///<param name="callback" type="Function">A callback to execute when the value changes</param>
+        ///<param name="evaluateImmediately" type="Boolean">Execute the callback now</param>
+        ///<returns type="Boolean">Whether the property could be subscribed to or not</returns>
+		
+		this.primed();
+		
+		var op = obsjs.tryObserve(this.propertyOwner, this.name, callback);
+		if (op) this._caching.push(op);
+		if (evaluateImmediately)
+			callback(undefined, wipeout.utils.obj.getObject(this.name, this.propertyOwner));
+		
+		return !!op;
+	};
 	
 	// override
-	propertySetter.prototype.getValue = function() {
+	viewModelPropertyValue.prototype.value = function() {
+        ///<summary>Get the value</summary>
+        ///<returns type="String">The value</returns>
 		
         return this.hasOwnProperty("_valueAsString") ?
             this._valueAsString :
-            (this._valueAsString = this._value.serializeContent());
+            (this._valueAsString = this._super().serializeContent());
     };
 	
-	propertySetter.prototype.getParser = function(forViewModel) {
-		
-        // use parser, global parser or lazy create auto parser
-        return this.parser ||
-            (forViewModel instanceof wipeout.base.bindable ? forViewModel.getGlobalParser(this.name) : null);
-    };
-	 
-	propertySetter.prototype.parseOrExecute = function (viewModel, renderContext) {
-		
-		var parser = this.getParser(viewModel);
-		
-		return parser ?
-			parser(parser.useRawXmlValue ? this._value : this.getValue(), this.name, renderContext) :
-			this.build().apply(null, renderContext.asGetterArgs());
-	};
-		
-	propertySetter.prototype.getBindingType = function (viewModel) {
-		return this.bindingType || 
-				(viewModel instanceof wipeout.base.bindable && viewModel.getGlobalBindingType(this.name)) || 
-				"ow";
-	};
-	
-	propertySetter.prototype.applyToViewModel = function (viewModel, renderContext) {
-		
-		var bindingType = this.getBindingType(viewModel);
-		
-		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + this.name + "\".";
-		
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this, renderContext)
-			if (o && o.dispose instanceof Function)
-				op.push(o);
-			else if (o instanceof Function)
-				op.push({ dispose: o });
-		}).bind(this)));
-		
-		return op;
-	};
-	
-	return propertySetter;
+	return viewModelPropertyValue;
 });
 
 
@@ -4639,7 +5086,7 @@ Class("wipeout.template.loader", function () {
     loader.prototype.add = function(success) {
         ///<summary>Call success when this template is loaded</summary>
         ///<param name="success" type="Function" optional="false">The callback</param>
-        ///<returns type="Boolean">True if the template is available, false if the template must be loaded</returns>
+        ///<returns type="Object">Null, if the template is loaded, an object with a "cancel" function to cancel the load</returns>
         
         if (this._callbacks) {
             this._callbacks.push(success);
@@ -4672,14 +5119,18 @@ Class("wipeout.template.rendering.builder", function () {
     builder.uniqueIdGenerator = (function() {
         var i = Math.floor(Math.random() * 1000000000);
         return function() {
+			///<summary>Get a unique html id</summary>
+			///<returns type="String">The id</returns>
+			
             return wipeoutPlaceholder + (++i);
         }
     }());
     
     function builder(compiledTemplate) {
         ///<summary>Build html and execute logic giving the html functionality</summary>
-        ///<param name="template" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
+        ///<param name="compiledTemplate" type="wipeout.template.compiledTemplate" optional="false">The template to base the html on</param>
         
+        ///<summary type="Array">A list of processors to add dynamic content</summary>
         this.elements = [];
         
         var htmlFragments = [];
@@ -4699,13 +5150,34 @@ Class("wipeout.template.rendering.builder", function () {
             }
         }, this);
         
+        ///<summary type="String">The static html for this builder</summary>
         this.html = htmlFragments.join("");
-    }
-    
-    builder.prototype.execute = function(renderContext) {
+    };
+	
+	builder.applyToElement = function (setter, element, renderContext) {
+		///<summary>Apply this attribute to an element/summary>
+        ///<param name="setter" type="wipeout.template.rendering.htmlAttributeSetter">The setter</param>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Array">An array of disposables</returns>
+		
+		var op = [];
+		op.push.apply(op, setter.prime(element, function () {
+			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
+			if (o && o.dispose instanceof Function)
+				op.push(o);
+			else if (o instanceof Function)
+				op.push({ dispose: o });
+		}));
+		
+		return op;
+	};
+	
+	builder.prototype.execute = function(renderContext) {
         ///<summary>Add dynamic content to the html</summary>
         ///<param name="renderContext" type="wipeout.template.renderContext" optional="false">The context of the dynamic content</param>
-        
+		///<returns type="Function">A dispose function</returns>
+		
         var output = [];
         enumerateArr(this.elements, function(elementAction) {
             // get the element
@@ -4714,7 +5186,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(setter) {				
-				output.push.apply(output, setter.applyToElement(element, renderContext));
+				output.push.apply(output, builder.applyToElement(setter, element, renderContext));
             });
         }, this);
     
@@ -4730,11 +5202,33 @@ Class("wipeout.template.rendering.builder", function () {
 
 
 Class("wipeout.template.rendering.compiledTemplate", function () {
+	    
+    compiledTemplate.getPropertyFlags = function(name) {
+		///<summary>Seperate name from flags by "--"</summary>
+        ///<param name="name" type="String">The combined name and flags</param>
+        ///<returns type="Object">The name and flags</returns>
+        
+        var flags = name.indexOf("--");
+        if (flags === -1)
+            return {
+                flags: [],
+                name: name
+            };
+        
+        return {
+            flags: name.substr(flags + 2).toLowerCase().split("-"),
+            name: name.substr(0, flags)
+        };
+    };
         
     function compiledTemplate(template) {
         ///<summary>Scans over an xml template and compiles it into something which can be rendered</summary>
-        
+        ///<param name="template" type="wipeout.xml.xmlElement">The template</param>
+		
+		///<summary type="wipeout.xml.xmlElement">The template</summary>
         this.xml = template;
+		
+		///<summary type="Array">Generated static html and modifiers</summary>
         this.html = [];
         this._addedElements = [];
         
@@ -4762,13 +5256,17 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 	
 	//TODM
     compiledTemplate.renderParenthesis = function(beginParenthesis, endParenthesis) {
+        ///<summary>Change the escape values to render. Default is {{ and }}</summary>
+        ///<param name="beginParenthesis" type="String">the beginnin</param>
+        ///<param name="endParenthesis" type="String">the end</param>
+		
 		begin = beginParenthesis;
 		end = endParenthesis;
 	};
 	
     compiledTemplate.prototype.addTextNode = function(node) {
         ///<summary>Add a text node to the html string scanning for dynamic functionality</summary>
-        ///<param name="node" type="Object">The node</param>
+        ///<param name="node" type="wipeout.wml.wmlString">The node</param>
         
         var html = node.serialize(), oldIndex = 0, index = 0;
         while ((index = html.indexOf(begin, oldIndex)) !== -1) {
@@ -4782,8 +5280,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
             this.html.push("<script");
 
             // add the id flag and the id generator
-            this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wo-render",
-									  html.substring(oldIndex, index))]);
+            this.html.push([new wipeout.template.rendering.htmlPropertyValue("wo-render", html.substring(oldIndex, index))]);
 
             // add the end of the placeholder
             this.html.push(' type="placeholder"></script>');
@@ -4802,13 +5299,17 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         this.html.push("<script");
         
         // add the id flag and the id generator
-        this.html.push([new wipeout.template.rendering.htmlAttributeSetter("wipeoutCreateViewModel", vmNode)]);
+        this.html.push([new wipeout.template.rendering.htmlPropertyValue("wipeoutCreateViewModel", vmNode)]);
         
         // add the end of the placeholder
         this.html.push(' type="placeholder"></script>');
     };
 	
 	compiledTemplate.getAttributeName = function (attributeName) {
+        ///<summary>Returns the name of the wipeout attribute that this attributeName is pointing to. Sometimes wipeout modifies the actual attribute, for instance, "wo-attr-value" will be modified to "wo-attr"</summary>
+        ///<param name="attributeName" type="String">The attribute name</param>
+        ///<returns type="String">The altered attribute name, or null if the attribute is not a wipeout attribute</returns>
+		
 		if (wipeout.template.rendering.htmlAttributes[attributeName])
 			return attributeName;
 		
@@ -4819,12 +5320,18 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 	};
     
     compiledTemplate.prototype.addAttributes = function(attributes) {
+        ///<summary>Add a group of attributes</summary>
+        ///<param name="attributes" type="Object">The attributes</param>
         
         var modifications;
         
 		var attr;
         enumerateObj(attributes, function (attribute, name) {
-        
+			     
+			var flags = compiledTemplate.getPropertyFlags(name);
+			name = flags.name;
+			flags = flags.flags;
+			
             // if it is a special attribute
 			attr = false;
             if (attr = compiledTemplate.getAttributeName(name)) {
@@ -4832,14 +5339,24 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
                 // if it is the first special attribute for this element
                 if (!modifications)
                     this.html.push(modifications = []);
+					
+				var parser;
+				for (var i = 0, ii = flags.length; i < ii; i++) {
+					if (wipeout.template.initialization.parsers[flags[i]]) {
+						if (parser)
+							throw "The parser has already been set for this element"; //TODE
+
+						parser = flags[i];
+					}
+				}
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value, attr));
+					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value)) :
-						modifications.push(new wipeout.template.rendering.htmlAttributeSetter(name, attribute.value));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser)) :
+						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser));
 				}
             } else {
                 // add non special attribute
@@ -4890,6 +5407,9 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     
     compiledTemplate.prototype.quickBuild = function(htmlAddCallback, renderContext) {
         ///<summary>Add html and execute dynamic content. Ensures synchronocity so reuses the same builder</summary>
+        ///<param name="htmlAddCallback" type="Function">A function to add html to the DOM</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="obsjs.disposable">A disposable</returns>
         
         var builder = this._builder || (this._builder = this.getBuilder());
 		
@@ -4899,87 +5419,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     
     compiledTemplate.prototype.getBuilder = function() {
         ///<summary>Get an item which will generate dynamic content to go with the static html</summary>
+        ///<returns type="wipeout.template.rendering.builder">Get a builder for this template</returns>
         
         return new wipeout.template.rendering.builder(this);
     };
         
     return compiledTemplate;
-});
-
-
-Class("wipeout.template.rendering.htmlAttributeSetter", function () {
-	
-	var htmlAttributeSetter = wipeout.template.setter.extend(function htmlAttributeSetter (name, value, action /* optional */) {
-		
-		this._super(name, value);
-		
-		this.action = action;
-	});
-	
-	htmlAttributeSetter.prototype.setData = function (element, name, data) {
-        
-		if (!this._caching)
-			throw "The setData function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
-		
-		this._caching.push({
-			dispose: function () {
-				wipeout.utils.domData.clear(element, name);
-			}
-		});
-		
-		return wipeout.utils.domData.set(element, name, data);
-	};
-	
-	htmlAttributeSetter.prototype.getData = function (element, name) {
-		
-		return wipeout.utils.domData.get(element, name);
-	};
-	
-	htmlAttributeSetter.prototype.dataExists = function (element, name) {
-		
-		return wipeout.utils.domData.exists(element, name);
-	};
-	
-	htmlAttributeSetter.prototype.eventBuild = function () {
-		
-		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventGetter(this.getValue()));
-	};
-	
-	htmlAttributeSetter.prototype.onElementEvent = function (element, event, renderContext, callback, capture) { //TODE
-        
-		if (!this._caching)
-			throw "The onElementEvent function can only be called in the context of a cacheAllWatched call. Otherwise the event dispose callback will be lost, causing memory leaks";
-		
-		callback = callback || (function (e) {
-			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
-		}).bind(this);
-						
-        element.addEventListener(event, callback, capture || false);
-        
-        var output = new obsjs.disposable(function() {
-			element.removeEventListener(event, callback, capture || false);
-			callback = null;
-        });
-		
-		this._caching.push(output);
-		
-		return output.dispose.bind(output);
-    };
-	
-	htmlAttributeSetter.prototype.applyToElement = function (element, renderContext) {
-		var op = [];
-		op.push.apply(op, this.cacheAllWatched((function () {
-			var o = wipeout.template.rendering.htmlAttributes[this.action || this.name](element, this, renderContext);
-			if (o && o.dispose instanceof Function)
-				op.push(o);
-			else if (o instanceof Function)
-				op.push({ dispose: o });
-		}).bind(this)));
-		
-		return op;
-	};
-	
-	return htmlAttributeSetter;
 });
 
 
@@ -4990,6 +5435,11 @@ HtmlAttr("attr", function () {
 	};
 	
 	function attr (element, attribute, renderContext) { //TODE
+        ///<summary>Add html attributes to an element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (!test(attribute.name)) return;
 		
@@ -5037,9 +5487,9 @@ HtmlAttr("class", function () {
 	function old_class(element, attribute, renderContext) {
 		var attr, has;
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (!(has = hasClass(element, className)) && attribute.execute(renderContext))
+		if (!(has = hasClass(element, className)) && attribute.get(renderContext))
 			addClass(element, className);
-		else if (has && !attribute.execute(renderContext))
+		else if (has && !attribute.get(renderContext))
 			removeClass(element, className);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
@@ -5051,6 +5501,11 @@ HtmlAttr("class", function () {
 	}
 	
 	function _class (element, attribute, renderContext) { //TODE
+        ///<summary>Add or remove css classes</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (!test(attribute.name)) return;
 		
@@ -5058,7 +5513,7 @@ HtmlAttr("class", function () {
 			return old_class(element, attribute, renderContext);
 		
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (attribute.execute(renderContext))
+		if (attribute.get(renderContext))
 			element.classList.add(className);
 		else
 			element.classList.remove(className);
@@ -5077,6 +5532,12 @@ HtmlAttr("class", function () {
 
 HtmlAttr("content", function () {
 	return function content (element, attribute, renderContext) { //TODE
+        ///<summary>Set the content of a html element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
+		
 		attribute.watch(renderContext, function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
         }, true);
@@ -5087,6 +5548,11 @@ HtmlAttr("content", function () {
 HtmlAttr("data", function () {
 	
 	return function data (element, attribute, renderContext) { //TODE
+        ///<summary>Add data to an element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		attribute.setData(element, "wo-data", attribute);
     }
@@ -5100,10 +5566,15 @@ HtmlAttr("event", function () {
 	};
 	
     function event (element, attribute, renderContext) { //TODE
+        ///<summary>Subscribe to a html event</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (!test(attribute.name)) return;
 		
-		attribute.onElementEvent(element, attribute.name.substr(attribute.name.indexOf("event-") + 6), renderContext);
+		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6), renderContext);
     };
 	
 	return event;
@@ -5115,8 +5586,13 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 	HtmlAttr(event, function () {
 
 		return function (element, attribute, renderContext) { //TODE
-
-			attribute.onElementEvent(element, event, renderContext);
+			///<summary>Subscribe to a html event</summary>
+			///<param name="element" type="Element">The element</param>
+			///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+			///<param name="renderContext" type="wipeout.template.context">The current context</param>
+			///<returns type="Function">A dispose function</returns>
+			
+			attribute.onElementEvent(event, renderContext);
 		};
 	});
 });
@@ -5124,8 +5600,13 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 
 Class("wipeout.template.rendering.htmlAttributes.id", function () {
 	return function id (element, attribute, renderContext) {
+        ///<summary>Add an id to an element and add the element to tempalteItems</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
-		var val = attribute.getValue();
+		var val = attribute.value();
         if (renderContext.$this instanceof wipeout.viewModels.view)
         	renderContext.$this.templateItems[val] = element;
 		
@@ -5142,16 +5623,26 @@ Class("wipeout.template.rendering.htmlAttributes.id", function () {
 HtmlAttr("on-event", function () {
 	
 	return function onEvent (element, attribute, renderContext) { //TODE
+        ///<summary>Used by the wo-value attribute to get when the value change event should be triggered. Default is "change".</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
-		attribute.setData(element, "wo-on-event", attribute.getValue());
+		attribute.setData(element, "wo-on-event", attribute.value());
     }
 });
 
 
 HtmlAttr("render", function () {
 	return function render (element, attribute, renderContext) {
+        ///<summary>Render content inside a html element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
-        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.getValue(), renderContext);
+        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
             htmlContent.render(newVal);
@@ -5169,6 +5660,11 @@ HtmlAttr("style", function () {
 	};
 	
 	function style (element, attribute, renderContext) { //TODE
+        ///<summary>Bind to the style of a html element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (!test(attribute.name)) return;
 		
@@ -5187,8 +5683,8 @@ HtmlAttr("value", function () {
 	
 	function radio (radio, attribute, renderContext) { 
 		
-		var val = attribute.getValue();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+		var val = attribute.value();
+        if (!attribute.canSet())
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		var tmpData;		
@@ -5199,8 +5695,8 @@ HtmlAttr("value", function () {
 				radio.removeAttribute("checked");
         }, true);
 		
-		attribute.onElementEvent(radio, "change", renderContext, function () {			
-			wipeout.utils.obj.setObject(val, renderContext, getRadioButtonVal(radio, attribute, renderContext));
+		attribute.onElementEvent("change", renderContext, function () {
+			attribute.set(renderContext, getRadioButtonVal(radio, attribute, renderContext), radio);
         });
 	}
 	
@@ -5208,7 +5704,7 @@ HtmlAttr("value", function () {
 	function getCheckboxVal(element, attribute, renderContext) {
 		var tmpData;
 		if (tmpData = attribute.getData(element, "wo-data"))
-			return tmpData.execute(renderContext);
+			return tmpData.get(renderContext, element);
 		if ((tmpData = element.getAttribute("value")) != null)
 			return tmpData;
 		
@@ -5225,14 +5721,14 @@ HtmlAttr("value", function () {
 	
 	function checkbox (checkbox, attribute, renderContext) { 
 		
-		var val = attribute.getValue();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+		var val = attribute.value();
+        if (!attribute.canSet())
             throw "Cannot bind to the property \"" + val + "\".";
 		
 		// set default
 		var tmpData;
 		if ((tmpData = getCheckboxVal(checkbox, attribute, renderContext)) !== noVal)
-			wipeout.utils.obj.setObject(val, renderContext, tmpData);
+			attribute.set(renderContext, tmpData, checkbox);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
 			if (newVal || newVal === "")
@@ -5241,7 +5737,7 @@ HtmlAttr("value", function () {
 				checkbox.removeAttribute("checked");
         }, true);
 		
-		attribute.onElementEvent(checkbox, "change", renderContext, function () {
+		attribute.onElementEvent("change", renderContext, function () {
 			tmpData = getCheckboxVal(checkbox, attribute, renderContext);
 			if (checkbox.getAttribute("checked") != null) {
 				if (tmpData === noVal)
@@ -5250,11 +5746,16 @@ HtmlAttr("value", function () {
 				tmpData = tmpData === noVal ? false : null;
 			}
 			
-			wipeout.utils.obj.setObject(val, renderContext, tmpData);
+			attribute.set(renderContext, tmpData, checkbox);
         });
 	}
 	
 	return function value (element, attribute, renderContext) { //TODE
+        ///<summary>Bind to the value of a htl element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
 		if (element.type === "checkbox")
 			return checkbox(element, attribute, renderContext);
@@ -5262,17 +5763,20 @@ HtmlAttr("value", function () {
 		if (element.type === "radio")
 			return radio(element, attribute, renderContext);
 		
-		var val = attribute.getValue();
-        if (!wipeout.template.setter.isSimpleBindingProperty(val))
+		var val = attribute.value();
+        if (!attribute.canSet())
             throw "Cannot bind to the property \"" + val + "\".";
 		
+		var textarea = trimToLower(element.tagName) === "textarea";
 		attribute.watch(renderContext, function (oldVal, newVal) {
-            if (element.value !== newVal)
+			if (textarea && element.innerHTML !== newVal)
+                element.innerHTML = newVal;
+			else if (!textarea && element.value !== newVal)
                 element.value = newVal;
         }, true);
 		
-		attribute.onElementEvent(element, attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
-			wipeout.utils.obj.setObject(val, renderContext, element.value);
+		attribute.onElementEvent(attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
+			attribute.set(renderContext, textarea ? element.innerHTML : element.value, element);
         });
     }
 });
@@ -5280,8 +5784,13 @@ HtmlAttr("value", function () {
 
 HtmlAttr("visible", function () {
 	return function visible (element, attribute, renderContext) { //TODE
+        ///<summary>Determine element visibility</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
 		
-		element.style.display = attribute.execute(renderContext) ? "" : "none";
+		element.style.display = attribute.get(renderContext) ? "" : "none";
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
 			if (newVal && !oldVal)
@@ -5295,7 +5804,13 @@ HtmlAttr("visible", function () {
 
 Class("wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel", function () {
 	return function wipeoutCreateViewModel (element, attribute, renderContext) {
-        var op = new wipeout.template.rendering.viewModelElement(element, attribute.getValue(), renderContext);
+        ///<summary>Used internally to add view model elements</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
+		
+        var op = new wipeout.template.rendering.viewModelElement(element, attribute.value(), renderContext);
         
         return function () {
             op.dispose(true);
@@ -5305,16 +5820,114 @@ Class("wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel", functi
         
 
 
+Class("wipeout.template.rendering.htmlPropertyValue", function () {
+	
+	var htmlPropertyValue = wipeout.template.propertyValue.extend(function htmlPropertyValue (name, value, parser, action) {
+		///<summary>Set html attributes</summary>
+        ///<param name="name" type="String">The name of the attribute</param>
+        ///<param name="value" type="String">The value of the attribute</param>
+        ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
+        ///<param name="action" type="String" optional="true">The wipoeut html attribute to use. If null, use "name"</param>
+		
+		this._super(name, value, parser);
+		
+		///<summary type="String">The wipoeut html attribute to use. If null, use "name"</summary>
+		this.action = action;
+	});
+	
+	htmlPropertyValue.prototype.eventBuild = function () {
+		///<summary>Build an event invoker for this._value</summary>
+        ///<returns type="Function">A function to get the value from render context parts</returns>
+		
+		return this._eventBuilt || (this._eventBuilt = wipeout.template.context.buildEventCallback(this.value()));
+	};
+	
+	htmlPropertyValue.prototype.onElementEvent = function (event, renderContext, callback, capture) { //TODE
+		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
+        ///<param name="event" type="String">The event</param>
+        ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
+        ///<param name="callback" type="Function">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback</param>
+        ///<param name="capture" type="Boolean">Capture the event within this element</param>
+        ///<returns type="Function">A dispose function to dispose prematurely</returns>
+		
+		this.primed();
+		
+		var element = this.propertyOwner;
+		callback = callback || (function (e) {
+			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
+		}).bind(this);
+						
+        element.addEventListener(event, callback, capture || false);
+        
+        var output = new obsjs.disposable(function() {
+			element.removeEventListener(event, callback, capture || false);
+			callback = null;
+        });
+		
+		this._caching.push(output);
+		
+		return output.dispose.bind(output);
+    };
+	
+	htmlPropertyValue.prototype.setData = function (element, name, data) {
+		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>	//TODM
+        ///<param name="element" type="Element">The html element</param>
+        ///<param name="name" type="String">The data key</param>
+        ///<param name="data" type="Any">the data</param>
+        ///<returns type="Any">The data</returns>
+        
+		this.primed();
+		
+		this._caching.push({
+			dispose: function () {
+				wipeout.utils.domData.clear(element, name);
+			}
+		});
+		
+		return wipeout.utils.domData.set(element, name, data);
+	};
+	
+	htmlPropertyValue.prototype.getData = function (element, name) {
+		///<summary>Get data saved against a html element</summary>
+        ///<param name="element" type="Element">the element</param>
+        ///<param name="name" type="String">The data key</param>
+        ///<returns type="Any">The data</returns>
+		
+		return wipeout.utils.domData.get(element, name);
+	};
+	
+	htmlPropertyValue.prototype.dataExists = function (element, name) {
+		///<summary>Determine whether an element has a data key</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="name" type="String">The data key</param>
+        ///<returns type="Boolean">The result</returns>
+		
+		return wipeout.utils.domData.exists(element, name);
+	};
+	
+	return htmlPropertyValue;
+});
+
+
 Class("wipeout.template.rendering.renderedArray", function () {
     
 	var renderedArray = obsjs.disposable.extend(function renderedArray (array, parent) {
+		///<summary>Helper for rendering arrays</summary>
+        ///<param name="array" type="Array">The array</param>
+        ///<param name="parent" type="wipeout.template.rendering.renderedContent">The renderedContent to help</param>
+				
 		this._super();
 		
+		///<summary type="wipeout.template.rendering.renderedContent">The parent to help</summary>
 		this.parent = parent;
+		
+		///<summary type="Array">The array</summary>
 		this.array = array;
 		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
+			///<summary type="wo.itemsControl">The items control if the array belongs to one</summary>
 			this.itemsControl = this.parent.parentRenderContext.$this;
 		
+		///<summary type="Array">Cache the child renderedContents </summary>
 		this.children = [];
         
         if (this.itemsControl) {
@@ -5335,7 +5948,10 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		}
 	});
 	
-	renderedArray.prototype.remove = function (item) {                   
+	renderedArray.prototype.remove = function (item) {
+		///<summary>Clean up item before removal</summary>
+        ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
+		
 		if (this.itemsControl)
 			this.itemsControl.onItemRemoved(item.renderedChild);
 
@@ -5347,6 +5963,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	
 	var mysteryItem = {};
 	renderedArray.prototype.render = function (changes) {
+		///<summary>Alter the DOM based on array changes</summary>
+        ///<param name="changes" type="Array">The array changes</param>
 		
 		var removed = [];
 		enumerateArr(changes, function (change) {
@@ -5415,6 +6033,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	};
 	
 	renderedArray.prototype.dispose = function () {
+		///<summary>Dispose of this helper</summary>
+		
 		this._super();
 
 		enumerateArr(this.children, this.remove, this);
@@ -5449,6 +6069,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 	}
     
     renderedContent.prototype.prepend = function (content) {
+		///<summary>Prepend content to the renderedContent</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
               
 		content = getNodesAndRemoveDetatched(content);
 		
@@ -5458,7 +6080,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
 			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
     };
     
-	/* this is not tested
+	/* this is not needed or tested
     renderedContent.prototype.append = function (content) {
               
 		var nodes = getNodesAndRemoveDetatched(content);
@@ -5470,6 +6092,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
     };*/
     
     renderedContent.prototype.insertBefore = function (content) {
+		///<summary>Insert content before this</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
 		
 		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
 			this.parentNode.insertBefore(node, this);
@@ -5477,6 +6101,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
     };
     
     renderedContent.prototype.insertAfter = function (content) {
+		///<summary>Insert content after this</summary>
+        ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
               
 		content = getNodesAndRemoveDetatched(content);
 		
@@ -5490,6 +6116,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
     };
     
     renderedContent.prototype.detatch = function() {
+		///<summary>This renderedContent and all of it's html from the DOM</summary>
+        ///<returns type="Array" generic0="Element">The html</retruns>
 		
 		if (!this.detatched) {		
 			var current = this.openingTag;
@@ -5505,6 +6133,9 @@ Class("wipeout.template.rendering.renderedArray", function () {
     };
     
     renderedContent.prototype.allHtml = function() {
+		///<summary>Get all of the html for this</summary>
+        ///<returns type="Array" generic0="Element">The html</retruns>
+		
 		if (this.detatched) return this.detatch();
 		
         var output = [this.openingTag], current = this.openingTag;
@@ -5536,6 +6167,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         // create actual view model
         this.createdViewModel = new vm.constructor();
 		
+		///<summary type="wipeout.template.context">The context for the view model</summary>
         this.renderContext = parentRenderContext ?
 			parentRenderContext.contextFor(this.createdViewModel) :
 			new wipeout.template.context(this.createdViewModel);
@@ -5870,6 +6502,171 @@ Class("wipeout.utils.html", function () {
     return html;    
 });
 
+Class("wipeout.utils.jsParse", function () {
+    
+	function quoteIsEscaped (input, tokenIndex, isOpeningTag) {
+		if (isOpeningTag)
+			return false;
+		
+		var number = 0;
+		while (input[tokenIndex - 1 - number] === "\\")
+			number++;
+
+		return number % 2 != 0;
+	}
+	
+	var stringsAndComments = [{
+		open: /'/gm,
+		close: /'/gm,
+		tokenize: true,
+		isEscaped: quoteIsEscaped
+	}, {
+		open: /"/gm,
+		close: /"/gm,
+		tokenize: true,
+		isEscaped: quoteIsEscaped
+	}, {
+		open: /\/\//gm,
+		close: /(?=\r?\n)/gm,
+		tokenize: false
+	}, {
+		open: /\/\*/gm,
+		close: /\*\//gm,
+		tokenize: false
+	}];
+	
+	var brackets = [{
+		open: /\{/gm,
+		close: /\}/gm,
+		tokenize: true,
+		nested: true
+	}, {
+		open: /\(/gm,
+		close: /\)/gm,
+		tokenize: true,
+		nested: true
+	}, {
+		open: /\[/gm,
+		close: /\]/gm,
+		tokenize: true,
+		nested: true
+	}];
+	
+	brackets.getFirst = stringsAndComments.getFirst = function (input, beginAt) {
+		var tmp, beginning, token;
+		for (var i = 0, ii = this.length; i < ii; i++) {
+		
+			this[i].open.lastIndex = beginAt;
+			tmp = this[i].open.exec(input);
+			if (tmp && (!beginning || tmp.index < beginning.index)) {
+				beginning = tmp;
+				token = this[i];
+			}
+		}
+		
+		if (!beginning)
+			return;
+		
+		var index = 1, fOpen, fClose;
+		do {
+			token.close.lastIndex = token.open.lastIndex;
+			while (token.nested && (fOpen = token.open.exec(input)) && token.isEscaped && token.isEscaped(input, fOpen.index, true)) ;
+			while ((fClose = token.close.exec(input)) && token.isEscaped && token.isEscaped(input, fClose.index, false)) ;
+
+			if (!fClose)
+				throw "Invalid function string: " + input;	//TODE
+
+			if (fOpen && fOpen.index < fClose.index)
+				index++;
+			else {
+				token.open.lastIndex = token.close.lastIndex;
+				index--;
+			}
+		} while (token.nested && index > 0);
+		
+		return {
+			token: token,
+			begin: beginning.index,
+			end: token.close.lastIndex
+		};
+	};
+	
+	var uniqueToken = (function () {
+		var i = 0;
+		
+		return function () {
+			return "##token" + (++i) + "##"
+		};
+	}());
+	
+	function removeAndToken (input, tokens) {
+		
+		if (input instanceof Function)
+			input = input.toString();
+		
+		var found = [{end: 0}], i = 0, token;
+		while (token = tokens.getFirst(input, i)) {
+			i = token.token.close.lastIndex;
+			found.push(token);
+		}
+		
+		found.push({end: input.length});
+		
+		var op = [], output = new splitter(), token;
+		for (var i = 1, ii = found.length; i < ii; i++) {
+			op.push(input.substring(found[i - 1].end, found[i].begin));
+			
+			if (found[i].token && found[i].token.tokenize) {
+				output[token = uniqueToken()] = input.substring(found[i].begin, found[i].end);
+				op.push(token);
+			}
+		}
+		
+		output.output = op.join("");
+		return output;
+	}
+	
+	var removeCommentsTokenStrings = function(input) {
+        ///<summary>Takes a function string and removes comments and strings</summary>
+        ///<param name="input" type="String|Function">The function</param>
+        ///<returns type="Object">The output</returns>
+		
+		return removeAndToken(input, stringsAndComments);
+    };
+	
+	var removeCommentsTokenStringsAndBrackets = function(input) {
+        ///<summary>Takes a function string and removes comments, strings and anything within brackets</summary>
+        ///<param name="input" type="String|Function">The function</param>
+        ///<returns type="Object">The output</returns>
+		
+		var op1 = removeCommentsTokenStrings(input);
+		var op2 = removeAndToken(op1.output, brackets);
+		for (var i in op2)
+			if (op2.hasOwnProperty(i) && i !== "output")
+				op2[i] = op1.addTokens(op2[i]);
+		
+		for (var i in op1)
+			if (i !== "output")
+				op2[i] = op1[i];
+		
+		return op2;
+    };
+	
+	var splitter = function () {}
+	splitter.prototype.addTokens = function (toString) {
+		for (var i in this)
+			if (this.hasOwnProperty(i) && i !== "output")
+				toString = toString.replace(i, this[i]);
+		
+		return toString;
+	};
+    
+    function jsParse() { };
+    jsParse.removeCommentsTokenStrings = removeCommentsTokenStrings;
+    jsParse.removeCommentsTokenStringsAndBrackets = removeCommentsTokenStringsAndBrackets;
+    return jsParse;
+});
+
 Class("wipeout.utils.viewModels", function () { 
 	
 	function viewModels () {}
@@ -5877,6 +6674,9 @@ Class("wipeout.utils.viewModels", function () {
 	//TODM
 	var realName = "data-wo-element-name";
 	viewModels.getElementName = function (wmlElement) {
+        ///<summary>Get the actual name of an element. The actual name is either the "data-wo-element-name" attribute or the element name</summary>
+        ///<param name="wmlElement" type="wipeout.wml.wmlElement">The key</param>
+        ///<returns type="String">The name</returns>
 
 		var tmp;
 		if (wmlElement.getAttribute && (tmp = wmlElement.getAttribute(realName)) != null)
@@ -5889,6 +6689,9 @@ Class("wipeout.utils.viewModels", function () {
 	};
 	
 	viewModels.getViewModelConstructor = function (wmlElement) {
+        ///<summary>A constructor for a view model (if any) given a specific element</summary>
+        ///<param name="wmlElement" type="wipeout.wml.wmlElement">The element</param>
+        ///<returns type="Boolean">Success</returns>
 
 		var constr, name = viewModels.getElementName(wmlElement);
 
@@ -6151,7 +6954,7 @@ Class("wipeout.viewModels.contentControl", function () {
                 
         return function (templateStringOrXml) {
             ///<summary>Creates an anonymous template within the DOM and returns its id</summary>
-            ///<param name="templateString" type="String" optional="false">Gets a template id for an anonymous template</param>
+            ///<param name="templateStringOrXml" type="String" optional="false">Gets a template id for an anonymous template</param>
             ///<returns type="String">The template id</returns>
 
             if (typeof templateStringOrXml === "string") {
@@ -6197,11 +7000,14 @@ Class("wipeout.viewModels.contentControl", function () {
     };
         
     boundTemplate.prototype.dispose = function() {
+        ///<summary>Dispose of this binding</summary>
+		
         this.d1.dispose();
         this.d2.dispose();
     };
     
     boundTemplate.prototype.refreshTemplate = function(templateId) {
+		
         this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
             delete this.pendingLoad;                
             this.currentTemplate = this.owner[this.templateProperty] = template;
@@ -6373,7 +7179,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     
     itemsControl.prototype.getItemViewModels = function() {
         ///<summary>Get the child view models if any</summary>
-        ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+        ///<returns type="Array">The items</returns>
     
         return this.$getChild ?
             this.$getChild() :
@@ -6383,6 +7189,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     itemsControl.prototype.getItemViewModel = function(index) {
         ///<summary>Get the child view model at a given index</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+        ///<returns type="Any">The view model</returns>
     
         return this.$getChild ?
             this.$getChild(index) :
@@ -6405,7 +7212,7 @@ Class("wipeout.viewModels.itemsControl", function () {
     //virtual, TODV
     itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
-        ///<param name="item" type="wo.view" optional="false">The item deleted</param>  
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
         
         item.dispose();
     };
@@ -6424,6 +7231,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
+		
         var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
 		vm.__createdByItemsControl = true;
 		return vm;
@@ -6512,6 +7320,9 @@ Class("wipeout.viewModels.itemsControl", function () {
 }());
 
 var getParentElement = function() {
+	///<summary>Get the parent element of this node</summary>
+	///<returns type="wipeout.wml.wmlElement">The element</returns>
+	
     if (this._parentElement) {
 		for (var i in this._parentElement)
 			if (this._parentElement[i] === this)
@@ -6526,8 +7337,11 @@ var getParentElement = function() {
 Class("wipeout.wml.wmlElementBase", function () {
     
     var wmlElementBase = wipeout.base.object.extend(function wmlElementBase() {
+        ///<summary>A wml element base</summary>
+		
         this._super();
 		
+        ///<summary type="Number">The number of child nodes</summary>
 		this.length = 0;
     });
     
@@ -6535,6 +7349,10 @@ Class("wipeout.wml.wmlElementBase", function () {
     wmlElementBase.prototype._super = wipeout.base.object.prototype._super;
     
     wmlElementBase.prototype.push = function(obj) {
+        ///<summary>Add an element child</summary>
+        ///<param name="obj" type="wipeout.xml.xmlElement">The element</param>
+        ///<returns type="Number">The new length</returns>
+		
         if(obj.getParentElement !== getParentElement)
             throw "Invalid template node";
         if(obj.getParentElement())
@@ -6547,6 +7365,8 @@ Class("wipeout.wml.wmlElementBase", function () {
     };
     
     wmlElementBase.prototype.splice = function() {
+        ///<summary>Not implemented</summary>	TODO
+		
         throw "not implemented";
 		
         for(var i = 2, ii = arguments.length; i < ii; i++) {
@@ -6566,6 +7386,8 @@ Class("wipeout.wml.wmlElementBase", function () {
     };
     
     wmlElementBase.prototype.serializeContent = function() {
+        ///<summary>Serialize all of the child elements of this element</summary>
+        ///<returns type="String">The value</returns>
         
         var output = [];        
         wipeout.utils.obj.enumerateArr(this, function(i) {
@@ -6578,38 +7400,44 @@ Class("wipeout.wml.wmlElementBase", function () {
     return wmlElementBase;
 });
 
-Class("wipeout.wml.rootWmlElement", function () {
-    
-    var rootWmlElement = wipeout.wml.wmlElementBase.extend(function rootWmlElement() {
-        this._super();
-		
-		this.nodeType = 9;
-    });
-    
-    return rootWmlElement;
-});
-
 Class("wipeout.wml.wmlElement", function () {
     
-    var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline /*optional*/) {
+    var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline) {
+        ///<summary>A wml element</summary>
+        ///<param name="name" type="String">The element name</param>
+        ///<param name="inlien" optional="true type="Boolean">Determines whether the element has a closing tag</param>
+		
         this._super();
         
+        ///<summary type="String">The element name</summary>
         this.name = name;
         
-        this.attributes = {};        
+        ///<summary type="Object">A list of attributes</summary>
+        this.attributes = {};
+		
+        ///<summary type="Boolean">Determines whether the element has a closing tag</summary>
         this.inline = !!inline;
+		
+        ///<summary type="Number">1</summary>
         this.nodeType = 1;
     });
     
     wmlElement.prototype.getParentElement = getParentElement;
     
 	wmlElement.prototype.getAttribute = function (attributeName) {
+        ///<summary>Get attribute value by name</summary>
+        ///<param name="attributeName" type="String">The attribute</param>
+        ///<returns type="String">The value</returns>
+		
 		return this.attributes[attributeName] ?
 			this.attributes[attributeName].value :
 			null;
 	};
 	
     wmlElement.prototype.serialize = function() {
+        ///<summary>Serialize the element</summary>
+        ///<returns type="String">Serialize the element</returns>
+		
         var output = [];
         
         output.splice(0, 0, "<", this.name);
@@ -6637,16 +7465,26 @@ Class("wipeout.wml.wmlElement", function () {
 Class("wipeout.wml.wmlAttribute", function () {
     
     function wmlAttribute(value) {
+        ///<summary>An attribute</summary>
+        ///<param name="value" type="String">The attribute value</param>
+		
+        ///<summary type="String">The value</summary>
         this.value = value;
+		
+        ///<summary type="Number">2</summary>
         this.nodeType = 2;
     };
     
     wmlAttribute.prototype.serializeValue = function() {
+        ///<summary>Serialize the attribute from "=" onwards</summary>
+        ///<returns type="String">The value</returns>
 		
         return '="' + this.value.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"';
     };    
     
     wmlAttribute.prototype.serializeContent = function() {
+        ///<summary>Serialize the value</summary>
+        ///<returns type="String">The value</returns>
                 
         return this.value;
     };
@@ -6656,12 +7494,21 @@ Class("wipeout.wml.wmlAttribute", function () {
 
 Class("wipeout.wml.wmlComment", function () {
     
-    var wmlComment = function wmlComment(commentText) {        
+    var wmlComment = function wmlComment(commentText) {
+        ///<summary>A comment</summary>
+        ///<param name="commentText" type="String">The comment</param>
+		
+        ///<summary type="String">The comment</summary>
         this.commentText = commentText;
+		
+        ///<summary type="Number">8</summary>
         this.nodeType = 8;
     };
     
     wmlComment.prototype.serialize = function() {
+        ///<summary>Serialize</summary>
+        ///<returns type="String">The value</returns>
+		
         return "<!--" + this.commentText + "-->";
     };
     
@@ -6673,11 +7520,20 @@ Class("wipeout.wml.wmlComment", function () {
 Class("wipeout.wml.wmlString", function () {
     
     var wmlString = function wmlString(text) {
+        ///<summary>A text node</summary>
+        ///<param name="text" type="String">The value</param>
+		
+        ///<summary type="String">The text</summary>
         this.text = text;
+		
+        ///<summary type="Number">3</summary>
         this.nodeType = 3;
     };
     
     wmlString.prototype.serialize = function() {
+        ///<summary>Serialize</summary>
+        ///<returns type="String">The value</returns>
+		
         return this.text;
     }
     
@@ -6774,9 +7630,9 @@ Class("wipeout.wml.wmlParser", function () {
 	var ie = !test.childNodes.length;
 	
 	wmlParser.addToElement = function(htmlString) {
-        ///<summary>Create a html element from a string</summary>
+        ///<summary>Add the html string to a html element and return it</summary>
         ///<param name="htmlString" type="String">A string of html</param>
-        ///<returns type="HTMLElement">The first element in the string as a HTMLElement</returns>
+        ///<returns type="HTMLElement">The element</returns>
 				
 		var childTag = wmlParser.getFirstTagName(htmlString);
 		if (!childTag) {
@@ -6806,10 +7662,11 @@ Class("wipeout.wml.wmlParser", function () {
         parent.innerHTML = htmlString;
 		return parent;
 	};
-    		
+    
+	var inline = ["area", "base", "br", "col", "command", "hr", "img", "input", "keygen", "link", "meta", "param", "source"];		
 	function parse (htmlElement) {
 
-		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName);
+		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName, inline.indexOf(htmlElement.localName) !== -1);
 		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
 			if (htmlElement.childNodes[i].nodeType === 1)
 				output.push(parse(htmlElement.childNodes[i]));
@@ -6832,6 +7689,9 @@ Class("wipeout.wml.wmlParser", function () {
 	};
 	
     function wmlParser(wmlString) {
+        ///<summary>Parse a string to wml</summary>
+        ///<param name="wmlString" type="String|Element">The value to parse</param>
+        ///<returns type="wipeout.wml.wmlElement">The element</returns>
 		
 		if (wmlString instanceof Element)
 			return parse(wmlString);
@@ -6884,15 +7744,27 @@ window.addEventListener("load", function () {
     window.wo();
 });
 
+//TODM: all exposed items
+function expose (name, value) {
+	if (!name || value == null) throw "Invalid input";
+	if (wo[name]) throw name + " is already taken!";
+	wo[name] = value;
+}
 
-wo.viewModel = viewModel;
+expose("viewModel", viewModel);
 
-wo.routedEvent = wipeout.events.routedEvent;
-wo.array = wipeout.base.array;
-wo.observe = obsjs.observable.observe;
+expose("routedEvent", wipeout.events.routedEvent);
+expose("array", wipeout.base.array);
+expose("observable", obsjs.observable);
+
+expose("bindings", wipeout.htmlBindingTypes);
+expose("parsers", wipeout.template.initialization.parsers);
+expose("filters", wipeout.template.filters);
+
+expose("addHtmlAttribute", HtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
-    wo[name] = vm;
+	expose(name, vm);
 });
 
 }());
