@@ -33,6 +33,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		
 		var element = this.propertyOwner;
 		callback = callback || (function (e) {
+			e.preventDefault();	//TODO: test
 			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
 		}).bind(this);
 						
