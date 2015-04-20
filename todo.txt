@@ -24,6 +24,7 @@ standardise the way things are rendered, between Objects and wo.views (toString)
 
 for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
 
+onInitialized, onRendered etc...
 
 bug, handle null template id better
 

@@ -26,12 +26,23 @@ function viewModel (name, extend) {
 
 		return output;
 	};
+	
+	function buildComputeds() {
+		var output = [];
+		for (var i in computeds) {
+			var name = '"' + i.replace('"', '\\"') + '"';
+			output.push("\n	this.initComputed(" + name + ", computeds[" + name + "].logic, computeds[" + name + "].options);");
+		}
+		
+		return output.join("");
+	}
 
 	var methods = {statics: true},	//statics is reserved
 		valuesAsConstructorArgs = {},
 		statics = {},
 		bindingTypes = {},
 		parsers = {},
+		computeds = {},
 		inheritanceTree;
 
 	function check () {
@@ -61,7 +72,7 @@ function viewModel (name, extend) {
 			}
 
 			var split = name.split(".");
-			$constructor = new Function("extend", "getParentConstructorArgs", "values", 
+			$constructor = new Function("extend", "getParentConstructorArgs", "values", "computeds",
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
 "	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
 "\n" +
@@ -69,7 +80,8 @@ function viewModel (name, extend) {
 "		this[i] = values[i] instanceof Function ?\n" +
 "			values[i].apply(this, arguments) :\n" +
 "			values[i];\n" +
-"}")(extend, getParentConstructorArgs, values);
+										buildComputeds() +
+"}")(extend, getParentConstructorArgs, values, computeds);
 
 			Class(name, function () {
 				return objjs.object.extend.call(extend, $constructor);
@@ -106,6 +118,20 @@ function viewModel (name, extend) {
 			methods[name] = method;				
 			return output;
 		},
+		
+		computed: function (name, logic, options) {
+
+			check();
+			
+			if (values[name])
+				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a value: " + name;
+			
+			computeds[name] = {logic: logic, options: options};
+			return output;
+		},
 
 		value: function (name, value) {
 			check();
@@ -118,6 +144,9 @@ function viewModel (name, extend) {
 
 			if (values[name])
 				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a computed: " + name;
 
 			values[name] = value;				
 			return output;
@@ -133,6 +162,9 @@ function viewModel (name, extend) {
 
 			if (values[name])
 				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a computed: " + name;
 
 			values[name] = value;				
 			return output;

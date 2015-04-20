@@ -27,6 +27,31 @@ test("model and template id via constructor args", function() {
 	ok(ok1);
 });
 
+test("computed", function() {
+	
+	// arrange
+	var vm = wo.viewModel("vms.test")
+		.computed("theVal", function () {
+			
+			return this.model ? this.model.hello : 4;
+			
+		}, {hello: true})
+		.build();
+		
+	// act
+	var obj = new vm.constructor();
+	obj.observe("theVal", function (oldV, newV) {
+		strictEqual(oldV, 4);
+		strictEqual(newV, 5);
+		start();
+	});
+	
+	obj.model = {hello: 5};
+	
+	// assert
+	stop();
+});
+
 test("model and template id via constructor args, with comments", function() {
 	
 	// arrange
