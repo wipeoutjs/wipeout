@@ -41,7 +41,7 @@ Class("wipeout.viewModels.view", function () {
 		var op = this.computed(property, callback, options);
 		
 		if (op)
-			(this.$initComputeds || this.$initComputeds = []).push(op);
+			(this.$initComputeds || (this.$initComputeds = [])).push(op);
 		
 		return op;
 	};

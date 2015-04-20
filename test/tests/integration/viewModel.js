@@ -33,7 +33,7 @@ test("computed", function() {
 	var vm = wo.viewModel("vms.test")
 		.computed("theVal", function () {
 			
-			return this.model ? this.model.hello : 4;
+			return this.model ? this.model.hello : null;
 			
 		}, {hello: true})
 		.build();
@@ -41,7 +41,6 @@ test("computed", function() {
 	// act
 	var obj = new vm.constructor();
 	obj.observe("theVal", function (oldV, newV) {
-		strictEqual(oldV, 4);
 		strictEqual(newV, 5);
 		start();
 	});
