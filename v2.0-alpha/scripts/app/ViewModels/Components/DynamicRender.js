@@ -7,8 +7,8 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
         this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
     };
     
-    dynamicRender.prototype.onModelChanged = function(oldVal, newVal) {
-        this._super(oldVal, newVal);
+    dynamicRender.prototype.onModelChanged = function(newVal) {
+        this._super(newVal);
                
         var oldVal = this.content;
         
@@ -33,7 +33,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
                 throw "Unknown model type";
             }
             
-            newVm.model(newVal);
+            newVm.model = newVal;
             this.content = newVm;
         }
     };  

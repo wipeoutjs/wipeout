@@ -183,7 +183,7 @@ var get = function(item, root) {
     return current;
 };
 
-compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", function() {
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
@@ -932,7 +932,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
                 
         for(var i in this.constructorFunction) {
             if(this.constructorFunction.hasOwnProperty(i)) {
-                if(this.constructorFunction[i] instanceof wo.event) {
+                if(this.constructorFunction[i] instanceof wipeout.events.event) {
                     this.staticEvents.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, true));
                 } else if(this.constructorFunction[i] instanceof Function) {
                     this.staticFunctions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction[i], i, this.classFullName, true));
@@ -944,7 +944,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
         
         for(var i in this.constructorFunction.prototype) {
             if(this.constructorFunction.prototype.hasOwnProperty(i)) {                    
-                if(this.constructorFunction.prototype[i] instanceof wo.event) { 
+                if(this.constructorFunction.prototype[i] instanceof wipeout.events.event) { 
                     this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
                 } else if(this.constructorFunction.prototype[i] instanceof Function) {
                     this.functions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction.prototype[i], i, this.classFullName, false));
@@ -965,7 +965,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if (anInstance) {
                 for(var i in anInstance) {
                     if(anInstance.hasOwnProperty(i)) {                    
-                        if(anInstance[i] instanceof wo.event) { 
+                        if(anInstance[i] instanceof wipeout.events.event) { 
                             this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
                         } else if(anInstance[i] instanceof Function) { 
                             this.functions.push(new wipeoutDocs.models.descriptions.function(anInstance[i], i, this.classFullName, false));
@@ -1690,13 +1690,6 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
         crossroads.parse(location.pathname + location.search);
     };
     
-    ApiApplication.prototype.onRendered = function() {
-        this._super.apply(this, arguments);
-        
-        //TODO: this
-        this.templateItems.treeView.select();
-    };
-    
     return ApiApplication;
 });
 
@@ -1738,10 +1731,14 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = null;
         
-        this.code.subscribe(this.onCodeChanged, this);        
-        this.computed("renderCode", function() {
+        this.observe("code", this._onCodeChanged, this);        
+        this.initComputed("renderCode", function() {
             return this.code ? this.code.replace(/</g, "&lt;") : this.code;
         });
+    };
+    
+    codeBlock.prototype._onCodeChanged = function(oldVal, newVal) {
+		return this.onCodeChanged(newVal);
     };
     
     codeBlock.prototype.onCodeChanged = function(newVal) {
@@ -1764,8 +1761,8 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
         this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
     };
     
-    dynamicRender.prototype.onModelChanged = function(oldVal, newVal) {
-        this._super(oldVal, newVal);
+    dynamicRender.prototype.onModelChanged = function(newVal) {
+        this._super(newVal);
                
         var oldVal = this.content;
         
@@ -1790,7 +1787,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
                 throw "Unknown model type";
             }
             
-            newVm.model(newVal);
+            newVm.model = newVal;
             this.content = newVm;
         }
     };  
@@ -1831,7 +1828,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.newTemplateCodeBlock",
     return newTemplateCodeBlock;
 });
 
-compiler.registerClass("wipeout.rl", "wo.view", function() {
+compiler.registerClass("wipeoutDocs.rl", "wo.view", function() {
     var RouteLink = function() {
         this._super("wipeoutDocs.viewModels.components.routeLink");
     };
@@ -2058,7 +2055,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
 
 compiler.registerClass("wipeoutDocs.viewModels.pages.classItemTable", "wo.itemsControl", function() {
     return function() {
-        this._super("wipeoutDocs.viewModels.pages.classItemTable", "wipeoutDocs.viewModels.Pages.ClassItemRow");
+        this._super("wipeoutDocs.viewModels.pages.classItemTable", "wipeoutDocs.viewModels.pages.classItemRow");
         
         this.itemType = "Function";
     };

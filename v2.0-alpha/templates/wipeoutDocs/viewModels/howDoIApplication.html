@@ -8,14 +8,14 @@
             <div class="list-group">
                 <wo.if condition="$model.header.visible">
                     <set-template>
-                        <wipeout.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header" />
+                        <wipeout-docs.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header" />
                     </set-template>
                 </wo.if>
                 <wo.items-control items="$model.items" id="items">
                     <item-template>
-                        <wo.if condition="model.visible">
+                        <wo.if condition="$model.visible">
                             <set-template>
-                                <wipeout.rl text="$model.text" href="$model.href" class="'list-group-item'" style="'padding-left: 30px'" />
+                                <wipeout-docs.rl text="$model.text" href="$model.href" class="'list-group-item'" style="'padding-left: 30px'" />
                             </set-template>
                         </wo.if>
                     </item-template>

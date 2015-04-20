@@ -1,7 +1,7 @@
 <wo.items-control items="$model.branches" id="content">
     <set-template>
         <div>
-            <a wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select"
+            <a wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select()"
 			   wo-content="$model.name"
 			   wo-attr-href="$model.href || 'javascript:void(0)'"></a>
                 <small style="color: #158cba; cursor: pointer" 

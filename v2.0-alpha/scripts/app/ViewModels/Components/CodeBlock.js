@@ -3,10 +3,14 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = null;
         
-        this.code.subscribe(this.onCodeChanged, this);        
-        this.computed("renderCode", function() {
+        this.observe("code", this._onCodeChanged, this);        
+        this.initComputed("renderCode", function() {
             return this.code ? this.code.replace(/</g, "&lt;") : this.code;
         });
+    };
+    
+    codeBlock.prototype._onCodeChanged = function(oldVal, newVal) {
+		return this.onCodeChanged(newVal);
     };
     
     codeBlock.prototype.onCodeChanged = function(newVal) {

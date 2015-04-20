@@ -3328,7 +3328,20 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
+		
+        ///<Summary type="[obsjs.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
+		this.$initComputeds = [];
     });
+	
+	view.prototype.initComputed = function () {
+		var op = this.computed.apply(this, arguments);
+		
+		if (op) {
+			this.$initComputeds.push(op);
+		}
+		
+		return op;
+	};
 	
     view.addGlobalParser("id", "string");
     view.addGlobalBindingType("id", "viewModelId");
@@ -3464,7 +3477,11 @@ Class("wipeout.viewModels.view", function () {
     
     // virtual
     view.prototype.onInitialized = function() {
-        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
+        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
+		
+		enumerateArr(this.$initComputeds, function (comp) {
+			comp.execute();
+		});
     };
 
     return view;
@@ -4737,7 +4754,7 @@ If view models have odd names ensure you are not using a minifier';
         div.innerHTML += innerHTML.join("<br />");
         
         function listener() {
-            viewVm(vm, vm.model);
+            viewVm(vm, vm.model());
         }
         
         div.firstChild.addEventListener("click", listener, false);
@@ -5642,6 +5659,12 @@ HtmlAttr("render", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
+		//TODO: is this a hack?
+		if (element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script") {
+			element.innerHTML = '<script type="placeholder"></script>';
+			return render(element.firstChild, attribute, renderContext);
+		}
+		
         var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
 		
 		attribute.watch(renderContext, function (oldVal, newVal) {
@@ -5854,6 +5877,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		
 		var element = this.propertyOwner;
 		callback = callback || (function (e) {
+			e.preventDefault();	//TODO: test
 			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
 		}).bind(this);
 						
@@ -6733,12 +6757,23 @@ function viewModel (name, extend) {
 
 		return output;
 	};
+	
+	function buildComputeds() {
+		var output = [];
+		for (var i in computeds) {
+			var name = '"' + i.replace('"', '\\"') + '"';
+			output.push("\n	this.initComputed(" + name + ", computeds[" + name + "].logic, computeds[" + name + "].options);");
+		}
+		
+		return output.join("");
+	}
 
 	var methods = {statics: true},	//statics is reserved
 		valuesAsConstructorArgs = {},
 		statics = {},
 		bindingTypes = {},
 		parsers = {},
+		computeds = {},
 		inheritanceTree;
 
 	function check () {
@@ -6768,7 +6803,7 @@ function viewModel (name, extend) {
 			}
 
 			var split = name.split(".");
-			$constructor = new Function("extend", "getParentConstructorArgs", "values", 
+			$constructor = new Function("extend", "getParentConstructorArgs", "values", "computeds",
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
 "	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
 "\n" +
@@ -6776,7 +6811,8 @@ function viewModel (name, extend) {
 "		this[i] = values[i] instanceof Function ?\n" +
 "			values[i].apply(this, arguments) :\n" +
 "			values[i];\n" +
-"}")(extend, getParentConstructorArgs, values);
+										buildComputeds() +
+"}")(extend, getParentConstructorArgs, values, computeds);
 
 			Class(name, function () {
 				return objjs.object.extend.call(extend, $constructor);
@@ -6813,6 +6849,20 @@ function viewModel (name, extend) {
 			methods[name] = method;				
 			return output;
 		},
+		
+		computed: function (name, logic, options) {
+
+			check();
+			
+			if (values[name])
+				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a value: " + name;
+			
+			computeds[name] = {logic: logic, options: options};
+			return output;
+		},
 
 		value: function (name, value) {
 			check();
@@ -6825,6 +6875,9 @@ function viewModel (name, extend) {
 
 			if (values[name])
 				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a computed: " + name;
 
 			values[name] = value;				
 			return output;
@@ -6840,6 +6893,9 @@ function viewModel (name, extend) {
 
 			if (values[name])
 				throw "You have already added a value: " + name;
+
+			if (computeds[name])
+				throw "You have already added a computed: " + name;
 
 			values[name] = value;				
 			return output;
@@ -7751,8 +7807,6 @@ function expose (name, value) {
 	wo[name] = value;
 }
 
-expose("event", wipeout.events.event);
-	
 expose("viewModel", viewModel);
 
 expose("routedEvent", wipeout.events.routedEvent);

@@ -23,12 +23,5 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
         crossroads.parse(location.pathname + location.search);
     };
     
-    ApiApplication.prototype.onRendered = function() {
-        this._super.apply(this, arguments);
-        
-        //TODO: this
-        this.templateItems.treeView.select();
-    };
-    
     return ApiApplication;
 });

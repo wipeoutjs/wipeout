@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.apiApplication", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", function() {
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;

@@ -72,7 +72,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
                 
         for(var i in this.constructorFunction) {
             if(this.constructorFunction.hasOwnProperty(i)) {
-                if(this.constructorFunction[i] instanceof wo.event) {
+                if(this.constructorFunction[i] instanceof wipeout.events.event) {
                     this.staticEvents.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, true));
                 } else if(this.constructorFunction[i] instanceof Function) {
                     this.staticFunctions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction[i], i, this.classFullName, true));
@@ -84,7 +84,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
         
         for(var i in this.constructorFunction.prototype) {
             if(this.constructorFunction.prototype.hasOwnProperty(i)) {                    
-                if(this.constructorFunction.prototype[i] instanceof wo.event) { 
+                if(this.constructorFunction.prototype[i] instanceof wipeout.events.event) { 
                     this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
                 } else if(this.constructorFunction.prototype[i] instanceof Function) {
                     this.functions.push(new wipeoutDocs.models.descriptions.function(this.constructorFunction.prototype[i], i, this.classFullName, false));
@@ -105,7 +105,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
             if (anInstance) {
                 for(var i in anInstance) {
                     if(anInstance.hasOwnProperty(i)) {                    
-                        if(anInstance[i] instanceof wo.event) { 
+                        if(anInstance[i] instanceof wipeout.events.event) { 
                             this.events.push(new wipeoutDocs.models.descriptions.event(this.constructorFunction, i, this.classFullName, false));
                         } else if(anInstance[i] instanceof Function) { 
                             this.functions.push(new wipeoutDocs.models.descriptions.function(anInstance[i], i, this.classFullName, false));
