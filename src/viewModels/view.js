@@ -32,12 +32,16 @@ Class("wipeout.viewModels.view", function () {
 		this.$initComputeds = [];
     });
 	
-	view.prototype.initComputed = function () {
-		var op = this.computed.apply(this, arguments);
+	view.prototype.initComputed = function (property, callback, options) {
+		if (options)
+			options = {delayExecution: true};
+		else
+			options.delayExecution = true
 		
-		if (op) {
-			this.$initComputeds.push(op);
-		}
+		var op = this.computed(property, callback, options);
+		
+		if (op)
+			(this.$initComputeds || this.$initComputeds = []).push(op);
 		
 		return op;
 	};
@@ -173,14 +177,15 @@ Class("wipeout.viewModels.view", function () {
     view.prototype.onApplicationInitialized = function () {
         ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
     };
-    
+	
+    function ex (comp) { comp.execute(); }
+	
     // virtual
     view.prototype.onInitialized = function() {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
 		
-		enumerateArr(this.$initComputeds, function (comp) {
-			comp.execute();
-		});
+		enumerateArr(this.$initComputeds, ex);
+		this.$initComputeds = null;
     };
 
     return view;
