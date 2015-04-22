@@ -53,7 +53,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		var ra = new wipeout.template.rendering.renderedArray(array, this);
         this.disposeOfBindings = ra.dispose.bind(ra);
 		
-        if (array instanceof wipeout.base.array)
+        if (array instanceof busybody.array)
             ra.registerDisposable(array.observe(ra.render, ra, {useRawChanges: true}));
 		
 		ra.render([{

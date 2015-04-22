@@ -1,7 +1,7 @@
 
 Class("wipeout.base.bindable", function () {
 	
-    var bindable = wipeout.base.observable.extend(function bindable() {
+    var bindable = busybody.observable.extend(function bindable() {
         ///<summary>An object which interacts with the wipeout template parser and defines parsers and bindings for specific properties</summary>
         
         this._super();

@@ -1,7 +1,7 @@
 
 Class("wipeout.events.eventRegistration", function () {
     
-    return wipeout.base.disposable.extend(function eventRegistration(callback, context, dispose) {
+    return busybody.disposable.extend(function eventRegistration(callback, context, dispose) {
         ///<summary>On object containing event registration details</summary>
         ///<param name="callback" type="Any" optional="false">The event logic</param>
         ///<param name="context" type="Any" optional="true">The context of the event logic</param>

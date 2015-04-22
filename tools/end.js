@@ -8,7 +8,7 @@ function expose (name, value) {
 expose("viewModel", viewModel);
 
 expose("routedEvent", wipeout.events.routedEvent);
-expose("array", wipeout.base.array);
+expose("array", busybody.array);
 expose("observable", busybody.observable);
 
 expose("bindings", wipeout.htmlBindingTypes);

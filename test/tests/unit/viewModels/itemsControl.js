@@ -25,7 +25,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     
     // assert
     strictEqual(subject.itemTemplateId, itemTemplateId);
-    strictEqual(subject.items.constructor, wipeout.base.array);
+    strictEqual(subject.items.constructor, busybody.array);
 });
 
 testUtils.testWithUtils("constructor", "item template change", false, function(methods, classes, subject, invoker) {

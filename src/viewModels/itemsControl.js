@@ -21,8 +21,8 @@ Class("wipeout.viewModels.itemsControl", function () {
         
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
-        ///<Summary type="wipeout.base.array">An array of models to render</Summary>
-        this.items = new wipeout.base.array();
+        ///<Summary type="busybody.array">An array of models to render</Summary>
+        this.items = new busybody.array();
         this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
