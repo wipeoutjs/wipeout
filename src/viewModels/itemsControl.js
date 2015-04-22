@@ -1,246 +1,91 @@
-
+ 
 Class("wipeout.viewModels.itemsControl", function () {
     
-    var deafaultTemplateId;
-    var staticConstructor = function() {
-        if(deafaultTemplateId) return;
-        
-        deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("<div data-bind='itemsControl: null'></div>");
-    };
-    
+	var deafaultTemplateId;
+	var defaultItemTemplateId;
     var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
-        ///<summary>Bind a list of models (itemSource) to a list of view models (items) and render accordingly</summary>
+        ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
-        staticConstructor();
-        this._super(templateId || deafaultTemplateId, model);
+        this._super(templateId || 
+					deafaultTemplateId ||
+					(deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}')), model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
-        this.itemTemplateId = ko.observable(itemTemplateId);
+        this.itemTemplateId = itemTemplateId;
 
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
-        this.itemTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.itemTemplateId, this);
+        this.itemTemplate = "";
         
-        ///<Summary type="ko.observableArray" generic0="Any">An array of models to render</Summary>
-        this.itemSource = ko.observableArray([]);
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
-        ///<Summary type="ko.observable" generic0="wo.view">An array of viewmodels, each corresponding to a mode in the itemSource property</Summary>
-        this.items = ko.observableArray([]);
-
-        if(wipeout.utils.ko.version()[0] < 3) {
-            itemsControl._subscribeV2.call(this);
-        } else {
-            itemsControl._subscribeV3.call(this);
-        }
-        
-        var d1 = this.items.subscribe(this._syncModelsAndViewModels, this);
-        this.registerDisposable(d1);
-
-        itemTemplateId = this.itemTemplateId.peek();
-        var d2 = this.itemTemplateId.subscribe(function (newValue) {
-            if (itemTemplateId !== newValue) {
-                try {
-                    this.reDrawItems();
-                } finally {
-                    itemTemplateId = newValue;
-                }
-            }
-        }, this);
-        this.registerDisposable(d2);
+        ///<Summary type="wipeout.base.array">An array of models to render</Summary>
+        this.items = new wipeout.base.array();
+        this.registerDisposable(this.items);
         
         this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
+        
+        this.observe("itemTemplateId", function (oldVal, newVal) {
+			enumerateArr(this.getItemViewModels(), function (vm) {
+				if (vm.__createdByItemsControl)
+					vm.templateId = newVal;
+			});
+        }, this);
     });
     
-    itemsControl._subscribeV2 = function() {
-        ///<summary>Bind items to itemSource for knockout v2. Context must be an itemsControl</summary>
-        var initialItemSource = this.itemSource.peek();
+    itemsControl.addGlobalParser("itemTemplate", "template");
+    itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
         
-        var d1 = this.itemSource.subscribe(function() {
-            try {
-                if(this._modelsAndViewModelsAreSynched())
-                    return;
-                this._itemSourceChanged(ko.utils.compareArrays(initialItemSource, arguments[0] || []));
-            } finally {
-                initialItemSource = wipeout.utils.obj.copyArray(arguments[0] || []);
-            }
-        }, this);
-        this.registerDisposable(d1);
-        
-        var initialItems = this.items.peek();
-        var d2 = this.items.subscribe(function() {
-            try {
-                this._itemsChanged(ko.utils.compareArrays(initialItems, arguments[0] || []));
-            } finally {
-                initialItems = wipeout.utils.obj.copyArray(arguments[0] || []);
-            }
-        }, this);
-        this.registerDisposable(d2);
-    };
-    
     itemsControl.removeItem = wipeout.events.routedEvent();
-    
-    itemsControl._subscribeV3 = function() {
-        ///<summary>Bind items to itemSource for knockout v3. Context must be an itemsControl</summary>
-        var d1 = this.itemSource.subscribe(this._itemSourceChanged, this, "arrayChange");
-        this.registerDisposable(d1);
-        
-        var d2 = this.items.subscribe(this._itemsChanged, this, "arrayChange");
-        this.registerDisposable(d2);
-        
-    };
-    
+	
     itemsControl.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>
     
-        if(this.itemSource.indexOf(e.data) !== -1) {
+        if(this.items.indexOf(e.data) !== -1) {
             this.removeItem(e.data);
             e.handled = true;
         }
+    };
+    
+    itemsControl.prototype.getItemViewModels = function() {
+        ///<summary>Get the child view models if any</summary>
+        ///<returns type="Array">The items</returns>
+    
+        return this.$getChild ?
+            this.$getChild() :
+			[];
+	};
+    
+    itemsControl.prototype.getItemViewModel = function(index) {
+        ///<summary>Get the child view model at a given index</summary>
+        ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
+        ///<returns type="Any">The view model</returns>
+    
+        return this.$getChild ?
+            this.$getChild(index) :
+            undefined;
     };
     
     itemsControl.prototype.removeItem = function(item) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="item" type="Any" optional="false">The item to remove</param>
     
-        this.itemSource.remove(item);
+        this.items.remove(item);
     };
     
-    itemsControl.prototype._initialize = function(propertiesXml, parentBindingContext) {
-        ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
-        ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
-    
-        if(propertiesXml) {        
-            var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
-            if(prop && parseBool(prop.value))
-                throw "A wo.itemsControl cannot share it's parents scope.";
-        }
-        
-        this._super(propertiesXml, parentBindingContext);
-    };
-    
-    itemsControl.prototype._syncModelsAndViewModels = function() {
-        ///<summary>Ensures that the itemsSource array and items array are in sync</summary>
-        var changed = false, modelNull = false;
-        var models = this.itemSource();
-        if(models ==  null) {
-            modelNull = true;
-            models = [];
-        }
-        
-        var viewModels = this.items();
-        
-        if(models.length !== viewModels.length) {
-            changed = true;
-            models.length = viewModels.length;
-        }
-        
-        for(var i = 0, ii = viewModels.length; i < ii; i++) {
-            if(viewModels[i].model() !== models[i]) {
-                models[i] = viewModels[i].model();
-                changed = true;
-            }
-        }
-        
-        if(changed) {
-            if(modelNull)
-                this.itemSource(models);
-            else
-                this.itemSource.valueHasMutated();
-        }
-    };
-
-    itemsControl.prototype._modelsAndViewModelsAreSynched = function() {
-        ///<summary>Returns whether all models have a corresponding view model at the correct index</summary>
-        ///<returns type="Boolean"></returns>
-        var model = this.itemSource() || [];
-        var viewModel = this.items() || [];
-        
-        if(model.length !== viewModel.length)
-            return false;
-        
-        for(var i = 0, ii = model.length; i < ii; i++) {
-            if(model[i] !== viewModel[i].model())
-                return false;
-        }
-        
-        return true;
-    };
-
-    itemsControl.prototype._itemsChanged = function (changes) { 
-        ///<summary>Runs onItemDeleted and onItemRendered on deleted and created items respectively</summary>
-        ///<param name="changes" type="Array" generic0="wo.view" optional="false">A knockout diff of changes to the items</param>
-        
-        enumerateArr(changes, function(change) {
-            if(change.status === wipeout.utils.ko.array.diff.deleted && change.moved == null)
-                this.onItemDeleted(change.value);
-            else if(change.status === wipeout.utils.ko.array.diff.added && change.moved == null)
-                this.onItemRendered(change.value);
-        }, this);
-    };
-
-    itemsControl.prototype._itemSourceChanged = function (changes) { 
-        ///<summary>Adds, removes and moves view models depending on changes to the models array</summary>
-        ///<param name="changes" type="Array" optional="false">A knockout diff of changes to the itemSource</param>
-        var items = this.items();
-        var del = [], add = [], move = {}, delPadIndex = 0;
-        for(var i = 0, ii = changes.length; i < ii; i++) {
-            if(changes[i].status === wipeout.utils.ko.array.diff.retained) continue;            
-            else if(changes[i].status === wipeout.utils.ko.array.diff.deleted) {
-                del.push((function(change) {
-                    return function() {
-                        var removed = items.splice(change.index + delPadIndex, 1)[0];
-                        if(change.moved != null)
-                            move[change.moved + "." + change.index] = removed;
-                        
-                        delPadIndex--;
-                    };
-                })(changes[i]));
-            } else if(changes[i].status === wipeout.utils.ko.array.diff.added) {
-                add.push((function(change) {
-                    return function() {
-                        var added = change.moved != null ? move[change.index + "." + change.moved] : this._createItem(change.value);
-                        items.splice(change.index, 0, added);
-                    };
-                })(changes[i]));
-            } else {
-                throw "Unsupported status";
-            }
-        }
-        
-        for(i = 0, ii = del.length; i < ii; i++) {
-            del[i].call(this);
-        }
-        
-        for(i = 0, ii = add.length; i < ii; i++) {
-            add[i].call(this);
-        }
-        
-        this.items.valueHasMutated();
-    };
-    
-    //virtual
+    //virtual, TODV
     itemsControl.prototype.onItemRendered = function (item) {
         ///<summary>Called after a new item items control is rendered</summary>
         ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
     
-    itemsControl.prototype.dispose = function () {
-        ///<summary>Dispose of the items control and its items</summary>
-        enumerateArr(this.items(), function(i) {
-            i.dispose();
-        });
-        
-        this._super();
-    };    
-    
-    //virtual
-    itemsControl.prototype.onItemDeleted = function (item) {
+    //virtual, TODV
+    itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
-        ///<param name="item" type="wo.view" optional="false">The item deleted</param>  
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
         
         item.dispose();
     };
@@ -251,7 +96,6 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<returns type="wo.view">The newly created item</returns>
         
         var item = this.createItem(model);
-        item.__woBag.createdByWipeout = true;
         return item;
     };
 
@@ -260,19 +104,10 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
-        return new wipeout.viewModels.view(this.itemTemplateId(), model);        
-    };
-
-    itemsControl.prototype.reDrawItems = function () {
-        ///<summary>Destroys and re-draws all view models</summary>
-        var models = this.itemSource() || [];
-        var values = this.items();
-        values.length = models.length;
-        for (var i = 0, ii = models.length; i < ii; i++) {
-            values[i] = this._createItem(models[i]);
-        }
-
-        this.items.valueHasMutated();
+		
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
+		vm.__createdByItemsControl = true;
+		return vm;
     };
 
     return itemsControl;

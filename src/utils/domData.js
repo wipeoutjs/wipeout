@@ -5,14 +5,14 @@ Class("wipeout.utils.domData", function () {
         ///<summary>Append data to dom elemenents</summary>
     }
     
-    function store(element) {
-        ///<summary>Lazy create and get the dom data store for an element</summary>
+    domData.exists = function(element, key) {
+        ///<summary>Determine if the element has a value for a given key</summary>
         ///<param name="element" type="HTMLNode" optional="false">The element to get a store from</param>
-        ///<returns type="Object">The data store for this element</returns>
+        ///<param name="key" type="String" optional="true">The data key</param>
+        ///<returns type="Boolean"></returns>
         
-        if(!element) throw "Invalid html element";
-        return element[domDataKey] = element[domDataKey] || {};
-    }
+        return element[domDataKey] && element[domDataKey].hasOwnProperty(key)
+    };
     
     domData.get = function(element, key) {
         ///<summary>Get data from an element</summary>
@@ -20,7 +20,10 @@ Class("wipeout.utils.domData", function () {
         ///<param name="key" type="String" optional="true">The data to get</param>
         ///<returns type="Object">The value of this key</returns>
         
-        return arguments.length > 1 ? store(element)[key] : store(element);
+		if (arguments.length < 2)
+			return element[domDataKey];
+		
+		return domData.exists(element, key) ? element[domDataKey][key] : undefined;
     };
     
     domData.set = function(element, key, value) {
@@ -30,7 +33,7 @@ Class("wipeout.utils.domData", function () {
         ///<param name="value" type="Any" optional="false">The data to set</param>
         ///<returns type="Any">The value</returns>
         
-        return store(element)[key] = value;
+        return (element[domDataKey] || (element[domDataKey] = {}))[key] = value;
     };
     
     domData.clear = function(element, key) {
@@ -38,11 +41,14 @@ Class("wipeout.utils.domData", function () {
         ///<param name="element" type="HTMLNode" optional="false">The element to get a store from</param>
         ///<param name="key" type="String" optional="true">The key of data to clear</param>
         
-        if(key) {
-            delete store(element)[key];
-        } else {
-            delete element[domDataKey];
-        }
+		if (key && element[domDataKey])
+			for (var i in element[domDataKey])
+				if (i !== key) {
+            		delete element[domDataKey][key];
+					return;
+				}
+		
+		delete element[domDataKey];
     };
     
     return domData;

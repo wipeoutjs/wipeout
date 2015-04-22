@@ -94,24 +94,29 @@ testUtils.testWithUtils("getObject", "", true, function(methods, classes, subjec
     strictEqual(invoker("a.b.c.d", ctxt), ctxt.a.b.c.d);
 });
 
-testUtils.testWithUtils("createObject", "invalid function", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("setObject", "", true, function(methods, classes, subject, invoker) {
     // arrange
-    var ctxt = {a:{b:{c:{d:{}}}}};
+    var ctxt = {a:{b:{c:{d:{}}}}}, obj = {};
     
-    // act 
+    // act
+	invoker("a.b.c.d", ctxt, obj);
+	
     // assert    
-    throws(function() {
-        invoker("a.b.c.d", ctxt);
-    });
+    strictEqual(obj, ctxt.a.b.c.d);
 });
 
-testUtils.testWithUtils("createObject", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var ctxt = {a:{b:{c:{d:function(){}}}}};
-    
-    // act 
-    // assert
-    ok(invoker("a.b.c.d", ctxt) instanceof ctxt.a.b.c.d);;
+testUtils.testWithUtils("splitPropertyName", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act	
+    // assert    
+    deepEqual(invoker("a.b.c[3].t"), ["a", "b", "c", 3, "t"]);
+});
+
+testUtils.testWithUtils("joinPropertyName", "", true, function(methods, classes, subject, invoker) {
+    // arrange    
+    // act	
+    // assert    
+    deepEqual(invoker(["a", "b", "c", 3, "t"]), "a.b.c[3].t");
 });
 
 testUtils.testWithUtils("copyArray", "", true, function(methods, classes, subject, invoker) {
@@ -127,12 +132,15 @@ testUtils.testWithUtils("copyArray", "", true, function(methods, classes, subjec
         strictEqual(actual[i], expected[i]);        
 });
 
-testUtils.testWithUtils("endsWith", "", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("extend", "", true, function(methods, classes, subject, invoker) {
     // arrange
-    var end = "LKJBKJB";
+    var obj1 = {};
+    var obj2 = {aaa:{}};
     
-    // act    
+    // act
+    var out = invoker(obj1, obj2);
+    
     // assert    
-    ok(invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end, end));
-    ok(!invoker("lsdikgflkjsdbfkjlsdbfkjsdbf" + end + " ", end));
+    strictEqual(out, obj1);
+    strictEqual(out.aaa, obj2.aaa);
 });

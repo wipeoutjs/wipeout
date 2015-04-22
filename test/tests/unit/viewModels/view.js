@@ -5,254 +5,80 @@ module("wipeout.viewModels.view", {
     }
 });
 
-var view = wipeout.viewModels.view;
-
-testUtils.testWithUtils("binding subscriptions one way", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-    var view = new wo.view();
-    view.prop = ko.observable();
-    
-    var obs = ko.observable();
-    
-    view.bind("prop", function() { return obs; }, false);
-    
-    var props = [];
-    view.prop.subscribe(function() {
-        props.push(arguments[0]);
-    });
-    
-    var obss = [];
-    obs.subscribe(function() {
-        obss.push(arguments[0]);
-    });
-    
-    
-    // act
-    view.prop(1);
-    obs(2);
-    view.prop(3);
-    obs(4);
-    view.prop(5);
-    obs(6);
-    view.prop(7);
-    
-    // assert
-    deepEqual(props, [1, 2, 3, 4, 5, 6, 7]);
-    deepEqual(obss, [2, 4, 6]);
-});
-
-testUtils.testWithUtils("binding subscriptions two way", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-    var view = new wo.view();
-    view.prop = ko.observable();
-    
-    var obs = ko.observable();
-    
-    view.bind("prop", function() { return obs; }, true);
-    
-    var props = [];
-    view.prop.subscribe(function() {
-        props.push(arguments[0]);
-    });
-    
-    var obss = [];
-    obs.subscribe(function() {
-        obss.push(arguments[0]);
-    });
-    
-    
-    // act
-    view.prop(1);
-    obs(2);
-    view.prop(3);
-    obs(4);
-    view.prop(5);
-    obs(6);
-    view.prop(7);
-    
-    // assert
-    deepEqual(props, [1, 2, 3, 4, 5, 6, 7]);
-    deepEqual(obss, [1, 2, 3, 4, 5, 6, 7]);
-});
-
 testUtils.testWithUtils("constructor", "", false, function(methods, classes, subject, invoker) {
     // arrange
     var templateId = {};
     var model = {};
-    subject.__woBag = {};
     subject._super = methods.method([templateId]);
-    subject.registerDisposable = methods.customMethod();
-    
+    subject._onModelChanged = {};
+	subject.observe = methods.customMethod(function () {
+		methods.method(["model", subject._onModelChanged, subject]).apply(null, Array.prototype.slice.call(arguments, 0, 3));
+		ok(arguments[3].activateImmediately);
+	});
+	
     // act
     invoker(templateId, model);
     
     // assert    
-    strictEqual(subject.model(), model);
-    strictEqual(subject.__woBag.bindings.constructor, Object);
-    
-    // test on model changed
-    var newModel = {};
-    subject._onModelChanged = methods.method([model, newModel]);
-    subject.model(newModel);
+    strictEqual(subject.model, model);
 });
-
-testUtils.testWithUtils("setObservable", "non observable", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var obj = {
-        val: null
-    };
-    
-    var val = {};
-    
-    // act
-    invoker(obj, "val", val);
-    
-    // assert    
-    strictEqual(obj.val, val);
-});
-
-testUtils.testWithUtils("setObservable", "observable", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var obj = {
-        val: ko.observable()
-    };
-    
-    var val = {};
-    
-    // act
-    invoker(obj, "val", val);
-    
-    // assert    
-    strictEqual(obj.val(), val);
-});
-   
 
 testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject._super = methods.method();
-    subject.__woBag = {
-        "wipeout.viewModels.view.modelRoutedEvents": {},
-        bindings: {
-            blabla: [{
-                dispose: methods.method()
-            }]
-        }
-    };
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
+    subject.$routedEventSubscriptions = [{dispose: methods.method()}, {dispose: methods.method()}];
     
     // act
     invoker();
     
     // assert    
-    ok(!subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]);
-    ok(!subject.__woBag.bindings.blabla);
+    ok(!subject.$routedEventSubscriptions.length);
 });
 
-testUtils.testWithUtils("_elementHasModelBinding", "no model", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onModelChanged", "", false, function(methods, classes, subject, invoker) {
     // arrange
-    var element = wipeout.template.templateParser("<root></root>", "application/xml")[0];
-    
-    // act
-    var actual = invoker(element);
-    
-    // assert
-    ok(!actual);
-});    
-
-testUtils.testWithUtils("_elementHasModelBinding", "model as attribute", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var element = wipeout.template.templateParser("<root model='asdsad'></root>", "application/xml")[0];
-    
-    // act
-    var actual = invoker(element);
-    
-    // assert
-    ok(actual);
-});      
-
-testUtils.testWithUtils("_elementHasModelBinding", "model as element", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var element = wipeout.template.templateParser("<root><model /></root>", "application/xml")[0];
-    
-    // act
-    var actual = invoker(element);
-    
-    // assert
-    ok(actual);
-});
-
-testUtils.testWithUtils("initialize", "more of an integration test than a unit test", false, function(methods, classes, subject, invoker) {
-    // arrange
-    var bindingContext = new ko.bindingContext({
-            model: ko.observable({}),
-            twProperty: ko.observable({}),
-            owProperty: {}
-        }, null);
-    
-    var subject = new wo.view();
-    subject.twProp = ko.observable();
-    
-    var element = wipeout.template.templateParser(
-'<root shareParentScope="false" twProp-tw="$parent.twProperty" owProp="$parent.owProperty">\
-    <inlinePropString>Hello</inlinePropString>\
-    <inlinePropParser constructor="int">22</inlinePropParser>\
-    <inlinePropConstructor constructor="Array"></inlinePropConstructor>\
-</root>', "application/xml")[0];
-    
-    // act
-    subject._initialize(element, bindingContext);
-    
-    // assert
-    strictEqual(subject.shareParentScope, false);
-    strictEqual(subject.model(), bindingContext.$data.model());
-    strictEqual(subject.twProp(), bindingContext.$data.twProperty());
-    strictEqual(subject.owProp, bindingContext.$data.owProperty);
-    strictEqual(subject.inlinePropString, "Hello");
-    strictEqual(subject.inlinePropParser, 22);
-    strictEqual(subject.inlinePropConstructor.constructor, Array);
-});
-    
-testUtils.testWithUtils("objectParser", "all but json", false, function(methods, classes, subject, invoker) {
-    // arrange    
-    // act    
-    // assert   
-    strictEqual(view.objectParser.string("aval"), "aval");
-    strictEqual(view.objectParser.bool(" tRue "), true);
-    strictEqual(view.objectParser.int(" 44 "), 44);
-    strictEqual(view.objectParser.float(" 44.55 "), 44.55);
-    ok(view.objectParser.regexp("^Hello$").test("Hello"));
-    strictEqual(view.objectParser.date("2012/01/01") - new Date("2012/01/01"), 0);
-});
-    
-testUtils.testWithUtils("objectParser", "json", false, function(methods, classes, subject, invoker) {
-    // arrange
-    // act    
-    var json = view.objectParser.json('{"val1":8,"val2":"3"}')
+	var registration = {}, key = {};
+    subject.$modelRoutedEventKey = {};
+    subject.disposeOf = methods.method([subject.$modelRoutedEventKey]);
+    subject.registerDisposable = methods.method([registration], key);
+    subject._onModelRoutedEvent = {};
+	var input = new wipeout.events.routedEventModel();
+	
+	/*
+            if(newValue instanceof wipeout.events.routedEventModel) {
+                var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+                this.$modelRoutedEventKey = this.registerDisposable(d1);
+            }*/
+	
+	input.__triggerRoutedEventOnVM = {
+		register: methods.method([subject._onModelRoutedEvent, subject], registration)
+	};
+	
+	// act
+	invoker(input);
     
     // assert   
-    strictEqual(json.val1, 8);
-    strictEqual(json.val2, "3");
+    strictEqual(subject.$modelRoutedEventKey, key);
 });
 
-testUtils.testWithUtils("_onModelChanged", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getRenderContext", "has render context", false, function(methods, classes, subject, invoker) {
     // arrange
-    subject.__woBag = {
-        "wipeout.viewModels.view.modelRoutedEvents": {}
-    };
-    var disposable = {};
-    var newVal = new wipeout.events.routedEventModel();
-    subject.disposeOf = methods.method([subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"]]);
-    subject.registerDisposable = methods.customMethod(function() {
-        return disposable;
-    });
-    subject._onModelRoutedEvent = function(){};
-    subject.onModelChanged = methods.method([null, newVal]);
+	subject.$domRoot = {renderContext: {}};
     
     // act
-    invoker(null, newVal);
+    var op = invoker();
     
-    // assert   
-    strictEqual(subject.__woBag["wipeout.viewModels.view.modelRoutedEvents"], disposable);
+    // assert
+	strictEqual(op, subject.$domRoot.renderContext);
+});
+
+testUtils.testWithUtils("getRenderContext", "no render context", false, function(methods, classes, subject, invoker) {
+    // arrange
+    // act
+    var op = invoker();
+    
+    // assert
+	strictEqual(op, null);
 });
 
 testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, classes, subject, invoker) {
@@ -268,4 +94,150 @@ testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, clas
     invoker(eventArgs);
     
     // assert    
+});
+
+testUtils.testWithUtils("getParent", "no parent", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.getRenderContext = methods.method([], null);
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual, null);
+});
+
+testUtils.testWithUtils("getParent", "has parent", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent = {};
+	subject.getRenderContext = methods.method([], {$parent: parent, $this: subject});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual, parent);
+});
+
+testUtils.testWithUtils("getParent", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent = {};
+	subject.getRenderContext = methods.method([], {$this: parent});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual, parent);
+});
+
+testUtils.testWithUtils("getParents", "no parents", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.getRenderContext = methods.method([], null);
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 0);
+});
+
+testUtils.testWithUtils("getParents", "has parent", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent0 = {}, parent1 = {};
+	subject.getRenderContext = methods.method([], {$this: subject, $parents: [parent0, parent1]});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 2);
+    strictEqual(actual[0], parent0);
+    strictEqual(actual[1], parent1);
+});
+
+testUtils.testWithUtils("getParents", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+    // arrange
+	var parent0 = {}, parent1 = {}, parent2 = {};
+	subject.getRenderContext = methods.method([], {$this: parent0, $parents: [parent1, parent2]});
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    strictEqual(actual.length, 3);
+    strictEqual(actual[0], parent0);
+    strictEqual(actual[1], parent1);
+    strictEqual(actual[2], parent2);
+});
+
+testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
+    // arrange
+    subject.$routedEventSubscriptions = [];
+    
+    // act
+    var actual = invoker();
+    
+    // assert
+    ok(!actual);
+});
+
+testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var callback = {};
+    var context = {};
+    var routedEvent = {};
+    subject.$routedEventSubscriptions = [{
+		routedEvent: routedEvent,
+		event: {
+			unRegister: methods.method([callback, context])
+		}
+	}];
+    
+    // act
+    var actual = invoker(routedEvent, callback, context);
+    
+    // assert
+    ok(actual);
+});
+
+testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var expected = {};
+    var callback = {};
+    var context = {};
+    var routedEvent = {};
+    subject.$routedEventSubscriptions = [{
+		routedEvent: routedEvent,
+		event: {
+			register: methods.method([callback, context], expected)
+		}
+	}];
+    
+    // act
+    var actual = invoker(routedEvent, callback, context);
+    
+    // assert
+    strictEqual(actual, expected);
+});
+
+testUtils.testWithUtils("registerRoutedEvent", "new event", false, function(methods, classes, subject, invoker) {
+    // arrange
+    var expected = {};
+    function callback() {};
+    var context = {};
+    var routedEvent = {};
+    subject.$routedEventSubscriptions = [];
+    
+    // act
+    var actual = invoker(routedEvent, callback, context);
+    
+    // assert
+    strictEqual(subject.$routedEventSubscriptions.length, 1);
+    strictEqual(actual.dispose.constructor, Function);
+});
+
+testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tests instead", false, function(methods, classes, subject, invoker) {
+    // arrange
+    ok(true);
 });

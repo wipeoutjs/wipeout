@@ -1,5 +1,5 @@
 Class("wipeout.profile.profile", function () { 
-    
+    return function(){}
     var doRendering, _initialize, rewriteTemplate, profileState;
     var profile = function profile(profile) {
         ///<summary>Profile this application.</summary>
@@ -29,7 +29,7 @@ Class("wipeout.profile.profile", function () {
                     var vms = vm.getParents();
                     vms.splice(0, 0, vm);
 
-                    // todo: dispose of old content (dispose methods from buildProfile function)
+                    // TODO: dispose of old content (dispose methods from buildProfile function)
                     profileState.infoBox.innerHTML = '<span style="float: right; margin-left: 10px; cursor: pointer;">x</span><br/>Open a console window and click on a class to debug it<br/>\
 If view models do not have names, you can <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name">name them</a><br/>\
 If view models have odd names ensure you are not using a minifier';
@@ -43,8 +43,8 @@ If view models have odd names ensure you are not using a minifier';
                 },
                 dispose: function() {
                     profileState.highlighter.dispose();
-                    if(profileState.infoBox.parentElement)
-                        profileState.infoBox.parentElement.removeChild(profileState.infoBox);
+                    if(profileState.infoBox.parentNode)
+                        profileState.infoBox.parentNode.removeChild(profileState.infoBox);
                     
                     document.body.removeEventListener("click", profileState.eventHandler);
                     wipeout.bindings.render.prototype.doRendering = doRendering;
@@ -62,7 +62,7 @@ If view models have odd names ensure you are not using a minifier';
                     this.value.__woBag.profiler = {};
                 
                 this.value.__woBag.profiler["Render time"] = time;
-                var template = document.getElementById(this.value.templateId());
+                var template = document.getElementById(this.value.templateId);
                 if(template)
                     this.value.__woBag.profiler["Template compile time"] =  wipeout.utils.domData.get(template, "rewriteTemplateTime");
             };

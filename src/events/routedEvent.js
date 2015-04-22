@@ -2,38 +2,38 @@
 Class("wipeout.events.routedEvent", function () {
     
     var routedEvent = function routedEvent() {
-        ///<summary>A routed event is triggerd on a visual and travels up to ancestor visuals all the way to the root of the application</summary>
+        ///<summary>A routed event is triggered on a view and travels up to ancestor views all the way to the root of the application</summary>
         
         // allow for non use of the new key word
         if(!(this instanceof routedEvent))
            return new routedEvent();
     };
 
-    routedEvent.prototype.trigger = function(triggerOnVisual, eventArgs) {
-        ///<summary>Trigger a routed event on a visual</summary>
-        ///<param name="triggerOnVisual" type="wo.visual" optional="false">The visual where the routed event starts</param>
+    routedEvent.prototype.trigger = function(triggerOnView, eventArgs) {
+        ///<summary>Trigger a routed event on a view</summary>
+        ///<param name="triggerOnView" type="wo.view" optional="false">The view where the routed event starts</param>
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
-        triggerOnVisual.triggerRoutedEvent(this, new wipeout.events.routedEventArgs(eventArgs, triggerOnVisual));
+        triggerOnView.triggerRoutedEvent(this, new wipeout.events.routedEventArgs(eventArgs, triggerOnView));
     };
     
-    routedEvent.prototype.unRegister = function (callback, triggerOnVisual, context /* optional */) {
-        ///<summary>Unregister a routed event on a visual</summary>
+    routedEvent.prototype.unRegister = function (callback, triggerOnView, context /* optional */) {
+        ///<summary>Unregister a routed event on a view</summary>
         ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="triggerOnVisual" type="wo.visual" optional="false">The visual passed into the register function</param>
+        ///<param name="triggerOnView" type="wo.view" optional="false">The view passed into the register function</param>
         ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
         ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-        return triggerOnVisual.unRegisterRoutedEvent(this, callback, context);
+        return triggerOnView.unRegisterRoutedEvent(this, callback, context);
     };
     
-    routedEvent.prototype.register = function(callback, triggerOnVisual, context /* optional */) {
-        ///<summary>Register a routed event on a visual</summary>
+    routedEvent.prototype.register = function(callback, triggerOnView, context /* optional */) {
+        ///<summary>Register a routed event on a view</summary>
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="triggerOnVisual" type="wo.visual" optional="false">The visual registered to the routed event</param>
+        ///<param name="triggerOnView" type="wo.view" optional="false">The view registered to the routed event</param>
         ///<param name="context" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
         
-        return triggerOnVisual.registerRoutedEvent(this, callback, context);
+        return triggerOnView.registerRoutedEvent(this, callback, context);
     };
     
     return routedEvent;

@@ -1,275 +1,85 @@
 
-Class("wipeout.viewModels.view", function () {    
-
-    var modelRoutedEventKey = "wipeout.viewModels.view.modelRoutedEvents";
+Class("wipeout.viewModels.view", function () {
     
-    var view = wipeout.viewModels.visual.extend(function view (templateId, model /*optional*/) {        
-        ///<summary>Extends on the visual class to provide expected MVVM functionality, such as a model and bindings</summary>  
+    var view = wipeout.base.bindable.extend(function view (templateId, model /*optional*/) {        
+        ///<summary>Extends on the view class to provide expected MVVM functionality, such as a model and bindings</summary>  
         ///<param name="templateId" type="String" optional="true">An initial template id</param>
         ///<param name="model" type="Any" optional="true">An initial model</param>
 
-        this._super(templateId);
-        
-        if(model === undefined)
-            model = null;
-        
-        ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
-        this.model = ko.observable(model);
-        
-        var d1 = this.model.subscribe(function(newVal) {
-            try {
-                this._onModelChanged(model, newVal);
-            } finally {
-                model = newVal;
-            }                                          
-        }, this);
-        this.registerDisposable(d1);
-                                
-        ///<Summary type="Object">Placeholder to store binding disposal objects</Summary>
-        this.__woBag.bindings = {};
-    }); 
-    
-    view.setObservable = function(obj, property, value) {
-        ///<summary>Set an observable or non observable property</summary>
-        ///<param name="obj" type="Any" optional="false">The object to set the property on</param>
-        ///<param name="property" type="String" optional="false">The name of the property</param>
-        ///<param name="value" type="String" optional="false">The value to set the property to</param>
-        
-        if(ko.isObservable(obj[property])) {
-            obj[property](ko.utils.unwrapObservable(value));
-        } else {
-            obj[property] = ko.utils.unwrapObservable(value);
-        }
-    };
-    
-    view.prototype.dispose = function() {
-        ///<summary>Dispose of view specific items</summary>    
         this._super();
-        
-        if(this.__woBag[modelRoutedEventKey]) {
-            this.disposeOf(this.__woBag[modelRoutedEventKey]);
-            delete this.__woBag[modelRoutedEventKey];
-        }
-        
-        for(var i in this.__woBag.bindings) {
-            for (var j = 0, jj = this.__woBag.bindings[i].length; j < jj; j++) {
-                this.__woBag.bindings[i][j].dispose();
-            }
-            
-            delete this.__woBag.bindings[i];
-        }
-    };
 
-    
-    // virtual
-    view.prototype.onInitialized = function() {
-        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>    
-    };
-    
-    view.prototype.bind = function(property, valueAccessor, twoWay) {
-        ///<summary>Bind the value returned by valueAccessor to this[property]</summary>
-        ///<param name="property" type="String" optional="false">The name of the property to bind</param>
-        ///<param name="valueAccessor" type="Function" optional="false">A function which returns an observable or object to bind to</param>
-        ///<param name="twoWay" type="Boolean" optional="true">Specifies whether to bind the destination to the source as well</param>
-        ///<returns type="wo.disposable">A item to dispose of the binding</returns>
-        
-        if(twoWay && (!ko.isObservable(this[property]) || !ko.isObservable(valueAccessor())))
-           throw 'Two way bindings must be between 2 observables';
-        
-        var toBind = ko.dependentObservable({ 
-            read: function() { return ko.utils.unwrapObservable(valueAccessor()); },
-            write: twoWay ? function() { var va = valueAccessor(); if(va) va(arguments[0]); } : undefined
-        });                                 
-        
-        var unsubscribe1 = false;
-        var unsubscribe2 = false;
-        view.setObservable(this, property, toBind.peek());
-        var subscription1 = toBind.subscribe(function(newVal) {
-            if(!unsubscribe1) {
-                try {
-                    unsubscribe2 = true;
-                    view.setObservable(this, property, newVal);
-                } finally {
-                    unsubscribe2 = false;
-                }
-            }
-        }, this);
-        
-        var subscription2 = twoWay ?
-            this[property].subscribe(function(newVal) {
-                if(!unsubscribe2) {
-                    try {
-                        unsubscribe1 = true;
-                        view.setObservable({x: toBind}, "x", newVal);
-                    } finally {
-                        unsubscribe1 = false;
-                    }
-                }
-            }, this) :
-            null;
-        
-        var _this = this;
-        var binding = new wipeout.base.disposable(function() {
-            if(subscription1) {
-                subscription1.dispose();
-                subscription1 = null;
-            }
+        ///<Summary type="Boolean">Specifies whether this object should be used as a binding context. If true, the binding context of this object will be it's parent. Default is false</Summary>
+        this.shareParentScope = false;
 
-            if(subscription2) {
-                subscription2.dispose();
-                subscription2 = null;
-            }
+        ///<Summary type="Object">Dictionary of items created within the current template. The items can be views or html elements</Summary>
+        this.templateItems = {};
 
-            if(toBind) {
-                toBind.dispose();
-                toBind = null;
-            }
-            
-            if(binding) {
-                var tmp;
-                if (_this.__woBag.bindings[property] && (tmp = _this.__woBag.bindings[property].indexOf(binding)) !== -1) {
-                    _this.__woBag.bindings[property].splice(tmp, 1);
-                    if (!_this.__woBag.bindings[property].length) {
-                        delete _this.__woBag.bindings[property];
-                    }
-                }
-                
-                binding = null;
-            }
-        });
+        ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
+        this.templateId = templateId;
         
-        if(!this.__woBag.bindings[property])
-            this.__woBag.bindings[property] = [binding];
-        else
-            this.__woBag.bindings[property].push(binding);
-        
-        return binding;
-    };    
+        this.observe("model", this._onModelChanged, this, {activateImmediately: true});
+		
+        ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
+        this.model = model == null ? null : model;
+
+        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
+        this.$routedEventSubscriptions = [];
+		
+        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
+		this.$synchronusTemplateChange = new wipeout.events.event();
+		
+        ///<Summary type="[busybody.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
+		this.$initComputeds = [];
+    });
+	
+	view.prototype.initComputed = function (property, callback, options) {
+		if (options)
+			options = {delayExecution: true};
+		else
+			options.delayExecution = true
+		
+		var op = this.computed(property, callback, options);
+		
+		if (op)
+			(this.$initComputeds || (this.$initComputeds = [])).push(op);
+		
+		return op;
+	};
+	
+    view.addGlobalParser("id", "string");
+    view.addGlobalBindingType("id", "viewModelId");
     
-    view._elementHasModelBinding = function(element) {
-        ///<summary>returns whether the view defined in the element was explicitly given a model property</summary>
-        ///<param name="element" type="wipeout.template.templateElement" optional="false">The element to check for a model setter property</param>
-        ///<returns type="Boolean"></returns>
+    view.prototype.getParent = function() {
+        ///<summary>Get the parent view of this view</summary> 
+        ///<returns type="Any">The parent view model</returns>
         
-        if(element.attributes["model"] || element.attributes["model-tw"])
-            return true;
-        
-        for(var i = 0, ii = element.length; i < ii; i++) {
-            if(element[i].constructor === wipeout.template.templateElement && element[i].name === "model")
-                return true;
-        }
-        
-        return false;
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return null;
+					
+        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
     };
     
-    // properties which will not be copied onto the view if defined in the template
-    view.reservedPropertyNames = ["constructor", "id"];
-    
-    view.prototype._initialize = function(propertiesXml, parentBindingContext) {
-        ///<summary>Takes an xml fragment and binding context and sets its properties accordingly</summary>
-        ///<param name="propertiesXml" type="wipeout.template.templateElement" optional="false">An XML element containing property setters for the view</param>
-        ///<param name="parentBindingContext" type="ko.bindingContext" optional="false">The binding context of the wipeout node just above this one</param>
-        if(this.__woBag.initialized) throw "Cannot call initialize item twice";
-        this.__woBag.initialized = true;
+    view.prototype.getParents = function() {
+        ///<summary>Get all parent views of this view</summary> 
+        ///<returns type="Array" generic0="wo.view">The parent view model</returns>
         
-        if(!propertiesXml)
-            return;
-        
-        if(propertiesXml.attributes["id"])
-            this.id = propertiesXml.attributes["id"].value;
-        
-        var prop = propertiesXml.attributes["shareParentScope"] || propertiesXml.attributes["share-parent-scope"];
-        if(prop)
-            this.shareParentScope = parseBool(prop.value);
-                
-        if(!view._elementHasModelBinding(propertiesXml) && wipeout.utils.ko.peek(this.model) == null) {
-            this.bind('model', parentBindingContext.$data.model);
-        }
-        
-        var bindingContext = this.shareParentScope ? parentBindingContext : parentBindingContext.createChildContext(this);        
-        enumerateObj(propertiesXml.attributes, function(attr, name) {
-            
-            var setter = "";
-            
-            // find and removr "-tw" if necessary
-            if(name.length > 3 && name.substr(name.length - 3) === "-tw") {
-                name = name.substr(0, name.length - 3);
-                setter = 
-        ",\n\t\t\tfunction(val) {\n\t\t\t\tif(!ko.isObservable(" + attr.value + "))\n\t\t\t\t\tthrow 'Two way bindings must be between 2 observables';\n\t\t\t\t" + attr.value + "(val);\n\t\t\t}";
-            }
-            
-            name = camelCase(name);
-            
-            // reserved
-            if(view.reservedPropertyNames.indexOf(name) !== -1) return;
-                        
-            try {
-                bindingContext.__$woCurrent = this;
-                wipeout.template.engine.createJavaScriptEvaluatorFunction(
-        "(function() {\n\t\t\t__$woCurrent.bind('" + name + "', function() {\n\t\t\t\treturn " + attr.value + ";\n\t\t\t}" + setter + ");\n\n\t\t\treturn '';\n\t\t})()"
-                )(bindingContext);
-            } finally {
-                delete bindingContext.__$woCurrent;
-            }
-        }, this);
-        
-        enumerateArr(propertiesXml, function(child, i) {
-            
-            var nodeName = camelCase(child.name);
-            if(child.constructor !== wipeout.template.templateElement || view.reservedPropertyNames.indexOf(nodeName) !== -1) return;
-            
-            // default
-            var type = "string";
-            for(var j in child.attributes) {
-                if(j === "constructor" && child.attributes[j].value) {
-                    type = camelCase(child.attributes[j].value);
-                    break;
-                }
-            }
-            
-            if (view.objectParser[trimToLower(type)]) {
-                var innerHTML = [];
-                for (var j = 0, jj = child.length; j < jj; j++) {
-                    innerHTML.push(child[j].serialize());
-                }
-            
-                var val = view.objectParser[trimToLower(type)](innerHTML.join(""));
-                view.setObservable(this, nodeName, val);
-            } else {
-                var val = wipeout.utils.obj.createObject(type);
-                if(val instanceof wipeout.viewModels.view) {
-                    val.__woBag.createdByWipeout = true;
-                    val._initialize(child, bindingContext);
-                }
-                
-                view.setObservable(this, nodeName, val);
-            }
-        }, this);
+		var renderContext = this.getRenderContext();
+		if (!renderContext)
+			return [];
+						
+		var op = renderContext.$parents.slice();	
+		if (renderContext.$this !== this)	// if share parent scope
+			op.splice(0, 0, renderContext.$this);
+		
+		return op;
     };
     
-    view.objectParser = {
-        "json": function (value) {
-            return JSON.parse(value);
-        },
-        "string": function (value) {
-            return value;
-        },
-        "bool": function (value) {
-            var tmp = trimToLower(value);
-            return tmp ? tmp !== "false" && tmp !== "0" : false;
-        },
-        "int": function (value) {
-            return parseInt(trim(value));
-        },
-        "float": function (value) {
-            return parseFloat(trim(value));
-        },
-        "regexp": function (value) {
-            return new RegExp(trim(value));
-        },
-        "date": function (value) {
-            return new Date(trim(value));
-        }
+    view.prototype.getRenderContext = function() {
+        ///<summary>Get the render context of this view</summary> 
+        ///<returns type="wipeout.template.context">The render context</returns>
+        
+		return (this.$domRoot && this.$domRoot.renderContext) || null;
     };
         
     view.prototype._onModelChanged = function (oldValue, newValue) {
@@ -277,24 +87,21 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
         
-        if(oldValue !== newValue) {
-            this.disposeOf(this.__woBag[modelRoutedEventKey]);
-            delete this.__woBag[modelRoutedEventKey];
-            
-            if(newValue instanceof wipeout.events.routedEventModel) {
-                var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
-                this.__woBag[modelRoutedEventKey] = this.registerDisposable(d1);
-            }
-        }
-        
-        this.onModelChanged(oldValue, newValue);
-    };
-        
-    // virtual
-    view.prototype.onModelChanged = function (oldValue, newValue) {
+        if(oldValue !== newValue)
+			this.onModelChanged(newValue);
+	};
+	
+    view.prototype.onModelChanged = function (newValue) {
         ///<summary>Called when the model has changed</summary>
-        ///<param name="oldValue" type="Any" optional="false">The old model</param>
-        ///<param name="newValue" type="Any" optional="false">The new mode</param>        
+        ///<param name="newValue" type="Any" optional="false">The new mode</param>
+		
+		this.disposeOf(this.$modelRoutedEventKey);
+		this.$modelRoutedEventKey = null;
+
+		if(newValue instanceof wipeout.events.routedEventModel) {
+			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+			this.$modelRoutedEventKey = this.registerDisposable(d1);
+		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
@@ -304,6 +111,81 @@ Class("wipeout.viewModels.view", function () {
         if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
+    };
+	
+	view.prototype.dispose = function () {
+        ///<summary>Dispose of this view</summary>
+		
+		this._super();
+		
+		// dispose of routed event subscriptions
+		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
+			event.dispose();
+		});
+	};
+	
+	//TODM
+	view.prototype.synchronusTemplateChange = function (templateId) {
+        ///<summary>Tell the overlying renderedContent the the template has changed</summary>    
+        ///<param name="templateId" type="String" optional="true">Set the template id also</param>
+		
+		if (arguments.length)
+			this.templateId = templateId;
+		
+		this.$synchronusTemplateChange.trigger();
+	};
+	
+    view.visualGraph = function (rootElement, displayFunction) {
+        ///<summary>Compiles a tree of all view elements in a block of html, starting at the rootElement</summary>    
+        ///<param name="rootElement" type="HTMLNode" optional="false">The root node of the view tree</param>
+        ///<param name="displayFunction" type="Function" optional="true">A function to convert view models found into a custom type</param>
+        ///<returns type="Array" generic0="Object">The view graph</returns>
+
+        throw "TODO";
+        
+        /*if (!rootElement)
+            return [];
+
+        displayFunction = displayFunction || function() { return typeof arguments[0]; };
+
+        var output = [];
+        wipeout.utils.obj.enumerateArr(wipeout.utils.html.getAllChildren(rootElement), function (child) {
+            wipeout.utils.obj.enumerateArr(visual.visualGraph(child), output.push, output);
+        });
+
+        var vm = wipeout.utils.domData.get(rootElement, wipeout.bindings.wipeout.utils.wipeoutKey);        
+        if (vm) {
+            return [{ viewModel: vm, display: displayFunction(vm), children: output}];
+        }
+
+        return output;*/
+    };
+    
+    // virtual
+    view.prototype.onRendered = function (oldValues, newValues) {
+        ///<summary>Triggered each time after a template is rendered</summary>   
+        ///<param name="oldValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes removed</param>
+        ///<param name="newValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes rendered</param>
+    };
+    
+    // virtual
+    view.prototype.onUnrendered = function () {
+        ///<summary>Triggered just before a view is un rendered</summary>    
+    };
+    
+    // virtual
+    view.prototype.onApplicationInitialized = function () {
+        ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
+    };
+	
+    function ex (comp) { comp.execute(); }
+	
+    // virtual
+    view.prototype.onInitialized = function() {
+        ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
+		
+		enumerateArr(this.$initComputeds, ex);
+		this.$initComputeds = null;
     };
 
     return view;

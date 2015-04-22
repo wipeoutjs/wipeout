@@ -5,8 +5,6 @@ module("wipeout.utils.find", {
     }
 });
 
-var find = wipeout.utils.find;
-
 testUtils.testWithUtils("constructor", "", false, function(methods, classes, subject, invoker) {
     // arrange
     subject._super = methods.method();
@@ -16,7 +14,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     invoker(ctxt);
     
     // assert    
-    strictEqual(ctxt, subject.bindingContext);
+    strictEqual(ctxt, subject.renderContext);
 });
 
 testUtils.testWithUtils("find", "no filters", false, function(methods, classes, subject, invoker) {
@@ -126,6 +124,8 @@ testUtils.testWithUtils("create", "smoke test", true, function(methods, classes,
 
 testUtils.testWithUtils("regex", "", true, function(methods, classes, subject, invoker) {
     // arrange
+	var find = wipeout.utils.find;
+	
     // act
     // assert
     ok(find.regex.ancestors.test("greatgreatgreatgrandparent"));

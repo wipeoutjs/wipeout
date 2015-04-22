@@ -2,160 +2,124 @@
 Class("wipeout.viewModels.contentControl", function () {    
 
     var contentControl = wipeout.viewModels.view.extend(function contentControl(templateId, model) {
-        ///<summary>Expands on visual and view functionality to allow the setting of anonymous templates</summary>
+        ///<summary>Expands on view and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
-        this._super(templateId || wipeout.viewModels.visual.getBlankTemplateId(), model);
+        this._super(templateId, model);
 
-        ///<Summary type="ko.observable" generic0="string">The template which corresponds to the templateId for this item</Summary>
-        this.template = contentControl.createTemplatePropertyFor(this.templateId, this);
-    });    
+        ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
+        //this.setTemplate = "";
+        
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
+    });  
     
-    contentControl.createTemplatePropertyFor = function(templateIdObservable, owner) {
-        ///<summary>Creates a computed for a template property which is bound to the templateIdObservable property</summary>
-        ///<param name="templateIdObservable" type="ko.observable" generic0="String" optional="false">The observable containing the templateId to create a template property for</param>
-        ///<param name="owner" type="Object" optional="false">The new owner of the created template property</param>
-        ///<returns type="String">A template property bound to the template id</returns>
-        var output = ko.dependentObservable({
-            read: function () {
-                var script = document.getElementById(templateIdObservable());
-                return script ? script.text : "";
-            },
-            write: function (newValue) {
-                templateIdObservable(wipeout.viewModels.contentControl.createAnonymousTemplate(newValue));
-            },
-            owner: owner
-        });
-        
-        if(owner instanceof wipeout.viewModels.visual)
-            owner.registerDisposable(output);
-        
-        return output;
+    contentControl.addGlobalParser("setTemplate", "template");
+    contentControl.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
+    
+    contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+        ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
+        ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
+        ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
+        ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
+                
+        return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
-    var dataTemplateHash = "data-templatehash";  
-    var tmp = (function () {
+    contentControl.createAnonymousTemplate = (function () {
         
-        var getTemplateArea = (function() {
-            var templateArea = null;
-            return function() {
-                if(!templateArea) {
-                    templateArea = wipeout.utils.html.createElement("<div style='display: none'></div>");
-                    document.body.appendChild(templateArea);
-                }
+        var i = Math.floor(Math.random() * 1000000000), 
+            anonymousTemplateId = "WipeoutAnonymousTemplate",
+            templateStringCache = {};
+        
+        function newTemplateId () {
+            return anonymousTemplateId + "-" + (++i);
+        }
                 
-                return templateArea;
-            };
-        })();
-        
-        var i = Math.floor(Math.random() * 1000000000); 
-        
-        return { 
-            create: function (templateString, forceCreate) {
-                ///<summary>Creates an anonymous template within the DOM and returns its id</summary>
-                ///<param name="templateString" type="String" optional="false">Gets a template id for an anonymous template</param>
-                ///<param name="forceCreate" type="Boolean" optional="true">Force the creation of a new template, regardless of whether there is an existing clone</param>
-                ///<returns type="String">The template id</returns>
-                
-                var templateArea = getTemplateArea();
+        return function (templateStringOrXml) {
+            ///<summary>Creates an anonymous template within the DOM and returns its id</summary>
+            ///<param name="templateStringOrXml" type="String" optional="false">Gets a template id for an anonymous template</param>
+            ///<returns type="String">The template id</returns>
 
-                templateString = trim(templateString || "");
-                var hash = contentControl.hashCode(templateString).toString();
-
-                if(!forceCreate) {
-                    // if we can, reuse an existing anonymous template
-                    for (var j = 0, jj = templateArea.childNodes.length; j < jj; j++) {
-                        if (templateArea.childNodes[j].nodeType === 1 &&
-                        templateArea.childNodes[j].nodeName === "SCRIPT" &&
-                        templateArea.childNodes[j].id &&
-                        // first use a hash to avoid computationally expensive string compare if possible
-                        templateArea.childNodes[j].attributes[dataTemplateHash] &&
-                        templateArea.childNodes[j].attributes[dataTemplateHash].value === hash &&
-                        wipeout.utils.domData.get(templateArea.childNodes[j], "rawTemplate") === templateString) {
-                            return templateArea.childNodes[j].id;
-                        }
-                    }
+            if (typeof templateStringOrXml === "string") {
+				// look in cached template strings and create template if necessary
+                if (!templateStringCache[templateStringOrXml]) {
+                    var id = newTemplateId();
+                    wipeout.template.engine.instance.setTemplate(id, templateStringOrXml);
+                    templateStringCache[templateStringOrXml] = id;
                 }
 
-                var id = "AnonymousTemplate" + (++i);
-                contentControl.createTemplate(id, templateString, hash);
-                return id;
-            },
-            del: function(templateId) {
-                ///<summary>Deletes an anonymous template with the given id</summary>
-                ///<param name="templateId" type="String" optional="false">The id of the template to delete</param>
-                ///<returns type="void"></returns>
-                var templateArea = getTemplateArea();
-            
-                for (var j = 0; j < templateArea.childNodes.length; j++) {
-                    if (templateArea.childNodes[j].nodeType === 1 &&
-                    templateArea.childNodes[j].nodeName === "SCRIPT" &&
-                    templateArea.childNodes[j].id === templateId) {
-                        templateArea.removeChild(templateArea.childNodes[j]);
-                        j--;
-                    }
+                return templateStringCache[templateStringOrXml];
+            } else {
+				// look for cached id within xml or create one
+                if (!templateStringOrXml[anonymousTemplateId]) {
+                    var id = newTemplateId();
+                    wipeout.template.engine.instance.setTemplate(id, templateStringOrXml);
+                    templateStringOrXml[anonymousTemplateId] = id;
                 }
-            },
-            createTemplate: function(templateId, template, templateHash) {
-                ///<summary>Create a template and add it to the DOM</summary>
-                ///<param name="templateId" type="String" optional="false">The id for the new template</param>
-                ///<param name="template" type="String" optional="false">The template itself</param>
-                ///<param name="templateHash" type="String" optional="true">A hash for the template</param>                
-                ///<returns type="String">A template property bound to the template id</returns>
-                if(contentControl.templateExists(templateId))
-                    throw "Template: \"" + templateId + "\" already exists";
 
-                var templateArea = getTemplateArea();
-
-                var script = document.createElement("script");
-                
-                var att1 = document.createAttribute("type");
-                att1.value = "text/xml";
-                script.setAttributeNode(att1);
-
-                var att2 = document.createAttribute("id");
-                att2.value = templateId;
-                script.setAttributeNode(att2);
-                
-                templateHash = templateHash || contentControl.hashCode(trim(template) || "").toString();                
-                var att3 = document.createAttribute(dataTemplateHash);
-                att3.value = templateHash;
-                script.setAttributeNode(att3);
-                
-                script.text = template;
-                templateArea.appendChild(script);
-                
-                // keep a record of the template before the ko/wo template engine mangles it
-                wipeout.utils.domData.set(script, "rawTemplate", template);
+                return templateStringOrXml[anonymousTemplateId];
             }
         };
-    })();  
+    })();
     
-    contentControl.createAnonymousTemplate = tmp.create;
-    contentControl.deleteAnonymousTemplate = tmp.del;
-    contentControl.createTemplate = tmp.createTemplate;
-    contentControl.templateExists = function(templateId) {
-        ///<summary>Describes whether a template exists</summary>
-        ///<param name="templateId" type="String" optional="false">The id of the template</param>
-        ///<returns type="Boolean"></returns>
+    function boundTemplate (owner, templateIdProperty, templateProperty) {
+        ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
+        ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
+        ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
+        ///<param name="templateProperty" type="String" optional="false">The name of the template property.</param>
         
-        return !!document.getElementById(templateId);
+        this.currentTemplate = owner[templateProperty];
+        this.currentTemplateId = owner[templateIdProperty];
+        
+        this.owner = owner;
+        this.templateIdProperty = templateIdProperty;
+        this.templateProperty = templateProperty;
+        
+        // bind template to template id for the first time
+        this.refreshTemplate(this.currentTemplateId);
+        
+        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        
+        this.d2 = owner.observe(templateProperty, this.onTemplateChange, this);
+    };
+        
+    boundTemplate.prototype.dispose = function() {
+        ///<summary>Dispose of this binding</summary>
+		
+        this.d1.dispose();
+        this.d2.dispose();
+    };
+    
+    boundTemplate.prototype.refreshTemplate = function(templateId) {
+		
+        this.pendingLoad = wipeout.template.engine.instance.getTemplateXml(templateId, (function (template) {
+            delete this.pendingLoad;                
+            this.currentTemplate = this.owner[this.templateProperty] = template;
+        }).bind(this)); 
     };
 
-    //http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
-    contentControl.hashCode = function (str) {        
-        ///<summary>Creates a rough has code for the given string</summary>
-        ///<param name="str" type="String" optional="false">The string to hash</param>
-        ///<returns type="Number">The hash code</returns>
-        var hash = 0;
-        for (var i = 0, ii = str.length; i < ii; i++) {
-            var ch = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + ch;
-            hash = hash & hash; // Convert to 32bit integer
+    boundTemplate.prototype.onTemplateIdChange = function(oldVal, newVal) {
+        if (newVal === this.currentTemplateId) {
+            this.currentTemplateId = null;
+            return;
         }
-        
-        return hash;
+
+        this.currentTemplateId = null;
+
+        if (this.pendingLoad)
+            this.pendingLoad.cancel();
+
+        this.refreshTemplate(newVal);
     };
+
+    boundTemplate.prototype.onTemplateChange = function(oldVal, newVal) {
+        if (newVal === this.currentTemplate) {
+            this.currentTemplate = null;
+            return;
+        }
+
+        this.currentTemplate = null;
+        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+    }
     
     return contentControl;
 });
