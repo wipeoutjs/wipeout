@@ -160,8 +160,8 @@ wipeoutDocs.compiler = (function () {
     
 })();
 
-var compiler = new wipeoutDocs.compiler("wipeoutDocs", "objjs.object", [
-    "obsjs.disposable", "obsjs.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+var compiler = new wipeoutDocs.compiler("wipeoutDocs", "orienteer", [
+    "busybody.disposable", "busybody.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
 ]);
 
 
@@ -183,7 +183,7 @@ var get = function(item, root) {
     return current;
 };
 
-compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", function() {
+compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable", function() {
     
     var staticContructor = function() {
         if(window.wipeoutApi) return;
@@ -192,10 +192,10 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
 			{key: "EventTarget", value: EventTarget},	//TODO: take these out of the list
 			{key: "Window", value: Window},
 			{key: "Array", value: Array},
-			{key: "objjs.object", value: objjs.object},
-			{key: "obsjs.disposable", value: obsjs.disposable},
-			{key: "obsjs.observableBase", value: obsjs.observableBase},
-			{key: "obsjs.arrayBase", value: obsjs.arrayBase},
+			{key: "orienteer", value: orienteer},
+			{key: "busybody.disposable", value: busybody.disposable},
+			{key: "busybody.observableBase", value: busybody.observableBase},
+			{key: "busybody.arrayBase", value: busybody.arrayBase},
 			{key: "wipeout.base.bindable", value: wipeout.base.bindable}
 		];
 		
@@ -208,6 +208,10 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
             });
 		
         woApi = new wipeoutDocs.models.components.apiBuilder(wo, "wo").build({knownParents: parents});
+		
+		orienteerApi = new wipeoutDocs.models.components.apiBuilder(orienteer, "orienteer").build();
+		
+		busybodyApi = new wipeoutDocs.models.components.apiBuilder(busybody, "busybody").build({knownParents: parents});
     };
     
     ApiApplication.routableUrl = function(item) {
@@ -249,9 +253,15 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
     ApiApplication.getApiModel = function(modelPointer) {
         staticContructor();
                 
-        var api = modelPointer.className.indexOf("wipeout") === 0 ?
-            wipeoutApi :
-            (modelPointer.className.indexOf("wo") === 0 ? woApi : null);
+        var api = null;
+		if (modelPointer.className.indexOf("wipeout") === 0)
+			api = wipeoutApi;
+		else if (modelPointer.className.indexOf("wo") === 0)
+			api = woApi;
+		else if (modelPointer.className.indexOf("orienteer") === 0)
+			api = orienteerApi;
+		else if (modelPointer.className.indexOf("busybody") === 0)
+			api = busybodyApi;
         
         if(!api) return null;
         
@@ -324,6 +334,32 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
         this._super();
         
         this.content = new wipeoutDocs.models.pages.landingPage();
+        var _busybody = new wipeoutDocs.models.components.treeViewBranch("busybody", null, [
+            new wipeoutDocs.models.components.treeViewBranch("callbacks", null, [
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.callbacks.arrayCallback"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.callbacks.changeCallback"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.callbacks.propertyCallback"),
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("observeTypes", null, [
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observeTypes.computed"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observeTypes.observeTypesBase"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observeTypes.pathObserver"),
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("utils", null, [
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.utils.compiledArrayChange"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.utils.executeCallbacks"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.utils.obj"),
+				ApiApplication.treeViewBranchFor(busybodyApi, "busybody.utils.observeCycleHandler"),
+			]),
+			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.array"),
+			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.arrayBase"),
+			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.disposable"),
+			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observable"),
+			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observableBase")
+		]);
+				
+				
+				
         var _wipeout = new wipeoutDocs.models.components.treeViewBranch("wipeout", null, [
             new wipeoutDocs.models.components.treeViewBranch("base", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.bindable"),
@@ -393,6 +429,8 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
         ]);
         
         this.menu = new wipeoutDocs.models.components.treeViewBranch("API", null, [
+			ApiApplication.treeViewBranchFor(orienteerApi, "orienteer"),
+            _busybody,
             _wo,
             _wipeout
         ]);
@@ -401,7 +439,7 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "obsjs.observable", 
     return ApiApplication;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.api", "objjs.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.api", "orienteer", function() {    
     
     var api = function() {
         this._super();
@@ -460,7 +498,7 @@ compiler.registerClass("wipeoutDocs.models.components.api", "objjs.object", func
     return api;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "orienteer", function() {    
     
     function apiBuilder(root, rootNamespace) {
         this._super();
@@ -537,14 +575,14 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object
     return apiBuilder;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.apiClass", "objjs.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiClass", "orienteer", function() {    
     return function(classDescription, classConstructor) {
         this.classDescription= classDescription;
         this.classConstructor = classConstructor;
     }
 });
 
-compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "orienteer", function() {
     
     function select(input, converter, context) {
         var output = [];
@@ -831,7 +869,7 @@ compiler.registerClass("wipeoutDocs.models.components.generators.typescript", "w
     return typescript;
 });
 
-compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "orienteer", function() {
     var treeViewBranch = function(name, href, branches) {
         this._super();
             
@@ -843,7 +881,7 @@ compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "objjs.ob
     return treeViewBranch;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.argument", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.argument", "orienteer", function() {
     function argument(itemDetails) {
         this._super();
         
@@ -858,7 +896,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.argument", "objjs.object
     return argument;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.class", "orienteer", function() {
     var classDescription = function(classFullName, api) {
         this._super();
         
@@ -1056,7 +1094,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "objjs.object", 
     return classDescription;
 });
 
-compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "obsjs.observable", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "busybody.observable", function() {
     return function(itemName, itemSummary, isStatic) {
         this._super();
         
@@ -1448,7 +1486,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     return property;  
 }); 
 
-compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", function() {
     
     function articleLink(title, article) {
         this.text = title;
@@ -1651,7 +1689,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "objjs.object", f
     return HowDoIApplication;
 });
 
-compiler.registerClass("wipeoutDocs.models.pages.displayItem", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.pages.displayItem", "orienteer", function() {
     return function(name) {
         this._super();
         

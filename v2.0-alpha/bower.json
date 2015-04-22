@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "obsjs": "ShaneGH/obsjs#in-dev"
+    "busybody": "ShaneGH/busybody#in-dev"
   }
 }

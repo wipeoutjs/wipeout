@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.descriptions.argument", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.argument", "orienteer", function() {
     function argument(itemDetails) {
         this._super();
         

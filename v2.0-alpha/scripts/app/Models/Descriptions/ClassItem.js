@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "obsjs.observable", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.classItem", "busybody.observable", function() {
     return function(itemName, itemSummary, isStatic) {
         this._super();
         

@@ -1,7 +1,7 @@
 // wipeout v2.0.0
 // (c) Shane Connon 2015
 // http://www.opensource.org/licenses/mit-license.php
-// obsJs v0.0.1
+// busybody v0.0.1
 // (c) Shane Connon 2015
 // http://www.opensource.org/licenses/mit-license.php
 // objJs v0.1.0
@@ -10,7 +10,7 @@
 (function () {
     window.objjs = {};
 
-var object = objjs.object = function object() {
+var object = orienteer = function object() {
 	///<summary>The object class is the base class for all objects. It has base functionality for inheritance and parent methods</summary>
 };
 
@@ -179,8 +179,8 @@ object.getInheritanceChain = function(forClass) {
 }());
 
 (function () {
-    window.obsjs = {};
-    var useObjectObserve = obsjs.useObjectObserve = Object.observe && (!window.hasOwnProperty("useObjectObserve") || window.useObjectObserve);
+    window.busybody = {};
+    var useObjectObserve = busybody.useObjectObserve = Object.observe && (!window.hasOwnProperty("useObjectObserve") || window.useObjectObserve);
 
     
 var enumerateArr = function(enumerate, action, context) {
@@ -214,7 +214,7 @@ var enumerateObj = function(enumerate, action, context) {
 };
 
 var Class = function(classFullName, accessorFunction) {
-    ///<summary>Create an obsjs class</summary>
+    ///<summary>Create an busybody class</summary>
     ///<param name="classFullName" type="String">The name of the class</param>
     ///<param name="accessorFunction" type="Function">A function which returns the class</param>
     
@@ -230,16 +230,16 @@ var Class = function(classFullName, accessorFunction) {
 };
 
 var Extend = function(namespace, extendWith) {
-    ///<summary>Similar to $.extend but with a namespace string which must begin with "obsjs"</summary>
+    ///<summary>Similar to $.extend but with a namespace string which must begin with "busybody"</summary>
     ///<param name="namespace" type="String">The namespace to add to</param>
     ///<param name="extendWith" type="Object">The object to add to the namespace</param>
     
     namespace = namespace.split(".");
     
-    if(namespace[0] !== "obsjs") throw "Root must be \"obsjs\".";
+    if(namespace[0] !== "busybody") throw "Root must be \"busybody\".";
     namespace.splice(0, 1);
     
-    var current = obsjs;
+    var current = busybody;
     enumerateArr(namespace, function(nsPart) {
         current = current[nsPart] || (current[nsPart] = {});
     });
@@ -259,7 +259,7 @@ var trim = function(string) {
     return string ? string.replace(_trimString, '') : string;
 };
 
-Class("obsjs.utils.obj", function () {
+Class("busybody.utils.obj", function () {
         
     var arrayMatch = /\[\s*\d\s*\]$/g;
     var splitPropertyName = function(propertyName) {
@@ -267,11 +267,11 @@ Class("obsjs.utils.obj", function () {
         
         var tmp;
         for (var i = 0; i < propertyName.length; i++) {
-            propertyName[i] = obsjs.utils.obj.trim(propertyName[i]);
+            propertyName[i] = busybody.utils.obj.trim(propertyName[i]);
             var match = propertyName[i].match(arrayMatch);
             if (match && match.length) {
-                if (tmp = obsjs.utils.obj.trim(propertyName[i].replace(arrayMatch, ""))) {
-                    propertyName[i] = obsjs.utils.obj.trim(propertyName[i].replace(arrayMatch, ""));
+                if (tmp = busybody.utils.obj.trim(propertyName[i].replace(arrayMatch, ""))) {
+                    propertyName[i] = busybody.utils.obj.trim(propertyName[i].replace(arrayMatch, ""));
                 } else {
                     propertyName.splice(i, 1);
                     i--;
@@ -352,7 +352,7 @@ Class("obsjs.utils.obj", function () {
     function addWithDispose(callbackArray, callback) {
 
         callbackArray.push(callback);
-        var dispose = new obsjs.disposable(function () {
+        var dispose = new busybody.disposable(function () {
             if (!dispose) return;
             dispose = null;
 
@@ -379,13 +379,13 @@ Class("obsjs.utils.obj", function () {
 });
 
 
-Class("obsjs.disposable", function () {
+Class("busybody.disposable", function () {
     
 	function init (disp) {
 		if (!disp.$disposables) disp.$disposables = {};
 	}
 	
-    var disposable = objjs.object.extend(function disposable(disposableOrDisposeFunction) {
+    var disposable = orienteer.extend(function disposable(disposableOrDisposeFunction) {
         ///<summary>An object which can be disposed</summary>
         
         this._super();
@@ -465,9 +465,9 @@ Class("obsjs.disposable", function () {
 
 // name is subject to change
 
-Class("obsjs.utils.executeCallbacks", function () {
+Class("busybody.utils.executeCallbacks", function () {
 	
-	var executeCallbacks = obsjs.disposable.extend(function executeCallbacks() {
+	var executeCallbacks = busybody.disposable.extend(function executeCallbacks() {
 		if (this.constructor === executeCallbacks) throw "You cannot create an instance of an abstract class";
 		
 		this._super();
@@ -476,7 +476,7 @@ Class("obsjs.utils.executeCallbacks", function () {
 	});
 	
 	executeCallbacks.prototype.addCallback = function (callback) {
-		var op = obsjs.utils.obj.addWithDispose(this.callbacks, callback);
+		var op = busybody.utils.obj.addWithDispose(this.callbacks, callback);
 		this.registerDisposable(op);
 		
 		return op;
@@ -508,9 +508,9 @@ Class("obsjs.utils.executeCallbacks", function () {
 });
 
 
-Class("obsjs.observeTypes.observeTypesBase", function () {
+Class("busybody.observeTypes.observeTypesBase", function () {
 	
-	var observeTypesBase = obsjs.utils.executeCallbacks.extend(function observeTypesBase() {
+	var observeTypesBase = busybody.utils.executeCallbacks.extend(function observeTypesBase() {
 		if (this.constructor === observeTypesBase) throw "You cannot create an instance of an abstract class";
 		
 		this._super();
@@ -534,9 +534,9 @@ Class("obsjs.observeTypes.observeTypesBase", function () {
 });
 
 
-Class("obsjs.observableBase", function () {
+Class("busybody.observableBase", function () {
         
-    var observableBase = obsjs.disposable.extend(function observableBase(forObject) {
+    var observableBase = busybody.disposable.extend(function observableBase(forObject) {
         ///<summary>An object whose properties can be subscribed to</summary>
 
         this._super();
@@ -565,7 +565,7 @@ Class("obsjs.observableBase", function () {
         
         this.$changeBatch.length = 0;
 
-        obsjs.utils.observeCycleHandler.instance.execute(this.$forObject || this, (function () {
+        busybody.utils.observeCycleHandler.instance.execute(this.$forObject || this, (function () {
 			var evaluateMultiple = [];
 			enumerateObj(splitChanges, function (changes, name) {
 				if (this.$callbacks[name])
@@ -606,9 +606,9 @@ Class("obsjs.observableBase", function () {
     
     observableBase.prototype.captureChanges = function (logic, callback, toProperty) {
 		
-		if (toProperty && (toProperty = obsjs.utils.obj.splitPropertyName(toProperty)).length > 1) {
-			return obsjs.captureChanges(
-				obsjs.utils.obj.getObject(toProperty.slice(0, toProperty.length - 1).join("."), this.$forObject || this), 
+		if (toProperty && (toProperty = busybody.utils.obj.splitPropertyName(toProperty)).length > 1) {
+			return busybody.captureChanges(
+				busybody.utils.obj.getObject(toProperty.slice(0, toProperty.length - 1).join("."), this.$forObject || this), 
 				logic, 
 				callback, 
 				toProperty[toProperty.length - 1]);
@@ -636,7 +636,7 @@ Class("obsjs.observableBase", function () {
 	};
     
     observableBase.prototype.bind = function (property, otherObject, otherPropoerty) {
-		return obsjs.bind(this, property, otherObject, otherPropoerty);
+		return busybody.bind(this, property, otherObject, otherPropoerty);
     };
 
     observableBase.prototype.observeArray = function (property, callback, context, options) {
@@ -659,19 +659,19 @@ Class("obsjs.observableBase", function () {
             if (options && options.evaluateOnEachChange) {
                 callback.call(context, change);
             } else {
-                var cec = new obsjs.utils.compiledArrayChange([change], 0, 1);
+                var cec = new busybody.utils.compiledArrayChange([change], 0, 1);
                 callback.call(context, cec.getRemoved(), cec.getAdded(), cec.getIndexes());
             }
             
-            if (newValue instanceof obsjs.array)
+            if (newValue instanceof busybody.array)
                 d2 = this.registerDisposable(newValue.observe(callback, context, options));
         }, this);
         
         var tmp;
-        if ((tmp = obsjs.utils.obj.getObject(property, this.$forObject || this)) instanceof obsjs.array)
+        if ((tmp = busybody.utils.obj.getObject(property, this.$forObject || this)) instanceof busybody.array)
             d2 = this.registerDisposable(tmp.observe(callback, context, options));
         
-        return new obsjs.disposable(function () {
+        return new busybody.disposable(function () {
             if (d2) {
                 this.disposeOf(d2);
                 d2 = null;
@@ -689,14 +689,14 @@ Class("obsjs.observableBase", function () {
 		// options: evaluateOnEachChange, evaluateIfValueHasNotChanged, useRawChanges
 		
         if (/[\.\[]/.test(property)) {
-            var pw = new obsjs.observeTypes.pathObserver(this.$forObject || this, property, callback, context);
+            var pw = new busybody.observeTypes.pathObserver(this.$forObject || this, property, callback, context);
             this.registerDisposable(pw);
             return pw;
         }
         
         this._init(property);
 
-        var cb = new obsjs.callbacks.propertyCallback(callback, context, options);
+        var cb = new busybody.callbacks.propertyCallback(callback, context, options);
         if (!this.$callbacks[property]) this.$callbacks[property] = [];
         this.$callbacks[property].push(cb);
 
@@ -741,7 +741,7 @@ Class("obsjs.observableBase", function () {
     
     observableBase.prototype.computed = function (property, callback, options) {
         
-        var computed = new obsjs.observeTypes.computed(callback, this, options);
+        var computed = new busybody.observeTypes.computed(callback, this, options);
         computed.bind(this.$forObject || this, property);
         this.registerDisposable(computed);
         return computed;        
@@ -753,21 +753,21 @@ Class("obsjs.observableBase", function () {
     };
         
     observableBase.afterObserveCycle = function(callback) {
-        return obsjs.utils.observeCycleHandler.instance.afterObserveCycle(callback);
+        return busybody.utils.observeCycleHandler.instance.afterObserveCycle(callback);
     };
 
     observableBase.beforeObserveCycle = function(callback) {
-        return obsjs.utils.observeCycleHandler.instance.beforeObserveCycle(callback);
+        return busybody.utils.observeCycleHandler.instance.beforeObserveCycle(callback);
     };
 
     observableBase.afterNextObserveCycle = function (callback, waitForNextCycleToStart) {
 
-        if (obsjs.utils.observeCycleHandler.instance.length === 0 && !waitForNextCycleToStart) {
+        if (busybody.utils.observeCycleHandler.instance.length === 0 && !waitForNextCycleToStart) {
             callback();
             return;
         }
 
-        var dispose = obsjs.utils.observeCycleHandler.instance.afterObserveCycle(function () {
+        var dispose = busybody.utils.observeCycleHandler.instance.afterObserveCycle(function () {
             dispose.dispose();
             callback();
         });
@@ -777,7 +777,7 @@ Class("obsjs.observableBase", function () {
 
     observableBase.beforeNextObserveCycle = function (callback) {
 
-        var dispose = obsjs.utils.observeCycleHandler.instance.beforeObserveCycle(function () {
+        var dispose = busybody.utils.observeCycleHandler.instance.beforeObserveCycle(function () {
             dispose.dispose();
             callback();
         });
@@ -789,9 +789,9 @@ Class("obsjs.observableBase", function () {
 });
 
 
-Class("obsjs.callbacks.changeCallback", function () {
+Class("busybody.callbacks.changeCallback", function () {
         
-    var changeCallback = objjs.object.extend(function changeCallback(evaluateOnEachChange) {
+    var changeCallback = orienteer.extend(function changeCallback(evaluateOnEachChange) {
         this._super();
         
         this.evaluateOnEachChange = evaluateOnEachChange;
@@ -885,9 +885,9 @@ Class("obsjs.callbacks.changeCallback", function () {
     return changeCallback;
 });
 
-Class("obsjs.arrayBase", function () {
+Class("busybody.arrayBase", function () {
         
-    var arrayBase = objjs.object.extend.call(Array, function arrayBase (initialValues) {
+    var arrayBase = orienteer.extend.call(Array, function arrayBase (initialValues) {
         
         Array.call(this);
         
@@ -906,8 +906,8 @@ Class("obsjs.arrayBase", function () {
                 this[i] = initialValues[i]; // doing it this way as it will not publish changes
     });
     
-    arrayBase.prototype._super = objjs.object.prototype._super;
-    arrayBase.extend = objjs.object.extend;
+    arrayBase.prototype._super = orienteer.prototype._super;
+    arrayBase.extend = orienteer.extend;
     
     arrayBase.isValidArrayChange = function (change) {
         return change.type === "splice" || !isNaN(parseInt(change.name));
@@ -927,8 +927,8 @@ Class("obsjs.arrayBase", function () {
         var changeBatch = this.$changeBatch.slice();
         this.$changeBatch.length = 0;
 
-        obsjs.utils.observeCycleHandler.instance.execute(this, (function () {
-        	enumerateArr(obsjs.observableBase.processChanges(this.$callbacks, changeBatch), function (c) { c(); });
+        busybody.utils.observeCycleHandler.instance.execute(this, (function () {
+        	enumerateArr(busybody.observableBase.processChanges(this.$callbacks, changeBatch), function (c) { c(); });
 		}).bind(this));
     };
     
@@ -939,7 +939,7 @@ Class("obsjs.arrayBase", function () {
             if (!arrayBase.isValidArrayChange(changes[i]))
                 changes.splice(i, 1);
         
-        return obsjs.observableBase.prototype.registerChangeBatch.call(this, changes);
+        return busybody.observableBase.prototype.registerChangeBatch.call(this, changes);
     };
             
     function changeIndex(index) {
@@ -992,10 +992,10 @@ Class("obsjs.arrayBase", function () {
         if (typeof arguments[0] === "string") {			
             var args = Array.prototype.slice.call(arguments);
             args.splice(0, 0, this);
-            return obsjs.observe.apply(null, args);
+            return busybody.observe.apply(null, args);
         }
 		
-		return this.addCallback(new obsjs.callbacks.arrayCallback(callback, context, options));
+		return this.addCallback(new busybody.callbacks.arrayCallback(callback, context, options));
     };
 	
 	arrayBase.prototype.disposableFor = function (changeCallback) {
@@ -1017,7 +1017,7 @@ Class("obsjs.arrayBase", function () {
 		return dispose;
 	};
     
-	var boundArrayStopKey = "obsjs-do-not-apply-to";
+	var boundArrayStopKey = "busybody-do-not-apply-to";
     arrayBase.prototype.alteringArray = function(method, args) {
         if (this.__alteringArray)
             throw "Calls to alteringArray must be synchronus and not nested.";
@@ -1066,10 +1066,10 @@ Class("obsjs.arrayBase", function () {
 		
 		this.$boundArrays.push(anotherArray);
         
-        if (!(anotherArray instanceof obsjs.array) || anotherArray.$boundArrays.indexOf(this) === -1)
+        if (!(anotherArray instanceof busybody.array) || anotherArray.$boundArrays.indexOf(this) === -1)
             arrayBase.copyAll(this, anotherArray);
 		
-		return new obsjs.disposable((function () {
+		return new busybody.disposable((function () {
 			if (!anotherArray) return;
 			var i;
 			if ((i = this.$boundArrays.indexOf(anotherArray)) !== -1)
@@ -1110,9 +1110,9 @@ Class("obsjs.arrayBase", function () {
 });
 
 useObjectObserve ?
-Class("obsjs.array", function () {
+Class("busybody.array", function () {
     
-    var array = obsjs.arrayBase.extend(function array (initialValues) {
+    var array = busybody.arrayBase.extend(function array (initialValues) {
         
         this._super.apply(this, arguments);
     });
@@ -1122,7 +1122,7 @@ Class("obsjs.array", function () {
         var cb = (function (changes) {
             if (!cb) return;
             for (var i = 0, ii = changes.length; i < ii; i++) {
-                if (obsjs.arrayBase.isValidArrayChange(changes[i])) {    
+                if (busybody.arrayBase.isValidArrayChange(changes[i])) {    
                     Array.unobserve(this, cb);
                     cb = null;
                     callback(changes[i]);
@@ -1139,7 +1139,7 @@ Class("obsjs.array", function () {
         var cb = function (changes) {
             changes = changes.slice();
             for (var i = changes.length - 1; i >= 0; i--)
-                if (!obsjs.arrayBase.isValidArrayChange(changes[i]))
+                if (!busybody.arrayBase.isValidArrayChange(changes[i]))
                     changes.splice(i, 1);
 
             callback(changes);
@@ -1168,9 +1168,9 @@ Class("obsjs.array", function () {
     
     return array;
 }) :
-Class("obsjs.array", function () {
+Class("busybody.array", function () {
     
-    var array = obsjs.arrayBase.extend(function array (initialValues) {
+    var array = busybody.arrayBase.extend(function array (initialValues) {
         
         this._super.apply(this, arguments);
         
@@ -1183,7 +1183,7 @@ Class("obsjs.array", function () {
         var cb = function (changes) {
             changes = changes.slice();
             for (var i = changes.length - 1; i >= 0; i--)
-                if (!obsjs.arrayBase.isValidArrayChange(changes[i]))
+                if (!busybody.arrayBase.isValidArrayChange(changes[i]))
                     changes.splice(i, 1);
 
             callback(changes);
@@ -1196,7 +1196,7 @@ Class("obsjs.array", function () {
     
     array.prototype.registerChangeBatch = function (changes) {
         for (var i = 0, ii = changes.length; i < ii; i++) {
-            if (obsjs.arrayBase.isValidArrayChange(changes[i])) {
+            if (busybody.arrayBase.isValidArrayChange(changes[i])) {
                 enumerateArr(this.$onNextArrayChanges.splice(0, this.$onNextArrayChanges.length), function (cb) {
                     cb(changes[i]);
                 });
@@ -1226,7 +1226,7 @@ Class("obsjs.array", function () {
 
 (function () {
     
-    var array = obsjs.array;
+    var array = busybody.array;
     
     array.prototype.replace = function(index, replacement) {        
         this.splice(index, index >= this.length ? 0 : 1, replacement);
@@ -1365,9 +1365,9 @@ Class("obsjs.array", function () {
 }());
 
 
-Class("obsjs.callbacks.arrayCallback", function () {
+Class("busybody.callbacks.arrayCallback", function () {
         
-    var arrayCallback = obsjs.callbacks.changeCallback.extend(function arrayCallback(callback, context, options) {
+    var arrayCallback = busybody.callbacks.changeCallback.extend(function arrayCallback(callback, context, options) {
         
         this._super(options && options.evaluateOnEachChange);
         
@@ -1400,7 +1400,7 @@ Class("obsjs.callbacks.arrayCallback", function () {
         }
         
         if (!result)
-            changes.compiled.push(result = new obsjs.utils.compiledArrayChange(changes, beginAt, endAt));
+            changes.compiled.push(result = new busybody.utils.compiledArrayChange(changes, beginAt, endAt));
         
         this._evaluateArrayMultiple(result);
     };
@@ -1414,9 +1414,9 @@ Class("obsjs.callbacks.arrayCallback", function () {
 });
 
 
-Class("obsjs.callbacks.propertyCallback", function () {
+Class("busybody.callbacks.propertyCallback", function () {
         
-    var propertyCallback = obsjs.callbacks.changeCallback.extend(function propertyCallback(callback, context, options) {
+    var propertyCallback = busybody.callbacks.changeCallback.extend(function propertyCallback(callback, context, options) {
         
 		// options: evaluateOnEachChange, evaluateIfValueHasNotChanged, useRawChanges
 		
@@ -1455,8 +1455,8 @@ Class("obsjs.callbacks.propertyCallback", function () {
 
     
 var observable = useObjectObserve ?
-    Class("obsjs.observable", function () {
-        var observable = obsjs.observableBase.extend(function observable(forObject) {
+    Class("busybody.observable", function () {
+        var observable = busybody.observableBase.extend(function observable(forObject) {
             this._super(forObject);
         });
 
@@ -1503,8 +1503,8 @@ var observable = useObjectObserve ?
 
         return observable;
     }) :
-    Class("obsjs.observable", function () {
-        var observable = obsjs.observableBase.extend(function observable(forObject) {
+    Class("busybody.observable", function () {
+        var observable = busybody.observableBase.extend(function observable(forObject) {
             this._super(forObject);
 
             this.$observed = {};
@@ -1600,7 +1600,7 @@ var observable = useObjectObserve ?
 
 //TODO: look into esprima and falafel
 
-Class("obsjs.observeTypes.computed", function () {
+Class("busybody.observeTypes.computed", function () {
     
     var WITH = /\s*with\s*\(/g;
     var GET_ARGUMENT_NAMES = /([^\s,]+)/g;
@@ -1610,7 +1610,7 @@ Class("obsjs.observeTypes.computed", function () {
     var completeArg = {};
 	
     // monitor a function and change the value of a "watched" when it changes
-    var computed = obsjs.observeTypes.observeTypesBase.extend(function computed(callback, context, options) {
+    var computed = busybody.observeTypes.observeTypesBase.extend(function computed(callback, context, options) {
         
         this._super();
         
@@ -1682,7 +1682,7 @@ Class("obsjs.observeTypes.computed", function () {
 			}	
 			
 			var array = possibleArray.path.length ? 
-				obsjs.utils.obj.getObject(possibleArray.path, possibleArray.root) : 
+				busybody.utils.obj.getObject(possibleArray.path, possibleArray.root) : 
 				possibleArray.root;
 			
 			if (array instanceof Array) {
@@ -1834,9 +1834,9 @@ Class("obsjs.observeTypes.computed", function () {
         enumerateArr(found, function (item) {
             
 			// if there is a path, i.e. variable.property, subscribe to it
-            tmp = obsjs.utils.obj.splitPropertyName(item.variableName);
+            tmp = busybody.utils.obj.splitPropertyName(item.variableName);
 			if (tmp.length > 1)
-				this.addPathWatchFor(variable, obsjs.utils.obj.joinPropertyName(tmp.slice(1)));
+				this.addPathWatchFor(variable, busybody.utils.obj.joinPropertyName(tmp.slice(1)));
 			
 			// if we are looking for array elements, do more examination for this
 			if (observeArrayElements) {
@@ -1846,7 +1846,7 @@ Class("obsjs.observeTypes.computed", function () {
 						if (!possibleArray)
 							this.possibleArrays.push(possibleArray = {
 								root: variable,
-								path: obsjs.utils.obj.joinPropertyName(tmp.slice(1)),
+								path: busybody.utils.obj.joinPropertyName(tmp.slice(1)),
 								subPaths: [arrProps]
 							});
 						else
@@ -1872,7 +1872,7 @@ Class("obsjs.observeTypes.computed", function () {
 	};
 	
     computed.prototype.addPathWatchFor = function(variable, path) {
-		var path = new obsjs.observeTypes.pathObserver(variable, path, this.execute, this);
+		var path = new busybody.observeTypes.pathObserver(variable, path, this.execute, this);
 		
 		var dispose;
 		var te = this.execute.bind(this);
@@ -1882,7 +1882,7 @@ Class("obsjs.observeTypes.computed", function () {
 				dispose = null;
 			}
 
-			if (newVal instanceof obsjs.array)
+			if (newVal instanceof busybody.array)
 				dispose = newVal.observe(te);
 		}, true);
 		
@@ -1893,16 +1893,16 @@ Class("obsjs.observeTypes.computed", function () {
         var arrayDisposeCallback;
         var output = function (oldValue, newValue) {
 			
-            var existingVal = obsjs.utils.obj.getObject(bindToProperty, bindToObject);
+            var existingVal = busybody.utils.obj.getObject(bindToProperty, bindToObject);
             if (newValue === existingVal)
                 return;
 			
             output.dispose();
 			
 			if (newValue instanceof Array || existingVal instanceof Array)
-				arrayDisposeCallback = obsjs.tryBindArrays(newValue, existingVal);
+				arrayDisposeCallback = busybody.tryBindArrays(newValue, existingVal);
             else
-				obsjs.utils.obj.setObject(bindToProperty, bindToObject, newValue);
+				busybody.utils.obj.setObject(bindToProperty, bindToObject, newValue);
         };
         
         output.dispose = function () {
@@ -1920,11 +1920,11 @@ Class("obsjs.observeTypes.computed", function () {
 
 // name is subject to change
 
-Class("obsjs.observeTypes.pathObserver", function () {
+Class("busybody.observeTypes.pathObserver", function () {
         
-    var pathObserver = obsjs.observeTypes.observeTypesBase.extend(function pathObserver (forObject, property, callback, context) {
+    var pathObserver = busybody.observeTypes.observeTypesBase.extend(function pathObserver (forObject, property, callback, context) {
         ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
-        ///<param name="forObject" type="obsjs.observable" optional="false">The object to watch</param>
+        ///<param name="forObject" type="busybody.observable" optional="false">The object to watch</param>
         ///<param name="property" type="String" optional="false">The property</param>
         ///<param name="callback" type="Function" optional="true">A callback for property change</param>
         ///<param name="context" type="Any" optional="true">The context of the callback</param>
@@ -1934,7 +1934,7 @@ Class("obsjs.observeTypes.pathObserver", function () {
         this.forObject = forObject;
         this.property = property;
         
-        this.path = obsjs.utils.obj.splitPropertyName(property);
+        this.path = busybody.utils.obj.splitPropertyName(property);
         
         this.__pathDisposables = new Array(this.path.length);
         this.execute();
@@ -1976,7 +1976,7 @@ Class("obsjs.observeTypes.pathObserver", function () {
         
         // get the last item in the path subscribing to changes along the way
         for (; current && i < this.path.length - 1; i++) {
-            if ((obsjs.canObserve(current) || current instanceof obsjs.array) && current[this.path[i]] && i >= begin) {
+            if ((busybody.canObserve(current) || current instanceof busybody.array) && current[this.path[i]] && i >= begin) {
                 
                 var args = [current, (function (i) {
                     return function(oldVal, newVal) {
@@ -1989,15 +1989,15 @@ Class("obsjs.observeTypes.pathObserver", function () {
                     args.splice(1, 0, this.path[i]);
                 }
                 
-                this.__pathDisposables[i] = obsjs.tryObserve.apply(null, args);
+                this.__pathDisposables[i] = busybody.tryObserve.apply(null, args);
             }
 
             current = current[this.path[i]];
         }
         
         // observe last item in path
-        if (obsjs.canObserve(current))
-            this.__pathDisposables[i] = obsjs.tryObserve(current, this.path[i], function (oldVal, newVal) {
+        if (busybody.canObserve(current))
+            this.__pathDisposables[i] = busybody.tryObserve(current, this.path[i], function (oldVal, newVal) {
                 this.execute();
             }, this);
     };
@@ -2028,7 +2028,7 @@ Class("obsjs.observeTypes.pathObserver", function () {
 
 // name is subject to change
 
-Class("obsjs.utils.compiledArrayChange", function () {
+Class("busybody.utils.compiledArrayChange", function () {
     
     function compiledArrayChange(changes, beginAt, endAt) {
         this.beginAt = beginAt;
@@ -2199,9 +2199,9 @@ Class("obsjs.utils.compiledArrayChange", function () {
 
 // name is subject to change
 //TODO: before/after observe cycle for specific object
-Class("obsjs.utils.observeCycleHandler", function () {
+Class("busybody.utils.observeCycleHandler", function () {
         
-    var observeCycleHandler = obsjs.observable.extend(function observeCycleHandler () {
+    var observeCycleHandler = busybody.observable.extend(function observeCycleHandler () {
         this._super();
         
         this.$afterObserveCycles = [];
@@ -2249,12 +2249,12 @@ Class("obsjs.utils.observeCycleHandler", function () {
 
     observeCycleHandler.prototype.afterObserveCycle = function (callback) {
 
-        return obsjs.utils.obj.addWithDispose(this.$afterObserveCycles, callback);
+        return busybody.utils.obj.addWithDispose(this.$afterObserveCycles, callback);
     };
 
     observeCycleHandler.prototype.befreObserveCycle = function (callback) {
 
-        return obsjs.utils.obj.addWithDispose(this.$beforeObserveCycles, callback);
+        return busybody.utils.obj.addWithDispose(this.$beforeObserveCycles, callback);
     };
 
     observeCycleHandler.prototype.dispose = function () {
@@ -2271,22 +2271,22 @@ Class("obsjs.utils.observeCycleHandler", function () {
 });
 
     
-    obsjs.getObserver = function (object) {
+    busybody.getObserver = function (object) {
                 
-        return object == null || object instanceof obsjs.observableBase ?
+        return object == null || object instanceof busybody.observableBase ?
             object :
-            (object.$observer instanceof obsjs.observableBase ? object.$observer : null);
+            (object.$observer instanceof busybody.observableBase ? object.$observer : null);
     };
     
-    obsjs.captureArrayChanges = function (forObject, logic, callback) {
-        if (!(forObject instanceof obsjs.array))
-            throw "Only obsjs.array objects can have changes captured";
+    busybody.captureArrayChanges = function (forObject, logic, callback) {
+        if (!(forObject instanceof busybody.array))
+            throw "Only busybody.array objects can have changes captured";
         
         return forObject.captureArrayChanges(logic, callback);
     };
     
-    obsjs.captureChanges = function (forObject, logic, callback, property) {
-        forObject = obsjs.getObserver(forObject);
+    busybody.captureChanges = function (forObject, logic, callback, property) {
+        forObject = busybody.getObserver(forObject);
         
 		if (forObject)
         	return forObject.captureChanges(logic, callback, property);
@@ -2294,14 +2294,14 @@ Class("obsjs.utils.observeCycleHandler", function () {
 			logic();
     };
 
-    obsjs.makeObservable = function (object) {
+    busybody.makeObservable = function (object) {
         if (!arguments.length)
             object = {};
         
-		if (object instanceof obsjs.array) {
-			if (obsjs.getObserver(object)) 
+		if (object instanceof busybody.array) {
+			if (busybody.getObserver(object)) 
 				return object;
-		} else if (obsjs.canObserve(object)) {
+		} else if (busybody.canObserve(object)) {
 			return object;
 		}
         
@@ -2310,30 +2310,30 @@ Class("obsjs.utils.observeCycleHandler", function () {
         Object.defineProperty(object, "$observer", {
             enumerable: false,
             configurable: false,
-            value: new obsjs.observable(object),
+            value: new busybody.observable(object),
             writable: false
         });
         
         return object;
     };
 
-    obsjs.observe = function (object, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
-        obsjs.makeObservable(object);
-        return obsjs.tryObserve(object, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
+    busybody.observe = function (object, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged) {
+        busybody.makeObservable(object);
+        return busybody.tryObserve(object, property, callback, context, evaluateOnEachChange, evaluateIfValueHasNotChanged);
     };
 
-    obsjs.tryObserve = function (object, property, callback, context, options) {
+    busybody.tryObserve = function (object, property, callback, context, options) {
         
-        if (object instanceof obsjs.array) {
+        if (object instanceof busybody.array) {
 			if (property instanceof Function)
             	return object.observe(arguments[1], arguments[2], arguments[3]);    // property names are misleading in this case
 			if (property === "length")
 				property = "$length";
 			
-			obsjs.makeObservable(object);	//TODO: test
+			busybody.makeObservable(object);	//TODO: test
 		}
         
-        var target = obsjs.getObserver(object);
+        var target = busybody.getObserver(object);
         
         if (target)
             return target.observe(property, callback, context, options);
@@ -2341,14 +2341,14 @@ Class("obsjs.utils.observeCycleHandler", function () {
         return false;
     };
 
-    obsjs.observeArray = function (object, property, callback, context, evaluateOnEachChange) {
-        obsjs.makeObservable(object);
-        return obsjs.tryObserveArray(object, property, callback, context, evaluateOnEachChange);
+    busybody.observeArray = function (object, property, callback, context, evaluateOnEachChange) {
+        busybody.makeObservable(object);
+        return busybody.tryObserveArray(object, property, callback, context, evaluateOnEachChange);
     };
     
-    obsjs.tryObserveArray = function (object, property, callback, context, evaluateOnEachChange) {
+    busybody.tryObserveArray = function (object, property, callback, context, evaluateOnEachChange) {
                 
-        var target = obsjs.getObserver(object);
+        var target = busybody.getObserver(object);
         
         if (target)
             return target.observeArray(property, callback, context, evaluateOnEachChange);
@@ -2356,7 +2356,7 @@ Class("obsjs.utils.observeCycleHandler", function () {
         return false;
     };
 
-	obsjs.tryBindArrays = function (array1, array2) {
+	busybody.tryBindArrays = function (array1, array2) {
 		
 		if ((!(array1 instanceof Array) && array1 != null) ||
 		   (!(array2 instanceof Array) && array2 != null))
@@ -2368,10 +2368,10 @@ Class("obsjs.utils.observeCycleHandler", function () {
 		if (array1 == null) {
 			array2.length = 0;
 		} else if (array2 != null) {
-			if (array1 instanceof obsjs.array)
+			if (array1 instanceof busybody.array)
 				return array1.bind(array2);
 			else
-				obsjs.array.copyAll(array1, array2);
+				busybody.array.copyAll(array1, array2);
 		}
 	};
 	
@@ -2386,20 +2386,20 @@ Class("obsjs.utils.observeCycleHandler", function () {
 		
 		return function (changes) {
 			
-			var observer1 = obsjs.getObserver(object1);
+			var observer1 = busybody.getObserver(object1);
 			if (changes && observer1.$bindingChanges)
 				for (var i in observer1.$bindingChanges)
 					if (object2 === observer1.$bindingChanges[i].fromObject
 						&& changes[changes.length - 1] === observer1.$bindingChanges[i].change)
 						return;
 			
-			obsjs.captureChanges(object2, function () {
-				obsjs.utils.obj.setObject(property2, object2, obsjs.utils.obj.getObject(property1, object1));
+			busybody.captureChanges(object2, function () {
+				busybody.utils.obj.setObject(property2, object2, busybody.utils.obj.getObject(property1, object1));
 			}, function (changes) {
-				var observer2 = obsjs.makeObservable(object2);
+				var observer2 = busybody.makeObservable(object2);
 				enumerateArr(changes, function (change) {
 					
-					var observer2 = obsjs.getObserver(object2);
+					var observer2 = busybody.getObserver(object2);
 					if (observer2) {
 						if (!observer2.$bindingChanges)
 							observer2.$bindingChanges = {};
@@ -2419,10 +2419,10 @@ Class("obsjs.utils.observeCycleHandler", function () {
 		};
 	}
 
-	obsjs.tryBind = function (object1, property1, object2, property2, twoWay, doNotSet) {
+	busybody.tryBind = function (object1, property1, object2, property2, twoWay, doNotSet) {
 		
 		// store all parts which need to be disposed
-		var disposable = new obsjs.disposable();
+		var disposable = new busybody.disposable();
 				
 		var dispKey, evaluator;
 		function ev () {
@@ -2432,12 +2432,12 @@ Class("obsjs.utils.observeCycleHandler", function () {
 				disp = null;
 			}
 			
-			var obj1 = obsjs.utils.obj.getObject(property1, object1);
-			var obj2 = obsjs.utils.obj.getObject(property2, object2);
+			var obj1 = busybody.utils.obj.getObject(property1, object1);
+			var obj2 = busybody.utils.obj.getObject(property2, object2);
 			
 			// if arrays are invloved, bind arrays
 			if (obj1 instanceof Array || obj2 instanceof Array) {
-				dispKey = disposable.registerDisposable(obsjs.tryBindArrays(obj1, obj2));
+				dispKey = disposable.registerDisposable(busybody.tryBindArrays(obj1, obj2));
 			} else {
 				if (!doNotSet)
 					(evaluator || (evaluator = createBindingEvaluator(object1, property1, object2, property2))).apply(this, arguments);
@@ -2446,40 +2446,40 @@ Class("obsjs.utils.observeCycleHandler", function () {
 			}
 		}
 		
-		disposable.registerDisposable(obsjs.tryObserve(object1, property1, ev, null, {useRawChanges: true}));
+		disposable.registerDisposable(busybody.tryObserve(object1, property1, ev, null, {useRawChanges: true}));
 		
 		ev();
 		
 		if (twoWay)
-			disposable.registerDisposable(obsjs.tryBind(object2, property2, object1, property1, false, true));
+			disposable.registerDisposable(busybody.tryBind(object2, property2, object1, property1, false, true));
 		
 		return disposable;
 	};
     
-    obsjs.bind = function (object1, property1, object2, property2, twoWay) {
+    busybody.bind = function (object1, property1, object2, property2, twoWay) {
 		
-		obsjs.makeObservable(object1);
-		obsjs.makeObservable(object2);
+		busybody.makeObservable(object1);
+		busybody.makeObservable(object2);
 		
-		return obsjs.tryBind(object1, property1, object2, property2, twoWay);
+		return busybody.tryBind(object1, property1, object2, property2, twoWay);
     };
 
-    obsjs.canObserve = function (object) {
+    busybody.canObserve = function (object) {
         
 			//TODO: test array bit
-        return object instanceof obsjs.array || !!obsjs.getObserver(object);
+        return object instanceof busybody.array || !!busybody.getObserver(object);
     }; 
 
-    obsjs.del = function (object, property) {
+    busybody.del = function (object, property) {
         
-        var target = obsjs.getObserver(object);
+        var target = busybody.getObserver(object);
         
         if (target)
             return target.del(property);
     };
     
-    obsjs.dispose = function (object) {
-        var target = obsjs.getObserver(object);
+    busybody.dispose = function (object) {
+        var target = busybody.getObserver(object);
         
         if (target)
             return target.dispose();
@@ -2490,10 +2490,10 @@ Class("obsjs.utils.observeCycleHandler", function () {
     
     window.wipeout = {
         base: {
-            object: objjs.object,
-            observable: obsjs.observable,
-            array: obsjs.array,
-            disposable: obsjs.disposable
+            object: orienteer,
+            observable: busybody.observable,
+            array: busybody.array,
+            disposable: busybody.disposable
         }
     };
     
@@ -2816,7 +2816,7 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		// if $this !== vm then $this is the parent, otherwise $parent is the parent
 		var parent = renderContext.$this === viewModel ? renderContext.$parent : renderContext.$this;
@@ -2824,7 +2824,7 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
 		if (parent instanceof wipeout.viewModels.view)
 			parent.templateItems[setter.value()] = viewModel;
 		
-		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new obsjs.disposable();
+		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new busybody.disposable();
 		output.registerDisposeCallback(function () {		
 			if (parent instanceof wipeout.viewModels.view &&
 			   parent.templateItems[setter.value()] === viewModel)
@@ -3329,7 +3329,7 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
 		
-        ///<Summary type="[obsjs.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
+        ///<Summary type="[busybody.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
 		this.$initComputeds = [];
     });
 	
@@ -3574,7 +3574,7 @@ Class("wipeout.events.routedEventRegistration", function () {
 
 Class("wipeout.template.rendering.renderedContent", function () {
     
-    var renderedContent = obsjs.disposable.extend(function renderedContent (element, name, parentRenderContext) {
+    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>
@@ -3836,7 +3836,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 
 Class("wipeout.template.propertyValue", function () {
 	
-	var propertyValue = objjs.object.extend(function setter (name, value, parser) {
+	var propertyValue = orienteer.extend(function setter (name, value, parser) {
 		///<summary>Base class for vm property setters and html attribute setters</summary>
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
@@ -4003,7 +4003,7 @@ Class("wipeout.template.propertyValue", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
         ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
-        ///<returns type="obsjs.diposable">A dispose function to dispose prematurely</returns>
+        ///<returns type="busybody.diposable">A dispose function to dispose prematurely</returns>
 		
 		this.primed();
 		
@@ -4015,7 +4015,7 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
+			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);
@@ -4026,7 +4026,7 @@ Class("wipeout.template.propertyValue", function () {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
-        ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
+        ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
 		
 		if (this._caching)
 			throw "prime cannot be asynchronus or nested.";
@@ -4231,7 +4231,7 @@ Class("wipeout.events.event", function () {
 Class("wipeout.events.routedEventModel", function () {
     
     
-    var routedEventModel = objjs.object.extend(function routedEventModel() {
+    var routedEventModel = orienteer.extend(function routedEventModel() {
         ///<summary>The base class for models if they wish to invoke routed events on their viewModel</summary>
         
 		this._super();
@@ -4342,7 +4342,7 @@ Class("wipeout.htmlBindingTypes.owts", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		if (!setter.canSet())
             throw "Setter \"" + setter.value() + "\" cannot be set.";	//TODE
@@ -4377,7 +4377,7 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
 		
 		viewModel[setter.name] = new setter._value.constructor();
 
-		var output = new obsjs.disposable(wipeout.template.engine.instance
+		var output = new busybody.disposable(wipeout.template.engine.instance
 			.getVmInitializer(setter._value.xml)
 			.initialize(viewModel[setter.name], renderContext));
 		
@@ -4408,7 +4408,7 @@ Class("wipeout.htmlBindingTypes.tw", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		var val;
         if (setter.getParser(viewModel) ||
@@ -4417,17 +4417,17 @@ Class("wipeout.htmlBindingTypes.tw", function () {
 		
 		// skip to first observable object, only paths one level off renderContext
 		// or one index of renderContexts.$parents are allowed
-		var current = renderContext, split = obsjs.utils.obj.splitPropertyName(val);
+		var current = renderContext, split = busybody.utils.obj.splitPropertyName(val);
 		
-		if (obsjs.getObserver(renderContext[split[0]])) {
+		if (busybody.getObserver(renderContext[split[0]])) {
 			renderContext = renderContext[split[0]];
-			val = obsjs.utils.obj.joinPropertyName(split.slice(1));
-		} else if (split[0] === "$parents" && renderContext.$parents && obsjs.getObserver(renderContext.$parents[split[1]])) {
+			val = busybody.utils.obj.joinPropertyName(split.slice(1));
+		} else if (split[0] === "$parents" && renderContext.$parents && busybody.getObserver(renderContext.$parents[split[1]])) {
 			renderContext = renderContext.$parents[split[1]];
-			val = obsjs.utils.obj.joinPropertyName(split.slice(2));
+			val = busybody.utils.obj.joinPropertyName(split.slice(2));
 		}
 		
-		return obsjs.tryBind(renderContext, val, viewModel, setter.name, true);
+		return busybody.tryBind(renderContext, val, viewModel, setter.name, true);
     }
 });
 
@@ -4803,7 +4803,7 @@ Class("wipeout.template.context", function () {
 		if (arrayIndex != null) {
 			
 			///<summary type="Object">An object whcih contains a "value" property. The value is the index. This property is only available for items in a rendered Array</summary>
-			this.$index = new obsjs.observable();
+			this.$index = new busybody.observable();
 			this.$index.value = arrayIndex;
 		}
     }
@@ -4868,9 +4868,9 @@ Class("wipeout.template.context", function () {
 	context.prototype.getComputed = function (forFunction) {
 		///<summary>Get a computed from this and a given function</summary>
         ///<param name="forFunction" type="Function">The function</param>
-        ///<returns type="obsjs.observeTypes.computed">The computed</returns>
+        ///<returns type="busybody.observeTypes.computed">The computed</returns>
 		
-		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
+		return new busybody.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {
@@ -5046,7 +5046,7 @@ Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 		
 		this.primed();
 		
-		var op = obsjs.tryObserve(this.propertyOwner, this.name, callback);
+		var op = busybody.tryObserve(this.propertyOwner, this.name, callback);
 		if (op) this._caching.push(op);
 		if (evaluateImmediately)
 			callback(undefined, wipeout.utils.obj.getObject(this.name, this.propertyOwner));
@@ -5426,7 +5426,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         ///<summary>Add html and execute dynamic content. Ensures synchronocity so reuses the same builder</summary>
         ///<param name="htmlAddCallback" type="Function">A function to add html to the DOM</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">A disposable</returns>
+        ///<returns type="busybody.disposable">A disposable</returns>
         
         var builder = this._builder || (this._builder = this.getBuilder());
 		
@@ -5883,7 +5883,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 						
         element.addEventListener(event, callback, capture || false);
         
-        var output = new obsjs.disposable(function() {
+        var output = new busybody.disposable(function() {
 			element.removeEventListener(event, callback, capture || false);
 			callback = null;
         });
@@ -5935,7 +5935,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 
 Class("wipeout.template.rendering.renderedArray", function () {
     
-	var renderedArray = obsjs.disposable.extend(function renderedArray (array, parent) {
+	var renderedArray = busybody.disposable.extend(function renderedArray (array, parent) {
 		///<summary>Helper for rendering arrays</summary>
         ///<param name="array" type="Array">The array</param>
         ///<param name="parent" type="wipeout.template.rendering.renderedContent">The renderedContent to help</param>
@@ -6221,10 +6221,10 @@ Class("wipeout.template.rendering.viewModelElement", function () {
 		
 		this.disposeOfViewModelBindings();
 		
-		if (this.createdViewModel instanceof obsjs.disposable)
+		if (this.createdViewModel instanceof busybody.disposable)
         	this.createdViewModel.dispose();
 		else
-			obsjs.dispose(this.createdViewModel);
+			busybody.dispose(this.createdViewModel);
 			
         delete this.createdViewModel;
     };
@@ -6815,7 +6815,7 @@ function viewModel (name, extend) {
 "}")(extend, getParentConstructorArgs, values, computeds);
 
 			Class(name, function () {
-				return objjs.object.extend.call(extend, $constructor);
+				return orienteer.extend.call(extend, $constructor);
 			});
 
 			methods.statics = $constructor;
@@ -6920,7 +6920,7 @@ function viewModel (name, extend) {
 			if (parsers[propertyName])
 				throw "A parser has already been set for this object";
 
-			inheritanceTree = inheritanceTree || objjs.object.getInheritanceChain.apply(extend);
+			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
 				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
 
@@ -6933,7 +6933,7 @@ function viewModel (name, extend) {
 			if (bindingTypes[propertyName])
 				throw "A binding type has already been set for this object";
 
-			inheritanceTree = inheritanceTree || objjs.object.getInheritanceChain(extend);
+			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
 				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
 
@@ -7768,7 +7768,7 @@ window.wo = function (model, htmlElement) {
     ///<param name="model" type="Any" optional="true">The root model</param>
     ///<param name="htmlElement" type="HTMLElement or String" optional="true">The root html element. Can be an element or an id</param>
 
-	var output = new obsjs.disposable();
+	var output = new busybody.disposable();
 	
     if (arguments.length < 2)
         htmlElement = document.getElementsByTagName("body")[0];
@@ -7811,7 +7811,7 @@ expose("viewModel", viewModel);
 
 expose("routedEvent", wipeout.events.routedEvent);
 expose("array", wipeout.base.array);
-expose("observable", obsjs.observable);
+expose("observable", busybody.observable);
 
 expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);

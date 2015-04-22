@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.treeViewBranch", "orienteer", function() {
     var treeViewBranch = function(name, href, branches) {
         this._super();
             

@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "objjs.object", function() {
+compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGenerator", "orienteer", function() {
     
     function select(input, converter, context) {
         var output = [];

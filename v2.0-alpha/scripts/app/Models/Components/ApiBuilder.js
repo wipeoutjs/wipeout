@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "objjs.object", function() {    
+compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "orienteer", function() {    
     
     function apiBuilder(root, rootNamespace) {
         this._super();
