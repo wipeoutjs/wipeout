@@ -8,7 +8,7 @@ test("removeItem routed event", function() {
     
     // arrange    
     var item = {};
-    application.items = new obsjs.array([{}, item]);
+    application.items = new busybody.array([{}, item]);
     application.setTemplate = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
     
     // act
@@ -62,7 +62,7 @@ test("basic items control with filters", function() {
 			return op;
 		}
 	};
-	application.items = new obsjs.array([1,2,3,4,5]);
+	application.items = new busybody.array([1,2,3,4,5]);
 	application.filter = 1;
 	application.setTemplate = '<wo.items-control id="myItems" items="$parent.items, $parent.filter => divisibleBy">\
 	<item-template>\
@@ -112,7 +112,7 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     var id1 = "JBKJBLKJBKJLBLKJB";
     var id2 = "oidshfp9usodnf";
     var item1 = "item1", item2 = "item2", item3 = "item3";
-    application.model.items = new obsjs.array([item1, item2, item3]);
+    application.model.items = new busybody.array([item1, item2, item3]);
     
     var bound = {};
     var assert = function() {

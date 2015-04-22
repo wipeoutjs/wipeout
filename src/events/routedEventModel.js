@@ -2,7 +2,7 @@
 Class("wipeout.events.routedEventModel", function () {
     
     
-    var routedEventModel = objjs.object.extend(function routedEventModel() {
+    var routedEventModel = orienteer.extend(function routedEventModel() {
         ///<summary>The base class for models if they wish to invoke routed events on their viewModel</summary>
         
 		this._super();

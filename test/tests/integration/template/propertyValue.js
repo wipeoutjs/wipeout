@@ -8,7 +8,7 @@ module("integration: wipeout.template.propertyValue", {
 test("prime and watch: computed", function() {
 	// arrange
 	var subject = new wipeout.template.propertyValue("hello", "$this.value || 555");
-	var model = obsjs.makeObservable({value: 666});
+	var model = busybody.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
 			strictEqual(oldVal, undefined);
@@ -40,7 +40,7 @@ test("prime and watch: computed", function() {
 	
 	model.value = 0;
 	strictEqual(disp.length, 1);
-	ok(disp[0] instanceof obsjs.observeTypes.computed);
+	ok(disp[0] instanceof busybody.observeTypes.computed);
 	
 	stop();
 });
@@ -48,7 +48,7 @@ test("prime and watch: computed", function() {
 test("prime and watch: pathObserver", function() {
 	// arrange
 	var subject = new wipeout.template.propertyValue("hello", "$this.value");
-	var model = obsjs.makeObservable({value: 666});
+	var model = busybody.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
 			strictEqual(oldVal, undefined);
@@ -80,7 +80,7 @@ test("prime and watch: pathObserver", function() {
 	
 	model.value = 0;
 	strictEqual(disp.length, 1);
-	ok(disp[0] instanceof obsjs.observeTypes.pathObserver);
+	ok(disp[0] instanceof busybody.observeTypes.pathObserver);
 	
 	stop();
 });

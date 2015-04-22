@@ -37,7 +37,7 @@ testUtils.testWithUtils("onPropertyChanged", "no val", false, function(methods, 
 	var obs = {}, cb = methods.method([undefined, subject.propertyOwner.aaa]);
 	subject.primed = methods.method();
 	subject._caching = [];
-    classes.mock("obsjs.tryObserve", function () {
+    classes.mock("busybody.tryObserve", function () {
 		methods.method([subject.propertyOwner, subject.name, cb]).apply(null, arguments);
 		return obs;
 	});

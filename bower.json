@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "obsjs": "ShaneGH/obsjs#>=0.1.0"
+    "busybody": "ShaneGH/busybody#>=0.1.0"
   }
 }

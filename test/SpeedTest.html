@@ -46,7 +46,7 @@
 				template += templateEnd;
 		}
 		
-		var rootModel = obsjs.makeObservable({theVal: "Hi"});
+		var rootModel = busybody.makeObservable({theVal: "Hi"});
 		time = new Date();
 		template = wipeout.wml.wmlParser(template);
 		rootModel.compileTime = new Date() - time;

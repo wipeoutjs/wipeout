@@ -1,7 +1,7 @@
 
 Class("wipeout.template.propertyValue", function () {
 	
-	var propertyValue = objjs.object.extend(function setter (name, value, parser) {
+	var propertyValue = orienteer.extend(function setter (name, value, parser) {
 		///<summary>Base class for vm property setters and html attribute setters</summary>
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
@@ -168,7 +168,7 @@ Class("wipeout.template.propertyValue", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
         ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
-        ///<returns type="obsjs.diposable">A dispose function to dispose prematurely</returns>
+        ///<returns type="busybody.diposable">A dispose function to dispose prematurely</returns>
 		
 		this.primed();
 		
@@ -180,7 +180,7 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new obsjs.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
+			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);
@@ -191,7 +191,7 @@ Class("wipeout.template.propertyValue", function () {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
-        ///<returns type="Array" generic0="obsjs.disposable">Dispose functions</returns>
+        ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
 		
 		if (this._caching)
 			throw "prime cannot be asynchronus or nested.";

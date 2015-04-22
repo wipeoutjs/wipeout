@@ -5,7 +5,7 @@ Class("wipeout.htmlBindingTypes.tw", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		var val;
         if (setter.getParser(viewModel) ||
@@ -14,16 +14,16 @@ Class("wipeout.htmlBindingTypes.tw", function () {
 		
 		// skip to first observable object, only paths one level off renderContext
 		// or one index of renderContexts.$parents are allowed
-		var current = renderContext, split = obsjs.utils.obj.splitPropertyName(val);
+		var current = renderContext, split = busybody.utils.obj.splitPropertyName(val);
 		
-		if (obsjs.getObserver(renderContext[split[0]])) {
+		if (busybody.getObserver(renderContext[split[0]])) {
 			renderContext = renderContext[split[0]];
-			val = obsjs.utils.obj.joinPropertyName(split.slice(1));
-		} else if (split[0] === "$parents" && renderContext.$parents && obsjs.getObserver(renderContext.$parents[split[1]])) {
+			val = busybody.utils.obj.joinPropertyName(split.slice(1));
+		} else if (split[0] === "$parents" && renderContext.$parents && busybody.getObserver(renderContext.$parents[split[1]])) {
 			renderContext = renderContext.$parents[split[1]];
-			val = obsjs.utils.obj.joinPropertyName(split.slice(2));
+			val = busybody.utils.obj.joinPropertyName(split.slice(2));
 		}
 		
-		return obsjs.tryBind(renderContext, val, viewModel, setter.name, true);
+		return busybody.tryBind(renderContext, val, viewModel, setter.name, true);
     }
 });

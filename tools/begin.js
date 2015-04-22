@@ -1,11 +1,12 @@
-(function () {
+;
+(function (orienteer, busybody) {
     
     window.wipeout = {
         base: {
-            object: objjs.object,
-            observable: obsjs.observable,
-            array: obsjs.array,
-            disposable: obsjs.disposable
+            object: orienteer,
+            observable: busybody.observable,
+            array: busybody.array,
+            disposable: busybody.disposable
         }
     };
     

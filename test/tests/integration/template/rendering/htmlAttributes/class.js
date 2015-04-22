@@ -26,7 +26,7 @@
 			
 			$("#qunit-fixture").html("<input type='text' id='hello' />")
 			var input = document.getElementById("hello");
-			var model = obsjs.makeObservable({theVal: false});
+			var model = busybody.makeObservable({theVal: false});
 			var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-class-class1", "$this.theVal", null, "wo-class");
 
 			// act
@@ -34,19 +34,19 @@
 
 			// assert
 			strictEqual(input.className, "");
-			var d2 = obsjs.observe(model, "theVal", function () {
+			var d2 = busybody.observe(model, "theVal", function () {
 				d2.dispose();
 
 				setTimeout(function () {
 
 					strictEqual(input.className, "class1");
-					d2 = obsjs.observe(model, "theVal", function () {
+					d2 = busybody.observe(model, "theVal", function () {
 						d2.dispose();
 
 						setTimeout(function () {
 							strictEqual(input.className, "");
 							enumerateArr(disp, function (d) { d.dispose(); });
-							d2 = obsjs.observe(model, "theVal", function () {
+							d2 = busybody.observe(model, "theVal", function () {
 								d2.dispose();
 								setTimeout(function () {
 									strictEqual(input.className, "");
@@ -70,7 +70,7 @@
 			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
-			var model = obsjs.makeObservable({theVal: false});
+			var model = busybody.makeObservable({theVal: false});
 			var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-class-class0", "$this.theVal", null, "wo-class");
 
 			// act
@@ -84,7 +84,7 @@
 			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
-			var model = obsjs.makeObservable({theVal: false});
+			var model = busybody.makeObservable({theVal: false});
 			var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-class-class1", "$this.theVal", null, "wo-class");
 
 			// act
@@ -98,7 +98,7 @@
 			
 			$("#qunit-fixture").html("<input type='text' class='class0 class1 class2' id='hello' />")
 			var input = document.getElementById("hello");
-			var model = obsjs.makeObservable({theVal: false});
+			var model = busybody.makeObservable({theVal: false});
 			var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-class-class2", "$this.theVal", null, "wo-class");
 
 			// act

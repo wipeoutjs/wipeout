@@ -24,7 +24,7 @@ test("class, add remove test", function() {
 	
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: "none"});
+	var model = busybody.makeObservable({theVal: "none"});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-style-display", "$this.theVal", null, "wo-style");
 
 	// act
@@ -32,18 +32,18 @@ test("class, add remove test", function() {
 
 	// assert
 	strictEqual(input.style.display, model.theVal);
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 
 		setTimeout(function () {
 			strictEqual(input.style.display, model.theVal);
-			d2 = obsjs.observe(model, "theVal", function () {
+			d2 = busybody.observe(model, "theVal", function () {
 				d2.dispose();
 
 				setTimeout(function () {
 					strictEqual(input.style.display, model.theVal);
 					enumerateArr(disp, function (d) { d.dispose(); });
-					d2 = obsjs.observe(model, "theVal", function () {
+					d2 = busybody.observe(model, "theVal", function () {
 						d2.dispose();
 						setTimeout(function () {
 							strictEqual(input.style.display, "none");

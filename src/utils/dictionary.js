@@ -1,6 +1,6 @@
 Class("wipeout.utils.dictionary", function () {
 
-    var dictionary = wipeout.base.object.extend(function dictionary() {
+    var dictionary = orienteer.extend(function dictionary() {
         ///<summary>A simple javascript dictionary</summary>
 		
         this.__keyArray = [], this.__valueArray = [];

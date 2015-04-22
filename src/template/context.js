@@ -30,7 +30,7 @@ Class("wipeout.template.context", function () {
 		if (arrayIndex != null) {
 			
 			///<summary type="Object">An object whcih contains a "value" property. The value is the index. This property is only available for items in a rendered Array</summary>
-			this.$index = new obsjs.observable();
+			this.$index = new busybody.observable();
 			this.$index.value = arrayIndex;
 		}
     }
@@ -95,9 +95,9 @@ Class("wipeout.template.context", function () {
 	context.prototype.getComputed = function (forFunction) {
 		///<summary>Get a computed from this and a given function</summary>
         ///<param name="forFunction" type="Function">The function</param>
-        ///<returns type="obsjs.observeTypes.computed">The computed</returns>
+        ///<returns type="busybody.observeTypes.computed">The computed</returns>
 		
-		return new obsjs.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
+		return new busybody.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {

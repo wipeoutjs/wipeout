@@ -9,7 +9,7 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
 		
 		viewModel[setter.name] = new setter._value.constructor();
 
-		var output = new obsjs.disposable(wipeout.template.engine.instance
+		var output = new busybody.disposable(wipeout.template.engine.instance
 			.getVmInitializer(setter._value.xml)
 			.initialize(viewModel[setter.name], renderContext));
 		

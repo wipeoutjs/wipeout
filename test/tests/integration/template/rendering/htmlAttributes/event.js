@@ -68,7 +68,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 	testUtils.testWithUtils("smoke test", "", true, function(methods, classes, subject, invoker) {
 		$("#qunit-fixture").html("<input type='text' id='hello' />")
 		var input = document.getElementById("hello");
-		var model = obsjs.makeObservable({method: methods.method()});
+		var model = busybody.makeObservable({method: methods.method()});
 		var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-" + event, "$this.method()");
 
 		// act

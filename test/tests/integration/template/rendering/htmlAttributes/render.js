@@ -8,7 +8,7 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-render", 
 test("success", function() {
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var div = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: 234});
+	var model = busybody.makeObservable({theVal: 234});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-render", "$this.theVal");
 	
 	// act
@@ -20,7 +20,7 @@ test("success", function() {
 	strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->234<!-- /$this.theVal --></div>");
 	
 	
-	obsjs.observe(model, "theVal", function () {
+	busybody.observe(model, "theVal", function () {
 		setTimeout(function () {
 			strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->456<!-- /$this.theVal --></div>");
 			enumerateArr(disp, function(disp) {

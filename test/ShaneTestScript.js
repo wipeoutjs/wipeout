@@ -47,11 +47,11 @@
         wipeout.profile.profile();
     };
             
-    var model = new obsjs.observable();
+    var model = new busybody.observable();
     model.rootTitle = "People";
-    model.items = new obsjs.array([obsjs.makeObservable({itemId: 22, itemName: "John"}), obsjs.makeObservable({itemId: 25, itemName: "Barry"})]);
-    model.deepItem = obsjs.makeObservable({
-        item: obsjs.makeObservable({
+    model.items = new busybody.array([busybody.makeObservable({itemId: 22, itemName: "John"}), busybody.makeObservable({itemId: 25, itemName: "Barry"})]);
+    model.deepItem = busybody.makeObservable({
+        item: busybody.makeObservable({
             value: "the value"
         })
     });
@@ -78,7 +78,7 @@ var actions = [
         view.model.rootTitle = "Persons";
         return "Changed title";
     }, function(view) {
-        theModel.items.push(obsjs.makeObservable({itemId: 66, itemName: "Mycroft"}));
+        theModel.items.push(busybody.makeObservable({itemId: 66, itemName: "Mycroft"}));
         return "Added person (Mycroft)";
     }, function(view) {
         view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
@@ -97,7 +97,7 @@ var actions = [
         view.model.items[0].itemId = 78;
         return "Changed first person id, total ids should also be updated";
     }, function(view) {
-        view.model.items.replace(0, obsjs.makeObservable({itemId: 54, itemName: "LJBLKJB"}));
+        view.model.items.replace(0, busybody.makeObservable({itemId: 54, itemName: "LJBLKJB"}));
         return "Changed first person.";
     }, function(view) {
         view.model.items[0].itemId = 896;
@@ -112,7 +112,7 @@ var actions = [
         view.model.deepItem.item = { value: "value 2" };
         return "Changed value 2";
     }, function(view) {
-        view.model.deepItem = obsjs.makeObservable({item: obsjs.makeObservable({ value: "value 3" })});
+        view.model.deepItem = busybody.makeObservable({item: busybody.makeObservable({ value: "value 3" })});
         return "Changed value 3";
     }, function(view) {
         view.model.deepItem.item.value = "value 4";

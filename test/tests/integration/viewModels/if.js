@@ -7,7 +7,7 @@ module("integration: wipeout.viewModels.if", {
 test("shareParentScope", function() {
 	
     // arrange
-    application.hello = new obsjs.observable({hello: "xxx"});
+    application.hello = new busybody.observable({hello: "xxx"});
     application.setTemplate = '<wo.if id="blabla" condition="$this.hello">\
     <set-template>\
         <div id="myDiv" content="$this.hello.hello"></div>\
@@ -65,7 +65,7 @@ test("elseTemplate", function() {
 
 test("shareParentScope = false", function() {
     // arrange
-    application.hello = obsjs.observe(obsjs.observe({hello: "xxx"}));
+    application.hello = busybody.observe(busybody.observe({hello: "xxx"}));
     application.setTemplate = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
     <set-template>\
         <div id="myDiv" data-bind="html: $parent.hello().hello"></div>\

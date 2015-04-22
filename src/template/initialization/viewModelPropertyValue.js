@@ -19,7 +19,7 @@ Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 		
 		this.primed();
 		
-		var op = obsjs.tryObserve(this.propertyOwner, this.name, callback);
+		var op = busybody.tryObserve(this.propertyOwner, this.name, callback);
 		if (op) this._caching.push(op);
 		if (evaluateImmediately)
 			callback(undefined, wipeout.utils.obj.getObject(this.name, this.propertyOwner));

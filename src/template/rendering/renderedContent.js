@@ -1,7 +1,7 @@
 
 Class("wipeout.template.rendering.renderedContent", function () {
     
-    var renderedContent = obsjs.disposable.extend(function renderedContent (element, name, parentRenderContext) {
+    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>

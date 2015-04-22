@@ -1,7 +1,7 @@
 
 Class("wipeout.template.rendering.renderedArray", function () {
     
-	var renderedArray = obsjs.disposable.extend(function renderedArray (array, parent) {
+	var renderedArray = busybody.disposable.extend(function renderedArray (array, parent) {
 		///<summary>Helper for rendering arrays</summary>
         ///<param name="array" type="Array">The array</param>
         ///<param name="parent" type="wipeout.template.rendering.renderedContent">The renderedContent to help</param>

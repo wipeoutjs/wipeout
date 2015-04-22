@@ -6,10 +6,10 @@ module("integration: wipeout.htmlBindingTypes.owts", {
 	
 test("binding, bindOneWay", function () {
 	// arrange
-	var viewModel = new obsjs.observable(),
+	var viewModel = new busybody.observable(),
 		name = "KJBKJBKJB",
 		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$parent.val")),
-		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
+		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	var val1 = viewModel[name] = {}, val2 = {};
 	

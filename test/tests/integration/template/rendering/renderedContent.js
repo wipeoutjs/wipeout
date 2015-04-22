@@ -50,7 +50,7 @@ test("renderArray", function() {
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
-	var array = new obsjs.array([1, 2, 3]);
+	var array = new busybody.array([1, 2, 3]);
 	
 	// act
 	rc.renderArray(array);

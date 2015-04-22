@@ -4,7 +4,7 @@ window.wo = function (model, htmlElement) {
     ///<param name="model" type="Any" optional="true">The root model</param>
     ///<param name="htmlElement" type="HTMLElement or String" optional="true">The root html element. Can be an element or an id</param>
 
-	var output = new obsjs.disposable();
+	var output = new busybody.disposable();
 	
     if (arguments.length < 2)
         htmlElement = document.getElementsByTagName("body")[0];

@@ -6,16 +6,16 @@ module("integration: wipeout.htmlBindingTypes.templateElementSetter", {
 	
 test("binding", function () {
 	// arrange
-	views.setView = obsjs.observable.extend(function aaa () {this._super(); });
+	views.setView = busybody.observable.extend(function aaa () {this._super(); });
 	
 	var name = "daasdasd";
 	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$parent.val"><val2>3</val2></views.set-view></val>');
-	var viewModel = new obsjs.observable(),
+	var viewModel = new busybody.observable(),
 		setter = new wipeout.template.initialization.viewModelPropertyValue(name, {
 			xml: xml,
 			constructor: Object
 		}),
-		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
+		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {};
 	

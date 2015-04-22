@@ -15,7 +15,7 @@ var getParentElement = function() {
 
 Class("wipeout.wml.wmlElementBase", function () {
     
-    var wmlElementBase = wipeout.base.object.extend(function wmlElementBase() {
+    var wmlElementBase = orienteer.extend(function wmlElementBase() {
         ///<summary>A wml element base</summary>
 		
         this._super();
@@ -24,8 +24,8 @@ Class("wipeout.wml.wmlElementBase", function () {
 		this.length = 0;
     });
     
-    wmlElementBase.extend = wipeout.base.object.extend;
-    wmlElementBase.prototype._super = wipeout.base.object.prototype._super;
+    wmlElementBase.extend = orienteer.extend;
+    wmlElementBase.prototype._super = orienteer.prototype._super;
     
     wmlElementBase.prototype.push = function(obj) {
         ///<summary>Add an element child</summary>

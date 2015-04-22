@@ -28,7 +28,7 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
 		
-        ///<Summary type="[obsjs.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
+        ///<Summary type="[busybody.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
 		this.$initComputeds = [];
     });
 	

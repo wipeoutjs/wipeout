@@ -5,7 +5,7 @@ Class("wipeout.htmlBindingTypes.owts", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		if (!setter.canSet())
             throw "Setter \"" + setter.value() + "\" cannot be set.";	//TODE

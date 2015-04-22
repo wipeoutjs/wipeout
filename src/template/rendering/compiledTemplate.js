@@ -207,7 +207,7 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
         ///<summary>Add html and execute dynamic content. Ensures synchronocity so reuses the same builder</summary>
         ///<param name="htmlAddCallback" type="Function">A function to add html to the DOM</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">A disposable</returns>
+        ///<returns type="busybody.disposable">A disposable</returns>
         
         var builder = this._builder || (this._builder = this.getBuilder());
 		

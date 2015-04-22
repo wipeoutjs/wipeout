@@ -9,7 +9,7 @@ expose("viewModel", viewModel);
 
 expose("routedEvent", wipeout.events.routedEvent);
 expose("array", wipeout.base.array);
-expose("observable", obsjs.observable);
+expose("observable", busybody.observable);
 
 expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
@@ -21,4 +21,4 @@ enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
 });
 
-}());
+}(window.orienteer, window.busybody));

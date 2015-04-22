@@ -5,7 +5,7 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<returns type="obsjs.disposable">Dispose of the binding</returns>
+        ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		// if $this !== vm then $this is the parent, otherwise $parent is the parent
 		var parent = renderContext.$this === viewModel ? renderContext.$parent : renderContext.$this;
@@ -13,7 +13,7 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
 		if (parent instanceof wipeout.viewModels.view)
 			parent.templateItems[setter.value()] = viewModel;
 		
-		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new obsjs.disposable();
+		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new busybody.disposable();
 		output.registerDisposeCallback(function () {		
 			if (parent instanceof wipeout.viewModels.view &&
 			   parent.templateItems[setter.value()] === viewModel)

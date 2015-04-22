@@ -27,7 +27,7 @@ testUtils.testWithUtils("constructor", "wih index", false, function(methods, cla
 	invoker(vm, null, 44);
 	
 	// assert	
-	ok(subject.$index instanceof obsjs.observable);
+	ok(subject.$index instanceof busybody.observable);
 	strictEqual(subject.$index.value, 44);
 });
 
@@ -149,7 +149,7 @@ testUtils.testWithUtils("asEventArgs", null, false, function(methods, classes, s
 
 testUtils.testWithUtils("getComputed", null, false, function(methods, classes, subject, invoker) {
     // arrange
-	var arg1 = obsjs.makeObservable();
+	var arg1 = busybody.makeObservable();
 	subject.asWatchVariables = function () { return {hi: arg1}; };
 		
 	// act

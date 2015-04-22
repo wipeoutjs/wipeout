@@ -6,10 +6,10 @@ module("integration: wipeout.htmlBindingTypes.tw", {
 
 test("binding", function () {
 	// arrange
-	var viewModel = new obsjs.observable(),
+	var viewModel = new busybody.observable(),
 		name = "KJBKJBKJB",
 		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$parent.val")),
-		renderContext = new wipeout.template.context(new obsjs.observable()).contextFor(viewModel);
+		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
 	
@@ -76,7 +76,7 @@ test("concurrency, ow", function() {
 			i++;
 		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
-		var timeout = 15 * (obsjs.useObjectObserve ? 1 : 2);
+		var timeout = 15 * (busybody.useObjectObserve ? 1 : 2);
 		
 		// act
 		//TODO: without timeouts it is messier
@@ -91,7 +91,7 @@ test("concurrency, ow", function() {
 		// assert
 		function assert() {
 			if (i === 5)
-				obsjs.observable.afterNextObserveCycle(function () {
+				busybody.observable.afterNextObserveCycle(function () {
 					deepEqual(v, [1, 2, 3]);
 					deepEqual(a, [1, 2, 3]);
 					strictEqual(application.property, view.model);

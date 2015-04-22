@@ -8,7 +8,7 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
 test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: 234});
+	var model = busybody.makeObservable({theVal: 234});
 	var onEvent = new wipeout.template.rendering.htmlPropertyValue("wo-on-event", "blur"),
 		attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
@@ -19,7 +19,7 @@ test("textbox", function() {
 	// assert
 	strictEqual(input.value, "234");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -46,7 +46,7 @@ test("textbox", function() {
 test("disposal", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: 234});
+	var model = busybody.makeObservable({theVal: 234});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -57,7 +57,7 @@ test("disposal", function() {
 	// assert
 	strictEqual(input.value, "234");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {		
+	var d2 = busybody.observe(model, "theVal", function () {		
 		setTimeout(function () {
 			
 			strictEqual(input.value, "234");
@@ -76,7 +76,7 @@ test("disposal", function() {
 test("radio", function() {
 	$("#qunit-fixture").html("<input type='radio' id='hello1' value='1' /><input type='radio' id='hello2' value='2' />")
 	var input1 = document.getElementById("hello1"), input2 = document.getElementById("hello2");
-	var model = obsjs.makeObservable({theVal: "1"});
+	var model = busybody.makeObservable({theVal: "1"});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -87,7 +87,7 @@ test("radio", function() {
 	strictEqual(input1.attributes.checked.value, "checked");
 	ok(!input2.attributes.checked);
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -113,7 +113,7 @@ test("radio", function() {
 test("checkbox", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: true});
+	var model = busybody.makeObservable({theVal: true});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -122,7 +122,7 @@ test("checkbox", function() {
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -147,7 +147,7 @@ test("checkbox", function() {
 test("checkbox, with value", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' value='something' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: true});
+	var model = busybody.makeObservable({theVal: true});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -157,7 +157,7 @@ test("checkbox, with value", function() {
 	strictEqual(input.attributes.checked.value, "checked");
 	strictEqual(model.theVal, "something");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -183,7 +183,7 @@ test("checkbox, with value", function() {
 test("checkbox, with data", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: true});
+	var model = busybody.makeObservable({theVal: true});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -195,7 +195,7 @@ test("checkbox, with data", function() {
 	strictEqual(input.attributes.checked.value, "checked");
 	strictEqual(model.theVal, "something");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -222,7 +222,7 @@ test("checkbox, with data", function() {
 test("checkbox, with data === null", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: true});
+	var model = busybody.makeObservable({theVal: true});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -234,7 +234,7 @@ test("checkbox, with data === null", function() {
 	ok(!input.attributes.checked);
 	strictEqual(model.theVal, null);
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		d2.dispose();
 		
 		setTimeout(function () {
@@ -260,7 +260,7 @@ test("checkbox, with data === null", function() {
 test("disposal", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");
-	var model = obsjs.makeObservable({theVal: true});
+	var model = busybody.makeObservable({theVal: true});
 	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
@@ -271,7 +271,7 @@ test("disposal", function() {
 	// assert
 	strictEqual(input.attributes.checked.value, "checked");
 	
-	var d2 = obsjs.observe(model, "theVal", function () {
+	var d2 = busybody.observe(model, "theVal", function () {
 		
 		d2.dispose();
 		

@@ -263,7 +263,7 @@ test("basic html binding", function() {
     // arrange
     var val = "LIB:OIPHJKB:OIYHJB";
     var id = "dsfbisdfb";
-    obsjs.makeObservable(application.model);
+    busybody.makeObservable(application.model);
 	application.model.value = val;
     
     // act
@@ -278,7 +278,7 @@ test("basic html binding", function() {
 		// re-act
 		var val2 = "NP(UNN{  JPIUNIIN";
 
-		obsjs.observe(application.model, "value", function () {
+		busybody.observe(application.model, "value", function () {
 			// re-assert
 			setTimeout(function () {
 				strictEqual($("#" + id).html(), val2);
@@ -296,7 +296,7 @@ test("basic html binding", function() {
 test("multi-dimentional binding", function() {
     // arrange
     var val;
-    var model = obsjs.makeObservable({ inner: obsjs.makeObservable({ inner: obsjs.makeObservable({ inner: obsjs.makeObservable({ val: "" }) }) }) });
+    var model = busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ val: "" }) }) }) });
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
     var open = "<wo.content-control id='" + id1 + "' model='$parent.model.inner'><set-template>", close = "</set-template></wo.content-control>";
     application.model = model;
@@ -311,34 +311,34 @@ test("multi-dimentional binding", function() {
 		ok(i3 = i2.templateItems[id1]);
 		
 		model.inner.inner.inner.val = val = "KVKJGVMNGMV";
-		obsjs.observable.afterNextObserveCycle(function () {
-		obsjs.observable.afterNextObserveCycle(function () {
-		obsjs.observable.afterNextObserveCycle(function () {
+		busybody.observable.afterNextObserveCycle(function () {
+		busybody.observable.afterNextObserveCycle(function () {
+		busybody.observable.afterNextObserveCycle(function () {
 			strictEqual($("#" + id2).html(), val);
 			
 			model.inner.inner.inner = {val: val = "asdasdasd" };
-			obsjs.observable.afterNextObserveCycle(function () {
-			obsjs.observable.afterNextObserveCycle(function () {
+			busybody.observable.afterNextObserveCycle(function () {
+			busybody.observable.afterNextObserveCycle(function () {
 				strictEqual($("#" + id2).html(), val);
 				
 				model.inner.inner = {inner: {val: val = "fghgfhgfh" } };
-				obsjs.observable.afterNextObserveCycle(function () {
-				obsjs.observable.afterNextObserveCycle(function () {
-				obsjs.observable.afterNextObserveCycle(function () {
+				busybody.observable.afterNextObserveCycle(function () {
+				busybody.observable.afterNextObserveCycle(function () {
+				busybody.observable.afterNextObserveCycle(function () {
 					strictEqual($("#" + id2).html(), val);
 					
 					model.inner = {inner: {inner: {val: val = "q3w34" } } };
-					obsjs.observable.afterNextObserveCycle(function () {
-					obsjs.observable.afterNextObserveCycle(function () {
-					obsjs.observable.afterNextObserveCycle(function () {
-					obsjs.observable.afterNextObserveCycle(function () {
+					busybody.observable.afterNextObserveCycle(function () {
+					busybody.observable.afterNextObserveCycle(function () {
+					busybody.observable.afterNextObserveCycle(function () {
+					busybody.observable.afterNextObserveCycle(function () {
 						strictEqual($("#" + id2).html(), val);
 					
 						application.model = {inner: {inner: {inner: {val: val = "KJBKJGKJKJB" } } } };
-						obsjs.observable.afterNextObserveCycle(function () {
-						obsjs.observable.afterNextObserveCycle(function () {
-						obsjs.observable.afterNextObserveCycle(function () {
-						obsjs.observable.afterNextObserveCycle(function () {
+						busybody.observable.afterNextObserveCycle(function () {
+						busybody.observable.afterNextObserveCycle(function () {
+						busybody.observable.afterNextObserveCycle(function () {
+						busybody.observable.afterNextObserveCycle(function () {
 							strictEqual($("#" + id2).html(), val);
 							start();
 						}, true);

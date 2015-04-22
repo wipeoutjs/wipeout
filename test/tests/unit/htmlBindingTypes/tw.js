@@ -8,7 +8,7 @@ module("wipeout.htmlBindingTypes.tw", {
 testUtils.testWithUtils("binding", "render context has no observable", false, function(methods, classes, subject, invoker) {
     // arrange
 	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {}, op = {};
-	classes.mock("obsjs.tryBind", function () {
+	classes.mock("busybody.tryBind", function () {
 		methods.method([rc, "$parent.value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
@@ -22,8 +22,8 @@ testUtils.testWithUtils("binding", "render context has no observable", false, fu
 
 testUtils.testWithUtils("binding", "render context has an observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: new obsjs.observable()}, op = {};
-	classes.mock("obsjs.tryBind", function () {
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: new busybody.observable()}, op = {};
+	classes.mock("busybody.tryBind", function () {
 		methods.method([rc.$parent, "value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
@@ -37,8 +37,8 @@ testUtils.testWithUtils("binding", "render context has an observable", false, fu
 
 testUtils.testWithUtils("binding", "render context has $parents observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parents[0].value";}}, rc = {$parents: [new obsjs.observable()]}, op = {};
-	classes.mock("obsjs.tryBind", function () {
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parents[0].value";}}, rc = {$parents: [new busybody.observable()]}, op = {};
+	classes.mock("busybody.tryBind", function () {
 		methods.method([rc.$parents[0], "value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
@@ -52,8 +52,8 @@ testUtils.testWithUtils("binding", "render context has $parents observable", fal
 
 testUtils.testWithUtils("binding", "render context has a deep observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: {value: new obsjs.observable()}}, op = {};
-	classes.mock("obsjs.tryBind", function () {
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: {value: new busybody.observable()}}, op = {};
+	classes.mock("busybody.tryBind", function () {
 		methods.method([rc, "$parent.value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);

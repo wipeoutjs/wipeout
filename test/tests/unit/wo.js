@@ -9,7 +9,7 @@ testUtils.testWithUtils("wo", "element", false, function(methods, classes, subje
 	
 	// arrange
 	var vm1;
-	$("#qunit-fixture").html("<obsjs.disposable id='obj1' xxx--s='obj1'></obsjs.disposable>");
+	$("#qunit-fixture").html("<busybody.disposable id='obj1' xxx--s='obj1'></busybody.disposable>");
 	
 	// act
 	var op = wo(null, $("#obj1")[0]);
@@ -26,7 +26,7 @@ testUtils.testWithUtils("wo", "id", false, function(methods, classes, subject, i
 	
 	// arrange
 	var vm1;
-	$("#qunit-fixture").html("<obsjs.disposable id='obj1' xxx--s='obj1'></obsjs.disposable>");
+	$("#qunit-fixture").html("<busybody.disposable id='obj1' xxx--s='obj1'></busybody.disposable>");
 	
 	// act
 	var op = wo(null, "obj1");
@@ -42,7 +42,7 @@ testUtils.testWithUtils("wo", "id", false, function(methods, classes, subject, i
 testUtils.testWithUtils("wo", "element 2", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var vm1, vm2;
-	$("#qunit-fixture").html("<div><obsjs.disposable id--s='obj1'></obsjs.disposable><div data-wo-element-name='obsjs.disposable' id--s='obj2'></div></div>");
+	$("#qunit-fixture").html("<div><busybody.disposable id--s='obj1'></busybody.disposable><div data-wo-element-name='busybody.disposable' id--s='obj2'></div></div>");
 	
 	// act
 	var op = wo(null, $("#qunit-fixture")[0]);

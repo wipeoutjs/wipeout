@@ -39,7 +39,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 						
         element.addEventListener(event, callback, capture || false);
         
-        var output = new obsjs.disposable(function() {
+        var output = new busybody.disposable(function() {
 			element.removeEventListener(event, callback, capture || false);
 			callback = null;
         });
