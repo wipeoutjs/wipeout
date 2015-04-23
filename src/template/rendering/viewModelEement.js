@@ -17,16 +17,26 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         // create actual view model
         this.createdViewModel = new vm.constructor();
 		
+		var initializer = wipeout.template.engine.instance
+            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(element));
+		
+		// nothing to dispose for shareParentScope
+		var d1 = initializer.initialize(this.createdViewModel, null, "shareParentScope");
+		
 		///<summary type="wipeout.template.context">The context for the view model</summary>
         this.renderContext = parentRenderContext ?
 			parentRenderContext.contextFor(this.createdViewModel) :
 			new wipeout.template.context(this.createdViewModel);
         
         // initialize the view model
-        this.disposeOfViewModelBindings = wipeout.template.engine.instance
-            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(element))
-            .initialize(this.createdViewModel, this.renderContext);
+        var d2 = initializer.initialize(this.createdViewModel, this.renderContext);
         
+		this.disposeOfViewModelBindings = function () {
+			//TODO, this could be a bit better
+			d1.apply(this, arguments);
+			d2.apply(this, arguments);
+		};
+		
         // run onInitialized after value initialization is complete
         if (this.createdViewModel instanceof wipeout.viewModels.view)
             this.createdViewModel.onInitialized();

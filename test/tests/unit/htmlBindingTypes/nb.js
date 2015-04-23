@@ -4,8 +4,7 @@ module("wipeout.htmlBindingTypes.nb", {
     teardown: function() {
     }
 });
-/*
-        viewModel[setter.name] = setter.parseOrExecute(viewModel, renderContext);*/
+
 testUtils.testWithUtils("binding", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	var vm = {}, rc = {}, val = {}, setter = {

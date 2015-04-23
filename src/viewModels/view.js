@@ -32,8 +32,10 @@ Class("wipeout.viewModels.view", function () {
 		this.$initComputeds = [];
     });
 	
+    view.addGlobalBindingType("shareParentScope", "shareParentScope");
+	
 	view.prototype.initComputed = function (property, callback, options) {
-		if (options)
+		if (!options)
 			options = {delayExecution: true};
 		else
 			options.delayExecution = true

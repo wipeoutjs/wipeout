@@ -67,6 +67,7 @@ module.exports = function(grunt) {
         "src/utils/obj.js",
         "src/settings.js",
 		"src/htmlBindingTypes/viewModelId.js",
+		"src/htmlBindingTypes/shareParentScope.js",
         "src/template/initialization/parsers.js",
         "src/template/initialization/compiledInitializer.js",
         "src/utils/dictionary.js",

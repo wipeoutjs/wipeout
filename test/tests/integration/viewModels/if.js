@@ -9,9 +9,9 @@ test("shareParentScope", function() {
     // arrange
     application.hello = new busybody.observable({hello: "xxx"});
     application.setTemplate = '<wo.if id="blabla" condition="$this.hello">\
-    <set-template>\
+    <true-template>\
         <div id="myDiv" content="$this.hello.hello"></div>\
-    </set-template>\
+    </true-template>\
 </wo.if>';
 	
 	application.onRendered = function () {
@@ -37,12 +37,12 @@ test("elseTemplate", function() {
     // arrange
     application.ok = true;
     application.setTemplate = '<wo.if id="theIf" condition="$this.ok">\
-    <set-template>\
+    <true-template>\
         <div id="myDiv1"></div>\
-    </set-template>\
-	<else-template>\
+    </true-template>\
+	<false-template>\
         <div id="myDiv2"></div>\
-	</else-template>\
+	</false-template>\
 </wo.if>';
 	
 	application.onRendered = function () {
@@ -67,9 +67,9 @@ test("shareParentScope = false", function() {
     // arrange
     application.hello = busybody.observe(busybody.observe({hello: "xxx"}));
     application.setTemplate = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
-    <set-template>\
-        <div id="myDiv" data-bind="html: $parent.hello().hello"></div>\
-    </set-template>\
+    <true-template>\
+        <div id="myDiv" wo-content="$parent.hello.hello"></div>\
+    </true-template>\
 </wo.if>';
     
 	application.onRendered = function () {

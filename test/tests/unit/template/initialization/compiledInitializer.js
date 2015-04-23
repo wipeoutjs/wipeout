@@ -301,6 +301,18 @@ testUtils.testWithUtils("addAttribute", "with global parser", false, function(me
 	strictEqual(subject.setters.name, setter);
 });
 
+testUtils.testWithUtils("initialize", "single property", false, function(methods, classes, subject, invoker) {
+		
+    // arrange
+	var vm = {}, rc = {};
+		
+	subject.applyToViewModel = methods.method(["xxx", vm, rc], [{dispose: methods.method()}]);
+	
+    // act
+    // assert
+	invoker(vm, rc, "xxx")();
+});
+
 testUtils.testWithUtils("initialize", null, false, function(methods, classes, subject, invoker) {
 		
     // arrange

@@ -129,20 +129,26 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         this.setters[name.name] = compiledInitializer.createPropertyValue(name.name, attribute, name.flags);
     };
     
-    compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
+    compiledInitializer.prototype.initialize = function (viewModel, renderContext, property) {
 		///<summary>Initialize a view model with the cached setter in this compiledInitializer</summary>
         ///<param name="viewModel" type="Any">The view model</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="property" type="String" optional="true">Initialize one property only (if possible)</param>
         ///<returns type="Function">Dispose of initialization</returns>
 		
-		// only auto set model if model wasn't already set
-        var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
-			[] :
-			this.applyToViewModel("model", viewModel, renderContext);
-        
-		for (var name in this.setters)
-            if (name !== "model")
-            	disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
+		var disposal;
+		if (property) {
+			disposal = this.applyToViewModel(property, viewModel, renderContext);
+		} else {
+			// only auto set model if model wasn't already set
+			disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
+				[] :
+				this.applyToViewModel("model", viewModel, renderContext);
+
+			for (var name in this.setters)
+				if (name !== "model")
+					disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
+		}
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
