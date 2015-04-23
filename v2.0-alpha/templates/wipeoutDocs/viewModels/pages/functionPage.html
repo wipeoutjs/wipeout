@@ -2,7 +2,7 @@
 <h2 wo-content="$this.title || $model.fullyQualifiedName"></h2>
 <div wo-content="$model.summary"></div>
 <wo.if condition="$model.arguments.length">
-    <set-template>
+    <true-template>
         <h3>Arguments</h3>
         <wo.items-control items="$model.arguments">
             <set-template>
@@ -15,19 +15,19 @@
                             <th>Optional</th>
                         </tr>
                     </thead>
-                    <tbody wo-render="$this.items"></tbody>
+					<tbody wo-render="$this.items"></tbody>
                 </table>
             </set-template>
             <item-template>
                 <tr>
-                    <td wo-content="$model.name"></td>
+					<td wo-content="$model.name"></td>
                     <td wo-content="$model.description"></td>
                     <td wo-content="$model.type"></td>
-                    <td wo-content="$model.optional ? 'Yes' : 'No'"></td><td>TODO: use a filter here</td>
+                    <td wo-content="$model.optional => yesNo"></td>
                 </tr>
             </item-template>
         </wo.items-control>
-    </set-template>
+    </true-template>
 </wo.if>
 <h2 wo-visible="$this.showReturnValue">
     Returns: <span wo-content="$model.returns.type"></span>
@@ -37,8 +37,8 @@
     <h3 style="display: inline-block" wo-content="$this.functionDefinitionText || 'Function definition'"></h3>
     <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
     <wo.if condition="$this.showCode">
-        <set-template>
+        <true-template>
             <wipeout-docs.view-models.components.code-block code="$model['function'].toString()"></wipeout-docs.view-models.components.code-block>
-        </set-template>
+        </true-template>
     </wo.if>
 </div>

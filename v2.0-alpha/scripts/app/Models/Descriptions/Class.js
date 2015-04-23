@@ -1,4 +1,4 @@
-compiler.registerClass("wipeoutDocs.models.descriptions.class", "orienteer", function() {
+compiler.registerClass("wipeoutDocs.models.descriptions.class", "busybody.observable", function() {
     var classDescription = function(classFullName, api) {
         this._super();
         

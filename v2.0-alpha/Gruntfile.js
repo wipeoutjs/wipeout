@@ -102,6 +102,9 @@ module.exports = function(grunt) {
 	];
     
     src.splice(1, 0, dependencies);
+	
+	var watch = src.slice();
+	watch.push('pages/**/*.html', 'templates/**/*.html');
     
     // Project configuration.
     grunt.initConfig({
@@ -125,7 +128,7 @@ module.exports = function(grunt) {
         },
         
         watch: {
-            files: src,
+            files: watch,
             tasks: ['default']
         },
         
@@ -151,5 +154,5 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['rebuild']);
     grunt.registerTask('release', ['test', 'copy:releaseDebug', 'copy:release']);
     
-    grunt.registerTask('default', 'build');
+    grunt.registerTask('default', ['build', 'build-html']);
 };

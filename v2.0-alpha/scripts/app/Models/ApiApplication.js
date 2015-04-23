@@ -10,7 +10,9 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
 			{key: "orienteer", value: orienteer},
 			{key: "busybody.disposable", value: busybody.disposable},
 			{key: "busybody.observableBase", value: busybody.observableBase},
+			{key: "busybody.observable", value: busybody.observable},
 			{key: "busybody.arrayBase", value: busybody.arrayBase},
+			{key: "busybody.array", value: busybody.array},
 			{key: "wipeout.base.bindable", value: wipeout.base.bindable}
 		];
 		
@@ -173,80 +175,114 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
 			ApiApplication.treeViewBranchFor(busybodyApi, "busybody.observableBase")
 		]);
 				
-				
-				
         var _wipeout = new wipeoutDocs.models.components.treeViewBranch("wipeout", null, [
             new wipeoutDocs.models.components.treeViewBranch("base", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.bindable"),
-                /*ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.disposable"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.event"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.if"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.itemsControl"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.object"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.routedEvent"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.routedEventArgs"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.routedEventModel"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.routedEventRegistration"),                
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.view"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.visual")
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.base.bindable")
             ]),
-            new wipeoutDocs.models.components.treeViewBranch("bindings", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.bindingBase"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.ic-render"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.itemsControl"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.render"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.wipeout"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.wipeout-type"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.bindings.wo")
-            ]),
+            new wipeoutDocs.models.components.treeViewBranch("events", null, [
+				ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.event"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEvent"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventArgs"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventModel"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventRegistration")
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("htmlBindingTypes", null, [
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.ifTemplateProperty"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.nb"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.ow"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.owts"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.setTemplateToTemplateId"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.shareParentScope"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.templateElementSetter"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.templateProperty"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.tw"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.viewModelId")
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("polyfills", null, [
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.polyfills.Array"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.polyfills.Function")
+			]),
+            /*new wipeoutDocs.models.components.treeViewBranch("profile", null, [
+			]),*/
             new wipeoutDocs.models.components.treeViewBranch("template", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.asyncLoader"),
+            	new wipeoutDocs.models.components.treeViewBranch("initialization", null, [
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.initialization.compiledInitializer"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.initialization.parsers"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.initialization.viewModelPropertyValue"),
+				]),
+            	new wipeoutDocs.models.components.treeViewBranch("rendering", null, [
+					new wipeoutDocs.models.components.treeViewBranch("htmlAttributes", null, [
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-attr"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-class"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-content"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-data"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-event"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.id"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-on-event"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-render"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-style"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-value"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-visible"),
+                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel")
+					]),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.builder"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.compiledTemplate"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlPropertyValue"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.renderedArray"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.renderedContent"),
+                	ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.viewModelElement")
+				]),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.context"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.engine"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.htmlBuilder")
-            ]),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.filters"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.loader"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.propertyValue"),
+			]),
             new wipeoutDocs.models.components.treeViewBranch("utils", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.bindingDomManipulationWorker"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.call"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.dictionary"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.domData"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.domManipulationWorkerBase"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.find"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.html"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.htmlAsync"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.ko"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.mutationObserverDomManipulationWorker"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj")*/
-            ])
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.jsParse"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.obj"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.viewModels")
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("viewModels", null, [
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.contentControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.if"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.itemsControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.view")
+			]),
+            new wipeoutDocs.models.components.treeViewBranch("wml", null, [
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlAttribute"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlComment"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlElement"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlElementBase"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlParser"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlString")
+			]),
+			ApiApplication.treeViewBranchFor(wipeoutApi, "wo"),
+			ApiApplication.treeViewBranchFor(wipeoutApi, "wo.viewModel")
         ]);
-        
+		
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
-       /*     ApiApplication.treeViewBranchFor(wipeoutApi, "wo.bindingDomManipulationWorker"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.call"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.disposable"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.domData"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.domManipulationWorkerBase"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.event"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.find"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.html"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.htmlAsync"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.addHtmlAttribute"),
+			ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
+            //ApiApplication.treeViewBranchFor(woApi, "wo.event"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.filters"),
+            //ApiApplication.treeViewBranchFor(woApi, "wo.find"),
             ApiApplication.treeViewBranchFor(woApi, "wo.if"),
+            //ApiApplication.treeViewBranchFor(woApi, "wo.htmlBindingTypes"),
             ApiApplication.treeViewBranchFor(woApi, "wo.itemsControl"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.ko"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.mutationObserverDomManipulationWorker"),
-            ApiApplication.treeViewBranchFor(wipeoutApi, "wo.obj"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.object"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.parsers"),
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEvent"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.routedEventArgs"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.routedEventModel"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.routedEventRegistration"),                
-            ApiApplication.treeViewBranchFor(woApi, "wo.view"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.visual")*/
+            ApiApplication.treeViewBranchFor(woApi, "wo.view")
         ]);
         
         this.menu = new wipeoutDocs.models.components.treeViewBranch("API", null, [
+            _wo,
 			ApiApplication.treeViewBranchFor(orienteerApi, "orienteer"),
             _busybody,
-            _wo,
             _wipeout
         ]);
     };
