@@ -3356,6 +3356,24 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
     }
 });
 
+Class("wipeout.htmlBindingTypes.shareParentScope", function () {  
+    
+    return function shareParentScope(viewModel, setter, renderContext) {
+		///<summary>Do not bind, only set</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+		
+		var val = setter.value();
+		if (/^\s*[Tt][Rr][Uu][Ee]\s*$/.test(val))
+			viewModel[setter.name] = true;
+		else if (/^\s*[Ff][Aa][Ll][Ss][Ee]\s*$/.test(val))
+			viewModel[setter.name] = false;
+		else
+			throw setter.name + " must be either \"true\" or \"false\". Dynamic values are not valid for this property.";	//TODE
+    }
+});
+
 
 Class("wipeout.template.initialization.parsers", function () {
     
@@ -3581,20 +3599,26 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         this.setters[name.name] = compiledInitializer.createPropertyValue(name.name, attribute, name.flags);
     };
     
-    compiledInitializer.prototype.initialize = function (viewModel, renderContext) {
+    compiledInitializer.prototype.initialize = function (viewModel, renderContext, property) {
 		///<summary>Initialize a view model with the cached setter in this compiledInitializer</summary>
         ///<param name="viewModel" type="Any">The view model</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="property" type="String" optional="true">Initialize one property only (if possible)</param>
         ///<returns type="Function">Dispose of initialization</returns>
 		
-		// only auto set model if model wasn't already set
-        var disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
-			[] :
-			this.applyToViewModel("model", viewModel, renderContext);
-        
-		for (var name in this.setters)
-            if (name !== "model")
-            	disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
+		var disposal;
+		if (property) {
+			disposal = this.applyToViewModel(property, viewModel, renderContext);
+		} else {
+			// only auto set model if model wasn't already set
+			disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
+				[] :
+				this.applyToViewModel("model", viewModel, renderContext);
+
+			for (var name in this.setters)
+				if (name !== "model")
+					disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
+		}
 		
 		return function () {
 			enumerateArr(disposal.splice(0, disposal.length), function (d) {
@@ -3854,8 +3878,10 @@ Class("wipeout.viewModels.view", function () {
 		this.$initComputeds = [];
     });
 	
+    view.addGlobalBindingType("shareParentScope", "shareParentScope");
+	
 	view.prototype.initComputed = function (property, callback, options) {
-		if (options)
+		if (!options)
 			options = {delayExecution: true};
 		else
 			options.delayExecution = true
@@ -4833,6 +4859,23 @@ Class("wipeout.events.routedEventModel", function () {
     };
     
     return routedEventModel;
+});
+
+Class("wipeout.htmlBindingTypes.ifTemplateProperty", function () {  
+    
+	// shortcut (hack :) ) to set template id instead of the template property
+    return function ifTemplateProperty(viewModel, setter, renderContext) {
+		///<summary>Set {property}Id rather than {property}. This makes setting templates faster</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+		
+		var op = wipeout.htmlBindingTypes.templateProperty(viewModel, setter, renderContext);
+		if (viewModel instanceof wipeout.viewModels["if"])
+			viewModel.reEvaluate();
+		
+		return op;
+    }
 });
 
 Class("wipeout.htmlBindingTypes.nb", function () {  
@@ -6717,16 +6760,26 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         // create actual view model
         this.createdViewModel = new vm.constructor();
 		
+		var initializer = wipeout.template.engine.instance
+            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(element));
+		
+		// nothing to dispose for shareParentScope
+		var d1 = initializer.initialize(this.createdViewModel, null, "shareParentScope");
+		
 		///<summary type="wipeout.template.context">The context for the view model</summary>
         this.renderContext = parentRenderContext ?
 			parentRenderContext.contextFor(this.createdViewModel) :
 			new wipeout.template.context(this.createdViewModel);
         
         // initialize the view model
-        this.disposeOfViewModelBindings = wipeout.template.engine.instance
-            .getVmInitializer(xmlOverride || wipeout.wml.wmlParser(element))
-            .initialize(this.createdViewModel, this.renderContext);
+        var d2 = initializer.initialize(this.createdViewModel, this.renderContext);
         
+		this.disposeOfViewModelBindings = function () {
+			//TODO, this could be a bit better
+			d1.apply(this, arguments);
+			d2.apply(this, arguments);
+		};
+		
         // run onInitialized after value initialization is complete
         if (this.createdViewModel instanceof wipeout.viewModels.view)
             this.createdViewModel.onInitialized();
@@ -7634,74 +7687,52 @@ Class("wipeout.viewModels.if", function () {
         _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
     };
     
-    var _if = wipeout.viewModels.contentControl.extend(function _if(templateId, model) {
+    var _if = wipeout.viewModels.view.extend(function _if(trueTemplateId, model) {
         ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
-        ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a blank template</param>
+        ///<param name="trueTemplateId" type="String" optional="true">The template id if condition is true. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
         staticConstructor();
         
-        this._super(templateId, model);
+        this._super(_if.blankTemplateId, model);
 
         ///<Summary type="Boolean">Specifies whether this object should be used as a binding context. If true, the binding context of this object will be it's parent. Default is true</Summary>
         this.shareParentScope = true;
         
         ///<Summary type="Boolean">if true, the template will be rendered, otherwise a blank template is rendered</Summary>
         this.condition = false;
+		
+        ///<Summary type="String">the template to render if the condition is true. Defaults to a blank template</Summary>
+		this.trueTemplateId = trueTemplateId || _if.blankTemplateId;
         
         ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
-        this.elseTemplateId = _if.blankTemplateId;
+        this.falseTemplateId = _if.blankTemplateId;
         
-        this.observe("elseTemplateId", this.elseTemplateChanged, this);
+        this.observe("trueTemplateId", this.reEvaluate, this);
+        this.observe("falseTemplateId", this.reEvaluate, this);
+        this.observe("condition", this.reEvaluate, this);
         
-        ///<Summary type="String">Anonymous version of elseTemplateId</Summary>
-        this.elseTemplate = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "elseTemplateId", "elseTemplate");
+        ///<Summary type="String">Anonymous version of trueTemplateId</Summary>
+        this.trueTemplate = "";
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "trueTemplateId", "trueTemplate");
         
-        ///<Summary type="String">Stores the template id if the condition is false</Summary>
-        this.__cachedTemplateId = this.templateId;
-        
-        this.observe("condition", this.onConditionChanged, this);
-        this.observe("templateId", this.copyTemplateId, this);
-                
-        this.copyTemplateId(null, this.templateId);
+        ///<Summary type="String">Anonymous version of falseTemplateId</Summary>
+        this.falseTemplate = "";
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "falseTemplateId", "falseTemplate");
     });
 	
-    _if.addGlobalParser("elseTemplate", "template");
-    _if.addGlobalBindingType("elseTemplate", "templateProperty");
+    _if.addGlobalParser("falseTemplate", "template");
+    _if.addGlobalBindingType("falseTemplate", "ifTemplateProperty");
+    _if.addGlobalParser("trueTemplate", "template");
+    _if.addGlobalBindingType("trueTemplate", "ifTemplateProperty");
     
-    _if.prototype.elseTemplateChanged = function (oldVal, newVal) {
-        ///<summary>Resets the template id to the else template if condition is not met</summary>  
-        ///<param name="oldVal" type="String" optional="false">The old else template Id</param>    
-        ///<param name="newVal" type="String" optional="false">The else template Id</param>
+    _if.prototype.reEvaluate = function () {
+        ///<summary>Set the template id based on the true template, false template and template id</summary>
 		
-        if (!this.condition)
-			this.synchronusTemplateChange(newVal);
-    };
-    
-    _if.prototype.onConditionChanged = function (oldVal, newVal) {
-        ///<summary>Set the template based on whether the condition is met</summary>      
-        ///<param name="oldVal" type="Boolean" optional="false">The old condition</param>     
-        ///<param name="newVal" type="Boolean" optional="false">The condition</param>
-		
-        if (this.__oldConditionVal && !newVal)
-			this.synchronusTemplateChange(this.elseTemplateId);
-        else if (!this.__oldConditionVal && newVal)
-			this.synchronusTemplateChange(this.__cachedTemplateId);
-        
-        this.__oldConditionVal = !!newVal;
-    };
-    
-    _if.prototype.copyTemplateId = function (oldTemplateId, templateId) {
-        ///<summary>Cache the template id and check whether correct template is applied</summary>
-        ///<param name="oldTemplateId" type="String" optional="false">The old template id</param>
-        ///<param name="templateId" type="String" optional="false">The template id to cache</param>      
-        if (templateId !== this.elseTemplateId)
-            this.__cachedTemplateId = templateId;
-    
-        if (!this.condition && templateId !== this.elseTemplateId) {
-            this.templateId = this.elseTemplateId;
-        }
+        if (this.condition)
+			this.synchronusTemplateChange(this.trueTemplateId);
+		else
+			this.synchronusTemplateChange(this.falseTemplateId);
     };
     
     return _if;
