@@ -21,8 +21,12 @@ test("getElementName", function() {
 	
 	strictEqual(wipeout.utils.viewModels.getElementName({name: "xxx-y"}), "xxxY");
 	strictEqual(wipeout.utils.viewModels.getElementName({name: "js-xxx-y"}), "XxxY");
-	strictEqual(wipeout.utils.viewModels.getElementName({getAttribute: function (input) { 
-		if (input === "data-wo-element-name") 
+	
+	var el = document.createElement("div");
+	el.getAttribute = function (input) { 
+		debugger;
+		if (input === "data-wo-el") 
 			return "js-xxXX-ff"; 
-	}}), "js-xxXX-ff");
+	};
+	strictEqual(wipeout.utils.viewModels.getElementName(el), "js-xxXX-ff");
 });

@@ -42,8 +42,8 @@ test("all property setter types", function() {
 			<val2 value="$parent.theValue"></val2>\
 		</js-object>\
 	</val7>\
-	<div data-wo-element-name="val8">777</div>\
-	<div data-wo-element-name="val9" parser="s">777</div>\
+	<div wo-el="val8">777</div>\
+	<div data-wo-el="val9" parser="s">777</div>\
 <object>')[0];
 	
 	var theValue = {}, theVm = {};

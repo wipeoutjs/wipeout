@@ -2,20 +2,18 @@ Class("wipeout.utils.viewModels", function () {
 	
 	function viewModels () {}
 
-	//TODM
-	var realName = "data-wo-element-name";
+	//TODO: standardise
+	var realName1 = "wo-el", realName2 = "data-wo-el";
 	viewModels.getElementName = function (wmlElement) {
         ///<summary>Get the actual name of an element. The actual name is either the "data-wo-element-name" attribute or the element name</summary>
         ///<param name="wmlElement" type="wipeout.wml.wmlElement">The key</param>
         ///<returns type="String">The name</returns>
 
-		var tmp;
-		if (wmlElement.getAttribute && (tmp = wmlElement.getAttribute(realName)) != null)
-			return tmp;
+		name = wmlElement instanceof Element ?
+			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(trimToLower( wmlElement.localName))) :
+			camelCase(trimToLower(wmlElement.name));
 		
-		var name = camelCase(trimToLower(wmlElement instanceof Element ? wmlElement.localName : wmlElement.name));
-		
-		//TODM
+		//TODM, TODO: an object called jsSomething cannot be found
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};
 	
