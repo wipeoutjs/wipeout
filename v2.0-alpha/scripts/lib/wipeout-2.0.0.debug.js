@@ -8279,7 +8279,8 @@ Class("wipeout.wml.wmlParser", function () {
 	var inline = ["area", "base", "br", "col", "command", "hr", "img", "input", "keygen", "link", "meta", "param", "source"];		
 	function parse (htmlElement) {
 
-		var tmp, output = new wipeout.wml.wmlElement(htmlElement.localName, inline.indexOf(htmlElement.localName) !== -1);
+		var name = htmlElement.getAttribute("data-wo-element-name") || htmlElement.localName;
+		var tmp, output = new wipeout.wml.wmlElement(name, inline.indexOf(name) !== -1);
 		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
 			if (htmlElement.childNodes[i].nodeType === 1)
 				output.push(parse(htmlElement.childNodes[i]));
@@ -8296,7 +8297,8 @@ Class("wipeout.wml.wmlParser", function () {
 		}
 
 		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
-			output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
+			if (htmlElement.attributes[i].name !== "data-wo-element-name")
+				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
 
 		return output;
 	};

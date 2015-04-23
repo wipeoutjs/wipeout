@@ -2493,12 +2493,12 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.classItemRow" type="text/template">
-<tr>
-    <td>
-        <wipeout-docs.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="$model.name" />
-    </td>
-    <td wo-content="$model.summary"></td>
-</tr>
+<div data-wo-element-name="tr">
+    <div data-wo-element-name="td">
+        <wipeout-docs.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="$model.name"></wipeout-docs.rl>
+    </div>
+    <div data-wo-element-name="td" wo-content="$model.summary"></div>
+</div>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.classItemTable" type="text/template">
@@ -2567,24 +2567,24 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                             <th>Optional</th>
                         </tr>
                     </thead>
-					<tbody wo-render="$this.items"></tbody>
+					<tbody wo-render=" $this.items"></tbody>
                 </table>
             </set-template>
             <item-template>
-                <tr>
-					<td wo-content="$model.name"></td>
-                    <td wo-content="$model.description"></td>
-                    <td wo-content="$model.type"></td>
-                    <td wo-content="$model.optional => yesNo"></td>
-                </tr>
+                <div data-wo-element-name="tr">
+					<div data-wo-element-name="td" wo-content="$model.name"></div>
+                    <div data-wo-element-name="td" wo-content="$model.description"></div>
+                    <div data-wo-element-name="td" wo-content="$model.type"></div>
+                    <div data-wo-element-name="td" wo-content="$model.optional => yesNo"></div>
+                </div>
             </item-template>
         </wo.items-control>
     </true-template>
 </wo.if>
 <h2 wo-visible="$this.showReturnValue">
     Returns: <span wo-content="$model.returns.type"></span>
+	<span wo-content="$model.returns.summary"></span>
 </h2>
-<span wo-content="$model.returns.summary"></span>
 <div>
     <h3 style="display: inline-block" wo-content="$this.functionDefinitionText || 'Function definition'"></h3>
     <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>

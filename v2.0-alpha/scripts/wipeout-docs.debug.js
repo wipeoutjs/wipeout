@@ -2185,6 +2185,15 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
     return functionPage;
 });
 
+wo.filters.yesNo = {
+	parentToChild: function (val1) {
+		return val1 ? "Yes" : "No";
+	},
+	childToParent: function (val1) {
+		return /^\s*[Yy][Ee][Ss]\s*$/.test(val1);
+	}
+};
+
 
 compiler.registerClass("wipeoutDocs.viewModels.pages.landingPage", "wo.view", function() {
     return function() {
