@@ -42,7 +42,7 @@ Class("wipeout.template.rendering.builder", function () {
     };
 	
 	builder.applyToElement = function (setter, element, renderContext) {
-		///<summary>Apply this attribute to an element/summary>
+		///<summary>Apply this attribute to an element</summary>
         ///<param name="setter" type="wipeout.template.rendering.htmlAttributeSetter">The setter</param>
         ///<param name="element" type="Element">The element</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>

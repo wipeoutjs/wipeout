@@ -1,4 +1,6 @@
-Class("wipeout.wml.wmlPart", function () {  
+Class("wipeout.wml.wmlPart", function () { 
+	return function (){};
+	
         //TODO: move to seperate file
     function wmlPart(value, escaped) {
         

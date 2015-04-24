@@ -126,7 +126,7 @@ var parseBool = function(input) {
 
 var camelCase = function(input) {
     ///<summary>Converts a string from "first-second" to "firstSecond"</summary>
-    ///<param name="constructorString" type="String">The string to convert</param>
+    ///<param name="input" type="String">The string to convert</param>
     ///<returns type="String">The camel cased string</returns>
     
     if(!input) return input;
@@ -254,13 +254,15 @@ Class("wipeout.utils.obj", function () {
         ///<summary>Random int generator</summary>
         ///<param name="max" type="Number">The maximum value</param>
         ///<returns type="Number">A random number</returns>
+		
         return Math.floor(Math.random() * max);
     };
     
     var extend = function(extend, extendWith) {
         ///<summary>The same as jQuery.extend</summary>
-        ///<param name="extend" type="Object"></param>
-        ///<param name="extendWith" type="Object"></param>
+        ///<param name="extend" type="Object">The object to extend</param>
+        ///<param name="extendWith" type="Object">The object to extend it with</param>
+        ///<returns type="Object">The object to extend</param>
 		
         if(extendWith && extend)
             for(var i in extendWith)

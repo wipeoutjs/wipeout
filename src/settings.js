@@ -1,5 +1,8 @@
 Class("wipeout.settings", function() {
     function settings (settings) {
+        ///<summary>Change all settings</summary>
+        ///<param name="settings" type="Object">A dictionary of new settings</param>
+		
         enumerateObj(wipeout.settings, function(a,i) {
             delete wipeout.settings[i];
         });
@@ -12,10 +15,6 @@ Class("wipeout.settings", function() {
     settings.asynchronousTemplates = true;
     settings.displayWarnings = true;
     settings.useElementClassName = false;
-    
-    settings.wipeoutAttributes = {
-        viewModelName: "wo-view-model"
-    };
 	
     return settings;
 });

@@ -1,7 +1,7 @@
 Class("wipeout.htmlBindingTypes.shareParentScope", function () {  
     
     return function shareParentScope(viewModel, setter, renderContext) {
-		///<summary>Do not bind, only set</summary>
+		///<summary>Binding specifically for the share parent scope property. Only values of "true" and "false" are allowed</summary>
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>

@@ -3,7 +3,11 @@ Class("wipeout.utils.dictionary", function () {
     var dictionary = orienteer.extend(function dictionary() {
         ///<summary>A simple javascript dictionary</summary>
 		
-        this.__keyArray = [], this.__valueArray = [];
+        ///<summary type="[Object]">The keys (private)</summary>
+        this.__keyArray = [];
+		
+        ///<summary type="[Object]">The values (private)</summary>
+		this.__valueArray = [];
     });
     
     dictionary.prototype.add = function (key, value) {

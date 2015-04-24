@@ -35,15 +35,21 @@ Class("wipeout.template.initialization.parsers", function () {
 	};
 	
 	parsers["int"] = function (value, propertyName, renderContext) {
-		return parseInt(trim(value));
-	};
-	
-	parsers["float"] = function (value, propertyName, renderContext) {
         ///<summary>A parser for int data</summary>
         ///<param name="value" type="String">The value to parse</param>
         ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="String">The value argument parsed as an int</returns>
+		
+		return parseInt(trim(value));
+	};
+	
+	parsers["float"] = function (value, propertyName, renderContext) {
+        ///<summary>A parser for float data</summary>
+        ///<param name="value" type="String">The value to parse</param>
+        ///<param name="propertyName" type="String">The name of the property which the parsed value will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="String">The value argument parsed as a float</returns>
 		
 		return parseFloat(trim(value));
 	};

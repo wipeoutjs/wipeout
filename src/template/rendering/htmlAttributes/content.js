@@ -1,6 +1,7 @@
 
 HtmlAttr("content", function () {
-	return function content (element, attribute, renderContext) { //TODE
+	//TODE
+	return function content (element, attribute, renderContext) {
         ///<summary>Set the content of a html element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

@@ -84,7 +84,7 @@ Class("wipeout.wml.wmlElement", function () {
     var wmlElement = wipeout.wml.wmlElementBase.extend(function wmlElement(name, inline) {
         ///<summary>A wml element</summary>
         ///<param name="name" type="String">The element name</param>
-        ///<param name="inlien" optional="true type="Boolean">Determines whether the element has a closing tag</param>
+        ///<param name="inline" optional="true" type="Boolean">Determines whether the element has a closing tag</param>
 		
         this._super();
         

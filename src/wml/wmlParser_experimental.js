@@ -1,6 +1,8 @@
 
 //http://www.w3.org/TR/html-markup/syntax.html
-Class("wipeout.wml.wmlParser_experimental", function () {  
+Class("wipeout.wml.wmlParser_experimental", function () {
+	
+	return function(){};
     		
 	function parse (htmlElement) {
 

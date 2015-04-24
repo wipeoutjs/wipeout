@@ -2,10 +2,15 @@
 HtmlAttr("event", function () {
     
 	var test = event.test = function (attributeName) {
+        ///<summary>Test an attribute name to determine if it is this attribute</summary>
+        ///<param name="attributeName" type="String">The attribute name</param>
+        ///<returns type="Boolean">The result</returns>
+		
 		return /^\s*(data\-)?wo\-event\-./.test(attributeName);
 	};
 	
-    function event (element, attribute, renderContext) { //TODE
+	//TODE
+    function event (element, attribute, renderContext) {
         ///<summary>Subscribe to a html event</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
@@ -25,7 +30,8 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 	function (event) {
 	HtmlAttr(event, function () {
 
-		return function (element, attribute, renderContext) { //TODE
+		 //TODE
+		return function (element, attribute, renderContext) {
 			///<summary>Subscribe to a html event</summary>
 			///<param name="element" type="Element">The element</param>
 			///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

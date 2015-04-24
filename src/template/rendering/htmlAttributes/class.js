@@ -2,6 +2,10 @@
 HtmlAttr("class", function () {
 	
 	var test = _class.test = function (attributeName) {
+        ///<summary>Test an attribute name to determine if it is this attribute</summary>
+        ///<param name="attributeName" type="String">The attribute name</param>
+        ///<returns type="Boolean">The result</returns>
+		
 		return /^\s*(data\-)?wo\-class\-./.test(attributeName);
 	};
 	
@@ -44,7 +48,8 @@ HtmlAttr("class", function () {
 		}, false);
 	}
 	
-	function _class (element, attribute, renderContext) { //TODE
+	//TODE
+	function _class (element, attribute, renderContext) {
         ///<summary>Add or remove css classes</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

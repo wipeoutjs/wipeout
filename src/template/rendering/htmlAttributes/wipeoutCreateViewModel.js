@@ -1,5 +1,7 @@
 
 Class("wipeout.template.rendering.htmlAttributes.wipeoutCreateViewModel", function () {
+	
+	//TODE
 	return function wipeoutCreateViewModel (element, attribute, renderContext) {
         ///<summary>Used internally to add view model elements</summary>
         ///<param name="element" type="Element">The element</param>

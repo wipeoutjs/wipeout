@@ -27,26 +27,9 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
-		
-        ///<Summary type="[busybody.observeTypes.computed]">A list of computeds which will be force evaluated on onInitialized</Summary>
-		this.$initComputeds = [];
     });
 	
     view.addGlobalBindingType("shareParentScope", "shareParentScope");
-	
-	view.prototype.initComputed = function (property, callback, options) {
-		if (!options)
-			options = {delayExecution: true};
-		else
-			options.delayExecution = true
-		
-		var op = this.computed(property, callback, options);
-		
-		if (op)
-			(this.$initComputeds || (this.$initComputeds = [])).push(op);
-		
-		return op;
-	};
 	
     view.addGlobalParser("id", "string");
     view.addGlobalBindingType("id", "viewModelId");
@@ -185,9 +168,6 @@ Class("wipeout.viewModels.view", function () {
     // virtual
     view.prototype.onInitialized = function() {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
-		
-		enumerateArr(this.$initComputeds, ex);
-		this.$initComputeds = null;
     };
 
     return view;

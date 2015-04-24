@@ -1,6 +1,7 @@
 
 HtmlAttr("visible", function () {
-	return function visible (element, attribute, renderContext) { //TODE
+	//TODE
+	return function visible (element, attribute, renderContext) {
         ///<summary>Determine element visibility</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

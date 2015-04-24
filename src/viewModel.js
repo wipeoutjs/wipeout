@@ -1,7 +1,20 @@
 
-function viewModel (name, extend) {
+function viewModel (name, extend, doNotWarn) {
+	///<summary>Create a new type of view model</summary>
+	///<param name="name" type="String" optional="false">The name of the view model. The name can be namespaced. The new view model class will be saved to the window object by this name</param>
+	///<param name="extend" type="Function" optional="true">The parent class. Default: wo.view</param>
+	///<param name="doNotWarn" type="Boolean" optional="true">If the view model is not built within a short period of time a warning will fire. This param supresses the warning.</param>
+	///<returns type="Boolean"></returns>
+	
+	setTimeout(function () {
+		if (!$constructor)
+			warn("The view model \"" + name + "\" was not built. You must call \".build()\" to actually create the view model class. To supress this warning use the \"doNotWarn\" argument of the wo.viewModel method, or set wipeout.settings.displayWarnings to false.");
+	}, 1000);
 		
 	extend = extend || wipeout.viewModels.view;
+	
+	var isViewModel = orienteer.getInheritanceChain(extend).indexOf(wo.view) !== -1;
+	var isDisposable = orienteer.getInheritanceChain(extend).indexOf(busybody.disposable) !== -1;
 	
 	var $constructor,
 		values = {},
@@ -26,23 +39,12 @@ function viewModel (name, extend) {
 
 		return output;
 	};
-	
-	function buildComputeds() {
-		var output = [];
-		for (var i in computeds) {
-			var name = '"' + i.replace('"', '\\"') + '"';
-			output.push("\n	this.initComputed(" + name + ", computeds[" + name + "].logic, computeds[" + name + "].options);");
-		}
-		
-		return output.join("");
-	}
 
 	var methods = {statics: true},	//statics is reserved
 		valuesAsConstructorArgs = {},
 		statics = {},
 		bindingTypes = {},
 		parsers = {},
-		computeds = {},
 		inheritanceTree;
 
 	function check () {
@@ -52,6 +54,8 @@ function viewModel (name, extend) {
 	var output = {
 
 		build: function () {
+			///<summary>Build the view model</summary>
+			///<returns type="Object">The prototype of the new view model. You can add function calls to this</returns>
 
 			if ($constructor)
 				return $constructor.prototype;
@@ -72,7 +76,7 @@ function viewModel (name, extend) {
 			}
 
 			var split = name.split(".");
-			$constructor = new Function("extend", "getParentConstructorArgs", "values", "computeds",
+			$constructor = new Function("extend", "getParentConstructorArgs", "values",
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
 "	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
 "\n" +
@@ -80,8 +84,7 @@ function viewModel (name, extend) {
 "		this[i] = values[i] instanceof Function ?\n" +
 "			values[i].apply(this, arguments) :\n" +
 "			values[i];\n" +
-										buildComputeds() +
-"}")(extend, getParentConstructorArgs, values, computeds);
+"}")(extend, getParentConstructorArgs, values);
 
 			Class(name, function () {
 				return orienteer.extend.call(extend, $constructor);
@@ -107,6 +110,11 @@ function viewModel (name, extend) {
 		},
 
 		method: function (name, method) {
+			///<summary>Add a function to the view model class</summary>
+			///<param name="name" type="String">The method name</param>
+			///<param name="method" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (!(method instanceof Function))
@@ -118,22 +126,13 @@ function viewModel (name, extend) {
 			methods[name] = method;				
 			return output;
 		},
-		
-		computed: function (name, logic, options) {
-
-			check();
-			
-			if (values[name])
-				throw "You have already added a value: " + name;
-
-			if (computeds[name])
-				throw "You have already added a value: " + name;
-			
-			computeds[name] = {logic: logic, options: options};
-			return output;
-		},
 
 		value: function (name, value) {
+			///<summary>Add a value to the view model class</summary>
+			///<param name="name" type="String">The value name</param>
+			///<param name="value" type="Object">The value. If value is a function, will add the value to the prototype instead</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (name === "constructor")
@@ -145,13 +144,15 @@ function viewModel (name, extend) {
 			if (values[name])
 				throw "You have already added a value: " + name;
 
-			if (computeds[name])
-				throw "You have already added a computed: " + name;
-
 			values[name] = value;				
 			return output;
 		},
 		dynamicValue: function (name, value) {
+			///<summary>Add a value to the view model class</summary>
+			///<param name="name" type="String">The value name</param>
+			///<param name="value" type="Function">A function which returns the value</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (name === "constructor")
@@ -163,17 +164,24 @@ function viewModel (name, extend) {
 			if (values[name])
 				throw "You have already added a value: " + name;
 
-			if (computeds[name])
-				throw "You have already added a computed: " + name;
-
 			values[name] = value;				
 			return output;
 		},
 
 		staticMethod: function (name, method) {
+			///<summary>Add a static function to the view model class</summary>
+			///<param name="name" type="String">The method name</param>
+			///<param name="method" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			return output.staticValue(name, method);
 		},
 		staticValue: function (name, value) {
+			///<summary>Add a static value to the view model class</summary>
+			///<param name="name" type="String">The value name</param>
+			///<param name="value" type="Object">The value</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (statics[name])
@@ -184,6 +192,11 @@ function viewModel (name, extend) {
 		},
 
 		parser: function (propertyName, parser) {
+			///<summary>Add a default parser for a particular property</summary>
+			///<param name="propertyName" type="String">The property name</param>
+			///<param name="parser" type="String|Function">The parser of the name of a parser in wo.parsers</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (parsers[propertyName])
@@ -197,6 +210,11 @@ function viewModel (name, extend) {
 			return output;
 		},
 		binding: function (propertyName, bindingType) {
+			///<summary>Add a default binding type for a particular property</summary>
+			///<param name="propertyName" type="String">The property name</param>
+			///<param name="bindingType" type="String">The name of a binding type in wo.bindings</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			check();
 
 			if (bindingTypes[propertyName])
@@ -212,27 +230,59 @@ function viewModel (name, extend) {
 
 		// convenience functions
 		templateId: function (templateId, eagerLoad) {
+			///<summary>Add a default template id</summary>
+			///<param name="templateId" type="String">The template id</param>
+			///<param name="eagerLoad" type="Boolean" optional="true">If true, fetch and compile the template now</param>
+			///<returns type="Object">The view model builder</returns>
+			
 			if (eagerLoad)
 				wipeout.template.engine.instance.compileTemplate(templateId, function () {});
 			
 			return output.value("templateId", templateId);
 		},
 		onInitialized: function (onInitialized) {
+			///<summary>Add a method to be called when the view model is initialized</summary>
+			///<param name="onInitialized" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
+			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
+			
 			return output.method("onInitialized", onInitialized);
 		},
-		onModelChanged: function (onModelChanged) {
-			return output.method("onModelChanged", onModelChanged);
-		},
 		onRendered: function (onRendered) {
+			///<summary>Add a method to be called when the view model is rendered</summary>
+			///<param name="onRendered" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
+			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
+			
 			return output.method("onRendered", onRendered);
 		},
 		onUnrendered: function (onUnrendered) {
+			///<summary>Add a method to be called when the view model is un rendered</summary>
+			///<param name="onUnrendered" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
+			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
+			
 			return output.method("onUnrendered", onUnrendered);
 		},
 		dispose: function (dispose) {
+			///<summary>Add a method to be called when the view model is disposed</summary>
+			///<param name="dispose" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
+			if (!isDisposable) throw "The parent class must be, or inherit from busybody.disposable to use this method.";
+			
 			return output.method("dispose", dispose);
 		},
 		onApplicationInitialized: function (onApplicationInitialized) {
+			///<summary>Add a method to be called when the view model is initialized, if the view model is a root application</summary>
+			///<param name="onApplicationInitialized" type="Function">The method</param>
+			///<returns type="Object">The view model builder</returns>
+			
+			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
+			
 			return output.method("onApplicationInitialized", onApplicationInitialized);
 		}
 	};

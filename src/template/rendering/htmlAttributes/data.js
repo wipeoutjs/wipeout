@@ -1,7 +1,8 @@
 
 HtmlAttr("data", function () {
 	
-	return function data (element, attribute, renderContext) { //TODE
+	//TODE
+	return function data (element, attribute, renderContext) {
         ///<summary>Add data to an element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

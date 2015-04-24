@@ -5,10 +5,10 @@ Class("wipeout.template.loader", function () {
         ///<summary>Private class for loading templates asynchronously</summary>
         ///<param name="templateName" type="string" optional="false">The name and url of this template</param>
 		
-        // specifies success callbacks for when template is loaded. If this property in null, the loading process has completed
+        ///<summary type="[Function]">Specifies success callbacks for when template is loaded. If this property in null, the loading process has completed</summary>
         this._callbacks = [];
         
-        // the name and url of the template to load
+        ///<summary type="String">the name and url of the template to load</summary>
         this.templateName = templateName;
         
         wipeout.utils.obj.ajax({

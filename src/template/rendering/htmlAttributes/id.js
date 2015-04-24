@@ -1,5 +1,7 @@
 
 Class("wipeout.template.rendering.htmlAttributes.id", function () {
+	
+	//TODE
 	return function id (element, attribute, renderContext) {
         ///<summary>Add an id to an element and add the element to tempalteItems</summary>
         ///<param name="element" type="Element">The element</param>

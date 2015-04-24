@@ -7,7 +7,7 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         this._super(templateId, model);
 
-        ///<Summary type="String">The template which corresponds to the templateId for this item</Summary>
+        ///<summary type="String">The template which corresponds to the templateId for this item</summary>
         //this.setTemplate = "";
         
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");

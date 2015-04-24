@@ -4,6 +4,9 @@ Class("wipeout.template.context", function () {
     // warning: do not make observable. This will create a LOT of un necessary subscriptions
     function context (forVm, parentContext, arrayIndex) {
 		///<summary>The context for any view model or html property set in a template</summary>
+        ///<param name="forVm" type="Any">The view model</param>
+        ///<param name="parentContext" type="wipeout.template.context" optional="true">The parent context</param>
+        ///<param name="arrayIndex" type="Number" optional="true">The array index if the view model is in an array</param>
 		
 		if (forVm && forVm.shareParentScope)
 			throw "You cannot create a template context for a view model with a shared parent scope";
@@ -55,8 +58,8 @@ Class("wipeout.template.context", function () {
         ///<param name="arrayIndex" type="Number" optional="true">The index if this item is in an array</param>
         ///<returns type="wipeout.template.context">The child context</returns>
         
-		if (wipeout.settings.displayWarnings && forVm.shareParentScope && arrayIndex != null)
-			console.warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
+		if (forVm.shareParentScope && arrayIndex != null)
+			warn("If an item in an array is to be rendered with shareParentScope set to true, this item will not have an $index value in it's renered context");
 		
         return forVm && forVm.shareParentScope ? this : new context(forVm, this, arrayIndex);
     };
@@ -83,6 +86,8 @@ Class("wipeout.template.context", function () {
 	
 	context.prototype.asEventArgs = function (e, element) {
 		///<summary>Return a version of this to be plugged into a function creted by context.buildEventCallback(...)</summary>
+        ///<param name="e" type="Object">The event args</param>
+        ///<param name="element" type="Element">The html element</param>
         ///<returns type="Array">the arguments</returns>
 		
 		var args = this.asGetterArgs().slice();

@@ -13,7 +13,8 @@ Class("wipeout.template.engine", function () {
     
     engine.prototype.setTemplate = function (templateId, template) {
 		///<summary>Associate a template string with a template id</summary>
-        ///<param name="templateId" type="String|wipeout.wml.wmlAttribute">The template</param>
+        ///<param name="templateId" type="String">The template id</param>
+        ///<param name="template" type="String|wipeout.wml.wmlAttribute">The template</param>
         ///<returns type="wipeout.template.rendering.compiledTemplate">The compiled template</returns>
 		
 		if (!templateId) throw "Invalid template id";

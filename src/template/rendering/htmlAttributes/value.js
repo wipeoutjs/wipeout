@@ -70,7 +70,8 @@ HtmlAttr("value", function () {
         });
 	}
 	
-	return function value (element, attribute, renderContext) { //TODE
+	//TODE
+	return function value (element, attribute, renderContext) {
         ///<summary>Bind to the value of a htl element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>

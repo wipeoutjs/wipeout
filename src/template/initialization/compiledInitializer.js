@@ -186,7 +186,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		
 	compiledInitializer.getBindingType = function (setter, viewModel) {
         ///<summary>Get the binding type or global binding type</summary>
-        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The current view model</param>
+        ///<param name="viewModel" type="Object">The current view model</param>
         ///<returns type="String">the binding type</returns>
 		
 		return setter[wipeoutBindingType] || 

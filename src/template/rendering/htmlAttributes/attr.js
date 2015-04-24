@@ -2,10 +2,15 @@
 HtmlAttr("attr", function () {
 	
 	var test = attr.test = function (attributeName) {
+        ///<summary>Test an attribute name to determine if it is this attribute</summary>
+        ///<param name="attributeName" type="String">The attribute name</param>
+        ///<returns type="Boolean">The result</returns>
+		
 		return /^\s*(data\-)?wo\-attr\-./.test(attributeName);
 	};
 	
-	function attr (element, attribute, renderContext) { //TODE
+	 //TODE
+	function attr (element, attribute, renderContext) {
         ///<summary>Add html attributes to an element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
