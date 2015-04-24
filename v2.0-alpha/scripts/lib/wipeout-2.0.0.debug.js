@@ -3322,10 +3322,6 @@ Class("wipeout.settings", function() {
     settings.asynchronousTemplates = true;
     settings.displayWarnings = true;
     settings.useElementClassName = false;
-    
-    settings.wipeoutAttributes = {
-        viewModelName: "wo-view-model"
-    };
 	
     return settings;
 });
@@ -6020,7 +6016,7 @@ HtmlAttr("attr", function () {
 		return /^\s*(data\-)?wo\-attr\-./.test(attributeName);
 	};
 	
-	function attr (element, attribute, renderContext) { //TODE
+	function attr (element, attribute, renderContext) {
         ///<summary>Add html attributes to an element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
@@ -7275,9 +7271,9 @@ Class("wipeout.utils.viewModels", function () {
 	function viewModels () {}
 
 	//TODM
-	var realName = "data-wo-element-name";
+	var realName = "wo-el";
 	viewModels.getElementName = function (wmlElement) {
-        ///<summary>Get the actual name of an element. The actual name is either the "data-wo-element-name" attribute or the element name</summary>
+        ///<summary>Get the actual name of an element. The actual name is either the "wo-el" attribute or the element name</summary>
         ///<param name="wmlElement" type="wipeout.wml.wmlElement">The key</param>
         ///<returns type="String">The name</returns>
 
@@ -8279,7 +8275,7 @@ Class("wipeout.wml.wmlParser", function () {
 	var inline = ["area", "base", "br", "col", "command", "hr", "img", "input", "keygen", "link", "meta", "param", "source"];		
 	function parse (htmlElement) {
 
-		var name = htmlElement.getAttribute("data-wo-element-name") || htmlElement.localName;
+		var name = htmlElement.getAttribute("wo-el") || htmlElement.localName;
 		var tmp, output = new wipeout.wml.wmlElement(name, inline.indexOf(name) !== -1);
 		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
 			if (htmlElement.childNodes[i].nodeType === 1)
@@ -8297,7 +8293,7 @@ Class("wipeout.wml.wmlParser", function () {
 		}
 
 		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
-			if (htmlElement.attributes[i].name !== "data-wo-element-name")
+			if (htmlElement.attributes[i].name !== "wo-el")
 				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
 
 		return output;

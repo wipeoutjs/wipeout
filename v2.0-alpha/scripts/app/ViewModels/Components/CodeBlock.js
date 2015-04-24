@@ -3,11 +3,16 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = null;
         
-        this.observe("code", this._onCodeChanged, this);        
-        this.initComputed("renderCode", function() {
+        this.observe("code", this._onCodeChanged, this);   
+    };
+	
+	codeBlock.prototype.onInitialized = function () {
+		this._super();
+		     
+        this.computed("renderCode", function() {
             return this.code ? this.code.replace(/</g, "&lt;") : this.code;
         });
-    };
+	}
     
     codeBlock.prototype._onCodeChanged = function(oldVal, newVal) {
 		return this.onCodeChanged(newVal);

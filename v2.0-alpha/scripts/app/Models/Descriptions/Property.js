@@ -1,5 +1,6 @@
 compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.models.descriptions.classItem", function() {
     var property = function(constructorFunction, propertyName, classFullName, isStatic) {
+		
         this._super(propertyName, property.getPropertySummary(constructorFunction, propertyName, classFullName), isStatic);
         
         this.propertyName = propertyName;
@@ -45,11 +46,11 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
             }
         }
          
-        result = search(new RegExp("\\s*this\\s*\\.\\s*" + propertyName + "\\s*="));
+        result = search(new RegExp("\\s*this\\s*\\.\\s*" + propertyName.replace("$", "\\$") + "\\s*="));
         if(result)
             return result;
                 
-        return search(new RegExp("\\s*this\\s*\\[\\s*\"" + propertyName + "\"\\s*\\]\\s*="));        
+        return search(new RegExp("\\s*this\\s*\\[\\s*\"" + propertyName.replace("$", "\\$") + "\"\\s*\\]\\s*="));
     };
             
     property.getPropertyType = function(xmlDefinition) {
@@ -78,6 +79,58 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         
         return current;
     };
+	
+	property.descriptionOverrides = {
+		orienteer: {
+			useVirtualCache: {
+				description: "<summary type=\"Boolean\">If set to true, pointers to methods called using \"_super\" are cached for faster lookup in the future. Default: true</summary>"
+			}
+		},
+		busybody: {
+			callbacks: {
+				changeCallback: {
+					dispose: "<summary type=\"Object\">A flag to indicate that this flag should be disposed of</summary>"
+				}
+			},
+			utils: {
+				observeCycleHandler: {
+					instance: "<summary type=\"busybody.utils.observeCycleHandler\">The working observe cycle handler</summary>"
+				}
+			}
+		},
+		wipeout: {
+			wml: {
+				wmlParser: {
+					specialTags: "<summary type=\"Object\">Dictionary of tags which cannot be placed within a div, along with the tags they can be placed within</summary>",
+					cannotCreateTags: "<summary type=\"Object\">Dictionary of tags which cannot be created by the wipeout template engine</summary>",
+					ieReadonlyElements: "<summary type=\"Object\">Dictionary of tags which are readonly once created in IE</summary>"
+				}
+			},
+			template: {
+				engine: {
+					instance: "<summary type=\"wipeout.template.engine\">The current template engine</summary>"
+				}
+			},
+			settings: {
+				asynchronousTemplates: "<summary type=\"Boolean\">Try to load templates from a URL if the template id cannot be found within the DOM</summary>",
+				displayWarnings: "<summary type=\"Boolean\">Display wipeout warnings</summary>",
+				useElementClassName: "<summary type=\"Object\">Setting this will revert to old HTML class attribute functionality. Exposed for testing purposes only.</summary>"
+			},
+			utils: {
+				find: {
+					regex: "<summary type=\"Object\">Collection of regexes used by find.</summary>"
+				}
+			},
+			viewModels: {
+				itemsControl: {
+					removeItem: "<summary type=\"wo.routedEvent\">If caught by an itemsControl, remove the item in the args from the itemsControl items</summary>"
+				}
+			}
+		},
+		wo: {
+			bindings:  "<summary type=\"Object\">Collection of wipeout bindings.</summary>"
+		}
+	};
         
     /*property.descriptionOverrides = {
         wo: {},

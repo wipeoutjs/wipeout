@@ -261,7 +261,6 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlParser"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.wml.wmlString")
 			]),
-			ApiApplication.treeViewBranchFor(wipeoutApi, "wo"),
 			ApiApplication.treeViewBranchFor(wipeoutApi, "wo.viewModel")
         ]);
 		
@@ -270,9 +269,8 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
 			ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
             //ApiApplication.treeViewBranchFor(woApi, "wo.event"),
             ApiApplication.treeViewBranchFor(woApi, "wo.filters"),
-            //ApiApplication.treeViewBranchFor(woApi, "wo.find"),
             ApiApplication.treeViewBranchFor(woApi, "wo.if"),
-            //ApiApplication.treeViewBranchFor(woApi, "wo.htmlBindingTypes"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.bindings"),
             ApiApplication.treeViewBranchFor(woApi, "wo.itemsControl"),
             ApiApplication.treeViewBranchFor(woApi, "wo.parsers"),
             ApiApplication.treeViewBranchFor(woApi, "wo.routedEvent"),

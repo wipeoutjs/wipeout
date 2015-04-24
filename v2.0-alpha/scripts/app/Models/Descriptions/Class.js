@@ -169,6 +169,10 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "busybody.observ
         pullSummaryFromOverride.call(this, "events");
         pullSummaryFromOverride.call(this, "properties");
         pullSummaryFromOverride.call(this, "functions");
+		
+		for (var i = 0, ii = this.staticProperties.length; i < ii; i++)
+			if (!this.staticProperties[i].summary && !/^Window\./.test(this.staticProperties[i].fullyQualifiedName))
+				console.log(this.staticProperties[i].fullyQualifiedName);
         
         for(var i = 0, ii = this.functions.length; i < ii; i++) {
             if(this.functions[i].functionName === "constructor") {
