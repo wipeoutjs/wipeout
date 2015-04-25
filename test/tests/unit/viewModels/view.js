@@ -5,7 +5,7 @@ module("wipeout.viewModels.view", {
     }
 });
 
-testUtils.testWithUtils("constructor", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("constructor", "", false, function (methods, classes, subject, invoker) {
     // arrange
     var templateId = {};
     var model = {};
@@ -23,7 +23,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     strictEqual(subject.model, model);
 });
 
-testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("dispose", "", false, function (methods, classes, subject, invoker) {
     // arrange
     subject._super = methods.method();
     subject.$routedEventSubscriptions = [{dispose: methods.method()}, {dispose: methods.method()}];
@@ -35,7 +35,7 @@ testUtils.testWithUtils("dispose", "", false, function(methods, classes, subject
     ok(!subject.$routedEventSubscriptions.length);
 });
 
-testUtils.testWithUtils("onModelChanged", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onModelChanged", "", false, function (methods, classes, subject, invoker) {
     // arrange
 	var registration = {}, key = {};
     subject.$modelRoutedEventKey = {};
@@ -61,7 +61,7 @@ testUtils.testWithUtils("onModelChanged", "", false, function(methods, classes, 
     strictEqual(subject.$modelRoutedEventKey, key);
 });
 
-testUtils.testWithUtils("getRenderContext", "has render context", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getRenderContext", "has render context", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.$domRoot = {renderContext: {}};
     
@@ -72,7 +72,7 @@ testUtils.testWithUtils("getRenderContext", "has render context", false, functio
 	strictEqual(op, subject.$domRoot.renderContext);
 });
 
-testUtils.testWithUtils("getRenderContext", "no render context", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getRenderContext", "no render context", false, function (methods, classes, subject, invoker) {
     // arrange
     // act
     var op = invoker();
@@ -81,7 +81,7 @@ testUtils.testWithUtils("getRenderContext", "no render context", false, function
 	strictEqual(op, null);
 });
 
-testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("_onModelRoutedEvent", "", false, function (methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {
         routedEvent: new wipeout.events.routedEvent(),
@@ -96,7 +96,7 @@ testUtils.testWithUtils("_onModelRoutedEvent", "", false, function(methods, clas
     // assert    
 });
 
-testUtils.testWithUtils("getParent", "no parent", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParent", "no parent", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.getRenderContext = methods.method([], null);
     
@@ -107,7 +107,7 @@ testUtils.testWithUtils("getParent", "no parent", false, function(methods, class
     strictEqual(actual, null);
 });
 
-testUtils.testWithUtils("getParent", "has parent", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParent", "has parent", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent = {};
 	subject.getRenderContext = methods.method([], {$parent: parent, $this: subject});
@@ -119,7 +119,7 @@ testUtils.testWithUtils("getParent", "has parent", false, function(methods, clas
     strictEqual(actual, parent);
 });
 
-testUtils.testWithUtils("getParent", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParent", "has parent, share parent scope", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent = {};
 	subject.getRenderContext = methods.method([], {$this: parent});
@@ -131,7 +131,7 @@ testUtils.testWithUtils("getParent", "has parent, share parent scope", false, fu
     strictEqual(actual, parent);
 });
 
-testUtils.testWithUtils("getParents", "no parents", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParents", "no parents", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.getRenderContext = methods.method([], null);
     
@@ -142,7 +142,7 @@ testUtils.testWithUtils("getParents", "no parents", false, function(methods, cla
     strictEqual(actual.length, 0);
 });
 
-testUtils.testWithUtils("getParents", "has parent", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParents", "has parent", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent0 = {}, parent1 = {};
 	subject.getRenderContext = methods.method([], {$this: subject, $parents: [parent0, parent1]});
@@ -156,7 +156,7 @@ testUtils.testWithUtils("getParents", "has parent", false, function(methods, cla
     strictEqual(actual[1], parent1);
 });
 
-testUtils.testWithUtils("getParents", "has parent, share parent scope", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParents", "has parent, share parent scope", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent0 = {}, parent1 = {}, parent2 = {};
 	subject.getRenderContext = methods.method([], {$this: parent0, $parents: [parent1, parent2]});
@@ -171,7 +171,7 @@ testUtils.testWithUtils("getParents", "has parent, share parent scope", false, f
     strictEqual(actual[2], parent2);
 });
 
-testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function (methods, classes, subject, invoker) {
     // arrange
     subject.$routedEventSubscriptions = [];
     
@@ -182,7 +182,7 @@ testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(met
     ok(!actual);
 });
 
-testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function (methods, classes, subject, invoker) {
     // arrange
     var callback = {};
     var context = {};
@@ -201,7 +201,7 @@ testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(met
     ok(actual);
 });
 
-testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function (methods, classes, subject, invoker) {
     // arrange
     var expected = {};
     var callback = {};
@@ -221,7 +221,7 @@ testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function(m
     strictEqual(actual, expected);
 });
 
-testUtils.testWithUtils("registerRoutedEvent", "new event", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("registerRoutedEvent", "new event", false, function (methods, classes, subject, invoker) {
     // arrange
     var expected = {};
     function callback() {};
@@ -237,12 +237,12 @@ testUtils.testWithUtils("registerRoutedEvent", "new event", false, function(meth
     strictEqual(actual.dispose.constructor, Function);
 });
 
-testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tests instead", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tests instead", false, function (methods, classes, subject, invoker) {
     // arrange
     ok(true);
 });
 
-testUtils.testWithUtils("onRendered", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onRendered", "", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.$onRendered = [methods.method(), methods.method()];
 	
@@ -251,7 +251,7 @@ testUtils.testWithUtils("onRendered", "", false, function(methods, classes, subj
 	invoker();
 });
 
-testUtils.testWithUtils("onUnrendered", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onUnrendered", "", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.$onUnrendered = [methods.method(), methods.method()];
 	
@@ -260,7 +260,7 @@ testUtils.testWithUtils("onUnrendered", "", false, function(methods, classes, su
 	invoker();
 });
 
-testUtils.testWithUtils("onApplicationInitialized", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onApplicationInitialized", "", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.$onApplicationInitialized = [methods.method(), methods.method()];
 	
@@ -269,7 +269,7 @@ testUtils.testWithUtils("onApplicationInitialized", "", false, function(methods,
 	invoker();
 });
 
-testUtils.testWithUtils("onInitialized", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("onInitialized", "", false, function (methods, classes, subject, invoker) {
     // arrange
 	subject.$onInitialized = [methods.method(), methods.method()];
 	
@@ -277,5 +277,3 @@ testUtils.testWithUtils("onInitialized", "", false, function(methods, classes, s
 	// assert
 	invoker();
 });
-
-/*onRendered, onUnrendered, onApplicationInitialized, onInitialized*/
