@@ -13,13 +13,14 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         this.parentRenderContext = parentRenderContext;
         
-		//TODV: if: debug, else this.openingTag = document.createComment(" " + name + " ");   
+        //issue-#38
         //this.openingTag = document.createElement("script");
 		
         // create opening and closing tags and link to this
 		///<summary type="Comment">The opening tag</summary>
         this.openingTag = document.createComment(" " + name + " ");
         this.openingTag.wipeoutOpening = this;
+		
 		///<summary type="Comment">The closing tag</summary>
         this.closingTag = document.createComment(" /" + name + " ");
         this.closingTag.wipeoutClosing = this;
@@ -147,13 +148,13 @@ Class("wipeout.template.rendering.renderedContent", function () {
             this.disposeOfBindings();
             delete this.disposeOfBindings;
         }
-
-        // TODV: test and implement - http://stackoverflow.com/questions/3785258/how-to-remove-dom-elements-without-memory-leaks
+		
+		//issue-#39
         // remove all children
         if(!leaveDeadChildNodes) {
 			var ns;
             while ((ns = this.openingTag.nextSibling) && ns !== this.closingTag) {
-				//TODV: benchmark test, is this necessary (does it help with memory leaks) and des it take much time?
+				//issue-#40
 				if (ns.elementType === 1)
 					ns.innerHTML = "";
 				
@@ -233,7 +234,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		if (this.openingTag && this.openingTag.nodeType === 1) {
 			this.openingTag.insertAdjacentHTML('afterend', html);
 		} else {
-        	//TODV: see todv in constructor
+        	//issue-#38
 			var scr = document.createElement("script");
 			this.closingTag.parentNode.insertBefore(scr, this.closingTag);
 			scr.insertAdjacentHTML('afterend', html);

@@ -116,12 +116,10 @@ Class("wipeout.template.context", function () {
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
 			return new Function("$context", "$this", "$parent", "$parents", "$index", model + "return " + logic + ";");
 		} catch (e) {
-			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
 	};
 	
-	//TODM
 	var notFunctionCall = /^\s*[Ll]ogic\s*:/;
 	context.buildEventCallback = function (logic) {
 		///<summary>Build a function around a logic string, specifically for html events</summary>
@@ -137,7 +135,6 @@ Class("wipeout.template.context", function () {
 			var model = /\$model/.test(logic) ? "var $model = $this ? $this.model : null;\n" : "";
 			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", model + logic);
 		} catch (e) {
-			// TODV: try to take into account some of these cases
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
 	};

@@ -11,7 +11,7 @@ Class("wipeout.wml.wmlPart", function () {
     
     wmlPart.prototype.indexOf = function(string, startingPosition) {
         if (this.value instanceof RegExp) {
-            //TODV: efficiencies
+            //issue-#46
             if(startingPosition)
                 string = string.substr(startingPosition);
             
@@ -28,7 +28,7 @@ Class("wipeout.wml.wmlPart", function () {
             var val = string.indexOf(this.value, startingPosition);
             return val == -1 ? null : {
                 index: val,
-                //TODV: efficiencies
+                //issue-#46
                 length: this.value.length
             };
         }

@@ -80,7 +80,6 @@ Class("wipeout.wml.wmlParser", function () {
 			null;
     };
 	
-	// TODO: test
 	var test = document.createElement("table");
 	test.innerHTML = "<tbody></tbody>";
 	var ie = !test.childNodes.length;
@@ -121,7 +120,7 @@ Class("wipeout.wml.wmlParser", function () {
     
 	var inline = ["area", "base", "br", "col", "command", "hr", "img", "input", "keygen", "link", "meta", "param", "source"];		
 	function parse (htmlElement) {
-		var name  = htmlElement.getAttribute("wo-el") || htmlElement.getAttribute("data-wo-el") || htmlElement.localName;	//TODM
+		var name  = htmlElement.getAttribute("wo-el") || htmlElement.getAttribute("data-wo-el") || htmlElement.localName;
 		var tmp, output = new wipeout.wml.wmlElement(name, inline.indexOf(name) !== -1);
 		for (var i = 0, ii = htmlElement.childNodes.length; i < ii; i++) {
 			if (htmlElement.childNodes[i].nodeType === 1)

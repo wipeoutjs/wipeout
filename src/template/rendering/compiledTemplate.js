@@ -51,8 +51,6 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
     
     var begin = "{{";
     var end = "}}";
-	
-	//TODM
     compiledTemplate.renderParenthesis = function(beginParenthesis, endParenthesis) {
         ///<summary>Change the escape values to render. Default is {{ and }}</summary>
         ///<param name="beginParenthesis" type="String">the beginnin</param>
@@ -111,7 +109,6 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 		if (wipeout.template.rendering.htmlAttributes[attributeName])
 			return attributeName;
 		
-		//TODM
 		for (var i in wipeout.template.rendering.dynamicHtmlAttributes)
 			if (wipeout.template.rendering.dynamicHtmlAttributes[i].test(attributeName))
 				return i;

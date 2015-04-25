@@ -44,7 +44,7 @@ Class("wipeout.wml.wmlElementBase", function () {
     };
     
     wmlElementBase.prototype.splice = function() {
-        ///<summary>Not implemented</summary>	TODV
+        ///<summary>Not implemented</summary>
 		
         throw "not implemented";
 		

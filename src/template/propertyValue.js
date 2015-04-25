@@ -53,7 +53,7 @@ Class("wipeout.template.propertyValue", function () {
 				if (!wipeout.template.filters[split[1]])
 					throw "Invalid filter: " + split[1];	//TODE
 				
-				if (wipeout.template.filters[split[1]].downwards)	//TODM (downwards)
+				if (wipeout.template.filters[split[1]].downwards)
 					val = "wipeout.template.filters[\"" + split[1] + "\"].downwards(" + split[0] + ")";
 				else
 					val = split[0].split(",")[0];
@@ -95,7 +95,7 @@ Class("wipeout.template.propertyValue", function () {
 				if (!wipeout.template.filters[split[1]])
 					throw "Invalid filter: " + split[1];	//TODE
 				
-				if (wipeout.template.filters[split[1]].upward) {	//TODM (upward)
+				if (wipeout.template.filters[split[1]].upward) {
 					getter = "wipeout.template.filters[\"" + split[1] + "\"].upward";
 					split = split[0].split(/\s*\,\s*/);
 					attributeValue = splitValue.addTokens(split[0]);
@@ -180,7 +180,7 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODV: this is non standard
+			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);

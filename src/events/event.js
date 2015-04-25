@@ -62,7 +62,6 @@ Class("wipeout.events.event", function () {
         this._registrations.length = 0;
     }
     
-    //TODO refactor, with disposable
     event.prototype.register = function(callback, context, priority) {
         ///<summary>Subscribe to an event</summary>
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
