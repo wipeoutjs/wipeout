@@ -51,7 +51,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
     };
 	
 	htmlPropertyValue.prototype.setData = function (element, name, data) {
-		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>	//TODM
+		///<summary>When used by a wipeout html attribute (wo.htmlAttributes), set data against the html element. This is useful to pass data between html attributes</summary>
         ///<param name="element" type="Element">The html element</param>
         ///<param name="name" type="String">The data key</param>
         ///<param name="data" type="Any">the data</param>

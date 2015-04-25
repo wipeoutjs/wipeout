@@ -84,7 +84,6 @@ Class("wipeout.template.initialization.parsers", function () {
 		return value;
 	};
     
-    //TODM
     parsers.template.useRawXmlValue = true;
     
     parsers.j = parsers["json"];

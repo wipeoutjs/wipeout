@@ -109,7 +109,6 @@ Class("wipeout.viewModels.view", function () {
 		});
 	};
 	
-	//TODM
 	view.prototype.synchronusTemplateChange = function (templateId) {
         ///<summary>Tell the overlying renderedContent the the template has changed</summary>    
         ///<param name="templateId" type="String" optional="true">Set the template id also</param>
@@ -126,7 +125,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="displayFunction" type="Function" optional="true">A function to convert view models found into a custom type</param>
         ///<returns type="Array" generic0="Object">The view graph</returns>
 
-        throw "TODV";
+        throw "Not implemented exception";	//issue-#44
         
         /*if (!rootElement)
             return [];

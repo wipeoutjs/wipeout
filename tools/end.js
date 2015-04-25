@@ -1,4 +1,4 @@
-//TODM: all exposed items
+
 function expose (name, value) {
 	if (!name || value == null) throw "Invalid input";
 	if (wo[name]) throw name + " is already taken!";

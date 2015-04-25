@@ -23,7 +23,6 @@ Class("wipeout.template.rendering.renderedArray", function () {
         if (this.itemsControl) {
 			if (this.itemsControl.$getChild) throw "These items are being rendered already.";
 			
-			//TODV
             this.itemsControl.$getChild = (function (i) {
 				if (arguments.length === 0) {
 					var op = this.children.slice();

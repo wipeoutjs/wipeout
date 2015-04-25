@@ -79,7 +79,6 @@ test("concurrency, ow", function() {
 		var timeout = 15 * (busybody.useObjectObserve ? 1 : 2);
 		
 		// act
-		//TODO: without timeouts it is messier
 		view.model = 1;
 		setTimeout(function () {
 			application.property = 2;

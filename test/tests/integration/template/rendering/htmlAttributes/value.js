@@ -218,7 +218,6 @@ test("checkbox, with data", function() {
 	stop();
 });
 
-//TODM: if data === null, checked attribute will never be applied
 test("checkbox, with data === null", function() {
 	$("#qunit-fixture").html("<input type='checkbox' id='hello' />")
 	var input = document.getElementById("hello");

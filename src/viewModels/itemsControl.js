@@ -76,13 +76,13 @@ Class("wipeout.viewModels.itemsControl", function () {
         this.items.remove(item);
     };
     
-    //virtual, TODV
+    //virtual
     itemsControl.prototype.onItemRendered = function (item) {
         ///<summary>Called after a new item items control is rendered</summary>
         ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
     
-    //virtual, TODV
+    //virtual
     itemsControl.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="Any" optional="false">The item deleted</param>  
