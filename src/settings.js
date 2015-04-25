@@ -1,5 +1,8 @@
 Class("wipeout.settings", function() {
     function settings (settings) {
+        ///<summary>Change all settings</summary>
+        ///<param name="settings" type="Object">A dictionary of new settings</param>
+		
         enumerateObj(wipeout.settings, function(a,i) {
             delete wipeout.settings[i];
         });
@@ -9,9 +12,9 @@ Class("wipeout.settings", function() {
         });        
     }
 
-    settings.suppressWarnings = false;
     settings.asynchronousTemplates = true;
-    settings.htmlAsyncTimeout = 10000;
-    
+    settings.displayWarnings = true;
+    settings.useElementClassName = false;
+	
     return settings;
 });

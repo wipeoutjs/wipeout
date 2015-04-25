@@ -1,4 +1,41 @@
 window.testUtils = window.testUtils || {};
+
+window.asyncAssert = function(callback, context) {
+    stop();
+    setTimeout(function() {
+        callback.call(context);
+        start();
+    }, 50);
+};
+
+window.enumerateArr = wipeout.utils.obj.enumerateArr;
+
+window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
+window.integrationTestSetup = function () {
+	window.$fixture = $("#qunit-fixture");
+	$fixture.html("<div data-wo-el='testApp' model='busybody.makeObservable()' application='true'></div>");
+	wo(null, $fixture.children()[0]);
+	window.application = wipeout.utils.html.getViewModel(window.node = $fixture[0].firstChild);
+	application.application = true;
+
+	window.views = {};
+};
+	
+window.clearIntegrationStuff = function() {
+	var node = application.$domRoot.openingTag;
+	application.$domRoot.dispose();
+	node.wipeoutOpening = {dispose: function (){}}
+};
+
+window.integrationTestTeardown = function () {
+	delete window.views;
+	node.wipeoutOpening.dispose();
+	$fixture.html("");
+	delete window.$fixture;
+	delete window.node;
+	delete window.application;
+};
+
 $.extend(testUtils, (function() {
     
     var cached = [];
@@ -19,7 +56,13 @@ $.extend(testUtils, (function() {
             current = current[className[i]] = (current[className[i]] || {});
         }
  
-        var mock = {ns: current, name: className[i], oldVal: current[className[i]], expected: expected, actual: 0};
+        var mock = {
+			ns: current, 
+			name: className[i], 
+			oldVal: current.hasOwnProperty(className[i]) ? current[className[i]] : deleteMe, 
+			expected: expected, 
+			actual: 0
+		};
         this.mocks.push(mock);
         if(newValue == null || newValue.constructor === Function)        
             current[className[i]] = function() {
@@ -34,13 +77,17 @@ $.extend(testUtils, (function() {
         return current[className[i]];
     };
  
+	var deleteMe;
     classMock.prototype.reset = function() {
         for(var i = 0, ii = this.mocks.length; i < ii; i++) {
             if(this.mocks[i].expected != null) {
                 strictEqual(this.mocks[i].actual, this.mocks[i].expected, "Constructor not called the correct number of times");
             }
  
-            this.mocks[i].ns[this.mocks[i].name] = this.mocks[i].oldVal;
+			if (this.mocks[i].oldVal === deleteMe)
+				delete this.mocks[i].ns[this.mocks[i].name];
+			else
+            	this.mocks[i].ns[this.mocks[i].name] = this.mocks[i].oldVal;
         }
  
         this.mocks.length = 0;
@@ -92,7 +139,7 @@ $.extend(testUtils, (function() {
             try {
                 var subject = {};                
                 var testSubject = testUtils.currentModule;
-                if(method.toLowerCase() !== "consrtuctor") {
+                if(method.toLowerCase() !== "constructor") {
                     if(!isStatic) {
                         testSubject += ".prototype";
                     }
@@ -134,20 +181,12 @@ $.extend(testUtils, (function() {
       testUtils.currentModule = details.name;
     });
     
-    ko.bindingHandlers.debug = {
-        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            debugger;
-        },
-        update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            debugger;
-        }
-    };
-    
     return {
         html: html,
         testWithUtils: testWithUtils,
         classMock: classMock,
-        methodMock: methodMock
+        methodMock: methodMock,
+		allHtmlTags: ["a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"]
     };
 
 })());

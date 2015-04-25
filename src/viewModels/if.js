@@ -9,71 +9,52 @@ Class("wipeout.viewModels.if", function () {
         _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
     };
     
-    var _if = wipeout.viewModels.contentControl.extend(function _if(templateId, model) {
+    var _if = wipeout.viewModels.view.extend(function _if(trueTemplateId, model) {
         ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
-        ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a blank template</param>
+        ///<param name="trueTemplateId" type="String" optional="true">The template id if condition is true. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
         staticConstructor();
         
-        this._super(templateId, model);
+        this._super(_if.blankTemplateId, model);
 
         ///<Summary type="Boolean">Specifies whether this object should be used as a binding context. If true, the binding context of this object will be it's parent. Default is true</Summary>
         this.shareParentScope = true;
         
-        ///<Summary type="ko.observable" generic0="Boolean">if true, the template will be rendered, otherwise a blank template is rendered</Summary>
-        this.condition = ko.observable();
+        ///<Summary type="Boolean">if true, the template will be rendered, otherwise a blank template is rendered</Summary>
+        this.condition = false;
+		
+        ///<Summary type="String">the template to render if the condition is true. Defaults to a blank template</Summary>
+		this.trueTemplateId = trueTemplateId || _if.blankTemplateId;
         
-        ///<Summary type="ko.observable" generic0="String">the template to render if the condition is false. Defaults to a blank template</Summary>
-        this.elseTemplateId = ko.observable(_if.blankTemplateId);
+        ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
+        this.falseTemplateId = _if.blankTemplateId;
         
-        var d1 = this.elseTemplateId.subscribe(this.elseTemplateChanged, this);
-        this.registerDisposable(d1);
+        this.observe("trueTemplateId", this.reEvaluate, this);
+        this.observe("falseTemplateId", this.reEvaluate, this);
+        this.observe("condition", this.reEvaluate, this);
         
-        ///<Summary type="ko.observable" generic0="String">Anonymous version of elseTemplateId</Summary>
-        this.elseTemplate = wipeout.viewModels.contentControl.createTemplatePropertyFor(this.elseTemplateId, this);
+        ///<Summary type="String">Anonymous version of trueTemplateId</Summary>
+        this.trueTemplate = "";
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "trueTemplateId", "trueTemplate");
         
-        ///<Summary type="String">Stores the template id if the condition is false</Summary>
-        this.__cachedTemplateId = this.templateId();
-        
-        var d2 = this.condition.subscribe(this.onConditionChanged, this);
-        this.registerDisposable(d2);
-        
-        var d3 = this.templateId.subscribe(this.copyTemplateId, this);
-        this.registerDisposable(d3);
-        
-        this.copyTemplateId(this.templateId());
+        ///<Summary type="String">Anonymous version of falseTemplateId</Summary>
+        this.falseTemplate = "";
+        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "falseTemplateId", "falseTemplate");
     });
+	
+    _if.addGlobalParser("falseTemplate", "template");
+    _if.addGlobalBindingType("falseTemplate", "ifTemplateProperty");
+    _if.addGlobalParser("trueTemplate", "template");
+    _if.addGlobalBindingType("trueTemplate", "ifTemplateProperty");
     
-    _if.prototype.elseTemplateChanged = function (newVal) {
-        ///<summary>Resets the template id to the else template if condition is not met</summary>  
-        ///<param name="newVal" type="String" optional="false">The else template Id</param>   
-        if (!this.condition()) {
-            this.templateId(newVal);
-        }
-    };
-    
-    _if.prototype.onConditionChanged = function (newVal) {
-        ///<summary>Set the template based on whether the condition is met</summary>      
-        ///<param name="newVal" type="Boolean" optional="false">The condition</param>   
-        if (this.__oldConditionVal && !newVal) {
-            this.templateId(this.elseTemplateId());
-        } else if (!this.__oldConditionVal && newVal) {
-            this.templateId(this.__cachedTemplateId);
-        }
-        
-        this.__oldConditionVal = !!newVal;
-    };
-    
-    _if.prototype.copyTemplateId = function (templateId) {
-        ///<summary>Cache the template id and check whether correct template is applied</summary>  
-        ///<param name="templateId" type="String" optional="false">The template id to cache</param>      
-        if (templateId !== this.elseTemplateId())
-            this.__cachedTemplateId = templateId;
-    
-        if (!this.condition() && templateId !== this.elseTemplateId()) {
-            this.templateId(this.elseTemplateId());
-        }
+    _if.prototype.reEvaluate = function () {
+        ///<summary>Set the template id based on the true template, false template and template id</summary>
+		
+        if (this.condition)
+			this.synchronusTemplateChange(this.trueTemplateId);
+		else
+			this.synchronusTemplateChange(this.falseTemplateId);
     };
     
     return _if;

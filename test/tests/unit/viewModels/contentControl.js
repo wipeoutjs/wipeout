@@ -13,125 +13,92 @@ testUtils.testWithUtils("constructor", "and all functionality", false, function(
     subject._super = methods.method([templateId, model]);
     subject.templateId = {};
     classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function() {
-        methods.method([subject.templateId, subject])(arguments[0], arguments[1]);
+        methods.method([subject, "templateId", "template"])(arguments[0], arguments[1]);
         return template;
     }, 1);
     
     // act
-    invoker(templateId, model);
-    
     // assert
-    strictEqual(subject.template, template);
+    invoker(templateId, model);
 });
 
 testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods, classes, subject, invoker) {
     // arrange
     var templateValue = "Hi";
-    var owner = new wipeout.viewModels.visual();
-    var templateId = ko.observable(contentControl.createAnonymousTemplate(templateValue));
+    var owner = new wipeout.viewModels.view();
+    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate");
     
     // act
-    var template = contentControl.createTemplatePropertyFor(templateId, owner);
-    var t1 = templateId();
-    
+    var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
+	    
     // assert
-    strictEqual($("#" + templateId()).html(), template());
-    
-    template("Bye");
-    ok(t1 != templateId());
-    
-    templateId(t1);
-    strictEqual(template(), templateValue);
+	var xx = owner.observe("testTemplate", function () {
+		xx.dispose();
+        strictEqual(wipeout.template.engine.instance.templates[t1].xml, owner.testTemplate);
+        strictEqual(owner.testTemplate.serializeContent(), "Hi");
+		
+		owner.testTemplate = "Bye";
+		xx = owner.observe("testTemplateId", function () {
+			xx.dispose();
+            ok(t1 != owner.testTemplateId);
+        
+            owner.testTemplateId = t1;
+			xx = owner.observe("testTemplate", function () {
+				xx.dispose();
+        		strictEqual(owner.testTemplate.serializeContent(), "Hi");
+				owner.dispose();
+				start();
+            });
+        });
+    });
+	
+	stop();
 });
 
-testUtils.testWithUtils("createAnonymousTemplate", "Create same template twice", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createTemplatePropertyFor", "disposal, dependant on \"createTemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
+    // arrange
+    var owner = new wipeout.viewModels.view();
+    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
+    
+    // act
+    owner.testTemplateId = contentControl.createAnonymousTemplate("Hello");
+    
+    // assert
+	owner.observe("testTemplate", function () {
+		ok(false);
+	});
+	
+	setTimeout(function () {
+		strictEqual(owner.testTemplate.serializeContent(), "");
+		start();
+	}, 50);
+	
+	stop();
+});
+
+testUtils.testWithUtils("createAnonymousTemplate", "Using string", true, function(methods, classes, subject, invoker) {
     // arrange
     var val = "LKJBLKJBKJBLKJBKJBKJB";
         
     // act
-    var result1 = invoker(val, false);
-    var result2 = invoker(val, false);
+    var result1 = invoker(val);
+    var result2 = invoker(val);
     
     // assert
     strictEqual(result1, result2);
-    strictEqual($("#" + result1).html(), val);
-    ok($("#" + result1).attr("data-templatehash"));
+    strictEqual(wipeout.template.engine.instance.templates[result1].xml.serializeContent(), val);
 });
 
-testUtils.testWithUtils("createAnonymousTemplate", "Create same template twice, force create", true, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("createAnonymousTemplate", "Using xml", true, function(methods, classes, subject, invoker) {
     // arrange
-    var val = "LKJBLKJBKJBLKJBKJBKJB";
+    var val = wipeout.wml.wmlParser("<div></div>");
         
     // act
-    var result1 = invoker(val, false);
-    var result2 = invoker(val, true);
-    
-    // assert
-    notEqual(result1, result2);
-    strictEqual($("#" + result1).html(), val);
-    strictEqual($("#" + result2).html(), val);
-    ok($("#" + result1).attr("data-templatehash"));
-    ok($("#" + result2).attr("data-templatehash"));
-});
-
-testUtils.testWithUtils("deleteAnonymousTemplate", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var result = contentControl.createAnonymousTemplate("asdgdfs");
-        
-    // act
-    invoker(result);
-    
-    // assert
-    strictEqual($("#" + result).length, 0);
-});
-
-testUtils.testWithUtils("hashCode", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var str1 = "KJBJBJBJKBJKBJLKJ";
-    var str2 = "sdfsdfdfsdfsdfsdf";
-    
-    // act
-    var result1 = invoker(str1);
-    var result2 = invoker(str1);
-    var result3 = invoker(str2);
+    var result1 = invoker(val);
+    var result2 = invoker(val);
     
     // assert
     strictEqual(result1, result2);
-    notEqual(result1, result3);
-});
-
-testUtils.testWithUtils("templateExists", "", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var id = "pajslkdjalkjhd";
-    $("#qunit-fixture").html("<siv id=\"" + id + "\"></div>");
-    
-    // act    
-    // assert
-    ok(invoker(id));
-});
-
-testUtils.testWithUtils("createTemplate", "template exists", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var id = "pajasdasdslkdjalkjhd";
-    $("#qunit-fixture").html("<div id=\"" + id + "\"></div>");
-        
-    // act
-    // assert
-    throws(function() {
-        invoker(id, "asdsad", "sadasd");
-    });    
-});
-
-testUtils.testWithUtils("createTemplate", "created", true, function(methods, classes, subject, invoker) {
-    // arrange
-    var id = "pajslkdjalkjhd";
-    var content = "LKJBLKUGHLUBK>JHG";
-    var hash = "98asd98sdf";
-    
-    // act
-    invoker(id, content, hash);
-    
-    // assert
-    strictEqual($("#" + id + "[data-templatehash=" + hash + "]").html(), content);
-    strictEqual($("#" + id + "[data-templatehash=" + hash + "]").parent()[0].style.display, "none");
+    strictEqual(wipeout.template.engine.instance.templates[result1].xml, val);
+    strictEqual(result1, val.WipeoutAnonymousTemplate);
 });
