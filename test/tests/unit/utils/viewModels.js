@@ -23,8 +23,7 @@ test("getElementName", function() {
 	strictEqual(wipeout.utils.viewModels.getElementName({name: "js-xxx-y"}), "XxxY");
 	
 	var el = document.createElement("div");
-	el.getAttribute = function (input) { 
-		debugger;
+	el.getAttribute = function (input) {
 		if (input === "data-wo-el") 
 			return "js-xxXX-ff"; 
 	};
