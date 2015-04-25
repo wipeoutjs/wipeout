@@ -241,3 +241,41 @@ testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tes
     // arrange
     ok(true);
 });
+
+testUtils.testWithUtils("onRendered", "", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.$onRendered = [methods.method(), methods.method()];
+	
+	// act
+	// assert
+	invoker();
+});
+
+testUtils.testWithUtils("onUnrendered", "", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.$onUnrendered = [methods.method(), methods.method()];
+	
+	// act
+	// assert
+	invoker();
+});
+
+testUtils.testWithUtils("onApplicationInitialized", "", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.$onApplicationInitialized = [methods.method(), methods.method()];
+	
+	// act
+	// assert
+	invoker();
+});
+
+testUtils.testWithUtils("onInitialized", "", false, function(methods, classes, subject, invoker) {
+    // arrange
+	subject.$onInitialized = [methods.method(), methods.method()];
+	
+	// act
+	// assert
+	invoker();
+});
+
+/*onRendered, onUnrendered, onApplicationInitialized, onInitialized*/

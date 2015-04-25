@@ -17,6 +17,7 @@ function viewModel (name, extend, doNotWarn) {
 	var isDisposable = orienteer.getInheritanceChain(extend).indexOf(busybody.disposable) !== -1;
 	
 	var $constructor,
+		viewModelLifecycle = {},
 		values = {},
 		tmp, args = (tmp = extend
 		.toString()
@@ -74,9 +75,9 @@ function viewModel (name, extend, doNotWarn) {
 				mod = values.model;
 				delete values[model];
 			}
-
+//"onInitialized", "onRendered", "onUnrendered", "onApplicationInitialized"
 			var split = name.split(".");
-			$constructor = new Function("extend", "getParentConstructorArgs", "values",
+			$constructor = new Function("extend", "getParentConstructorArgs", "values", "viewModelLifecycle",
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
 "	extend.apply(this, getParentConstructorArgs.apply(this, arguments));\n" +
 "\n" +
@@ -84,7 +85,16 @@ function viewModel (name, extend, doNotWarn) {
 "		this[i] = values[i] instanceof Function ?\n" +
 "			values[i].apply(this, arguments) :\n" +
 "			values[i];\n" +
-"}")(extend, getParentConstructorArgs, values);
+"\n" +
+"	if (viewModelLifecycle.onInitialized)\n" +
+"		(this.$onInitialized || (this.$onInitialized = [])).push(viewModelLifecycle.onInitialized);\n" +
+"	if (viewModelLifecycle.onRendered)\n" +
+"		(this.$onRendered || (this.$onRendered = [])).push(viewModelLifecycle.onRendered);\n" +
+"	if (viewModelLifecycle.onUnrendered)\n" +
+"		(this.$onUnrendered || (this.$onUnrendered = [])).push(viewModelLifecycle.onUnrendered);\n" +
+"	if (viewModelLifecycle.onApplicationInitialized)\n" +
+"		(this.$onApplicationInitialized || (this.$onApplicationInitialized = [])).push(viewModelLifecycle.onApplicationInitialized);\n" +
+"}")(extend, getParentConstructorArgs, values, viewModelLifecycle);
 
 			Class(name, function () {
 				return orienteer.extend.call(extend, $constructor);
@@ -204,7 +214,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
 
 			parsers[propertyName] = parser;
 			return output;
@@ -222,7 +232,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentCOntrol, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
 
 			bindingTypes[propertyName] = bindingType;
 			return output;
@@ -247,7 +257,10 @@ function viewModel (name, extend, doNotWarn) {
 			
 			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
 			
-			return output.method("onInitialized", onInitialized);
+			if (viewModelLifecycle.onInitialized) throw "onInitialized has been defined already";
+			viewModelLifecycle.onInitialized = onInitialized; 
+			
+			return output;
 		},
 		onRendered: function (onRendered) {
 			///<summary>Add a method to be called when the view model is rendered</summary>
@@ -256,7 +269,10 @@ function viewModel (name, extend, doNotWarn) {
 			
 			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
 			
-			return output.method("onRendered", onRendered);
+			if (viewModelLifecycle.onRendered) throw "onRendered has been defined already";
+			viewModelLifecycle.onRendered = onRendered; 
+			
+			return output;
 		},
 		onUnrendered: function (onUnrendered) {
 			///<summary>Add a method to be called when the view model is un rendered</summary>
@@ -265,16 +281,22 @@ function viewModel (name, extend, doNotWarn) {
 			
 			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
 			
-			return output.method("onUnrendered", onUnrendered);
+			if (viewModelLifecycle.onUnrendered) throw "onUnrendered has been defined already";
+			viewModelLifecycle.onUnrendered = onUnrendered; 
+			
+			return output;
 		},
-		dispose: function (dispose) {
+		onDisposed: function (dispose) {
 			///<summary>Add a method to be called when the view model is disposed</summary>
 			///<param name="dispose" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>
 			
 			if (!isDisposable) throw "The parent class must be, or inherit from busybody.disposable to use this method.";
 			
-			return output.method("dispose", dispose);
+			return output.method("dispose", function () {
+				this._super();
+				dispose.call(this);
+			});
 		},
 		onApplicationInitialized: function (onApplicationInitialized) {
 			///<summary>Add a method to be called when the view model is initialized, if the view model is a root application</summary>
@@ -283,9 +305,12 @@ function viewModel (name, extend, doNotWarn) {
 			
 			if (!isViewModel) throw "The parent class must be, or inherit from wo.view to use this method.";
 			
-			return output.method("onApplicationInitialized", onApplicationInitialized);
+			if (viewModelLifecycle.onApplicationInitialized) throw "onApplicationInitialized has been defined already";
+			viewModelLifecycle.onApplicationInitialized = onApplicationInitialized; 
+			
+			return output;
 		}
 	};
 
 	return output;
-};
+}

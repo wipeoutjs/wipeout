@@ -145,29 +145,43 @@ Class("wipeout.viewModels.view", function () {
 
         return output;*/
     };
+	
+	//TODO: test these methods
     
     // virtual
-    view.prototype.onRendered = function (oldValues, newValues) {
-        ///<summary>Triggered each time after a template is rendered</summary>   
-        ///<param name="oldValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes removed</param>
-        ///<param name="newValues" type="Array" generic0="HTMLNode" optional="false">A list of HTMLNodes rendered</param>
+    view.prototype.onRendered = function () {
+        ///<summary>Triggered each time after a template is rendered</summary>
+		
+		enumerateArr(this.$onRendered, function (f) {
+			f();
+		});
     };
     
     // virtual
     view.prototype.onUnrendered = function () {
-        ///<summary>Triggered just before a view is un rendered</summary>    
+        ///<summary>Triggered just before a view is un rendered</summary>
+		
+		enumerateArr(this.$onUnrendered, function (f) {
+			f();
+		});
     };
     
     // virtual
     view.prototype.onApplicationInitialized = function () {
-        ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>    
+        ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>
+		
+		enumerateArr(this.$onApplicationInitialized, function (f) {
+			f();
+		});
     };
-	
-    function ex (comp) { comp.execute(); }
 	
     // virtual
     view.prototype.onInitialized = function() {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
+		
+		enumerateArr(this.$onInitialized, function (f) {
+			f();
+		});
     };
 
     return view;

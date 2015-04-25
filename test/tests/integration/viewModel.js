@@ -27,30 +27,6 @@ test("model and template id via constructor args", function() {
 	ok(ok1);
 });
 
-test("computed", function() {
-	
-	// arrange
-	var vm = wo.viewModel("vms.test")
-		.computed("theVal", function () {
-			
-			return this.model ? this.model.hello : null;
-			
-		}, {hello: true})
-		.build();
-		
-	// act
-	var obj = new vm.constructor();
-	obj.observe("theVal", function (oldV, newV) {
-		strictEqual(newV, 5);
-		start();
-	});
-	
-	obj.model = {hello: 5};
-	
-	// assert
-	stop();
-});
-
 test("model and template id via constructor args, with comments", function() {
 	
 	// arrange
@@ -166,17 +142,13 @@ test("templateId with eager load", function() {
 test("convenience methods", function() {
 	//arrange
 	var functions = {
-		onInitialized: function (onInitialized) {
+		onInitialized: function (a) {
 		},
-		onModelChanged: function (onModelChanged) {
+		onRendered: function (b) {
 		},
-		onRendered: function (onRendered) {
+		onUnrendered: function (c) {
 		},
-		onUnrendered: function (onUnrendered) {
-		},
-		dispose: function (dispose) {
-		},
-		onApplicationInitialized: function (onApplicationInitialized) {
+		onApplicationInitialized: function (d) {
 		}
 	};
 	
@@ -190,8 +162,10 @@ test("convenience methods", function() {
 	var subject = new (builder.build().statics)();
 
 	// assert
-	for (var i in functions)
-		strictEqual(subject.constructor.prototype[i], functions[i]);
+	for (var i in functions) {
+		strictEqual(subject["$" + i].length, 1);
+		strictEqual(subject["$" + i][0], functions[i]);
+	}
 	
 	strictEqual(subject.templateId, 123);
 });
