@@ -32,7 +32,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         var d2 = initializer.initialize(this.createdViewModel, this.renderContext);
         
 		this.disposeOfViewModelBindings = function () {
-			//TODO, this could be a bit better
+			//TODV, this could be a bit better
 			d1.apply(this, arguments);
 			d2.apply(this, arguments);
 		};

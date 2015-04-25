@@ -53,7 +53,7 @@ test("getViewModel/getViewModels", function() {
 test("basic items control with filters", function() {
     // arrange
 	wo.filters.divisibleBy = {
-		parentToChild: function (items, divisibleBy) {
+		downwards: function (items, divisibleBy) {
 			var op = [];
 			for (var i = 0, ii = items.length; i < ii; i++)
 				if (items[i] % divisibleBy === 0)

@@ -1,7 +1,6 @@
 Class("wipeout.wml.wmlPart", function () { 
 	return function (){};
 	
-        //TODO: move to seperate file
     function wmlPart(value, escaped) {
         
         this.value = value;        
@@ -12,7 +11,7 @@ Class("wipeout.wml.wmlPart", function () {
     
     wmlPart.prototype.indexOf = function(string, startingPosition) {
         if (this.value instanceof RegExp) {
-            //TODO: efficiencies
+            //TODV: efficiencies
             if(startingPosition)
                 string = string.substr(startingPosition);
             
@@ -29,7 +28,7 @@ Class("wipeout.wml.wmlPart", function () {
             var val = string.indexOf(this.value, startingPosition);
             return val == -1 ? null : {
                 index: val,
-                //TODO: efficiencies
+                //TODV: efficiencies
                 length: this.value.length
             };
         }

@@ -126,7 +126,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="displayFunction" type="Function" optional="true">A function to convert view models found into a custom type</param>
         ///<returns type="Array" generic0="Object">The view graph</returns>
 
-        throw "TODO";
+        throw "TODV";
         
         /*if (!rootElement)
             return [];
@@ -145,8 +145,6 @@ Class("wipeout.viewModels.view", function () {
 
         return output;*/
     };
-	
-	//TODO: test these methods
     
     // virtual
     view.prototype.onRendered = function () {

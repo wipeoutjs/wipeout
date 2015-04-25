@@ -69,7 +69,7 @@ testUtils.testWithUtils("buildGetter", "good filter, with to child part", false,
 	// arrange
 	var op = {};
 	wo.filters["good-filter"] = {
-		parentToChild: methods.method(['hello shane', 'another hello'], op)
+		downwards: methods.method(['hello shane', 'another hello'], op)
 	};
 	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
 	
@@ -206,7 +206,7 @@ testUtils.testWithUtils("buildSetter", "good filter, with to child part", false,
 	// arrange
 	var ctxt = {asGetterArgs: function() { return [this, null, null, null, null]; }}, input = {}, output = {};
 	wo.filters["good-filter"] = {
-		childToParent: methods.method([input, 'another hello'], output)
+		upward: methods.method([input, 'another hello'], output)
 	};
 	subject.value = methods.method([], "$context.val, 'another hello' => good-filter");
 	

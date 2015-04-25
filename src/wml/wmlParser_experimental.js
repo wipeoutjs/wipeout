@@ -154,7 +154,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
     wmlParser._createAttribute = function(preParsed, startAt) {
         var i = startAt;
         if(typeof preParsed[i] !== "string")
-            //TODO
+            //TODE
             throw {
                 message: "Cannot create template attribute"
             };
@@ -196,7 +196,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
             }
         } 
         
-        //TODO
+        //TODE
         throw {
             message: "Cannot create template attribute"
         };
@@ -206,7 +206,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
         
         var i = startIndex;
         if (preParsed[i] !== openTag1)
-            //TODO
+            //TODE
             throw {
                 message: "Cannot create template element"
             };
@@ -219,7 +219,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
         
         // validate name
         if(typeof preParsed[i] !== "string" || !preParsed[i].length)
-            //TODO
+            //TODE
             throw {
                 message: "Cannot create template element"
             };
@@ -243,7 +243,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
             }
             
             if(preParsed[i] !== whiteSpace) {
-                //TODO
+                //TODE
                 throw {
                     message: "Cannot create template element"
                 };
@@ -272,7 +272,7 @@ Class("wipeout.wml.wmlParser_experimental", function () {
                     rootElement.push(new wipeout.wml.wmlComment(preParsed[i + 1]));
                     i+=2;
                 } else {
-                    //TODO
+                    //TODE
                     throw {
                         message: "Cannot find closing comment tag"
                     };
@@ -287,18 +287,18 @@ Class("wipeout.wml.wmlParser_experimental", function () {
                     if(rootElement.name === wipeout.utils.obj.trim(preParsed[i + 1]))
                         return i + 3; // skip <, "name" and >
                     
-                    //TODO
+                    //TODE
                     throw {
                         message: "Invalid closing tag"
                     };
                 } else {
-                    //TODO
+                    //TODE
                     throw {
                         message: "Invalid closing tag"
                     };
                 }
             } else {
-                //TODO
+                //TODE
                 throw {
                     message: "Invalid template"
                 };

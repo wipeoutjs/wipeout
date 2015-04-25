@@ -2,7 +2,7 @@ Class("wipeout.utils.viewModels", function () {
 	
 	function viewModels () {}
 
-	//TODO: standardise
+	//TODV: standardise
 	var realName1 = "wo-el", realName2 = "data-wo-el";
 	viewModels.getElementName = function (wmlElement) {
         ///<summary>Get the actual name of an element. The actual name is either the "data-wo-element-name" attribute or the element name</summary>
@@ -13,7 +13,7 @@ Class("wipeout.utils.viewModels", function () {
 			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(trimToLower( wmlElement.localName))) :
 			camelCase(trimToLower(wmlElement.name));
 		
-		//TODM, TODO: an object called jsSomething cannot be found
+		//TODM, TODV: an object called jsSomething cannot be found
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};
 	

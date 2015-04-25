@@ -1,5 +1,4 @@
-Html attributes docs
-Experimental parser
+
 wo-checked htmlAttr/wo-value refactor???
 
 Types of todos:
@@ -15,19 +14,13 @@ refactor _caching to use disposable
 
 view model constructor context (defualt = window)
 
-html event handled
-
 Try to make onModelChanged synchronus. Model routed events don't work properly if it is async
 
 events and routed events. make strings
 
-standardise the way things are rendered, between Objects and wo.views (toString)
-
 for html/css developers: wo.removeAllCommentNodes(), wo.replaceAllCommentNodes()
 
-onInitialized, onRendered etc...
-
-bug, handle null template id better
+services: onInitialized, onRendered etc...
 
 window.requestAnimationFrame
 
