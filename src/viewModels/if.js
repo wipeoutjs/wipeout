@@ -42,7 +42,7 @@ Class("wipeout.viewModels.if", function () {
         this.falseTemplate = "";
         wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "falseTemplateId", "falseTemplate");
     });
-	 
+	
     _if.addGlobalParser("falseTemplate", "template");
     _if.addGlobalBindingType("falseTemplate", "ifTemplateProperty");
     _if.addGlobalParser("trueTemplate", "template");
