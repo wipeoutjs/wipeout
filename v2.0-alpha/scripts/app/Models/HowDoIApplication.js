@@ -162,7 +162,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     
     HowDoIApplication.prototype._search = function(searchTerm) {
         if(!searchTerm) {
-            wo.obj.enumerateArr(this.flatList, function(item) {
+            wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
                 if(!item.visible)item.visible = true;
             }, this);
             
@@ -171,7 +171,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         
         searchTerm = searchTerm.toLowerCase().split(/\s+/);        
         
-        wo.obj.enumerateArr(this.flatList, function(item) {
+        wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
             
             var visible = true;
             var title = item.text.toLowerCase();
@@ -184,16 +184,16 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     
     HowDoIApplication.prototype.index = function() {
         this.flatList.length = 0;
-        wo.obj.enumerateArr(this.leftHandNav, function(group) {
+        wipeout.utils.obj.enumerateArr(this.leftHandNav, function(group) {
             if(group.header)
                 this.flatList.push(group.header);
             
-            wo.obj.enumerateArr(group.items, function(item) {
+            wipeout.utils.obj.enumerateArr(group.items, function(item) {
                 this.flatList.push(item);
             }, this);
         }, this);
         
-        wo.obj.enumerateArr(this.flatList, function(item) {
+        wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
             item.body = document.getElementById("Articles." + item.href.substr(item.href.indexOf("article=") + 8)).text.toLowerCase();
         }, this);        
     };

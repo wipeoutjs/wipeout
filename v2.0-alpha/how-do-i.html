@@ -32,8 +32,8 @@
             </div>
         </div>
         <div>
-            <div  data-bind="wipeout: wipeoutDocs.viewModels.howDoIApplication" id="PageRoot">
-</div>
+            <wipeout-docs.view-models.how-do-i-application model="new wipeoutDocs.models.howDoIApplication()">
+</wipeout-docs.view-models.how-do-i-application>
 
 <script id="Articles.add-property-parser" type="text/template">
 <h1>Add a custom parser</h1>
@@ -2426,6 +2426,9 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                     </true-template>
                 </wo.if>
                 <wo.items-control items="$model.items" id="items">
+					<set-template>
+						<div wo-render="$this.items" id="xxx"></div>
+					</set-template>
                     <item-template>
                         <wo.if condition="$model.visible">
                             <true-template>
@@ -2440,7 +2443,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
-        <wo.view templateId="$parent.contentTemplate" />
+        <wo.view template-id="$parent.contentTemplate"></wo.view>
     </div>
 </div>
 </script>
@@ -2637,32 +2640,33 @@ Welcome to wipeout. Browse the API on the left hand side
 <script id="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" type="text/template">
 &lt;{{$this.items}}&gt;
 </script>
-
+	
 <script type="text/javascript">
     window.bootstrapApplication = function() {
-               // wipeout.profile.profile();
-        window.model = new wipeoutDocs.models.howDoIApplication();
-        
-        wipeout.profile.profile();        
-        ko.applyBindings(window.model, document.getElementById("PageRoot"));
-        wipeout.profile.profile(false);
-
-        crossroads.parse(location.pathname + location.search);
-        window.onpopstate = function() {
-            crossroads.parse(location.pathname + location.search);
-        };
+		setTimeout(function () {
+			crossroads.parse(location.pathname + location.search);
+			window.onpopstate = function() {
+				crossroads.parse(location.pathname + location.search);
+			};
+		}, 500);
     };
 </script>
-      
-</div>
         </div>
         <script type="text/javascript" src="scripts/lib/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="scripts/lib/signals-1.0.0.min.js"></script>
         <script type="text/javascript" src="scripts/lib/crossroads-0.12.0.min.js"></script>
-        <script type="text/javascript" src="scripts/lib/wipeout-2.0.0.debug.js"></script>
-		<!--<script type="text/javascript" src="http://localhost:3000/orienteer/build/orienteer-0.1.0.debug.js"></script>
+        <!--<script type="text/javascript" src="scripts/lib/wipeout-2.0.0.debug.js"></script>-->
+		<script type="text/javascript" src="http://localhost:3000/orienteer/build/orienteer-0.1.0.debug.js"></script>
 		<script type="text/javascript" src="http://localhost:3000/busybody/build/busybody.raw.debug.js"></script>
-		<script type="text/javascript" src="http://localhost:3000/wipeoutDev/build/wipeout.raw.debug.js"></script>-->
+		<script type="text/javascript" src="http://localhost:3000/wipeoutDev/build/wipeout.raw.debug.js"></script>
+		<script>
+			//TODO: add issue to wipeout and add this functionality fo realz
+			wo.contentControl.templateExists = function (templateId) {
+				return !wipeout.template.engine.instance.compileTemplate(templateId, function (){});
+			};
+			
+			//Another TODO: view.prototype.getRootNode()
+		</script>
         <script type="text/javascript" src="scripts/lib/prettify.js"></script>
         
         <script type="text/javascript" src="scripts/wipeout-docs.debug.js"></script>

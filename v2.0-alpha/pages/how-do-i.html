@@ -1,22 +1,15 @@
-<div  data-bind="wipeout: wipeoutDocs.viewModels.howDoIApplication" id="PageRoot">
-</div>
+<wipeout-docs.view-models.how-do-i-application model="new wipeoutDocs.models.howDoIApplication()">
+</wipeout-docs.view-models.how-do-i-application>
 
 ## insert: templates ##
-
+	
 <script type="text/javascript">
     window.bootstrapApplication = function() {
-               // wipeout.profile.profile();
-        window.model = new wipeoutDocs.models.howDoIApplication();
-        
-        wipeout.profile.profile();        
-        ko.applyBindings(window.model, document.getElementById("PageRoot"));
-        wipeout.profile.profile(false);
-
-        crossroads.parse(location.pathname + location.search);
-        window.onpopstate = function() {
-            crossroads.parse(location.pathname + location.search);
-        };
+		setTimeout(function () {
+			crossroads.parse(location.pathname + location.search);
+			window.onpopstate = function() {
+				crossroads.parse(location.pathname + location.search);
+			};
+		}, 500);
     };
 </script>
-      
-</div>

@@ -12,6 +12,9 @@
                     </true-template>
                 </wo.if>
                 <wo.items-control items="$model.items" id="items">
+					<set-template>
+						<div wo-render="$this.items" id="xxx"></div>
+					</set-template>
                     <item-template>
                         <wo.if condition="$model.visible">
                             <true-template>
@@ -26,6 +29,6 @@
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
-        <wo.view templateId="$parent.contentTemplate" />
+        <wo.view template-id="$parent.contentTemplate"></wo.view>
     </div>
 </div>

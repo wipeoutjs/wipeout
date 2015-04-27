@@ -1741,7 +1741,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     
     HowDoIApplication.prototype._search = function(searchTerm) {
         if(!searchTerm) {
-            wo.obj.enumerateArr(this.flatList, function(item) {
+            wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
                 if(!item.visible)item.visible = true;
             }, this);
             
@@ -1750,7 +1750,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         
         searchTerm = searchTerm.toLowerCase().split(/\s+/);        
         
-        wo.obj.enumerateArr(this.flatList, function(item) {
+        wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
             
             var visible = true;
             var title = item.text.toLowerCase();
@@ -1763,16 +1763,16 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     
     HowDoIApplication.prototype.index = function() {
         this.flatList.length = 0;
-        wo.obj.enumerateArr(this.leftHandNav, function(group) {
+        wipeout.utils.obj.enumerateArr(this.leftHandNav, function(group) {
             if(group.header)
                 this.flatList.push(group.header);
             
-            wo.obj.enumerateArr(group.items, function(item) {
+            wipeout.utils.obj.enumerateArr(group.items, function(item) {
                 this.flatList.push(item);
             }, this);
         }, this);
         
-        wo.obj.enumerateArr(this.flatList, function(item) {
+        wipeout.utils.obj.enumerateArr(this.flatList, function(item) {
             item.body = document.getElementById("Articles." + item.href.substr(item.href.indexOf("article=") + 8)).text.toLowerCase();
         }, this);        
     };
@@ -2113,7 +2113,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         this.apiPlaceholderName = null;
         
         var placeholder = document.getElementById("headerText");
-        var textbox = wo.html.createElement('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>');
+        var textbox = $('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>')[0];
         placeholder.parentElement.insertBefore(textbox, placeholder);
         
         var _this = this;
@@ -2127,7 +2127,6 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
     };
     
     HowDoIApplication.prototype.route = function(query) { 
-                
         if(query.article) {
             this.openArticle(query.article);
         } else if (query.type === "api") {
@@ -2165,7 +2164,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
     
     HowDoIApplication.prototype.scrollToArticle = function(articleVm) { 
                 
-        var articleElement = articleVm.getRootHtmlElement();
+        var articleElement = articleVm.$domRoot.openingTag;
         while (articleElement && articleElement.nodeType !== 1)
             articleElement = articleElement.nextSibling;
         
@@ -2173,8 +2172,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(!$(articleElement).hasClass("active"))
             $(articleElement).addClass("list-group-item-info");
         
-        var _do = function() {        
-           // debugger;
+        var _do = function() {      
             $(this.templateItems.leftNav).animate({
                 scrollTop: $(articleElement).offset().top + this.templateItems.leftNav.scrollTop - 80
             }, 500);

@@ -21,7 +21,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         this.apiPlaceholderName = null;
         
         var placeholder = document.getElementById("headerText");
-        var textbox = wo.html.createElement('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>');
+        var textbox = $('<input style="margin-top: 20px;" type="text" placeholder="Search Docs..."></input>')[0];
         placeholder.parentElement.insertBefore(textbox, placeholder);
         
         var _this = this;
@@ -35,7 +35,6 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
     };
     
     HowDoIApplication.prototype.route = function(query) { 
-                
         if(query.article) {
             this.openArticle(query.article);
         } else if (query.type === "api") {
@@ -73,7 +72,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
     
     HowDoIApplication.prototype.scrollToArticle = function(articleVm) { 
                 
-        var articleElement = articleVm.getRootHtmlElement();
+        var articleElement = articleVm.$domRoot.openingTag;
         while (articleElement && articleElement.nodeType !== 1)
             articleElement = articleElement.nextSibling;
         
@@ -81,8 +80,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(!$(articleElement).hasClass("active"))
             $(articleElement).addClass("list-group-item-info");
         
-        var _do = function() {        
-           // debugger;
+        var _do = function() {      
             $(this.templateItems.leftNav).animate({
                 scrollTop: $(articleElement).offset().top + this.templateItems.leftNav.scrollTop - 80
             }, 500);
