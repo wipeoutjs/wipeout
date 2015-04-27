@@ -21,14 +21,14 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <p>And then using the filter</p>
     
 <wipeout-docs.view-models.components.code-block>
-    <code>&lt;my-namespace.my-view-model model="'Hello wipeout!'">
-    &lt;template>
+    <code parser="s">&lt;my-namespace.my-view-model model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control my-view-model-ancestor="$context.find({$namespace: myNamespace})">
-            &lt;template>
+            &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/my-namespace.my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
 

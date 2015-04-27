@@ -4,21 +4,17 @@
 Unless you are building generic components, most bindnigs will point to the model. Binding to the model is as follows
 </p>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-model-script-1'">
-        <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
-    &lt;template>
-        Binding to current scope: &lt;span data-bind="text: model().value">&lt;/span>
-    &lt;/template>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-model-script-1'">
+	<code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
+      Binding to current scope: &lt;span wo-content="$model.value">&lt;/span>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
+</wipeout-docs.view-models.components.new-template-code-block>
 
-    
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'bind-to-model-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
-<p>
-    The <code>model()</code> notation comes from the fact that <code>model</code> is a property on the view model which is a <a href="http://knockoutjs.com/documentation/observables.html">ko.observable</a>
-    
-</p>
+Renders:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view template-id="'bind-to-model-script-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>

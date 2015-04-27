@@ -15,21 +15,21 @@ myType.prototype.click = function(text) {
     alert(this.example + text);
 };</code>
     </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'call-method-out-of-scope-script-1'">
-        <code>&lt;myType model="'Hello wipeout!'">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'call-method-out-of-scope-script-1'">
+        <code parser="s">&lt;myType model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control>
-            &lt;template>
+            &lt;set-template>
                 &lt;button data-bind="click: $call(myType).dot('click').args('Hello wipeout!')">Test&lt;/button>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/myType></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'call-method-out-of-scope-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'call-method-out-of-scope-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 There is <code>$call</code>, documented  <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'here'" />.
 <br/>

@@ -4,21 +4,21 @@
 If the model property of a view model is not explicitly set, it recieves the mode of its parent.
 </p>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'cascading-models-script-1'">
-        <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'cascading-models-script-1'">
+        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
         &lt;wo.content-control>
-            &lt;template>
+            &lt;set-template>
                 Binding to a property on a cascaded model: &lt;span data-bind="text: model().value">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'cascading-models-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'cascading-models-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>

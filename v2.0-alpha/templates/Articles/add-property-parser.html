@@ -3,7 +3,7 @@
 <p>You can also add a custom parser by adding to the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=objectParser&amp;isStatic=true'" text="'wo.view.objectParser'" /> object.</p>
 <p>Custom parsers must have names all in lower case.</p>
 
-    <wipeout-docs.view-models.components.js-js-code-block newScriptId="'set-json-property-script-1'">
+    <wipeout-docs.view-models.components.js-js-code-block new-script-id="'set-json-property-script-1'">
         <code>wo.view.objectParser["name"] = function(nameString) {
     // trim whitespace characters and seperate words by spaces
     var nameParts = wo.obj.trim(nameString).split(/\s+/);
@@ -15,19 +15,19 @@
 		</code>
     </wipeout-docs.view-models.components.js-js-code-block>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'add-a-property-parser-script-1'">
-        <code>&lt;wo.content-control>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'add-a-property-parser-script-1'">
+        <code parser="s">&lt;wo.content-control>
     &lt;my-val constructor="name">
         William Wallace
     &lt;/my-val>
-    &lt;template>
+    &lt;set-template>
         First name: &lt;span data-bind="text: myVal.firstName">&lt;/span>, 
         Last name: &lt;span data-bind="text: myVal.lastName">&lt;/span>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'add-a-property-parser-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'add-a-property-parser-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 

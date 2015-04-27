@@ -2,7 +2,7 @@
 
     <p>In a prototypical inheritance model, all methods are virtual, which means all methods of a parent class can be overriden by methods of a child class.</p>
 
-    <wipeout-docs.view-models.components.code-block newScriptId="'bind-to-global-script-1'">
+    <wipeout-docs.view-models.components.code-block new-script-id="'bind-to-global-script-1'">
         <code>var Account = wo.object.extend(function Account(balance) {
     // call the constructor of the base class (wo.object)
     this._super();
@@ -34,7 +34,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <br/>
 <p>It is generally a good idea to call the method on the parent class which you are overriding as part of the child class. For this you can use the 
     <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.object&amp;functionName=_super&amp;isStatic=false'" text="'_super'" /> method again.</p>
-    <wipeout-docs.view-models.components.code-block newScriptId="'bind-to-global-script-1'">
+    <wipeout-docs.view-models.components.code-block new-script-id="'bind-to-global-script-1'">
         <code>Account.prototype.canWithdrawMoney = function() {
     var canWithdrawMoneyBase = this._super();
     return canWithdrawMoneyBase &amp;&amp; this.balance > -this.overdraft;

@@ -3,22 +3,22 @@
 <p>Complex properties with multiple levels can also be set in xml. If there is no parser to go with the <code>constructor</code> property, then
 the constructor is used as an actual constructor with the <code>new</code> keyword</p>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'set-complex-properties-script-1'">
-        <code>&lt;wo.content-control> &lt;!-- outer contentControl -->
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-complex-properties-script-1'">
+        <code parser="s">&lt;wo.content-control> &lt;!-- outer contentControl -->
     &lt;my-val constructor="wo.contentControl" inner-value="'Hello wipeout'"> &lt;!-- inner contentControl -->
-        &lt;template>
+        &lt;set-template>
             Binding to element value: &lt;span data-bind="text: innerValue">&lt;/span>
-        &lt;/template>
+        &lt;/set-template>
     &lt;/my-val>
-    &lt;template>
+    &lt;set-template>
         Rendering view model: &lt;div data-bind="render: myVal">&lt;/div>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'set-complex-properties-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'set-complex-properties-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>This is a fairly complex piece of functionality.
     <ol>

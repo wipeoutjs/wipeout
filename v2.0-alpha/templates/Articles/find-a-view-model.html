@@ -9,14 +9,14 @@
 <p>You can select an ancestor view model by passing a view model type into the find block.</p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code>&lt;myViewModel model="'Hello wipeout!'">
-    &lt;template>
+    <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control my-view-model-ancestor="$context.find(myViewModel)">
-            &lt;template>
+            &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
 
@@ -26,14 +26,14 @@
 	The string must be of the form 'parent', 'grandparent', 'greatgrandparent', 'greatgreatgrandparent', etc...</p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code>&lt;my-view-model model="'Hello wipeout!'">
-    &lt;template>
+    <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control my-view-model-ancestor="$context.find('parent')">
-            &lt;template>
+            &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
 
@@ -42,14 +42,14 @@
 <p>You can pass a filters object into <code>$call</code> for a targeted search. </p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code>&lt;my-view-model model="'Hello wipeout!'">
-    &lt;template>
+    <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
-            &lt;template>
+            &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
 

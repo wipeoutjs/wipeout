@@ -1,0 +1,65 @@
+<h1>Setting dynamic values</h1>
+<p>Taking the example from <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-hello-world'" text--s="Hello World"></wipeout-docs.rl>, let's expand it to include something dynamic.</p>
+
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">function helloToTheWorld() {
+		
+    this.howManyTimes = 1;
+		
+    this.toString = function () {
+        var output = [];
+        for (var i = 0; i < this.howManyTimes; i++) {
+            output.push("Hello wipeout (" + i + ")!");
+        }
+		
+        return output.join(", ");
+    };
+}</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>And let's define the amount of times rendered in the definition.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;hello-to-the-world how-many-times="3">
+&lt;/hello-to-the-world></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>This will ultimately render:
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!</code>
+</wipeout-docs.view-models.components.code-block>
+</p>
+<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values set in the template (<code>how-many-times="3"</code>) are set.</p>
+
+<p>The full code for this example is as follows</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;!DOCTYPE>(TODOD: is this correct)
+&lt;html>
+    &lt;head>
+        &lt;title>Hello Wipeout&lt;/title>
+    &lt;/head>
+    &lt;body>
+		
+        &lt;hello-to-the-world how-many-times="3">&lt;/hello-to-the-world>
+        
+        &lt;!-- Required scripts -->
+        &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
+        
+        &lt;!-- The application view model -->
+        &lt;script type="text/javascript">
+    function helloToTheWorld() {
+		
+        this.howManyTimes = 1;
+		
+        this.toString = function () {
+            var output = [];
+            for (var i = 0; i < this.howManyTimes; i++) {
+                output.push("Hello wipeout (" + i + ")!");
+            }
+		
+            return output.join(", ");
+        };
+    }
+        &lt;/script>
+    &lt;/body>    
+&lt;/html></code>
+</wipeout-docs.view-models.components.code-block>

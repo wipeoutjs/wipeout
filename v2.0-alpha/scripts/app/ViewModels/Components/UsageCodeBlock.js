@@ -9,10 +9,10 @@ compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipe
     };
     
     usageCodeBlock.prototype.onCodeChanged = function(newVal) {  
-        this.usage = newVal
+        this.usage = wo.contentControl.createAnonymousTemplate(newVal
             .replace(/\&lt;/g, "<")
             .replace(/\&amp;/g, "&")
-            .replace(/\&gt;/g, ">");
+            .replace(/\&gt;/g, ">"));
     };
     
     return usageCodeBlock;

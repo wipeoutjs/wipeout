@@ -2,18 +2,18 @@
 
 <p>The json parser uses <code>JSON.parse(value)</code> sp may need to be <a href="http://en.wikipedia.org/wiki/Polyfill">polyfilled</a> for older browsers.</p>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'set-json-property-script-1'">
-        <code>&lt;wo.content-control>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-json-property-script-1'">
+        <code parser="s">&lt;wo.content-control>
     &lt;my-val constructor="json">
         {"innerVal": "Hello wipeout!"}
     &lt;/my-val>
-    &lt;template>
+    &lt;set-template>
         Binding to element value: &lt;span data-bind="text: myVal.innerVal">&lt;/span>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'set-json-property-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'set-json-property-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 

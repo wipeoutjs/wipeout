@@ -2,27 +2,27 @@
 
     <p>There is a helper function which can find ancestors based on their proerties, type, depth or any other custom attribute you need.</p>
 
-    <wipeout-docs.view-models.components.js-js-code-block newScriptId="'bind-to-global-script-1'">
+    <wipeout-docs.view-models.components.js-js-code-block new-script-id="'bind-to-global-script-1'">
         <code>// create a custom class to distinguish type
 window.myType = wo.contentControl.extend(function myType() {
     this._super();
 });</code>
     </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-ancestor-script-1'">
-        <code>&lt;myType model="'Hello wipeout!'">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
+        <code parser="s">&lt;myType model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control model="$context.find(myType).model">
-            &lt;template>
+            &lt;set-template>
                 Binding to a specific ancestor: &lt;span data-bind="text: model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/myType></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'bind-to-ancestor-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-to-ancestor-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>

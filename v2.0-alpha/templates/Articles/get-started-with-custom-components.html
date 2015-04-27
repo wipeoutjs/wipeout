@@ -27,7 +27,7 @@
         <div class="column-2 main-example-code">
             <h3>The component template</h3>
             <wipeout-docs.view-models.components.template-code-block>
-                <code>&lt;script type="text/xml" id="helloWipeout.collapsible">
+                <code parser="s">&lt;script type="text/xml" id="helloWipeout.collapsible">
     &lt;a data-bind="text: model().header, click: toggleContent" href="#">&lt;/a>
     &lt;div data-bind="text: model().content, visible: show">&lt;/div>
 &lt;/script></code>
@@ -82,7 +82,7 @@
         <div class="column-2 main-example-code">            
             <h3>Modify the template of the root application</h3>
             <wipeout-docs.view-models.components.template-code-block>
-                <code>&lt;script type="text/xml" id="helloWipeout.rootApplication">
+                <code parser="s">&lt;script type="text/xml" id="helloWipeout.rootApplication">
     &lt;div>
         Hello &lt;span data-bind="text: model().name">&lt;/span>!
         &lt;br />
@@ -95,7 +95,7 @@
         <div class="column-2 main-example-code">            
             <h3>Modify the application definition</h3>    
             <wipeout-docs.view-models.components.code-block>
-                <code>&lt;div id="helloWipeoutApp" 
+                <code parser="s">&lt;div id="helloWipeoutApp" 
     data-bind="wipeout: helloWipeout.rootApplication">&lt;/div>
 &lt;script type="text/javascript">
     var rootApp = document.getElementById("helloWipeoutApp");    
@@ -143,8 +143,8 @@
         <p>And that is it. Collapsible component added! The resulting content will render like this:</p>
 
         
-        <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-            <code>&lt;wo.content-control templateId="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content-control></code>
+        <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+            <code parser="s">&lt;wo.content-control template-id="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content-control></code>
         </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>

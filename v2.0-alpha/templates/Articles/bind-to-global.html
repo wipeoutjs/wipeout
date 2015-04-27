@@ -2,22 +2,22 @@
 
     <p>The binding scope also includes the window object, so you can bind to global variables</p>
 
-    <wipeout-docs.view-models.components.js-js-code-block newScriptId="'bind-to-global-script-1'">
+    <wipeout-docs.view-models.components.js-js-code-block new-script-id="'bind-to-global-script-1'">
         <code>window.exampleValue = {
     innerValue: "Hello wipeout!"
 };</code>
     </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-global-script-1'">
-        <code>&lt;wo.content-control model="exampleValue.innerValue">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-global-script-1'">
+        <code parser="s">&lt;wo.content-control model="exampleValue.innerValue">
+    &lt;set-template>
         Binding to global: &lt;span data-bind="text: model">&lt;/span>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'bind-to-global-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-to-global-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>

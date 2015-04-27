@@ -5,11 +5,11 @@
     It doesn't need an argument and will throw an exception if not used by an itemsControl. 
 </p>
     
-<wipeout-docs.view-models.components.new-template-code-block newScriptId="'items-control-binding-script-1'">
-    <code>&lt;wo.items-control item-source="['Hello wipeout 1', 'Hello wipeout 2']">
-    &lt;template>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'items-control-binding-script-1'">
+    <code parser="s">&lt;wo.items-control item-source="['Hello wipeout 1', 'Hello wipeout 2']">
+    &lt;set-template>
         &lt;ul data-bind="itemsControl: null">&lt;/ul>
-    &lt;/template>
+    &lt;/set-template>
     &lt;item-template>
         &lt;li>
             &lt;span data-bind="text: model">&lt;/span>
@@ -20,6 +20,6 @@
 </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'items-control-binding-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'items-control-binding-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block>   

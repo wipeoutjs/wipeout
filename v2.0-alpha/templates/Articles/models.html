@@ -9,14 +9,14 @@ role of a model is beyond the scope of this document.</p>
             Unless explicitely set to null, every view model is gaurenteed to have a model. This is because models cascade downwards. If you do not have the model set on a view model, it will 
             be assigned the model of it's parent.
             <wipeout-docs.view-models.components.code-block>
-        <code>&lt;wo.content-control model="'Hello wipeout!'">
-    &lt;template>
+        <code parser="s">&lt;wo.content-control model="'Hello wipeout!'">
+    &lt;set-template>
         &lt;wo.content-control>
-            &lt;template>
+            &lt;set-template>
                 &lt;div data-bind="text: model">(This text will be replaced by "Hello wipeout!")&lt;/div>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.code-block>
             In this example the second contentControl has bee automatically given the model of its parent

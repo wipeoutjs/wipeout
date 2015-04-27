@@ -6,30 +6,30 @@ of un-needed scope.</p>
     <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a view model.</p>
 
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'share-parent-scope-script-1'">
-        <code>&lt;wo.content-control scope="'Parent scope'">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'share-parent-scope-script-1'">
+        <code parser="s">&lt;wo.content-control scope="'Parent scope'">
+    &lt;set-template>
         &lt;div>    
             &lt;wo.content-control share-parent-scope="true" scope="'Child scope 1'">
-                &lt;template>
+                &lt;set-template>
                     Scope is: &lt;span data-bind="text: scope">&lt;/span>
-                &lt;/template>
+                &lt;/set-template>
             &lt;/wo.content-control>
         &lt;/div>
         &lt;div>    
             &lt;wo.content-control scope="'Child scope 2'">
-                &lt;template>
+                &lt;set-template>
                     Scope is: &lt;span data-bind="text: scope">&lt;/span>
-                &lt;/template>
+                &lt;/set-template>
             &lt;/wo.content-control>
         &lt;/div>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'share-parent-scope-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'share-parent-scope-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>By default, the shareParentScope property of a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if'" text="'wo.if'" /> control is true.</p>

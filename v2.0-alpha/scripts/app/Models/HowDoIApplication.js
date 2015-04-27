@@ -24,8 +24,12 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         this.leftHandNav = [{
             header: new articleLink("Get started", "get-started"),
             items: [
-                new articleLink("With knockout", "get-started-with-knockout"),
-                new articleLink("With Hello World", "get-started-with-hello-world"),            
+                new articleLink("With orienteer", "get-started-with-orienteer"),
+                new articleLink("With busybody", "get-started-with-busybody"),
+                new articleLink("With Hello World", "get-started-with-hello-world"),  
+                new articleLink("With dynamic values", "get-started-with-dynamic-values"),    
+                new articleLink("With view models", "get-started-with-view-models"),           
+                new articleLink("With view bindings", "get-started-with-bindings"),            
                 new articleLink("With custom components", "get-started-with-custom-components"),
                 new articleLink("With lists", "get-started-with-lists"),
             ]

@@ -4,21 +4,21 @@
 In order to keep clean contextual boundaries, the model property of a child view model can be bound to a property of its parent's model
 </p>
 
-    <wipeout-docs.view-models.components.new-template-code-block newScriptId="'bind-to-parents-model-script-1'">
-        <code>&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
-    &lt;template>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
+        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
         &lt;wo.content-control model="$parent.model.value">
-            &lt;template>
+            &lt;set-template>
                 Binding to a property on parent's model: &lt;span data-bind="text: model">&lt;/span>
-            &lt;/template>
+            &lt;/set-template>
         &lt;/wo.content-control>
-    &lt;/template>
+    &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
-    <wipeout-docs.view-models.components.usage-code-block showDefinitionCode="false">
-        <code>&lt;wo.view templateId="'bind-to-parents-model-script-1'" /></code>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-to-parents-model-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     In this example there is a parent view model which has a child view model. 
