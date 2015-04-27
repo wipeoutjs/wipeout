@@ -1,24 +1,24 @@
 <h1>Bindings</h1>
 <p>Binding values together creates powerful chains of pluggable components which are the backbone of a wipeout application.</p>
 
-<wipeout-docs.view-models.components.js-js-code-block>
+<wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// view model 1
 var timer = wo.viewModel("app.timer")
     .templateId("/timer.html")
 		
     // the onInitialized method is called when the view model is created and it's values are set, but before it is rendered
     .onInitialized(function () {
-		this.show = false;
+        this.show = false;
 
         // toggle show every second
         var _this = this;
-		this.cancel = setInterval(function () {
-            _this.show = !this.show;
-		}, 1000);
+        this.cancel = setInterval(function () {
+            _this.show = !_this.show;
+        }, 1000);
     })
 	
     // the dispose function is called when the view model is disposed of
-	.dispose(function () {
+    .dispose(function () {
         clearInterval(this.cancel);
     })
     .build();
@@ -27,24 +27,24 @@ var timer = wo.viewModel("app.timer")
 wo.viewModel("app.blinker")
     .templateId("/blinker.html")
     .build();</code>
-</wipeout-docs.view-models.components.js-js-code-block>
+</wipeout-docs.view-models.components.j-code-block>
 
 <p>At the URL /timer.html</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/timer.html">
-	<code parser="s">&lt;h1>Blinker!&lt;/h1>
-&lt;app.blinker show="$this.show">
+	<code parser="s">&lt;span>Blinker:&lt;/span>
+&lt;app.blinker is-on="$parent.show">
 &lt;/app.blinker></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <p>And at the URL /blinker.html</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/blinker.html">
-	<code parser="s">&lt;div wo-visible="$this.show" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
+	<code parser="s">&lt;div wo-visible="$this.isOn" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <p>So an <code>app.timer</code> element in html will render:</p>
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;h1>Welcome to wipeout&lt;/h1>
-&lt;div>
-    &lt;span>It supports templates&lt;/span>
-&lt;/div></code>
-</wipeout-docs.view-models.components.code-block>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;app.timer>&lt;/app.timer></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br/>
+<br/>
+<br/>

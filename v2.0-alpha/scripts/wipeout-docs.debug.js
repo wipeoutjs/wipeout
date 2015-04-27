@@ -1932,19 +1932,19 @@ compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.co
     return dynamicRender
 });
 
-compiler.registerClass("wipeoutDocs.viewModels.components.JsCodeBlock", "wipeoutDocs.viewModels.components.codeBlock", function () {
-    var jsCodeBlock = function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.jCodeBlock", "wipeoutDocs.viewModels.components.codeBlock", function () {
+    var jCodeBlock = function() {
         this._super.apply(this, arguments);
     };
     
-    jsCodeBlock.prototype.onCodeChanged = function(newVal) {  
+    jCodeBlock.prototype.onCodeChanged = function(newVal) {  
         new Function(newVal
             .replace(/\&lt;/g, "<")
             .replace(/\&amp;/g, "&")
             .replace(/\&gt;/g, ">"))();
     };
 
-    return jsCodeBlock;
+    return jCodeBlock;
 });
 
 compiler.registerClass("wipeoutDocs.viewModels.components.newTemplateCodeBlock", "wipeoutDocs.viewModels.components.templateCodeBlock", function() {
