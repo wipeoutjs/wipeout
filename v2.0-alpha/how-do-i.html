@@ -1282,6 +1282,83 @@ wo.viewModel("app.blinker")
 </wipeout-docs.view-models.components.code-block>
 </script>
 
+<script id="Articles.get-started-with-functions-and-events" type="text/template">
+<h1>Functions and events</h1>
+<p>Along with specialized functions like onInitialized and dispose, you can also add custom functions to a view model.</p>
+
+<wipeout-docs.view-models.components.j-code-block>
+	<code parser="s">// view model 1
+var timer = wo.viewModel("app.timer")
+    .templateId("/timer.html")
+		
+    // the onInitialized method is called when the view model is created and it's values are set, but before it is rendered
+    .onInitialized(function () {
+        this.show = false;
+
+        this.begin();
+    })
+	
+    // the dispose function is called when the view model is disposed of
+    .dispose(function () {
+        this.end();
+    })
+
+    .build();
+
+// move set functionality to it's own function and add it to the timer class
+timer.begin = function () {
+    if (!this.cancel) {
+        var _this = this;
+        this.cancel = setInterval(function () {
+            _this.show = !_this.show;
+        }, 1000);
+    }
+};
+
+// move clear functionality to it's own function and add it to the timer class
+timer.end = function () {
+    if (this.cancel) {
+        clearInterval(this.cancel);
+        this.cancel = null;
+    }
+};
+
+// create a function to turn blinking on and off
+timer.toggle = function () {
+    if (this.cancel) {
+        this.end();
+    } else {
+        this.begin();
+    }
+};
+		
+// view model 2
+wo.viewModel("app.blinker")
+    .templateId("/blinker.html")
+    .build();</code>
+</wipeout-docs.view-models.components.j-code-block>
+
+<p>At the URL /timer.html</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/timer.html">
+	<code parser="s">&lt;button wo-click="$this.toggle" wo-content="$this.cancel ? 'Stop' : 'Begin'">&lt;/button>
+&lt;app.blinker is-on="$parent.show">
+&lt;/app.blinker></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<p>And at the URL /blinker.html</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/blinker.html">
+	<code parser="s">&lt;div wo-visible="$this.isOn" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<p>So an <code>app.timer</code> element in html will render:</p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;app.timer>&lt;/app.timer></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br/>
+<br/>
+<br/>
+</script>
+
 <script id="Articles.get-started-with-hello-world" type="text/template">
 <h1>Hello World</h1>
 <p>Wipeout goes with the idea, "If I can create it, I can render it", so to create a basic wipeout app, you simply need to create a class, or in the case of javascript, a function</p>

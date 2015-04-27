@@ -1607,9 +1607,9 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("With busybody", "get-started-with-busybody"),
                 new articleLink("With Hello World", "get-started-with-hello-world"),  
                 new articleLink("With dynamic values", "get-started-with-dynamic-values"),    
-                new articleLink("With view models", "get-started-with-view-models"),           
-                new articleLink("With view bindings", "get-started-with-bindings"),            
-                new articleLink("With custom components", "get-started-with-custom-components"),
+                new articleLink("With View Models", "get-started-with-view-models"),           
+                new articleLink("With View Bindings", "get-started-with-bindings"),            
+                new articleLink("With Functions and Events", "get-started-with-functions-and-events"),
                 new articleLink("With lists", "get-started-with-lists"),
             ]
         }, {        
