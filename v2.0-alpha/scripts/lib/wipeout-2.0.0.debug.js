@@ -4563,7 +4563,7 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :	//TODO: this is non standard
+			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.").replace(/^\s*\$model\s*$/, "$this.model")) :	//TODO: this is non standard
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);

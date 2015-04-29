@@ -3,15 +3,15 @@
 <p>
 By default, all bindings are one way. This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified.
-    This can be remedied by using a two way binding. Two way bindings are suffixed with <code>-tw</code>.
+    This can be remedied by using a two way binding. Two way bindings use the <code>--tw</code> flag (TODOD link).
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: ko.observable('Hello wipeout!') }">
+        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model-tw="$parent.model.value">
+        &lt;wo.content-control model--tw="$parent.model.value">
             &lt;set-template>
-                Two way bindings: &lt;span data-bind="text: model">&lt;/span>
+                Two way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -19,12 +19,12 @@ By default, all bindings are one way. This means that the object where the prope
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-two-way-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-two-way-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>
         Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>.
-        Notice how the value is an observable in this case. Two way bindings can only be defined between two observable properties
+		Notice how the model is created using <a href="https://github.com/ShaneGH/busybody"><code>busybody.makeObservable</code></a> in this case. Two way bindings can only be defined between two observable objects. If this is not the case, wipeout will make a best attempt to bind the two properties.
 </p>
 <br/>
 <br/>

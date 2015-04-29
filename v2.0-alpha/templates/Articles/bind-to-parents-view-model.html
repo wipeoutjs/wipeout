@@ -1,7 +1,7 @@
 <h1>Bind to a property on the parents view model</h1>
 
 <p>
-You may wish to bind to someting 1 level up in the view model hierarchy
+You may wish to bind to someting 1 level up in the view model hierarchy. You can do this using the <code>$parent</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
@@ -9,7 +9,7 @@ You may wish to bind to someting 1 level up in the view model hierarchy
     &lt;set-template>
         &lt;wo.content-control value="$parent.value.innerValue">
             &lt;set-template>
-                Binding to a property on parent's view model: &lt;span data-bind="text: value">&lt;/span>
+                Binding to a property on parent's view model: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -18,7 +18,12 @@ You may wish to bind to someting 1 level up in the view model hierarchy
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-to-parents-view-model-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-to-parents-view-model-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
+
+
+<br/>
+<p>You can walk further up the chain of ancestors using the <code>$parents</code> keyword. <code>$parents</code> is an array, meaning <code>$parents[0] === $parent</code>, <code>$parents[1] === grand parent</code>, <code>$parents[2] === great grand parent</code>, etc...</p>
+
 <br/>
 <br/>

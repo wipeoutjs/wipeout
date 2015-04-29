@@ -1,0 +1,21 @@
+<h1>Setting an object from view model</h1>
+
+<p>
+	You may wish to set the property of a view model, but not bind it. In this case you can use the "no binding" binding. To us no binding you must use the <code>--nb</code> flag (TODOD link).
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'">
+        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    &lt;set-template>
+        &lt;wo.content-control model--nb="$parent.model.value">
+            &lt;set-template>
+                Two way bindings: &lt;span wo-content="$model">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-no-way-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 

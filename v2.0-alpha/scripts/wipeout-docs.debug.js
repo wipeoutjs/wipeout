@@ -1621,13 +1621,27 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Bind to a property on the parent's view model", "bind-to-parents-view-model"),
                 new articleLink("Set the model from the parent's model", "bind-to-parents-model"),
                 new articleLink("Cascading models", "cascading-models"),
-                new articleLink("Two way bindings", "bind-two-way"),
                 new articleLink("Bind to a global value", "bind-to-global"),
                 new articleLink("Set properties using XML elements", "bind-with-elements"),
-                new articleLink("Bind in javascript code", "bind-in-code"),
-                new articleLink("Find an ancestor to bind to", "bind-to-ancestor"),
-                new articleLink("Call a method on a view model", "call-a-method"),
-                new articleLink("Call a method on another object", "call-method-out-of-scope")
+                new articleLink("Find an ancestor to bind to", "bind-to-ancestor")
+        ]}, {        
+            header: new articleLink("Property flags", "property-flags"),
+            items: [
+		]}, {        
+            header: new articleLink("Binding Types", "binding-types"),
+            items: [
+                new articleLink("One way bindings", "bind-one-way"),
+                new articleLink("Two way bindings", "bind-two-way"),
+                new articleLink("One way to source bindings", "bind-one-way-to-source"),
+                new articleLink("Setter binding", "bind-no-way"),
+                new articleLink("Change default binding", "change-default-binding"),
+                new articleLink("Custom binding", "custom-binding"),
+		]}, {        
+            header: new articleLink("Calling view model methods", "call-view-model-method"),
+            items: [
+        ]}, {        
+            header: new articleLink("Parsing values from html", "parsing-values-from-html"),
+            items: [
         ]}, {        
             header: new articleLink("Set properties using XML elements", "set-properties-using-xml-elements"),
             items: [

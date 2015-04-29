@@ -1,9 +1,11 @@
-<h1>Bind to a static value</h1>
+<h1>One way bindings</h1>
 
 <p>
-The item you want the template to bind to can be set in the template.
+The default binding is one way. This means that the object where the propery 
+    is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. In most cases properties will bound one way by default, but occasionally (for instance if an explicit default binding is set for a property (TODOD link)) you may need to explicitly set the binding to one way using the <code>--ow</code> flag (TODOD link).
 </p>
 
+    
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-static-value-script-1'">
         <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;set-template>

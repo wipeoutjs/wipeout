@@ -1,50 +1,10 @@
 <h1>Binding or setting properties</h1>
 
 <p>Binding properties is the process of binding the value of a property on one model or view model to that of another model or view model.
-    If the "from" property is a <code>ko.observable</code> then all changes to it will reflect in the "to" property. If the "to" property 
-    is a <code>ko.observable</code> and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/how-do-i.html?article=bind-two-way'" />, then then all changes to it will reflect in the "from" property.
+    If the "from" object is a (TODOD: link) view model, <a href="https://github.com/ShaneGH/busybody"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
 </p>
 
 <h3>camelCasing</h3>
-<p>Html editors do not like upper case letters, and although wipeout templates are xml (not html) you will most likely be uing a html editor to create them. So, within wipeout,
-property names containing "<code>-</code>" will convert the property name to camel case on the view model. So, <code>my-property="true"</code> in the template will set <code>myProperty = true</code> on the view model.</p>
-
-
-<h3>Binding</h3>
-There are lots of ways to bind items and set properties within a template:
-
-<ul>
-    <li>
-        <wipeout-docs.rl text="'Bind to a static value'" href="'/wipeout/how-do-i.html?article=bind-to-static-value'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the view model'" href="'/wipeout/how-do-i.html?article=bind-in-scope'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the model'" href="'/wipeout/how-do-i.html?article=bind-to-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the parent\'s view model'" href="'/wipeout/how-do-i.html?article=bind-to-parents-view-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Set the model from the parent\'s model'" href="'/wipeout/how-do-i.html?article=bind-to-parents-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Cascading models'" href="'/wipeout/how-do-i.html?article=cascading-models'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Two way bindings'" href="'/wipeout/how-do-i.html?article=bind-two-way'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a global value'" href="'/wipeout/how-do-i.html?article=bind-to-global'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind in javascript code'" href="'/wipeout/how-do-i.html?article=bind-in-code'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Find an ancestor to bind to'" href="'/wipeout/how-do-i.html?article=bind-to-ancestor'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Call a method on another object'" href="'/wipeout/how-do-i.html?article=call-method-out-of-scope'" />
-    </li>
-</ul>
+<p>Because HTML is not case sensitive, it is not advisable to use upper case letter in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
+So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"&amp;gt;&amp;lt;/app.my-view-model&amp;gt;</code> will be read as <code>app.myViewModel</code> with the attribute <code>myAttribute="true"</code>.<br/>
+</p>

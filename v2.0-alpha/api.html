@@ -160,104 +160,126 @@ They will be appended to the prototype, effectively making them static. Put inst
 </p>
 </script>
 
-<script id="Articles.bind-in-code" type="text/template">
-<h1>Binding in code</h1>
-
-    <p>You can also bind values in javascript using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=bind&amp;isStatic=false'" text="'bind'" /> function.</p>
-
-    <wipeout-docs.view-models.components.code-block new-script-id="'bind-in-code-script-1'">
-        <code>var objectToBindTo = ko.observable("Hello wipeout!");
-var myView = new wo.view();
-myView.bind("model", objectToBindTo, false);
-
-// Will log: "Hello wipeout!"
-console.log(myView.model);
-            
-objectToBindTo("Goodbye wipeout!");
-            
-// Will log: "Goodbye wipeout!"
-console.log(myView.model);</code>
-    </wipeout-docs.view-models.components.code-block>
-</script>
-
 <script id="Articles.bind-in-scope" type="text/template">
 <h1>Binding to the current view model</h1>
 
 <p>
-You can bind properties of a view model to itself
+You can bind properties of a view model to itself using the <code>$this</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-in-scope-script-1'">
-        <code parser="s">&lt;wo.content-control my-value="{ value: 'Hello wipeout!' }" my-inner-value="myValue.value">
+        <code parser="s">&lt;wo.content-control my-value="{ value: 'Hello wipeout!' }" my-inner-value="$this.myValue.value">
     &lt;set-template>
-        Binding to current scope: &lt;span data-bind="text: myInnerValue">&lt;/span>
+        Binding to current scope: &lt;span wo-content="$this.myInnerValue">&lt;/span>
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-in-scope-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-in-scope-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     This particular example works because <code>myValue</code> was bound before <code>myInnerValue</code>. Therefore, <code>myInnerValue</code> could point to a property on <code>myValue</code>. 
-    This method is far more useful in binding to properties explicitly defined in the view model constructor.
+    This method is far more useful in binding to properties explicitly defined in the view model onInitialized method or constructor.
     
 </p>
+</script>
+
+<script id="Articles.bind-no-way" type="text/template">
+<h1>Setting an object from view model</h1>
+
+<p>
+	You may wish to set the property of a view model, but not bind it. In this case you can use the "no binding" binding. To us no binding you must use the <code>--nb</code> flag (TODOD link).
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'">
+        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    &lt;set-template>
+        &lt;wo.content-control model--nb="$parent.model.value">
+            &lt;set-template>
+                Two way bindings: &lt;span wo-content="$model">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-no-way-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.bind-one-way-to-source" type="text/template">
+<h1>One way to source</h1>
+
+<p>
+By default, all bindings are one way from the parent (source) to the child (destination). This means that the object where the propery 
+    is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. Sometimes you may wish to reverse this behavior, using the <code>oneWayToSource</code> binding.
+    One way to source bindings use the <code>--owts</code> flag (TODOD link).
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-owts-script-1'">
+        <code parser="s">&lt;wo.content-control>
+    &lt;set-template>
+        One way to source bindings: &lt;span wo-content="$this.model">&lt;/span>
+        &lt;br />
+        &lt;wo.content-control input-value--owts="$parent.model">
+            &lt;set-template>
+                &lt;input type="text" wo-value="$this.inputValue" />
+            &lt;/set-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-owts-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+
+    <p>
+		Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>, but not view versa. To bind twa ways, you mus use a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'" text="'two way'"></wipeout-docs.rl> binding.
+</p>
+<br/>
+<br/>
+</script>
+
+<script id="Articles.bind-one-way" type="text/template">
+<h1>One way bindings</h1>
+
+<p>
+The default binding is one way. This means that the object where the propery 
+    is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. In most cases properties will bound one way by default, but occasionally (for instance if an explicit default binding is set for a property (TODOD link)) you may need to explicitly set the binding to one way using the <code>--ow</code> flag (TODOD link).
+</p>
+
+    
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-static-value-script-1'">
+        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
+        Binding to static value: &lt;span wo-content="$this.model.value">&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-to-static-value-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<br/>
 </script>
 
 <script id="Articles.bind-or-set-propertes" type="text/template">
 <h1>Binding or setting properties</h1>
 
 <p>Binding properties is the process of binding the value of a property on one model or view model to that of another model or view model.
-    If the "from" property is a <code>ko.observable</code> then all changes to it will reflect in the "to" property. If the "to" property 
-    is a <code>ko.observable</code> and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/how-do-i.html?article=bind-two-way'" />, then then all changes to it will reflect in the "from" property.
+    If the "from" object is a (TODOD: link) view model, <a href="https://github.com/ShaneGH/busybody"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
 </p>
 
 <h3>camelCasing</h3>
-<p>Html editors do not like upper case letters, and although wipeout templates are xml (not html) you will most likely be uing a html editor to create them. So, within wipeout,
-property names containing "<code>-</code>" will convert the property name to camel case on the view model. So, <code>my-property="true"</code> in the template will set <code>myProperty = true</code> on the view model.</p>
-
-
-<h3>Binding</h3>
-There are lots of ways to bind items and set properties within a template:
-
-<ul>
-    <li>
-        <wipeout-docs.rl text="'Bind to a static value'" href="'/wipeout/how-do-i.html?article=bind-to-static-value'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the view model'" href="'/wipeout/how-do-i.html?article=bind-in-scope'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the model'" href="'/wipeout/how-do-i.html?article=bind-to-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a property on the parent\'s view model'" href="'/wipeout/how-do-i.html?article=bind-to-parents-view-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Set the model from the parent\'s model'" href="'/wipeout/how-do-i.html?article=bind-to-parents-model'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Cascading models'" href="'/wipeout/how-do-i.html?article=cascading-models'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Two way bindings'" href="'/wipeout/how-do-i.html?article=bind-two-way'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind to a global value'" href="'/wipeout/how-do-i.html?article=bind-to-global'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Bind in javascript code'" href="'/wipeout/how-do-i.html?article=bind-in-code'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Find an ancestor to bind to'" href="'/wipeout/how-do-i.html?article=bind-to-ancestor'" />
-    </li>
-    <li>
-        <wipeout-docs.rl text="'Call a method on another object'" href="'/wipeout/how-do-i.html?article=call-method-out-of-scope'" />
-    </li>
-</ul>
-
+<p>Because HTML is not case sensitive, it is not advisable to use upper case letter in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
+So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"&amp;gt;&amp;lt;/app.my-view-model&amp;gt;</code> will be read as <code>app.myViewModel</code> with the attribute <code>myAttribute="true"</code>.<br/>
+</p>
 </script>
 
 <script id="Articles.bind-to-ancestor" type="text/template">
@@ -265,27 +287,26 @@ There are lots of ways to bind items and set properties within a template:
 
     <p>There is a helper function which can find ancestors based on their proerties, type, depth or any other custom attribute you need.</p>
 
-    <wipeout-docs.view-models.components.js-js-code-block new-script-id="'bind-to-global-script-1'">
-        <code>// create a custom class to distinguish type
-window.myType = wo.contentControl.extend(function myType() {
-    this._super();
-});</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
+wo.viewModel("app.myType", wo.contentControl)
+    .build();</code>
+    </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
-        <code parser="s">&lt;myType model="'Hello wipeout!'">
+        <code parser="s">&lt;app.my-type model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control model="$context.find(myType).model">
+        &lt;wo.content-control model="$context.find(app.myType).model">
             &lt;set-template>
-                Binding to a specific ancestor: &lt;span data-bind="text: model">&lt;/span>
+                Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
-&lt;/myType></code>
+&lt;/app.my-type></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-to-ancestor-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-to-ancestor-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
@@ -297,22 +318,22 @@ window.myType = wo.contentControl.extend(function myType() {
 
     <p>The binding scope also includes the window object, so you can bind to global variables</p>
 
-    <wipeout-docs.view-models.components.js-js-code-block new-script-id="'bind-to-global-script-1'">
-        <code>window.exampleValue = {
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">window.exampleValue = {
     innerValue: "Hello wipeout!"
 };</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
+    </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-global-script-1'">
         <code parser="s">&lt;wo.content-control model="exampleValue.innerValue">
     &lt;set-template>
-        Binding to global: &lt;span data-bind="text: model">&lt;/span>
+        Binding to global: &lt;span wo-content="$model">&lt;/span>
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-to-global-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-to-global-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
@@ -322,7 +343,7 @@ window.myType = wo.contentControl.extend(function myType() {
 <h1>Binding to the current model</h1>
 
 <p>
-Unless you are building generic components, most bindnigs will point to the model. Binding to the model is as follows
+Unless you are building generic components, most bindings will point to the model. Binding to the model can be done with the <code>$model</code> keyword.
 </p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-model-script-1'">
@@ -338,14 +359,16 @@ Renders:
 	<code parser="s">&lt;wo.view template-id="'bind-to-model-script-1'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
+<code>$model</code> is shorthand for <code>$this.model</code>
+<br/>
 <br/>
 </script>
 
 <script id="Articles.bind-to-parents-model" type="text/template">
-<h1>Set the model from the parents model</h1>
+<h1>Set the model from the parent's model</h1>
 
 <p>
-In order to keep clean contextual boundaries, the model property of a child view model can be bound to a property of its parent's model
+In order to keep clean contextual boundaries, the model property of a child view model can be bound to a property of its parent's model using the keywords <code>$parent.model</code>.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
@@ -353,7 +376,7 @@ In order to keep clean contextual boundaries, the model property of a child view
     &lt;set-template>
         &lt;wo.content-control model="$parent.model.value">
             &lt;set-template>
-                Binding to a property on parent's model: &lt;span data-bind="text: model">&lt;/span>
+                Binding to a property on parent's model: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -362,11 +385,11 @@ In order to keep clean contextual boundaries, the model property of a child view
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-to-parents-model-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-to-parents-model-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     In this example there is a parent view model which has a child view model. 
-    The model of the child is bound to a property of the model of the parent. <a href="http://knockoutjs.com/documentation/binding-context.html">$parent</a> points to the scope of the view model 1 level up
+    The model of the child is bound to a property of the model of the parent. <code>$parent</code> points to the scope of the view model 1 level up
     
 </p>
 <br/>
@@ -377,7 +400,7 @@ In order to keep clean contextual boundaries, the model property of a child view
 <h1>Bind to a property on the parents view model</h1>
 
 <p>
-You may wish to bind to someting 1 level up in the view model hierarchy
+You may wish to bind to someting 1 level up in the view model hierarchy. You can do this using the <code>$parent</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
@@ -385,7 +408,7 @@ You may wish to bind to someting 1 level up in the view model hierarchy
     &lt;set-template>
         &lt;wo.content-control value="$parent.value.innerValue">
             &lt;set-template>
-                Binding to a property on parent's view model: &lt;span data-bind="text: value">&lt;/span>
+                Binding to a property on parent's view model: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -394,8 +417,13 @@ You may wish to bind to someting 1 level up in the view model hierarchy
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-to-parents-view-model-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-to-parents-view-model-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
+
+
+<br/>
+<p>You can walk further up the chain of ancestors using the <code>$parents</code> keyword. <code>$parents</code> is an array, meaning <code>$parents[0] === $parent</code>, <code>$parents[1] === grand parent</code>, <code>$parents[2] === great grand parent</code>, etc...</p>
+
 <br/>
 <br/>
 </script>
@@ -428,7 +456,7 @@ The item you want the template to bind to can be set in the template.
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-static-value-script-1'">
         <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        Binding to static value: &lt;span data-bind="text: model().value">&lt;/span>
+        Binding to static value: &lt;span wo-content="$this.model.value">&lt;/span>
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -447,15 +475,15 @@ The item you want the template to bind to can be set in the template.
 <p>
 By default, all bindings are one way. This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified.
-    This can be remedied by using a two way binding. Two way bindings are suffixed with <code>-tw</code>.
+    This can be remedied by using a two way binding. Two way bindings use the <code>--tw</code> flag (TODOD link).
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: ko.observable('Hello wipeout!') }">
+        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model-tw="$parent.model.value">
+        &lt;wo.content-control model--tw="$parent.model.value">
             &lt;set-template>
-                Two way bindings: &lt;span data-bind="text: model">&lt;/span>
+                Two way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -463,12 +491,12 @@ By default, all bindings are one way. This means that the object where the prope
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-two-way-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'bind-two-way-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>
         Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>.
-        Notice how the value is an observable in this case. Two way bindings can only be defined between two observable properties
+		Notice how the model is created using <a href="https://github.com/ShaneGH/busybody"><code>busybody.makeObservable</code></a> in this case. Two way bindings can only be defined between two observable objects. If this is not the case, wipeout will make a best attempt to bind the two properties.
 </p>
 <br/>
 <br/>
@@ -501,45 +529,15 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 </script>
 
-<script id="Articles.call-a-method" type="text/template">
-<h1>Call a method</h1>
-
-    <p>Dom events are handled by standard knockout <a href="http://knockoutjs.com/documentation/introduction.html">event bindings</a>. The context of the event handler will always be the current view model, even if it resides on another object</p>
-
-    <wipeout-docs.view-models.components.js-js-code-block>
-        <code>
-window.myType = wo.contentControl.extend(function myType() {
-    this._super();
-            
-    this.name = "My View Model";
-});
-        
-myType.prototype.eventHandler1 = function() {
-    alert(this.name);
-};
-        
-window.aStaticObject = {
-    name: "My Static Object",
-    eventHandler2: function() {
-        alert(this.name);
-    }
-};</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'call-a-method-script-1'">
-        <code parser="s">&lt;my-type>
-    &lt;set-template>
-        &lt;button data-bind="click: eventHandler1">Test1&lt;/button>
-        &lt;button data-bind="click: aStaticObject.eventHandler2">Test2&lt;/button>
-    &lt;/set-template>
-&lt;/my-type></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
-
-    
-    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'call-a-method-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
-<br/>
-<br/>
+<script id="Articles.binding-types" type="text/template">
+<h1>Binding types</h1>
+<p>There are many ways of binding properties. By default properties are bound one way, but properties can also be bound
+<ul>
+	<li>Two ways (TODOD link)</li>
+	<li>One way to source (TODOD link)</li>
+	<li>Not bound, only set (TODOD link)</li>
+</ul>
+</p>
 </script>
 
 <script id="Articles.call-a-view-model-method" type="text/template">
@@ -567,50 +565,15 @@ the expected args (such as the event args) passed in by knockout.
 </wipeout-docs.view-models.components.code-block>
 </script>
 
-<script id="Articles.call-method-out-of-scope" type="text/template">
-<h1>Call a method of an ancestor</h1>
+<script id="Articles.call-view-model-method" type="text/template">
 
-    <p>Using knockout event bindings always sets the context of your functions to the current scope. However, when using ancestors function, it is 
-    generally more useful to have ancestor obect as the scope. The $call API will do this</p>
-
-    <wipeout-docs.view-models.components.js-js-code-block>
-        <code>// create a custom class to distinguish type
-window.myType = wo.contentControl.extend(function myType() {
-    this._super();
-            
-    this.example = "Call the method of an ancestor: ";
-});
-        
-myType.prototype.click = function(text) {
-    alert(this.example + text);
-};</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'call-method-out-of-scope-script-1'">
-        <code parser="s">&lt;myType model="'Hello wipeout!'">
-    &lt;set-template>
-        &lt;wo.content-control>
-            &lt;set-template>
-                &lt;button data-bind="click: $call(myType).dot('click').args('Hello wipeout!')">Test&lt;/button>
-            &lt;/set-template>
-        &lt;/wo.content-control>
-    &lt;/set-template>
-&lt;/myType></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
-
-    
-    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'call-method-out-of-scope-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
-There is <code>$call</code>, documented  <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=call-a-view-model-method'" text="'here'" />.
-<br/>
-<br/>
 </script>
 
 <script id="Articles.cascading-models" type="text/template">
 <h1>Cascading models</h1>
 
 <p>
-If the model property of a view model is not explicitly set, it recieves the mode of its parent.
+If the model property of a view model is not explicitly set, it recieves the model of its parent.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'cascading-models-script-1'">
@@ -618,7 +581,7 @@ If the model property of a view model is not explicitly set, it recieves the mod
     &lt;set-template>
         &lt;wo.content-control>
             &lt;set-template>
-                Binding to a property on a cascaded model: &lt;span data-bind="text: model().value">&lt;/span>
+                Binding to a property on a cascaded model: &lt;span wo-content="$model.value">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -627,10 +590,15 @@ If the model property of a view model is not explicitly set, it recieves the mod
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'cascading-models-script-1'" /></code>
+        <code parser="s">&lt;wo.view template-id="'cascading-models-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
+</script>
+
+<script id="Articles.change-default-binding" type="text/template">
+<h1>Changing the default binding</h1>
+TODOD this
 </script>
 
 <script id="Articles.control-the-view-model-lifecycle" type="text/template">
@@ -700,6 +668,11 @@ If the model property of a view model is not explicitly set, it recieves the mod
         </tbody>
 </table>
 </p>
+</script>
+
+<script id="Articles.custom-binding" type="text/template">
+<h1>Writing a custom binding</h1>
+TODOD this
 </script>
 
 <script id="Articles.custom-find-filters" type="text/template">
@@ -1961,6 +1934,10 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <br/>
 </script>
 
+<script id="Articles.parsing-values-from-html" type="text/template">
+
+</script>
+
 <script id="Articles.profiling" type="text/template">
 <h1>Profiling</h1>
 
@@ -1975,6 +1952,22 @@ console.log(currentAccount.canWithdrawMoney());</code>
     <li>Turn off proiling by calling <code>wipeout.profile.profile(false)</code>.</li>
 </ul>
 </p>
+</script>
+
+<script id="Articles.property-flags" type="text/template">
+<h1>Property flags</h1>
+
+<p>Sometimes you might like to say something about the property within the property itself. Examples of this are:</p>
+<ol>
+	<li>(TODOD, link) Defining how two properties will be bound (one way, two way etc...)</li>
+	<li>(TODOD, link) Defining how the string value in the property will be parsed</li>
+</ol>
+
+<p>In order to achieve this you can use property flags. Property flags are a method of splitting a property name into two parts. The first part is the property name, the second is a list of flags.</p>
+<p>The seperator for property flags is "<code>--</code>" and each subsequent flag is seperated by a "<code>-</code>".</p>
+
+<p>For instance the model property setting in the view model: <code>&amp;lt;wo.view model--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
+
 </script>
 
 <script id="Articles.referencing-items-in-a-template" type="text/template">
