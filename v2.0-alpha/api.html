@@ -1427,18 +1427,34 @@ wo.viewModel("app.blinker")
 <script id="Articles.get-started-with-lists" type="text/template">
 <h1>Using lists of items</h1>
 
-    <p>Lists of items are at the core of all javascript frameworks, and wipeout is no different. Within wipeout, 
-        simple js objects cannot be rendered, and so need to be converted to wo.view objects first. You can do this with an
-        <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" />
-    </p>
+<p>Lists of items are at the core of all javascript frameworks, and wipeout is no different. For simple objects you can simply render any array to render the sum of it's contents.</p>
 
-    <wipeout-docs.view-models.components.code-block>
-        <code parser="s">&lt;wo.items-control items="[{itemText: 'Item 1'}, {itemText: 'Item 2'}]">
-    &lt;itemTemplate>
-        &lt;div data-bind="text: model().itemText">&lt;/div>
-    &lt;/itemTemplate>
-&lt;/wo.items-control></code>
-    </wipeout-docs.view-models.components.code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="gettingStartedWithLists1">
+	<code parser="s">&lt;div wo-render="[new Date(), ' Item 2 ', 3]">&lt;/div></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+Will render
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view template-id--s="gettingStartedWithLists1">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+
+<p>Alternatively, you will more likely want to create a view model with a template for each item. You can do this using an 
+	<wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'">
+	</wipeout-docs.rl>
+</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="gettingStartedWithLists2">
+	<code parser="s">&lt;ul>
+    &lt;wo.items-control items="[{itemText: 'Item 1'}, {itemText: 'Item 2'}]">
+        &lt;item-template>
+            &lt;li wo-content="$model.itemText">&lt;/li>
+        &lt;/item-template>
+    &lt;/wo.items-control>
+&lt;/ul></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+Will render
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view template-id--s="gettingStartedWithLists2">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
 </script>
