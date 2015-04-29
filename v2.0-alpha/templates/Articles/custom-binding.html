@@ -1,2 +1,21 @@
 <h1>Writing a custom binding</h1>
-TODOD this
+
+You can write a custom binding which determines how properties are set. Simply add it to <code>wo.bindings</code>
+
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function (viewModel, property, renderContext) {
+    // The viewModel is the current view model, which owns the property to be set
+		
+    // The property is a wipeout viewModelPropertyValue. It contains functionality for 
+    // getting setting and watching properties. Full documentation is in the API 
+    // under wipeout.template.initialization.viewModelPropertyValue
+		
+    // renderContext is the current render context.
+
+    // the return value is either a function or an object with a dispose function
+    // which will undo anything done in the binding. This is important to prevent
+    // memory leaks. Anything done using the "property" does not need to be disposed
+    // of
+    return function dispose () { };
+};</code>
+</wipeout-docs.view-models.components.code-block> 

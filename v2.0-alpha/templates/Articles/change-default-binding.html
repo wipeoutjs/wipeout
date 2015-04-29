@@ -1,2 +1,22 @@
 <h1>Changing the default binding</h1>
-TODOD this
+<p>The default binding for a property can be changed when defining a view model.</p>
+<p>Say for instance, you wish the model of your view model to always bind two ways, you can use the following code:</p>
+
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.viewModel("myViewModel")
+    .binding("model", "tw")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>Now setting the model of <code>my-view-model</code> inside a template will always bind two ways.</p>
+
+<p>There are properties within wipeout which have default binding types as standard:</p>
+(TODOD link each property)  (TODOD document xml template)
+<ul>
+	<li>wo.contentControl.setTemplate expects an xml template difinition.</li>
+	<li>wo.if.trueTemplate expects an xml template difinition.</li>
+	<li>wo.if.falseTemplate expects an xml template difinition.</li>
+	<li>wo.itemsControl.itemTemplate expects an xml template difinition.</li>
+	<li>wo.view.shareParentScope expects either the string true or false.</li>
+	<li>wo.view.id expects a string.</li>
+</ul>

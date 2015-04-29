@@ -598,7 +598,27 @@ If the model property of a view model is not explicitly set, it recieves the mod
 
 <script id="Articles.change-default-binding" type="text/template">
 <h1>Changing the default binding</h1>
-TODOD this
+<p>The default binding for a property can be changed when defining a view model.</p>
+<p>Say for instance, you wish the model of your view model to always bind two ways, you can use the following code:</p>
+
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.viewModel("myViewModel")
+    .binding("model", "tw")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>Now setting the model of <code>my-view-model</code> inside a template will always bind two ways.</p>
+
+<p>There are properties within wipeout which have default binding types as standard:</p>
+(TODOD link each property)  (TODOD document xml template)
+<ul>
+	<li>wo.contentControl.setTemplate expects an xml template difinition.</li>
+	<li>wo.if.trueTemplate expects an xml template difinition.</li>
+	<li>wo.if.falseTemplate expects an xml template difinition.</li>
+	<li>wo.itemsControl.itemTemplate expects an xml template difinition.</li>
+	<li>wo.view.shareParentScope expects either the string true or false.</li>
+	<li>wo.view.id expects a string.</li>
+</ul>
 </script>
 
 <script id="Articles.control-the-view-model-lifecycle" type="text/template">
@@ -672,7 +692,26 @@ TODOD this
 
 <script id="Articles.custom-binding" type="text/template">
 <h1>Writing a custom binding</h1>
-TODOD this
+
+You can write a custom binding which determines how properties are set. Simply add it to <code>wo.bindings</code>
+
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function (viewModel, property, renderContext) {
+    // The viewModel is the current view model, which owns the property to be set
+		
+    // The property is a wipeout viewModelPropertyValue. It contains functionality for 
+    // getting setting and watching properties. Full documentation is in the API 
+    // under wipeout.template.initialization.viewModelPropertyValue
+		
+    // renderContext is the current render context.
+
+    // the return value is either a function or an object with a dispose function
+    // which will undo anything done in the binding. This is important to prevent
+    // memory leaks. Anything done using the "property" does not need to be disposed
+    // of
+    return function dispose () { };
+};</code>
+</wipeout-docs.view-models.components.code-block> 
 </script>
 
 <script id="Articles.custom-find-filters" type="text/template">
