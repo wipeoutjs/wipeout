@@ -33,6 +33,11 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("With Functions and Events", "get-started-with-functions-and-events"),
                 new articleLink("With lists", "get-started-with-lists"),
             ]
+        }, {
+            header: new articleLink("Define view models", "define-view-models"),
+            items: [
+                new articleLink("Add a default template", "add-a-default-template"),
+            ]
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
             items: [

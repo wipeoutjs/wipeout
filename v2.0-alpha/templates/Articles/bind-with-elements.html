@@ -6,11 +6,15 @@
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-with-elements-script-1'">
         <code parser="s">&lt;wo.content-control>
-    &lt;myJson constructor="json">
-            { "text": "Hello wipeout!" }
-    &lt;/myJson>
+    &lt;my-object-1>
+        &lt;js-object>
+            &lt;val parser="s">
+                Hello Wipeout!
+            &lt;/val>
+        &lt;/js-object>
+    &lt;/my-object-1>
     &lt;set-template>
-        Binding to element value: &lt;span data-bind="text: myJson.text">&lt;/span>
+        Binding to element value: &lt;span wo-content="$this.myObject1.val">&lt;/span>
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -19,6 +23,7 @@
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'bind-with-elements-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
-<p>There is more info on setting properties in this manner <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'" />.
+<p>This example, the <code>myObject1</code> property of the view model was set to <code>{val: "Hello Wipeout!"}</code>. The <code>parser="s"</code> part told the wipeout teplate engine that "Hello Wipeout!" should be interpreted as a string.</p>
+<p>There is more info on setting properties in this manner <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'"></wipeout-docs.rl>.(TODOD is this link valid)
     
 </p>

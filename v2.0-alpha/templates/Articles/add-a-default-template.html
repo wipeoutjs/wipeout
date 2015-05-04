@@ -1,0 +1,16 @@
+<h1>Add a default template</h1>
+<p>View models need templates to render. The <code>templateId</code> property can be set at any time during the lifecycle of the view model, and if you want the view model to have a default template you can set it here:</p>
+<p>The most basic view model definition looks like this:</p>
+<wipeout-docs.view-models.components.code-block>
+<code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .template("/my-template.html", true)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>
+    What this definition will do is:
+    <ol>
+        <li>Ensure that all viewmodels created using the myViewModel class will have the templateId <code>"/my-template.html"</code>. <code>"/my-template.html"</code> can be the id of a html element on the page, or the URL of the template html.</li>
+        <li>The second argument <code>true</code> tells wipeout to attempt to load the template from the URL immediately, if it doesn't exist in the DOM. If this is not set, the template will not be loaded until the first time a myViewModel element is rendered.</li>
+</ol>
+</p>

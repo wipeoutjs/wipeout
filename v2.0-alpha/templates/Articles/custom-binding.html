@@ -3,19 +3,142 @@
 You can write a custom binding which determines how properties are set. Simply add it to <code>wo.bindings</code>
 
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function (viewModel, property, renderContext) {
-    // The viewModel is the current view model, which owns the property to be set
-		
-    // The property is a wipeout viewModelPropertyValue. It contains functionality for 
-    // getting setting and watching properties. Full documentation is in the API 
-    // under wipeout.template.initialization.viewModelPropertyValue
-		
-    // renderContext is the current render context.
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 
-    // the return value is either a function or an object with a dispose function
-    // which will undo anything done in the binding. This is important to prevent
-    // memory leaks. Anything done using the "property" does not need to be disposed
-    // of
-    return function dispose () { };
+    // Use this function to set up the binding
 };</code>
 </wipeout-docs.view-models.components.code-block> 
+
+The <code>mybinding</code> function will be called when setting up a binding on a view model, for instance:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>Arguments</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>viewModel</td>
+			<td>The viewModel is the current view model, which owns the property to be set</td>
+		</tr>
+		<tr>
+			<td>property</td>
+			<td>The property is a wipeout viewModelPropertyValue. It contains functionality for getting setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wipeout.template.initialization.viewModelPropertyValue'" text--s="wipeout.template.initialization.viewModelPropertyValue"></wipeout-docs.rl></td>
+		</tr>
+		<tr>
+			<td>renderContext</td>
+			<td>renderContext is the current render context with $this, $parent etc...</td>
+		</tr>
+		<tr>
+			<td>Returns</td>
+			<td>The return value is either a function or an object with a dispose function which will undo anything done in the binding. This is important to prevent memory leaks. Any actions using the <code>property</code> argument do not need to be disposed of.</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Examples</h3>
+<ul>
+	<li><a href="#value">Get the template value (setter string) of the property</a></li>
+	<li><a href="#get">Get the value of the property</a></li>
+	<li><a href="#watch">Observe the value of the property</a></li>
+	<li><a href="#set">Set the value of the property</a></li>
+    <li><a href="#return">Dispose of the binding</a></li>
+</ul>
+<br/><h4 id="value">Get the template value (setter string) of the property</h4>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$parent.model"
+    var theValue = property.value();
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><h4 id="get">Get the value of the property</h4>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return the model property of the parent
+    var theValue = property.get(renderContext);
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><h4 id="watch">Observe the value of the property</h4>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$parent.model"
+    property.watch(renderContext, function (oldVal, newVal) {
+        // code for when the model value of the parent changes here
+    }, true);
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><h4 id="set">Set the value of the property</h4>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+	
+    // It is possible to set the property "$parent.model".
+    // It would not be possible to set something like "$parent.model ? $parent.model : null"
+    if (property.canSet()) {
+        // set the model of the parent to "Hello!"
+        property.set(renderContext, "Hello!");
+    }
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><h4 id="return">Dispose of the binding</h4>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+
+    // observe the model property of the view model. This will create a disposable
+    // which we want to dispose of when the binding is torn down
+    var disposable = viewModel.observe(property.name, function (...) { ... });
+
+    return function () {
+        disposable.dispose();
+    };
+
+    -- OR --
+
+    return disposable;
+};</code>
+</wipeout-docs.view-models.components.code-block>

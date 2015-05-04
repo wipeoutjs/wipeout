@@ -1,6 +1,6 @@
 <h1>One way to source</h1>
 
-<p>
+<p>(TODOD diagram)
 By default, all bindings are one way from the parent (source) to the child (destination). This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. Sometimes you may wish to reverse this behavior, using the <code>oneWayToSource</code> binding.
     One way to source bindings use the <code>--owts</code> flag (TODOD link).
@@ -25,7 +25,7 @@ By default, all bindings are one way from the parent (source) to the child (dest
     </wipeout-docs.view-models.components.usage-code-block> 
 
     <p>
-		Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>, but not view versa. To bind twa ways, you mus use a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-two-way'" text="'two way'"></wipeout-docs.rl> binding.
+		Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>, but not view versa. To bind twa ways, you must use a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-two-way'" text="'two way'"></wipeout-docs.rl> binding.
 </p>
 <br/>
 <br/>
