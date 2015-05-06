@@ -1,18 +1,19 @@
-<h1>Functions and events</h1>
-<p>You can add custom functions to a view model which can then be called by user actions such as a mouse click.</p>
+<h1>Computeds</h1>
+<p>Computeds are properties, the value of which is defined by the result of a function. If anything within the function changes the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// view model 1
 var person = wo.viewModel("app.person")
     .templateId("/person.html")
+    // this method initializes the view model
+    .onInitialized(function () {
+        // create a computed property "fullName" which is
+        // an amalgamation of the first name and last name
+        this.computed("fullName", function () {
+            return this.model.firstName + " " + this.model.lastName;
+        });
+    })
     .build();
-
-// add a function to the person which will display the name
-person.displayFullName = function () {
-    if (this.model) {
-        alert(this.model.firstName + " " + this.model.lastName);
-    }
-};
 		
 // view model 2
 wo.viewModel("app.name")
@@ -30,20 +31,21 @@ wo.viewModel("app.name")
 	<code parser="s">&lt;div>
     First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
     Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
-
-    &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
+    &lt;br />
+    Full name: &lt;span wo-content="$this.fullName">&lt;/span>
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <p>And at the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;input type="text" wo-value="$this.model" /></code>
+	<code parser="s">&lt;input type="text" wo-on-event="keyup" wo-value="$this.model" /></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <br />
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
+	<code parser="s">&lt;!-- in order to be observed, the model must be an observable -->
+&lt;app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>

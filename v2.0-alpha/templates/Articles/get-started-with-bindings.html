@@ -3,47 +3,33 @@
 
 <wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// view model 1
-var timer = wo.viewModel("app.timer")
-    .templateId("/timer.html")
-		
-    // the onInitialized method is called when the view model is created and it's values are set, but before it is rendered
-    .onInitialized(function () {
-        this.show = false;
-
-        // toggle show every second
-        var _this = this;
-        this.cancel = setInterval(function () {
-            _this.show = !_this.show;
-        }, 1000);
-    })
-	
-    // the dispose function is called when the view model is disposed of
-    .dispose(function () {
-        clearInterval(this.cancel);
-    })
+wo.viewModel("app.person")
+    .templateId("/person.html")
     .build();
 		
 // view model 2
-wo.viewModel("app.blinker")
-    .templateId("/blinker.html")
+wo.viewModel("app.name")
+    .templateId("/name.html")
     .build();</code>
 </wipeout-docs.view-models.components.j-code-block>
 
-<p>At the URL /timer.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/timer.html">
-	<code parser="s">&lt;span>Blinker:&lt;/span>
-&lt;app.blinker is-on="$parent.show">
-&lt;/app.blinker></code>
+<p>At the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
+	<code parser="s">&lt;div>
+    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
+    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+&lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>And at the URL /blinker.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/blinker.html">
-	<code parser="s">&lt;div wo-visible="$this.isOn" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
+<p>And at the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
+	<code parser="s">&lt;span wo-content="$this.model">&lt;/span></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>So an <code>&amp;lt;app.timer></code> element in html will render:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-	<code parser="s">&lt;app.timer>&lt;/app.timer></code>
+<br />
+<p>So the following element in html:</p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
+	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>

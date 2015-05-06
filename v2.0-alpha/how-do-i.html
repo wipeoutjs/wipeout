@@ -290,11 +290,11 @@ The default binding is one way. This means that the object where the propery
 <h1>Binding or setting properties</h1>
 
 <p>Binding properties is the process of binding the value of a property on one model or view model to that of another model or view model.
-    If the "from" object is a (TODOD: link) view model, <a href="https://github.com/ShaneGH/busybody"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
+    If the "from" object is a (TODOD: link) view model, <a href="https://github.com/ShaneGH/busybody" target="_blank"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
 </p>
 
 <h3>camelCasing</h3>
-<p>Because HTML is not case sensitive, it is not advisable to use upper case letter in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
+<p>Because HTML is not case sensitive, it is not advisable to use upper case letter in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase" target="_blank">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
 So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"&amp;gt;&amp;lt;/app.my-view-model&amp;gt;</code> will be read as <code>app.myViewModel</code> with the attribute <code>myAttribute="true"</code>.<br/>
 </p>
 </script>
@@ -513,7 +513,7 @@ By default, all bindings are one way. This means that the object where the prope
 
     <p>
         Now if the child content control modifies it's <code>model</code>, the resulting change will reflect in the parent's <code>model.value</code>.
-		Notice how the model is created using <a href="https://github.com/ShaneGH/busybody"><code>busybody.makeObservable</code></a> in this case. Two way bindings can only be defined between two observable objects. If this is not the case, wipeout will make a best attempt to bind the two properties.
+		Notice how the model is created using <a href="https://github.com/ShaneGH/busybody" target="_blank"><code>busybody.makeObservable</code></a> in this case. Two way bindings can only be defined between two observable objects. If this is not the case, wipeout will make a best attempt to bind the two properties.
 </p>
 <br/>
 <br/>
@@ -909,7 +909,7 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
     What this definition will do is:
     <ol>
         <li>Create a <code>window.myNamespace</code> object. If one exists already, do not overwrite it.</li>
-        <li>Create a <code>myViewModel</code> function. myViewModel will be the view model <a href="http://en.wikipedia.org/wiki/Class_(computer_programming)">class</a>. In order to implement the most basic view model functionality (templates, lifecycle management etc...) the view model will inherit from <code>wo.view</code> by default.</li>
+        <li>Create a <code>myViewModel</code> function. myViewModel will be the view model <a href="http://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank">class</a>. In order to implement the most basic view model functionality (templates, lifecycle management etc...) the view model will inherit from <code>wo.view</code> by default.</li>
         <li>Append the <code>myViewModel</code>  to <code>window.myNamespace</code>, (as <code>window.myNamespace.myViewModel</code>).</li>
 </ol>
 Always remember to <code>build(...)</code> view models after all definitioins.
@@ -1181,47 +1181,33 @@ theEvent.trigger("Hello wipeout!");
 
 <wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// view model 1
-var timer = wo.viewModel("app.timer")
-    .templateId("/timer.html")
-		
-    // the onInitialized method is called when the view model is created and it's values are set, but before it is rendered
-    .onInitialized(function () {
-        this.show = false;
-
-        // toggle show every second
-        var _this = this;
-        this.cancel = setInterval(function () {
-            _this.show = !_this.show;
-        }, 1000);
-    })
-	
-    // the dispose function is called when the view model is disposed of
-    .dispose(function () {
-        clearInterval(this.cancel);
-    })
+wo.viewModel("app.person")
+    .templateId("/person.html")
     .build();
 		
 // view model 2
-wo.viewModel("app.blinker")
-    .templateId("/blinker.html")
+wo.viewModel("app.name")
+    .templateId("/name.html")
     .build();</code>
 </wipeout-docs.view-models.components.j-code-block>
 
-<p>At the URL /timer.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/timer.html">
-	<code parser="s">&lt;span>Blinker:&lt;/span>
-&lt;app.blinker is-on="$parent.show">
-&lt;/app.blinker></code>
+<p>At the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
+	<code parser="s">&lt;div>
+    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
+    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+&lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>And at the URL /blinker.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/blinker.html">
-	<code parser="s">&lt;div wo-visible="$this.isOn" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
+<p>And at the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
+	<code parser="s">&lt;span wo-content="$this.model">&lt;/span></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>So an <code>&amp;lt;app.timer></code> element in html will render:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-	<code parser="s">&lt;app.timer>&lt;/app.timer></code>
+<br />
+<p>So the following element in html:</p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
+	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
@@ -1235,8 +1221,63 @@ wo.viewModel("app.blinker")
 	Busybody is a client binding library designed for wipeout. Busybody has some cool features like observing object properties, making observable arrays and computed properties
 </p>
 <p>
-	Check out the documentation for busybody <a href="https://github.com/ShaneGH/busybody">here</a>.
+	Check out the documentation for busybody <a href="https://github.com/ShaneGH/busybody" target="_blank">here</a>.
 </p>
+</script>
+
+<script id="Articles.get-started-with-computeds" type="text/template">
+<h1>Computeds</h1>
+<p>Computeds are properties, the value of which is defined by the result of a function. If anything within the function changes the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
+
+<wipeout-docs.view-models.components.j-code-block>
+	<code parser="s">// view model 1
+var person = wo.viewModel("app.person")
+    .templateId("/person.html")
+    // this method initializes the view model
+    .onInitialized(function () {
+        // create a computed property "fullName" which is
+        // an amalgamation of the first name and last name
+        this.computed("fullName", function () {
+            return this.model.firstName + " " + this.model.lastName;
+        });
+    })
+    .build();
+		
+// view model 2
+wo.viewModel("app.name")
+    // for this view model type we want
+    // any changes to the "model" property
+    // to reflect in the property it is bound to.
+    // "tw" stands for "two way"
+    .binding("model", "tw")
+    .templateId("/name.html")
+    .build();</code>
+</wipeout-docs.view-models.components.j-code-block>
+
+<p>At the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
+	<code parser="s">&lt;div>
+    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
+    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    &lt;br />
+    Full name: &lt;span wo-content="$this.fullName">&lt;/span>
+&lt;/div></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<p>And at the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
+	<code parser="s">&lt;input type="text" wo-on-event="keyup" wo-value="$this.model" /></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<br />
+<p>So the following element in html:</p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
+	<code parser="s">&lt;!-- in order to be observed, the model must be an observable -->
+&lt;app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/app.person></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br/>
+<br/>
+<br/>
 </script>
 
 <script id="Articles.get-started-with-custom-components" type="text/template">
@@ -1400,7 +1441,9 @@ wo.viewModel("app.blinker")
 	<code parser="s">function helloToTheWorld() {
 		
     this.howManyTimes = 1;
-		
+
+    // With this toString method, let's print "Hello wipeout"
+    // a set amount of times. (The default is 1)
     this.toString = function () {
         var output = [];
         for (var i = 0; i < this.howManyTimes; i++) {
@@ -1419,15 +1462,15 @@ wo.viewModel("app.blinker")
 </wipeout-docs.view-models.components.code-block>
 
 <p>This will ultimately render:
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!</code>
-</wipeout-docs.view-models.components.code-block>
+<div style="border: 1px solid #888; padding: 5px;">
+    Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!
+</div>
 </p>
-<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values set in the template (<code>how-many-times="3"</code>) are set.</p>
+<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values in the template (<code>how-many-times="3"</code>) are set.</p>
 
 <p>The full code for this example is as follows</p>
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;!DOCTYPE>(TODOD: is this correct)
+	<code parser="s">&lt;!DOCTYPE>
 &lt;html>
     &lt;head>
         &lt;title>Hello Wipeout&lt;/title>
@@ -1445,6 +1488,8 @@ wo.viewModel("app.blinker")
 		
         this.howManyTimes = 1;
 		
+        // With this toString method, let's print "Hello wipeout"
+        // a set amount of times. (The default is 1)
         this.toString = function () {
             var output = [];
             for (var i = 0; i < this.howManyTimes; i++) {
@@ -1462,75 +1507,51 @@ wo.viewModel("app.blinker")
 
 <script id="Articles.get-started-with-functions-and-events" type="text/template">
 <h1>Functions and events</h1>
-<p>Along with specialized functions like onInitialized and dispose, you can also add custom functions to a view model.</p>
+<p>You can add custom functions to a view model which can then be called by user actions such as a mouse click.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// view model 1
-var timer = wo.viewModel("app.timer")
-    .templateId("/timer.html")
-		
-    // the onInitialized method is called when the view model is created and it's values are set, but before it is rendered
-    .onInitialized(function () {
-        this.show = false;
-
-        this.begin();
-    })
-	
-    // the dispose function is called when the view model is disposed of
-    .dispose(function () {
-        this.end();
-    })
-
+var person = wo.viewModel("app.person")
+    .templateId("/person.html")
     .build();
 
-// move set functionality to it's own function and add it to the timer class
-timer.begin = function () {
-    if (!this.cancel) {
-        var _this = this;
-        this.cancel = setInterval(function () {
-            _this.show = !_this.show;
-        }, 1000);
-    }
-};
-
-// move clear functionality to it's own function and add it to the timer class
-timer.end = function () {
-    if (this.cancel) {
-        clearInterval(this.cancel);
-        this.cancel = null;
-    }
-};
-
-// create a function to turn blinking on and off
-timer.toggle = function () {
-    if (this.cancel) {
-        this.end();
-    } else {
-        this.begin();
+// add a function to the person which will display the name
+person.displayFullName = function () {
+    if (this.model) {
+        alert(this.model.firstName + " " + this.model.lastName);
     }
 };
 		
 // view model 2
-wo.viewModel("app.blinker")
-    .templateId("/blinker.html")
+wo.viewModel("app.name")
+    // for this view model type we want
+    // any changes to the "model" property
+    // to reflect in the property it is bound to.
+    // "tw" stands for "two way"
+    .binding("model", "tw")
+    .templateId("/name.html")
     .build();</code>
 </wipeout-docs.view-models.components.j-code-block>
 
-<p>At the URL /timer.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/timer.html">
-	<code parser="s">&lt;button wo-click="$this.toggle" wo-content="$this.cancel ? 'Stop' : 'Begin'">&lt;/button>
-&lt;app.blinker is-on="$parent.show">
-&lt;/app.blinker></code>
+<p>At the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
+	<code parser="s">&lt;div>
+    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
+    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+
+    &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
+&lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>And at the URL /blinker.html</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/blinker.html">
-	<code parser="s">&lt;div wo-visible="$this.isOn" style="width: 10px; height: 10px; background-color: red">&lt;/div></code>
+<p>And at the URL "/person.html"</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
+	<code parser="s">&lt;input type="text" wo-value="$this.model" /></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
-<p>So an <code>&amp;lt;app.timer></code> element in html will render:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-	<code parser="s">&lt;app.timer>&lt;/app.timer></code>
+<br />
+<p>So the following element in html:</p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
+	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
@@ -1574,7 +1595,7 @@ wo.viewModel("app.blinker")
 
 <p>The full code for this example is as follows</p>
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;!DOCTYPE>(TODOD: is this correct)
+	<code parser="s">&lt;!DOCTYPE>
 &lt;html>
     &lt;head>
         &lt;title>Hello Wipeout&lt;/title>
@@ -1639,11 +1660,11 @@ Will render
 <h1>Orienteer</h1>
 
 <p>
-	Orienteer is a very simple Object Oriented Programming (OOP) (TODOD: link) library which is included with wipeout.
+	Orienteer is a very simple <a href="http://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank">Object Oriented Programming (OOP)</a> library which is included with wipeout.
 </p>
 <p>
 If OOP isn't your thing, don't worry, it is used under the hood but is an optional method of creating wipeout view models.<br/>
-If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orienteer">here</a>.
+If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orienteer" target="_blank">here</a>.
 </p>
 </script>
 
@@ -1663,16 +1684,18 @@ wo.viewModel("app.innerViewModel")
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>At the URL /root-application.html</p>
+<p>At the URL "/root-application.html"</p>
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">&lt;h1>Welcome to wipeout&lt;/h1>
 &lt;div>
+    &lt;!-- as you can see the root-application
+            contains an inner-view-model -->
     &lt;app.inner-view-model>
     &lt;/app.inner-view-model>
 &lt;/div></code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>And at the URL /inner-view-model.html</p>
+<p>And at the URL "/inner-view-model.html"</p>
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">&lt;span>It supports templates&lt;/span></code>
 </wipeout-docs.view-models.components.code-block>
@@ -1690,7 +1713,7 @@ wo.viewModel("app.innerViewModel")
 <h1>Getting started</h1>
 
 <p>
-Getting started is really easy. It's javascript easy! Just download the latest verion of <a href="/wipeout/v2.0-alpha/download.html">wipeout</a> and add it to your page.</p>
+Getting started is really easy. It's javascript easy! Just download the latest verion of <a href="/wipeout/v2.0-alpha/download.html" target="_blank">wipeout</a> and add it to your page.</p>
 </script>
 
 <script id="Articles.global-overrides" type="text/template">
@@ -2459,7 +2482,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <script id="Articles.set-json-property" type="text/template">
 <h1>Set a javascript object from a JSON string</h1>
 
-<p>The json parser uses <code>JSON.parse(value)</code> sp may need to be <a href="http://en.wikipedia.org/wiki/Polyfill">polyfilled</a> for older browsers.</p>
+<p>The json parser uses <code>JSON.parse(value)</code> sp may need to be <a href="http://en.wikipedia.org/wiki/Polyfill" target="_blank">polyfilled</a> for older browsers.</p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-json-property-script-1'">
         <code parser="s">&lt;wo.content-control>

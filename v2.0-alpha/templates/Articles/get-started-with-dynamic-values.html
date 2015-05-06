@@ -5,7 +5,9 @@
 	<code parser="s">function helloToTheWorld() {
 		
     this.howManyTimes = 1;
-		
+
+    // With this toString method, let's print "Hello wipeout"
+    // a set amount of times. (The default is 1)
     this.toString = function () {
         var output = [];
         for (var i = 0; i < this.howManyTimes; i++) {
@@ -24,15 +26,15 @@
 </wipeout-docs.view-models.components.code-block>
 
 <p>This will ultimately render:
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!</code>
-</wipeout-docs.view-models.components.code-block>
+<div style="border: 1px solid #888; padding: 5px;">
+    Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!
+</div>
 </p>
-<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values set in the template (<code>how-many-times="3"</code>) are set.</p>
+<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values in the template (<code>how-many-times="3"</code>) are set.</p>
 
 <p>The full code for this example is as follows</p>
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;!DOCTYPE>(TODOD: is this correct)
+	<code parser="s">&lt;!DOCTYPE>
 &lt;html>
     &lt;head>
         &lt;title>Hello Wipeout&lt;/title>
@@ -50,6 +52,8 @@
 		
         this.howManyTimes = 1;
 		
+        // With this toString method, let's print "Hello wipeout"
+        // a set amount of times. (The default is 1)
         this.toString = function () {
             var output = [];
             for (var i = 0; i < this.howManyTimes; i++) {
