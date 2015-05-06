@@ -1,0 +1,48 @@
+<h1>Add a default value</h1>
+<p>You can add a default value to any viewModel using:</p>
+<ul>
+    <li>value -or-</li>
+    <li>dynamicValue</li>
+</ul>
+
+<h3>Using value</h3>
+<code>value</code> is used for primitive values. Primitive values are Strings, Numbers, Booleans, null and undefined.
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .value("myNumberProperty", 5)
+    .value("myStringProperty", "five")
+    .value("myBooleanProperty", true)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In this case, when a <code>myViewModel</code> is created, it will have default properties like this:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    myNumberProperty: 5,
+    myStringProperty: "five",
+    myBooleanProperty: true
+}</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>Using dynamicValue</h3>
+<p><code>dynamicValue</code> is used for non primitive values. Non primitive values are Objects. <code>dynamicValue</code> is slightly modre complex than <code>value</code>, as it must create a new instance of the object and property each time a new viewModel is created.
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .dynamicValue("myProperty", function () {
+        return {
+            innerValue: "hello"
+        };
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In this case, when a <code>myViewModel</code> is created, it will have default properties like this:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    myProperty: {
+        innerValue: "hello"
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />

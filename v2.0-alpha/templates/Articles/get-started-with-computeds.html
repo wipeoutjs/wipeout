@@ -1,11 +1,11 @@
 <h1>Computeds</h1>
-<p>Computeds are properties, the value of which is defined by the result of a function. If anything within the function changes the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
+<p>Computeds are properties whose values are defined by the result of a function. If anything within the function changes, the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-var person = wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
-    // this method initializes the view model
+    // this method initializes the viewModel
     .onInitialized(function () {
         // create a computed property "fullName" which is
         // an amalgamation of the first name and last name
@@ -15,9 +15,9 @@ var person = wo.viewModel("app.person")
     })
     .build();
 		
-// view model 2
-wo.viewModel("app.name")
-    // for this view model type we want
+// viewModel 2
+wo.viewModel("demoApp.name")
+    // for this viewModel type we want
     // any changes to the "model" property
     // to reflect in the property it is bound to.
     // "tw" stands for "two way"
@@ -29,8 +29,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
     &lt;br />
     Full name: &lt;span wo-content="$this.fullName">&lt;/span>
 &lt;/div></code>
@@ -45,7 +45,7 @@ wo.viewModel("app.name")
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
 	<code parser="s">&lt;!-- in order to be observed, the model must be an observable -->
-&lt;app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/app.person></code>
+&lt;demo-app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>

@@ -48,9 +48,10 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         }
     };
     
-    HowDoIApplication.prototype.openArticle = function(article) { 
+    HowDoIApplication.prototype.openArticle = function(article) {
         $(".list-group-item-info", this.templateItems.leftNav).removeClass("list-group-item-info");
         
+        delete window.demoApp;
         this.contentTemplate = "Articles." + article;
         
         var current, groups = this.templateItems.articles.getItemViewModels();

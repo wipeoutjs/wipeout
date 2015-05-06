@@ -13,14 +13,14 @@
 <p>With <code>helloToTheWorld</code> in place it is just a case of adding a &lt;hello-to-the-world> definition to your html.</p>
 
 <h3>Creating the application</h3>
-<p>Within the html document, we now define our view model.</p>
+<p>Within the html document, we now define our viewModel.</p>
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">&lt;hello-to-the-world>
 &lt;/hello-to-the-world></code>
 </wipeout-docs.view-models.components.code-block>
 <p>What wipeout will do here is:
 	<ol>
-		<li>Scan the DOM for nodes which it can find on the <code>window</code> object. In this case <code>"hello-to-the-world"</code> will be camel cased (TODOD: link camel casing) to <code>"helloToTheWorld"</code> and because <code>window.helloToTheWorld</code> exists, this node is marked as a view model.</li>
+		<li>Scan the DOM for nodes which it can find on the <code>window</code> object. In this case <code>"hello-to-the-world"</code> will be camel cased (TODOD: link camel casing) to <code>"helloToTheWorld"</code> and because <code>window.helloToTheWorld</code> exists, this node is marked as a viewModel.</li>
 		<li>Create an instance of helloToTheWorld, i.e. <code>var theViewModel = new helloToTheWorld();</code> </li>
 		<li>Use the toString method to find the rendered content, i.e. <code>var html = theViewModel.toString();</code> </li>
 	</ol>
@@ -46,7 +46,7 @@
         &lt;!-- Required scripts -->
         &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
         
-        &lt;!-- The application view model -->
+        &lt;!-- The application viewModel -->
         &lt;script type="text/javascript">
             function helloToTheWorld() {
                 // for simple objects, wipeout likes to render the result of the "toString" method.

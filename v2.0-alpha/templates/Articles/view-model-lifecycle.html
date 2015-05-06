@@ -1,0 +1,42 @@
+<h1>View mode lifecycle</h1>
+<p>There are several events within the viewModel lifecycle which you may wish to execute code:</p>
+<ol>
+    <li><code>initialize</code>, will be run after the viewModel is initialized (i.e. it's values are set from the template) but before it is rendered.</li>
+    <li><code>rendered</code>, will be run after each time the templateId changes and the viewModel is rendered.</li>
+    <li><code>unRendered</code>, will be run after each time the templateId changes and the viewModel is unRendered. unRender will be called before render.</li>
+    <li><code>dispose</code>, will be run when the viewModel is disposed of,</li>
+    <li><code>initializeApplication</code> is the same as initialize, but is only called if the viewModel has no parent viewModel.</li>
+</ol>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+        
+    .initialize(function () {
+        // set up the viewModel
+        
+        // alter any values
+        
+        // define computeds
+    })
+        
+    .rendered(function () {
+        // alter anything on templateItems
+    })
+        
+    .unRendered(function () {
+        // dispose of anything which was created during "rendered"
+    })
+        
+    .dispose(function () {
+        // dispose of anything created during "initialize"
+    })
+        
+    .initializeApplication(function () {
+        // set up any application specific items or variables
+    })
+        
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />

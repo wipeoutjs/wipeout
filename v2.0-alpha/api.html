@@ -39,10 +39,10 @@
 
 <script id="Articles.add-a-default-template" type="text/template">
 <h1>Add a default template</h1>
-<p>View models need templates to render. The <code>templateId</code> property can be set at any time during the lifecycle of the view model, and if you want the view model to have a default template you can set it here:</p>
-<p>The most basic view model definition looks like this:</p>
+<p>viewModels need templates to render. The <code>templateId</code> property can be set at any time during the lifecycle of the viewModel, and if you want the viewModel to have a default template you can set it here:</p>
 <wipeout-docs.view-models.components.code-block>
 <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    // set the default template
     .template("/my-template.html", true)
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
@@ -54,6 +54,149 @@
         <li>The second argument <code>true</code> tells wipeout to attempt to load the template from the URL immediately, if it doesn't exist in the DOM. If this is not set, the template will not be loaded until the first time a myViewModel element is rendered.</li>
 </ol>
 </p>
+</script>
+
+<script id="Articles.add-a-default-value" type="text/template">
+<h1>Add a default value</h1>
+<p>You can add a default value to any viewModel using:</p>
+<ul>
+    <li>value -or-</li>
+    <li>dynamicValue</li>
+</ul>
+
+<h3>Using value</h3>
+<code>value</code> is used for primitive values. Primitive values are Strings, Numbers, Booleans, null and undefined.
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .value("myNumberProperty", 5)
+    .value("myStringProperty", "five")
+    .value("myBooleanProperty", true)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In this case, when a <code>myViewModel</code> is created, it will have default properties like this:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    myNumberProperty: 5,
+    myStringProperty: "five",
+    myBooleanProperty: true
+}</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>Using dynamicValue</h3>
+<p><code>dynamicValue</code> is used for non primitive values. Non primitive values are Objects. <code>dynamicValue</code> is slightly modre complex than <code>value</code>, as it must create a new instance of the object and property each time a new viewModel is created.
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .dynamicValue("myProperty", function () {
+        return {
+            innerValue: "hello"
+        };
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In this case, when a <code>myViewModel</code> is created, it will have default properties like this:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    myProperty: {
+        innerValue: "hello"
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />
+</script>
+
+<script id="Articles.add-a-function" type="text/template">
+<h1>Add a function</h1>
+<p>You can add custom functions to your viewModel by simply adding them to the result of the <code>build()</code> call.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var myViewModel = wo.viewModel("myNamespace.myViewModel")
+    // add a default property
+    .value("name", "myViewModel")
+    .build();
+   
+// will log:
+//  Function 1 was called for myViewModel     
+myViewModel.function1 = function () {
+    // you can access properties of the viewModel using the
+    // "this" keyword
+    console.log("Function 1 was called for " + this.name);
+};
+
+// will log:
+//  Function 1 was called for myViewModel
+//  Function 2 was called for myViewModel
+myViewModel.function2 = function () {
+    // you can call other methods on the viewModel using
+    // the "this" keyword
+    this.function1();
+    console.log("Function 2 was called for " + this.name);
+};</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />
+</script>
+
+<script id="Articles.add-a-parser" type="text/template">
+<h1>Add a property parser</h1>
+<p>When creating viewModels, it is sometimes useful to alter how a property is parsed from a template. For instance, you may have a property <code>my-property="$model.value"</code> within a template. This property will be bound to the <code>value</code> property of the <code>model</code>, however you may wish it to be set to the string: <code>"$model.value"</code>. For this you can use a default parser.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .parser("myProperty", "string")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>There are a variety of parsers you can use, or you can define your own (TODOD link)</p>
+<br />
+<br />
+<br />
+</script>
+
+<script id="Articles.add-a-property-binding" type="text/template">
+<h1>Add a property binding</h1>
+<p>When binding a viewModel property within a template, the default binding direction is one way (TODOD link). It may be necessary to change this direction to another binding type (two way (TODOD link), one way to source (TODOD, link) etc...) using the <code>binding</code> method.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .binding("myProperty", "tw")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>There are a variety of bindings you can use, or you can define your own (TODOD link)</p>
+<br />
+<br />
+<br />
+</script>
+
+<script id="Articles.add-a-static-function" type="text/template">
+<h1>Add a static function</h1>
+<p>You can add a static function to any viewModel using the <code>staticFunction</code> function. Static functions are functions which are appended to the viewModel class, so for instance if you have a viewModel named <code>myNameSpace.myViewModel</code> and you add a staic function <code>function myStaticFunction () { }</code>, then <code>myNameSpace.myViewModel.myStaticValue()</code> will be valid.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .staticFunction("myStaticValue", function () {
+    // do something
+})
+.build();</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />
+</script>
+
+<script id="Articles.add-a-static-value" type="text/template">
+<h1>Add a static value</h1>
+<p>You can add a static value to any viewModel using the <code>staticValue</code> function. Static values are values which are appended to the viewModel class, so for instance if you have a viewModel named <code>myNameSpace.myViewModel</code> and you add a staic value <code>myStaticValue = 4</code>, then <code>myNameSpace.myViewModel.myStaticValue === 4</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .staticValue("myStaticValue", 4)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>Unlike non static values, it does not matter if the value is a primitive or not.</p>
+<br />
+<br />
+<br />
 </script>
 
 <script id="Articles.add-property-parser" type="text/template">
@@ -109,7 +252,7 @@
     <p>The <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs'" text="'routed event args'" /> class contains three properties:
         <ol>
             <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=data&amp;isStatic=false'" text="'data'" />: the event args passed in when the event was triggered.</li>
-            <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=originator&amp;isStatic=false'" text="'originator'" />: The view model which triggered the event.</li>
+            <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=originator&amp;isStatic=false'" text="'originator'" />: The viewModel which triggered the event.</li>
             <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=handled&amp;isStatic=false'" text="'handled'" />: If set to true, the event will stop bubbling up the chain.</li>
 </ol>
 </p>
@@ -180,10 +323,10 @@ They will be appended to the prototype, effectively making them static. Put inst
 </script>
 
 <script id="Articles.bind-in-scope" type="text/template">
-<h1>Binding to the current view model</h1>
+<h1>Binding to the current viewModel</h1>
 
 <p>
-You can bind properties of a view model to itself using the <code>$this</code> keyword.
+You can bind properties of a viewModel to itself using the <code>$this</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-in-scope-script-1'">
@@ -200,16 +343,16 @@ You can bind properties of a view model to itself using the <code>$this</code> k
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     This particular example works because <code>myValue</code> was bound before <code>myInnerValue</code>. Therefore, <code>myInnerValue</code> could point to a property on <code>myValue</code>. 
-    This method is far more useful in binding to properties explicitly defined in the view model onInitialized method or constructor.
+    This method is far more useful in binding to properties explicitly defined in the viewModel onInitialized method or constructor.
     
 </p>
 </script>
 
 <script id="Articles.bind-no-way" type="text/template">
-<h1>Setting an object from view model</h1>
+<h1>Setting an object from viewModel</h1>
 
 <p>(TODOD diagram)
-	You may wish to set the property of a view model, but not bind it. In this case you can use the "no binding" binding. To us no binding you must use the <code>--nb</code> flag (TODOD link).
+	You may wish to set the property of a viewModel, but not bind it. In this case you can use the "no binding" binding. To us no binding you must use the <code>--nb</code> flag (TODOD link).
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'">
@@ -291,8 +434,8 @@ The default binding is one way. This means that the object where the propery
 <script id="Articles.bind-or-set-propertes" type="text/template">
 <h1>Binding or setting properties</h1>
 
-<p>Binding properties is the process of binding the value of a property on one model or view model to that of another model or view model.
-    If the "from" object is a (TODOD: link) view model, <a href="https://github.com/ShaneGH/busybody" target="_blank"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
+<p>Binding properties is the process of binding the value of a property on one model or viewModel to that of another model or viewModel.
+    If the "from" object is a (TODOD: link) viewModel, <a href="https://github.com/ShaneGH/busybody" target="_blank"><code>busybody.observable</code> or has been made observable with <code>busybody.makeObservable</code> </a> then all changes to it's property will reflect in the "to" property. If the "to" object is likewise and the binding is a <wipeout-docs.rl text="'two way binding'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'"></wipeout-docs.rl> , then then all changes to it will reflect in the "from" property.
 </p>
 
 <h3>camelCasing</h3>
@@ -308,11 +451,11 @@ So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"
 
     <wipeout-docs.view-models.components.j-code-block>
         <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
-wo.viewModel("app.myType", wo.contentControl)
+wo.viewModel("demoApp.myType", wo.contentControl)
     .build();</code>
     </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
-        <code parser="s">&lt;app.my-type model="'Hello wipeout!'">
+        <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
         &lt;wo.content-control model="$context.find(app.myType).model">
             &lt;set-template>
@@ -320,7 +463,7 @@ wo.viewModel("app.myType", wo.contentControl)
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
-&lt;/app.my-type></code>
+&lt;/demo-app.my-type></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -387,7 +530,7 @@ Renders:
 <h1>Set the model from the parent's model</h1>
 
 <p>
-In order to keep clean contextual boundaries, the model property of a child view model can be bound to a property of its parent's model using the keywords <code>$parent.model</code>.
+In order to keep clean contextual boundaries, the model property of a child viewModel can be bound to a property of its parent's model using the keywords <code>$parent.model</code>.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
@@ -407,8 +550,8 @@ In order to keep clean contextual boundaries, the model property of a child view
         <code parser="s">&lt;wo.view template-id="'bind-to-parents-model-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
-    In this example there is a parent view model which has a child view model. 
-    The model of the child is bound to a property of the model of the parent. <code>$parent</code> points to the scope of the view model 1 level up
+    In this example there is a parent viewModel which has a child viewModel. 
+    The model of the child is bound to a property of the model of the parent. <code>$parent</code> points to the scope of the viewModel 1 level up
     
 </p>
 <br/>
@@ -416,10 +559,10 @@ In order to keep clean contextual boundaries, the model property of a child view
 </script>
 
 <script id="Articles.bind-to-parents-view-model" type="text/template">
-<h1>Bind to a property on the parents view model</h1>
+<h1>Bind to a property on the parents viewModel</h1>
 
 <p>
-You may wish to bind to someting 1 level up in the view model hierarchy. You can do this using the <code>$parent</code> keyword.
+You may wish to bind to someting 1 level up in the viewModel hierarchy. You can do this using the <code>$parent</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
@@ -427,7 +570,7 @@ You may wish to bind to someting 1 level up in the view model hierarchy. You can
     &lt;set-template>
         &lt;wo.content-control value="$parent.value.innerValue">
             &lt;set-template>
-                Binding to a property on parent's view model: &lt;span wo-content="$this.value">&lt;/span>
+                Binding to a property on parent's viewModel: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -448,11 +591,11 @@ You may wish to bind to someting 1 level up in the view model hierarchy. You can
 </script>
 
 <script id="Articles.bind-to-specific-view-model" type="text/template">
-<h1>Bind to a specific view model</h1>
+<h1>Bind to a specific viewModel</h1>
 
-    <p>When binding view model properties and event handlers, either using <code>data-bind=""</code> for html elements or setting the properties
-    	on view models, the current scope is the view model itself. So for instance, the setter <code>property1="model().property1"</code>
-    	will bind the property1 to the property1 property of the model of the current view model. 
+    <p>When binding viewModel properties and event handlers, either using <code>data-bind=""</code> for html elements or setting the properties
+    	on viewModels, the current scope is the viewModel itself. So for instance, the setter <code>property1="model().property1"</code>
+    	will bind the property1 to the property1 property of the model of the current viewModel. 
     	</p>
     <p>Often, it is useful to bind to ancestors, especially when using nested anonymous templates (contentControls), and there are
     	four mechanisms for doing this:
@@ -547,7 +690,7 @@ By default, all bindings are one way. This means that the object where the prope
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'bind-with-elements-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
-<p>This example, the <code>myObject1</code> property of the view model was set to <code>{val: "Hello Wipeout!"}</code>. The <code>parser="s"</code> part told the wipeout teplate engine that "Hello Wipeout!" should be interpreted as a string.</p>
+<p>This example, the <code>myObject1</code> property of the viewModel was set to <code>{val: "Hello Wipeout!"}</code>. The <code>parser="s"</code> part told the wipeout teplate engine that "Hello Wipeout!" should be interpreted as a string.</p>
 <p>There is more info on setting properties in this manner <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'"></wipeout-docs.rl>.(TODOD is this link valid)
     
 </p>
@@ -565,14 +708,14 @@ By default, all bindings are one way. This means that the object where the prope
 </script>
 
 <script id="Articles.call-a-view-model-method" type="text/template">
-<h1>Call a view model method</h1>
+<h1>Call a viewModel method</h1>
 
 <p>
 Using knockout event bindings always sets the context of your functions to the current scope. However, when using ancestors function, 
 it is generally more useful to have ancestor obect as the scope. The $call API will do this.
 <br />
 You simply spell out what you want to do rather than using the regular js syntax. For example, in order to call the <code>submit</code>
-function on the <code>model</code> of the <code>parent</code> view model, passing in the value of <code>true</code> , you would use:
+function on the <code>model</code> of the <code>parent</code> viewModel, passing in the value of <code>true</code> , you would use:
 <br />
 <code>$call($parent).dot("model").dot("submit").args(true)</code>.
 <br />
@@ -597,7 +740,7 @@ the expected args (such as the event args) passed in by knockout.
 <h1>Cascading models</h1>
 
 <p>
-If the model property of a view model is not explicitly set, it recieves the model of its parent.
+If the model property of a viewModel is not explicitly set, it recieves the model of its parent.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'cascading-models-script-1'">
@@ -622,8 +765,8 @@ If the model property of a view model is not explicitly set, it recieves the mod
 
 <script id="Articles.change-default-binding" type="text/template">
 <h1>Changing the default binding</h1>
-<p>The default binding for a property can be changed when defining a view model.</p>
-<p>Say for instance, you wish the model of your view model to always bind two ways, you can use the following code:</p>
+<p>The default binding for a property can be changed when defining a viewModel.</p>
+<p>Say for instance, you wish the model of your viewModel to always bind two ways, you can use the following code:</p>
 
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">wo.viewModel("myViewModel")
@@ -646,7 +789,7 @@ If the model property of a view model is not explicitly set, it recieves the mod
 </script>
 
 <script id="Articles.control-the-view-model-lifecycle" type="text/template">
-<h1>Control the view model lifecycle</h1>
+<h1>Control the viewModel lifecycle</h1>
 
 <p>
     Viewmodels can be controlled by overriding methods at various stages in the view's lifecycle. You can override a method by simply replacing it on the prototype of the derived class. 
@@ -685,28 +828,28 @@ If the model property of a view model is not explicitly set, it recieves the mod
             </tr>
             <tr>
                 <td><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=onInitialized&amp;isStatic=false'" text="'onInitialized'" /></td>
-                <td>Occurs once, when all of the properties of the view model have been set as defined as in the template.</td>
-                <td>Should be used to interact with properties of the view model.</td>
+                <td>Occurs once, when all of the properties of the viewModel have been set as defined as in the template.</td>
+                <td>Should be used to interact with properties of the viewModel.</td>
             </tr>
             <tr>
                 <td><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=onRendered&amp;isStatic=false'" text="'onRendered'" /></td>
-                <td>Occurs each time the view model is rendered: after the initial render and after each template id change. Should be u</td>
+                <td>Occurs each time the viewModel is rendered: after the initial render and after each template id change. Should be u</td>
                 <td>Should be used interact with the 
                     <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=referencing-items-in-a-template'" text="'templateItems'" /> property and the DOM</td>
             </tr>
             <tr>
                 <td><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=onUnrendered&amp;isStatic=false'" text="'onUnrendered'" /></td>
-                <td>Occurs when the view model is removed from the dom. In normal circumstances, will only occur once, before the view model is disposed of.</td>
+                <td>Occurs when the viewModel is removed from the dom. In normal circumstances, will only occur once, before the viewModel is disposed of.</td>
                 <td>Should be used to dispose of anything DOM related</td>
             </tr>
             <tr>
                 <td><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=dispose&amp;isStatic=false'" text="'dispose'" /></td>
-                <td>Occurs when the view model is disposed of</td>
-                <td>Should be used to dispose of the view model.</td>
+                <td>Occurs when the viewModel is disposed of</td>
+                <td>Should be used to dispose of the viewModel.</td>
             </tr>
             <tr>
                 <td><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=onApplicationInitialized&amp;isStatic=false'" text="'onApplicationInitialized'" /></td>
-                <td>Occurs to first view model defined: the one defined in the wipeout binding. Occurs once per wipeout application after all rendering is complete.</td>
+                <td>Occurs to first viewModel defined: the one defined in the wipeout binding. Occurs once per wipeout application after all rendering is complete.</td>
                 <td>Should be used to interact with the wipeout applicaiton as a whole</td>
             </tr>
         </tbody>
@@ -726,9 +869,9 @@ You can write a custom binding which determines how properties are set. Simply a
 };</code>
 </wipeout-docs.view-models.components.code-block> 
 
-The <code>mybinding</code> function will be called when setting up a binding on a view model, for instance:
+The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
 <h3>Arguments</h3>
@@ -742,7 +885,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 	<tbody>
 		<tr>
 			<td>viewModel</td>
-			<td>The viewModel is the current view model, which owns the property to be set</td>
+			<td>The viewModel is the current viewModel, which owns the property to be set</td>
 		</tr>
 		<tr>
 			<td>property</td>
@@ -770,7 +913,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 <br/><h4 id="value">Get the template value (setter string) of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -786,7 +929,7 @@ Binding:
 <br/><h4 id="get">Get the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -802,7 +945,7 @@ Binding:
 <br/><h4 id="watch">Observe the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -820,7 +963,7 @@ Binding:
 <br/><h4 id="set">Set the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -840,13 +983,13 @@ Binding:
 <br/><h4 id="return">Dispose of the binding</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 
-    // observe the model property of the view model. This will create a disposable
+    // observe the model property of the viewModel. This will create a disposable
     // which we want to dispose of when the binding is torn down
     var disposable = viewModel.observe(property.name, function (...) { ... });
 
@@ -900,9 +1043,9 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 </script>
 
 <script id="Articles.define-view-models" type="text/template">
-<h1>Define a view model</h1>
-<p>View model definitions create view model classes and determine how a view model will act once it is created by wipeout.</p>
-<p>The most basic view model definition looks like this:</p>
+<h1>Define a viewModel</h1>
+<p>viewModel definitions create viewModel classes and determine how a viewModel will act once it is created by wipeout.</p>
+<p>The most basic viewModel definition looks like this:</p>
 <wipeout-docs.view-models.components.code-block>
 <code parser="s">wo.viewModel("myNamespace.myViewModel").build();</code>
 </wipeout-docs.view-models.components.code-block>
@@ -911,10 +1054,10 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
     What this definition will do is:
     <ol>
         <li>Create a <code>window.myNamespace</code> object. If one exists already, do not overwrite it.</li>
-        <li>Create a <code>myViewModel</code> function. myViewModel will be the view model <a href="http://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank">class</a>. In order to implement the most basic view model functionality (templates, lifecycle management etc...) the view model will inherit from <code>wo.view</code> by default.</li>
+        <li>Create a <code>myViewModel</code> function. <code>myViewModel</code> will be the viewModel <a href="http://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank">class</a>. In order to implement the most basic viewModel functionality (templates, lifecycle management etc...) the viewModel will inherit from <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'"></wipeout-docs.rl> by default.</li>
         <li>Append the <code>myViewModel</code>  to <code>window.myNamespace</code>, (as <code>window.myNamespace.myViewModel</code>).</li>
 </ol>
-Always remember to <code>build(...)</code> view models after all definitioins.
+Always remember to <code>build(...)</code> viewModels after all definitions.
 </p>
 </script>
 
@@ -924,7 +1067,7 @@ Always remember to <code>build(...)</code> view models after all definitioins.
 <p>MVVM architecture is generally an event based architecture. When an observed value changes, it triggers an event which will change the values of the properties observing it.
     These changes might, in turn, trigger other events and so on. With so many events and event handlers, it is important to keep track of and dispose of event subscriptions in the correct manner.
 </p>
-<p>Wipeout view models expose tools to track the subscriptions belonging to the view model.
+<p>Wipeout viewModels expose tools to track the subscriptions belonging to the viewModel.
 <ul>
     <li><wipeout-docs.rl href="'/wipeout/how-do-i.html?article=disposing-using-a-callback'" text="'Disposing using a callback'" /></li>
     <li><wipeout-docs.rl href="'/wipeout/how-do-i.html?article=disposing-using-a-disposable-object'" text="'Disposing using a disposable object'" /></li>
@@ -937,7 +1080,7 @@ Always remember to <code>build(...)</code> view models after all definitioins.
 <h1>Disposing using a callback</h1>
 
 <p>The method <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.visual&amp;functionName=registerDisposeCallback&amp;isStatic=false'" text="'registerDisposeCallback'" />
-    is used to register a callback which will be invoked when the view model itself is disposed of.</p>
+    is used to register a callback which will be invoked when the viewModel itself is disposed of.</p>
 
 <wipeout-docs.view-models.components.code-block>
     <code>var myViewModel = wo.view.extend({
@@ -952,7 +1095,7 @@ Always remember to <code>build(...)</code> view models after all definitioins.
                 // do something
             });
         
-            // ensure this event subscription is disposed of when this view model is disposed of
+            // ensure this event subscription is disposed of when this viewModel is disposed of
             this.registerDisposeCallback(function() {
                 eventRegistration.dispose();
             });
@@ -1018,15 +1161,15 @@ theEvent.trigger("Hello wipeout!");
 </script>
 
 <script id="Articles.find-a-view-model" type="text/template">
-<h1>Find a View Model</h1>
+<h1>Find a viewModel</h1>
 
-    <p>You can find a view model with the <code>$find</code> api. The find api accepts many search term types which are customisable. For each find type you can
+    <p>You can find a viewModel with the <code>$find</code> api. The find api accepts many search term types which are customisable. For each find type you can
     	either it's full name or its alias.
 </p>
 
-<h2>Search for a view model type</h2>
+<h2>Search for a viewModel type</h2>
 
-<p>You can select an ancestor view model by passing a view model type into the find block.</p>
+<p>You can select an ancestor viewModel by passing a viewModel type into the find block.</p>
 
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
@@ -1085,7 +1228,7 @@ theEvent.trigger("Hello wipeout!");
 		<tr>
 			<td>$instanceof</td>
 			<td>$i</td>
-			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a view model type into $find</td>
+			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a viewModel type into $find</td>
 		</tr>
 		<tr>
 			<td>$type</td>
@@ -1100,19 +1243,19 @@ theEvent.trigger("Hello wipeout!");
 		<tr>
 			<td>$number</td>
 			<td>$n</td>
-			<td>Describes when to stop when a view model is found. For example, if <code>$n === 0</code>, return the first match.
+			<td>Describes when to stop when a viewModel is found. For example, if <code>$n === 0</code>, return the first match.
 				If <code>$n === 1</code>, return the second match.</td>
 		</tr>
 		<tr>
 			<td>$model</td>
 			<td>$m</td>
-			<td>If set to true, signifies that we are looking for models, not view models.</td>
+			<td>If set to true, signifies that we are looking for models, not viewModels.</td>
 		</tr>
 		<tr>
 			<td>anything else</td>
 			<td>none</td>
 			<td>Anything on the search object which is not prefixed with a $ will be treated as a property search. For instance
-			using <code>{ myProperty: "hello"}</code> will return the first view model where <code>myProperty === hello</code> .</td>
+			using <code>{ myProperty: "hello"}</code> will return the first viewModel where <code>myProperty === hello</code> .</td>
 		</tr>
 	</tbody>
 </table>
@@ -1182,13 +1325,13 @@ theEvent.trigger("Hello wipeout!");
 <p>Binding values together creates powerful chains of pluggable components which are the backbone of a wipeout application.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+wo.viewModel("demoApp.person")
     .templateId("/person.html")
     .build();
 		
-// view model 2
-wo.viewModel("app.name")
+// viewModel 2
+wo.viewModel("demoApp.name")
     .templateId("/name.html")
     .build();</code>
 </wipeout-docs.view-models.components.j-code-block>
@@ -1196,8 +1339,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
@@ -1209,7 +1352,7 @@ wo.viewModel("app.name")
 <br />
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
+	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
@@ -1229,13 +1372,13 @@ wo.viewModel("app.name")
 
 <script id="Articles.get-started-with-computeds" type="text/template">
 <h1>Computeds</h1>
-<p>Computeds are properties, the value of which is defined by the result of a function. If anything within the function changes the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
+<p>Computeds are properties whose values are defined by the result of a function. If anything within the function changes, the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-var person = wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
-    // this method initializes the view model
+    // this method initializes the viewModel
     .onInitialized(function () {
         // create a computed property "fullName" which is
         // an amalgamation of the first name and last name
@@ -1245,9 +1388,9 @@ var person = wo.viewModel("app.person")
     })
     .build();
 		
-// view model 2
-wo.viewModel("app.name")
-    // for this view model type we want
+// viewModel 2
+wo.viewModel("demoApp.name")
+    // for this viewModel type we want
     // any changes to the "model" property
     // to reflect in the property it is bound to.
     // "tw" stands for "two way"
@@ -1259,8 +1402,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
     &lt;br />
     Full name: &lt;span wo-content="$this.fullName">&lt;/span>
 &lt;/div></code>
@@ -1275,7 +1418,7 @@ wo.viewModel("app.name")
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
 	<code parser="s">&lt;!-- in order to be observed, the model must be an observable -->
-&lt;app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/app.person></code>
+&lt;demo-app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
@@ -1351,13 +1494,13 @@ wo.viewModel("app.name")
                         Bind the header of the model to the clickable item in the collapsible
                     </li>
                     <li>
-                        bind the click event on the clickable item to the click function in the view model
+                        bind the click event on the clickable item to the click function in the viewModel
                     </li>
                     <li>
                         Bind the text of the content div to the content of the model
                     </li>
                     <li>
-                        Bind the visibility of the model to the visible property of the view model
+                        Bind the visibility of the model to the visible property of the viewModel
                     </li>
                 </ul>
             </p>
@@ -1408,7 +1551,7 @@ wo.viewModel("app.name")
                     </li>
                     <li>
                         The <a href="http://knockoutjs.com/documentation/binding-context.html" target="_blank">$parent</a> definiton
-                        comes from knockout and allows you to refer to ancestors of the view model
+                        comes from knockout and allows you to refer to ancestors of the viewModel
                     </li>
                     <li>
                         Note that the namespace <code>helloWipeout</code> has changed to <code>hello-wipeout</code> when used in a template. Html editors do not like upper case 
@@ -1468,7 +1611,7 @@ wo.viewModel("app.name")
     Hello wipeout (0)!, Hello wipeout (1)!, Hello wipeout (2)!
 </div>
 </p>
-<p>Notice, the <code>this</code> value in the view model definition. <code>this</code> refers to the current object, and is also where values in the template (<code>how-many-times="3"</code>) are set.</p>
+<p>Notice, the <code>this</code> value in the viewModel definition. <code>this</code> refers to the current object, and is also where values in the template (<code>how-many-times="3"</code>) are set.</p>
 
 <p>The full code for this example is as follows</p>
 <wipeout-docs.view-models.components.code-block>
@@ -1484,7 +1627,7 @@ wo.viewModel("app.name")
         &lt;!-- Required scripts -->
         &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
         
-        &lt;!-- The application view model -->
+        &lt;!-- The application viewModel -->
         &lt;script type="text/javascript">
     function helloToTheWorld() {
 		
@@ -1509,11 +1652,11 @@ wo.viewModel("app.name")
 
 <script id="Articles.get-started-with-functions-and-events" type="text/template">
 <h1>Functions and events</h1>
-<p>You can add custom functions to a view model which can then be called by user actions such as a mouse click.</p>
+<p>You can add custom functions to a viewModel which can then be called by user actions such as a mouse click.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-var person = wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
     .build();
 
@@ -1524,9 +1667,9 @@ person.displayFullName = function () {
     }
 };
 		
-// view model 2
-wo.viewModel("app.name")
-    // for this view model type we want
+// viewModel 2
+wo.viewModel("demoApp.name")
+    // for this viewModel type we want
     // any changes to the "model" property
     // to reflect in the property it is bound to.
     // "tw" stands for "two way"
@@ -1538,8 +1681,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
 
     &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
 &lt;/div></code>
@@ -1553,7 +1696,7 @@ wo.viewModel("app.name")
 <br />
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
+	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>
@@ -1576,14 +1719,14 @@ wo.viewModel("app.name")
 <p>With <code>helloToTheWorld</code> in place it is just a case of adding a &lt;hello-to-the-world> definition to your html.</p>
 
 <h3>Creating the application</h3>
-<p>Within the html document, we now define our view model.</p>
+<p>Within the html document, we now define our viewModel.</p>
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">&lt;hello-to-the-world>
 &lt;/hello-to-the-world></code>
 </wipeout-docs.view-models.components.code-block>
 <p>What wipeout will do here is:
 	<ol>
-		<li>Scan the DOM for nodes which it can find on the <code>window</code> object. In this case <code>"hello-to-the-world"</code> will be camel cased (TODOD: link camel casing) to <code>"helloToTheWorld"</code> and because <code>window.helloToTheWorld</code> exists, this node is marked as a view model.</li>
+		<li>Scan the DOM for nodes which it can find on the <code>window</code> object. In this case <code>"hello-to-the-world"</code> will be camel cased (TODOD: link camel casing) to <code>"helloToTheWorld"</code> and because <code>window.helloToTheWorld</code> exists, this node is marked as a viewModel.</li>
 		<li>Create an instance of helloToTheWorld, i.e. <code>var theViewModel = new helloToTheWorld();</code> </li>
 		<li>Use the toString method to find the rendered content, i.e. <code>var html = theViewModel.toString();</code> </li>
 	</ol>
@@ -1609,7 +1752,7 @@ wo.viewModel("app.name")
         &lt;!-- Required scripts -->
         &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
         
-        &lt;!-- The application view model -->
+        &lt;!-- The application viewModel -->
         &lt;script type="text/javascript">
             function helloToTheWorld() {
                 // for simple objects, wipeout likes to render the result of the "toString" method.
@@ -1636,7 +1779,7 @@ Will render
 	<code parser="s">&lt;wo.view template-id--s="gettingStartedWithLists1">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block>
 
-<p>Alternatively, you will more likely want to create a view model with a template for each item. You can do this using an 
+<p>Alternatively, you will more likely want to create a viewModel with a template for each item. You can do this using an 
 	<wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'">
 	</wipeout-docs.rl>
 </p>
@@ -1665,23 +1808,23 @@ Will render
 	Orienteer is a very simple <a href="http://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank">Object Oriented Programming (OOP)</a> library which is included with wipeout.
 </p>
 <p>
-If OOP isn't your thing, don't worry, it is used under the hood but is an optional method of creating wipeout view models.<br/>
+If OOP isn't your thing, don't worry, it is used under the hood but is an optional method of creating wipeout viewModels.<br/>
 If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orienteer" target="_blank">here</a>.
 </p>
 </script>
 
 <script id="Articles.get-started-with-view-models" type="text/template">
-<h1>View Models</h1>
-<p>Using simple functions as view models is ok for the most basic of functionality, however, in order to access the rich set of wipeout features, you must create view models.</p>
+<h1>viewModels</h1>
+<p>Using simple functions as viewModels is ok for the most basic of functionality, however, in order to access the rich set of wipeout features, you must create viewModels.</p>
 
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">// view model 1
-wo.viewModel("app.rootApplication")
+	<code parser="s">// viewModel 1
+wo.viewModel("demoApp.rootApplication")
     .templateId("/root-application.html")
     .build();
 		
-// view model 2
-wo.viewModel("app.innerViewModel")
+// viewModel 2
+wo.viewModel("demoApp.innerViewModel")
     .templateId("/inner-view-model.html")
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
@@ -1692,8 +1835,8 @@ wo.viewModel("app.innerViewModel")
 &lt;div>
     &lt;!-- as you can see the root-application
             contains an inner-view-model -->
-    &lt;app.inner-view-model>
-    &lt;/app.inner-view-model>
+    &lt;demo-app.inner-view-model>
+    &lt;/demo-app.inner-view-model>
 &lt;/div></code>
 </wipeout-docs.view-models.components.code-block>
 
@@ -1722,12 +1865,12 @@ Getting started is really easy. It's javascript easy! Just download the latest v
 <h1>Global Overrides</h1>
 
 <p>Global overriding is overriding the functionality of a class and every instance of that class.</p>
-<p>Say you want to keep a static running total of all view models created by the system. This is going to involve two existing
+<p>Say you want to keep a static running total of all viewModels created by the system. This is going to involve two existing
  wipeout functions:
 <ol>
-    <li>A function which initializes wipeout view models (in this case
+    <li>A function which initializes wipeout viewModels (in this case
         <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=_initialize&amp;isStatic=false'" text="'_initialize'" />).</li>
-    <li>A function which destroys wipeout view models. (in this case
+    <li>A function which destroys wipeout viewModels. (in this case
         <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=dispose&amp;isStatic=false'" text="'dispose'" />).</li>
 </ol></p>
 
@@ -1773,9 +1916,52 @@ wo.view.prototype.dispose = function() {
     </wipeout-docs.view-models.components.code-block>
 
 <p>
-    One thing to note, is that <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other view models.
+    One thing to note, is that <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
     You can explicitly set this property to false in the template definition if this is not required.
 </p>
+</script>
+
+<script id="Articles.inherit-from-another-view-model" type="text/template">
+<h1>Inherit from another viewModel</h1>
+<p>At it's core, wipeout uses an <a href="http://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank">Object Oriented Programming (OOP)</a> model to build types of viewModels. This means that your viewModels must inherit from another viewModel type in order to use wipeout functionality. The default and most basic viewModel to inherit from is <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'"></wipeout-docs.rl> however you can change this with the second argument of <code>wo.viewModel</code> </p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">// inherit from contentControl
+wo.viewModel("myNamespace.myViewModel", wo.contentControl)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>There are several viewModel types within wipeout which you may wish to inherit from:
+    <ul>
+        <li>wo.view (TODOM link) will give you basic viewModel functionality such as <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view&propertyName=templateId&isStatic=false'" text="'template id'"></wipeout-docs.rl>, templateItems (TODOM: link), initialize (TODOM: link), rendered (TODOM: link) etc...</li>
+        <li>wo.contentControl (TODOM link) will give you all of the functionality of wo.view (TODOM link), and adds a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.contentControl&propertyName=setTemplate&isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property which allows you to set the template within another template.</li>
+        <li>wo.itemsControl (TODOM link) handles the rendering of lists of items and translating models into viewModels.</li>
+    </ul>
+</p>
+<h3>Inherit from a custom viewModel class</h3>
+<p>You can also inherit from a viewModel class which you have created</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var myParentViewModel = wo.viewModel("myNamespace.myParentViewModel")
+    .build();
+        
+myParentViewModel.getClassName = function () {
+    return "myParentViewModel";
+};
+    
+// inherit from myNamespace.myParentViewModel
+var myChildViewModel = wo.viewModel("myNamespace.myChildViewModel", myNamespace.myParentViewModel)
+    .build();
+        
+myChildViewModel.getClassName = function () {
+    // you can use the "_super" function to call the method of a parent class
+    var parent = this._super();
+        
+    return "myChildViewModel, inherits from " + parent;
+};</code>
+</wipeout-docs.view-models.components.code-block>
+<p>There is a caveat to using the <code>_super(...)</code> function. Internally <code>_super</code> jumps onto the function call stack, and this behavior is not allowed if writing javascript in strict mode.</p>
+<br />
+<br />
+<br />
 </script>
 
 <script id="Articles.inheritance" type="text/template">
@@ -1811,7 +1997,7 @@ console.log(account.balance);</code>
 <h1>The itemsControl binding</h1>
 
 <p>
-    The items control binding tells an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> view model where to render its items. 
+    The items control binding tells an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> viewModel where to render its items. 
     It doesn't need an argument and will throw an exception if not used by an itemsControl. 
 </p>
     
@@ -1927,7 +2113,7 @@ With a custom itemsControl you can control
 <h1>Self removing items</h1>
 
 <p>All items controls subscribe to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=removeItem&amp;isStatic=true'" text="'removeItem'" />
- <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=routed-events'" text="'routed event'" />. This means that if a view model in which is a decendent of the itemsControl fires a removeItem routed event with a specic model as the event args, then
+ <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=routed-events'" text="'routed event'" />. This means that if a viewModel in which is a decendent of the itemsControl fires a removeItem routed event with a specic model as the event args, then
      the model will be removed from the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=itemSource&amp;isStatic=false'" text="'itemSource'" />  of the itemsControl.
 </p>
 <p>
@@ -1939,12 +2125,12 @@ With a custom itemsControl you can control
 <h1>The knocout binding context</h1>
 
 <p>The <a href="http://knockoutjs.com/documentation/binding-context.html">knockout binding ocntext</a> is the scope provided by knockout.
-	The general scope will be the view model, however there are several other properties which may be useful within a wipeout application: </p>
+	The general scope will be the viewModel, however there are several other properties which may be useful within a wipeout application: </p>
 
 <ol>
-	<li><code>$parent</code>: refers to the parent view model. This property is very important when setting the model of view model, as you 
+	<li><code>$parent</code>: refers to the parent viewModel. This property is very important when setting the model of viewModel, as you 
 		will always want to set it to a property on <code>$parent.model</code>.</li>
-	<li><code>$parents[]</code>: refers to all ancestor view models. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
+	<li><code>$parents[]</code>: refers to all ancestor viewModels. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
 </ol>
@@ -1955,7 +2141,7 @@ and so on. It is best practice only to refer to parents in the current template 
 
 <p>Local overriding is overriding a specific instance of a class, while leaving other instances untouched.</p>
 
-<p>Say you have a view model which has a child view model, which is a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
+<p>Say you have a viewModel which has a child viewModel, which is a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
 You want each item in the items control to have a method which removes itself.
 There are two options on how to implement this functionality:
     <ol>
@@ -2037,10 +2223,10 @@ myViewModel.prototype.onRendered =
 <p>The role of the model object is generally to hold the business logic and business data of the application. It shold NEVER concern itself with appearence or manipulate the DOM. A definitive guide to the
 role of a model is beyond the scope of this document.</p>
 
-<p>In wipeout, a model manifests as a special property of the view model. It is special in two ways:
+<p>In wipeout, a model manifests as a special property of the viewModel. It is special in two ways:
     <ol>
         <li>
-            Unless explicitely set to null, every view model is gaurenteed to have a model. This is because models cascade downwards. If you do not have the model set on a view model, it will 
+            Unless explicitely set to null, every viewModel is gaurenteed to have a model. This is because models cascade downwards. If you do not have the model set on a viewModel, it will 
             be assigned the model of it's parent.
             <wipeout-docs.view-models.components.code-block>
         <code parser="s">&lt;wo.content-control model="'Hello wipeout!'">
@@ -2057,7 +2243,7 @@ role of a model is beyond the scope of this document.</p>
         </li>
         <li>
             There is a pre defined hook <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=onModelChanged&amp;isStatic=false'" text="'onModelChanged'" /> which 
-            can be overridden in derived view models to get a notification each time a model changes.
+            can be overridden in derived viewModels to get a notification each time a model changes.
         </li>
     </ol>
 </p>
@@ -2172,11 +2358,11 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <p>Wipeout has a built in rough and ready profiler. To open it, just open a console window and type <code>wipeout.profile.profile()</code>. Try it on this site!<br/>
     With the profiler you can:
 <ul>
-    <li>Highlight view model html by hovering over it</li>
-    <li>View the hierarchy of view models by honding ctrl+click (does not always work with clickable items in IE)</li>
-    <li>View the rendering, initialization and template compile time of each view model. In order to see these stats, profiling must be turned on
+    <li>Highlight viewModel html by hovering over it</li>
+    <li>View the hierarchy of viewModels by honding ctrl+click (does not always work with clickable items in IE)</li>
+    <li>View the rendering, initialization and template compile time of each viewModel. In order to see these stats, profiling must be turned on
     before the item is rendered, so before you call <code>ko.applyBindings(...)</code></li>
-    <li>Debug the view model and model objects themselves, by opening a console window and clicking on a view model header</li>
+    <li>Debug the viewModel and model objects themselves, by opening a console window and clicking on a viewModel header</li>
     <li>Turn off proiling by calling <code>wipeout.profile.profile(false)</code>.</li>
 </ul>
 </p>
@@ -2194,20 +2380,20 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <p>In order to achieve this you can use property flags. Property flags are a method of splitting a property name into two parts. The first part is the property name, the second is a list of flags.</p>
 <p>The seperator for property flags is "<code>--</code>" and each subsequent flag is seperated by a "<code>-</code>".</p>
 
-<p>For instance the model property setter in the view model: <code>&amp;lt;wo.view model--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
+<p>For instance the model property setter in the viewModel: <code>&amp;lt;wo.viewModel--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
 
 </script>
 
 <script id="Articles.referencing-items-in-a-template" type="text/template">
 <h1>Referencing items in a template and manipulating the DOM</h1>
 
-<p>Often it is useful to get handles on view models or html element defined in a template. 
+<p>Often it is useful to get handles on viewModels or html element defined in a template. 
     With other web paradigms you might use jQuery or document.getElementById, but these methods are strongly discouraged by wipeout, as 
     they are inaccurate. 
     </p>
     <p>
     Within the MVVM pattern it is recommended that you only select items from within the cotext of the 
-    view model you are using. NOT from it's children and NOT from the entire document.
+    viewModel you are using. NOT from it's children and NOT from the entire document.
         <br/>
     Wipeout uses the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.visual&amp;propertyName=templateItems&amp;isStatic=false'" text="'templateItems'" />
         property to automatically grab items you want to manipulate at a later stage based on their ids.
@@ -2241,10 +2427,10 @@ console.log(currentAccount.canWithdrawMoney());</code>
     </div>
 </div>
 
-<p>If you give a html element or view model within a template an id, that item will be appended to the templateItems of the view model which has been templated. 
+<p>If you give a html element or viewModel within a template an id, that item will be appended to the templateItems of the viewModel which has been templated. 
    The <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.visual&amp;functionName=onRendered&amp;isStatic=false'" text="'onRendered'" /> method is the place to do dom
-manipulation within a view model, as it is called after the view model has been fully templated and rendered</p>
-<p>Notice that the id property on the view model does not require inner quotations like other string properties. Id is a special property which does not go through the same property setting process</p>
+manipulation within a viewModel, as it is called after the viewModel has been fully templated and rendered</p>
+<p>Notice that the id property on the viewModel does not require inner quotations like other string properties. Id is a special property which does not go through the same property setting process</p>
 
 
 </script>
@@ -2252,7 +2438,7 @@ manipulation within a view model, as it is called after the view model has been 
 <script id="Articles.render-binding" type="text/template">
 <h1>Render binding</h1>
 
-<p>The render binding is used internally in wipeout to render view models, and can also be used in application development</p>
+<p>The render binding is used internally in wipeout to render viewModels, and can also be used in application development</p>
 
 <wipeout-docs.view-models.components.js-js-code-block>
     <code>window.renderVm = wo.contentControl.extend(function renderVm() {
@@ -2280,7 +2466,7 @@ manipulation within a view model, as it is called after the view model has been 
 <script id="Articles.reserved-tags" type="text/template">
 <h1>Reserved tags</h1>
 
-<p>When compiling templates, wipeout uses an opt-out model for deciding what is a view model and what is a html tag. If you are using web components or need
+<p>When compiling templates, wipeout uses an opt-out model for deciding what is a viewModel and what is a html tag. If you are using web components or need
 some custom tags in html markup you can register the tag with <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.visual&amp;propertyName=reservedTags&amp;isStatic=true'" text="'reservedTags'" /> </p>
     
 <wipeout-docs.view-models.components.code-block>
@@ -2291,23 +2477,23 @@ some custom tags in html markup you can register the tag with <wipeout-docs.rl h
 <script id="Articles.routed-event-models" type="text/template">
 <h1>Routed Event Models</h1>
 
-    <p>Routed events are generally for the view model layer. They travel up and down the view model stack, which is essentially the DOM, and do not interact with the model layer.
+    <p>Routed events are generally for the viewModel layer. They travel up and down the viewModel stack, which is essentially the DOM, and do not interact with the model layer.
  Models can interact with routed events by inheriting from the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventModel'" text="'routedEventModel'" /> class </p>
-<p>The routed event model is a type known by the view model layer. When a routed event is caught by a view model, it:
+<p>The routed event model is a type known by the viewModel layer. When a routed event is caught by a viewModel, it:
 <ol>
     <li>checks to see if it is subscribed to it</li>
     <li>checks to see if it's model is a routedEventModel, and if so, informs the model of the routed event</li>
 </ol>
-Similarily, routed event models can trigger routed events by delegating their view model to trigger it for them</p>
+Similarily, routed event models can trigger routed events by delegating their viewModel to trigger it for them</p>
 </script>
 
 <script id="Articles.routed-events" type="text/template">
 <h1>Routed Events</h1>
 
-    <p>Routed events are events which bubble up the the view model stack after being triggered. View models trigger routed events which are passed to their
-parents, grandparents etc... until the event reaches the root view model</p>
-    <p>In this example there is a view model which triggers routed events within a view model which subscribes to routed events. Since the events bubble upwards 
-the ancestor view model will recieve any events triggered by it's decendants</p>
+    <p>Routed events are events which bubble up the the viewModel stack after being triggered. viewModels trigger routed events which are passed to their
+parents, grandparents etc... until the event reaches the root viewModel</p>
+    <p>In this example there is a viewModel which triggers routed events within a viewModel which subscribes to routed events. Since the events bubble upwards 
+the ancestor viewModel will recieve any events triggered by it's decendants</p>
 
 
 <wipeout-docs.view-models.components.js-js-code-block>
@@ -2394,7 +2580,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         &lt;/set-template>
     &lt;/my-val>
     &lt;set-template>
-        Rendering view model: &lt;div data-bind="render: myVal">&lt;/div>
+        Rendering viewModel: &lt;div data-bind="render: myVal">&lt;/div>
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -2551,10 +2737,10 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <script id="Articles.share-parent-scope" type="text/template">
 <h1>Share parent scope</h1>
 
-    <p>It is not always necessary to create a scope for each view model. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'if'" />
+    <p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'if'" />
  control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $parents[4].value"</code> which is an indicator
 of un-needed scope.</p>
-    <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a view model.</p>
+    <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a viewModel.</p>
 
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'share-parent-scope-script-1'">
@@ -2606,8 +2792,8 @@ of un-needed scope.</p>
 <h1>Templating a wo.view</h1>
 
 <p>
-    In MVVM application design the view model layer is always necessary, but not always useful. This is generally the case when there is no view logic (dom manipulation) to be done and in 
-    wipeout, is generally the case when you want to template a model or sub model without the overhead of creating a new view model class.
+    In MVVM application design the viewModel layer is always necessary, but not always useful. This is generally the case when there is no view logic (dom manipulation) to be done and in 
+    wipeout, is generally the case when you want to template a model or sub model without the overhead of creating a new viewModel class.
     <br/>
     If this is the case you can template a wo.view directly.
 </p>
@@ -2616,14 +2802,14 @@ of un-needed scope.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;set-template>
-        &lt;wo.view model="$parent.model.subModel" template-id="'myTemplateId'" />
+        &lt;wo.viewModel="$parent.model.subModel" template-id="'myTemplateId'" />
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>Notice the single quotes surrounding the template id property. Anything defined in a property on a view model or a "data-bind" property on a html element is compiled into javascript, so the single quotes denote a string.</p>
+<p>Notice the single quotes surrounding the template id property. Anything defined in a property on a viewModel or a "data-bind" property on a html element is compiled into javascript, so the single quotes denote a string.</p>
 
-<p>Using this method, you can re-template any view model at any time by setting it's template id.</p>
+<p>Using this method, you can re-template any viewModel at any time by setting it's template id.</p>
 </script>
 
 <script id="Articles.templates-content-control" type="text/template">
@@ -2667,7 +2853,7 @@ of un-needed scope.</p>
 <h1>Using templates</h1>
 
 <p>
-Wipeout view models alone do not have an appearance, for this we need templates. At it's most basic, a view model inherits from the 
+Wipeout viewModels alone do not have an appearance, for this we need templates. At it's most basic, a viewModel inherits from the 
     <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> class and the view class has a 
     <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> property.
     <br />
@@ -2677,12 +2863,12 @@ Wipeout view models alone do not have an appearance, for this we need templates.
             The content must be valid, strict XML.
         </li>
         <li>
-            The content can contain wipeout view models which are not html tags.
+            The content can contain wipeout viewModels which are not html tags.
         </li>
 </ol>
 </p>
 <p>
-    In most cases, you will not want the the template of a view model to change. For this case you can set the template id in the constructor of the view model.
+    In most cases, you will not want the the template of a viewModel to change. For this case you can set the template id in the constructor of the viewModel.
     
         <wipeout-docs.view-models.components.code-block>
             <code>var myViewModel = wo.view.extend(function myViewModel() {
@@ -2692,6 +2878,51 @@ Wipeout view models alone do not have an appearance, for this we need templates.
 });</code>
         </wipeout-docs.view-models.components.code-block>
 </p>
+</script>
+
+<script id="Articles.view-model-lifecycle" type="text/template">
+<h1>View mode lifecycle</h1>
+<p>There are several events within the viewModel lifecycle which you may wish to execute code:</p>
+<ol>
+    <li><code>initialize</code>, will be run after the viewModel is initialized (i.e. it's values are set from the template) but before it is rendered.</li>
+    <li><code>rendered</code>, will be run after each time the templateId changes and the viewModel is rendered.</li>
+    <li><code>unRendered</code>, will be run after each time the templateId changes and the viewModel is unRendered. unRender will be called before render.</li>
+    <li><code>dispose</code>, will be run when the viewModel is disposed of,</li>
+    <li><code>initializeApplication</code> is the same as initialize, but is only called if the viewModel has no parent viewModel.</li>
+</ol>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+        
+    .initialize(function () {
+        // set up the viewModel
+        
+        // alter any values
+        
+        // define computeds
+    })
+        
+    .rendered(function () {
+        // alter anything on templateItems
+    })
+        
+    .unRendered(function () {
+        // dispose of anything which was created during "rendered"
+    })
+        
+    .dispose(function () {
+        // dispose of anything created during "initialize"
+    })
+        
+    .initializeApplication(function () {
+        // set up any application specific items or variables
+    })
+        
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />
 </script>
 
 <script id="Articles.virtual-method-cache" type="text/template">
@@ -2709,9 +2940,9 @@ are cached in the virtual cache.</p>
 <script id="Articles.wipeout-binding" type="text/template">
 <h1>The wipeout binding</h1>
 
-<p>The wipeout bindig is the root of a wipeout application and will only be used once. It accepts one parameter which is the root view model type.</p>
+<p>The wipeout bindig is the root of a wipeout application and will only be used once. It accepts one parameter which is the root viewModel type.</p>
     
-Create a view model type
+Create a viewModel type
 <wipeout-docs.view-models.components.code-block>
             <code>
 window.rootApplication = wo.contentControl.extend(function rootApplication() {
@@ -2765,11 +2996,11 @@ private functionality of the library.</p>
 
 <p>Wipeout has several native classes which can be inherited from to build an application.
     <br />
-    When building view models, you will be inheriting from:
+    When building viewModels, you will be inheriting from:
 <ul>
-    <li>wo.view, for the most basic of view models</li>
-    <li>wo.contentControl, for view models with a template property</li>
-    <li>wo.itemsControl, for view models which deal with lists</li>
+    <li>wo.view, for the most basic of viewModels</li>
+    <li>wo.contentControl, for viewModels with a template property</li>
+    <li>wo.itemsControl, for viewModels which deal with lists</li>
 </ul>
     You may also wish to have an object oriented model layer, although this is not necessary
 <ul>
@@ -2786,7 +3017,7 @@ private functionality of the library.</p>
 <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /></p> 
 
 <h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /></h2>
-<p>This class derives from wo.visual and is the base class for view models. It has a model property and provides binding functionality.</p>
+<p>This class derives from wo.visual and is the base class for viewModels. It has a model property and provides binding functionality.</p>
 
 <h2><wipeout-docs.rl href="'/wipeout/how-do-i.html?article=templates-content-control'" text="'wo.contentControl'" /></h2>
 <p>This class derives from wo.view and provides functionality to specify the template as a template string rather than as an Id.</p>
@@ -2833,8 +3064,8 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <script id="Articles.working-with-lists" type="text/template">
 <h1>Working with lists</h1>
 
-<p>Within wipeout, lists are handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> view model. Regular javascript objects cannot be rendered by
-    wipeout, as they are not view models. The purpose of the itemsControl class is to translate between model and view model layers for lists of items.
+<p>Within wipeout, lists are handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> viewModel. Regular javascript objects cannot be rendered by
+    wipeout, as they are not viewModels. The purpose of the itemsControl class is to translate between model and viewModel layers for lists of items.
 </p>
     
 <wipeout-docs.view-models.components.code-block>

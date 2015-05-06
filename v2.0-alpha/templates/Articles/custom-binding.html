@@ -9,9 +9,9 @@ You can write a custom binding which determines how properties are set. Simply a
 };</code>
 </wipeout-docs.view-models.components.code-block> 
 
-The <code>mybinding</code> function will be called when setting up a binding on a view model, for instance:
+The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
 <h3>Arguments</h3>
@@ -25,7 +25,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 	<tbody>
 		<tr>
 			<td>viewModel</td>
-			<td>The viewModel is the current view model, which owns the property to be set</td>
+			<td>The viewModel is the current viewModel, which owns the property to be set</td>
 		</tr>
 		<tr>
 			<td>property</td>
@@ -53,7 +53,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 <br/><h4 id="value">Get the template value (setter string) of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -69,7 +69,7 @@ Binding:
 <br/><h4 id="get">Get the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -85,7 +85,7 @@ Binding:
 <br/><h4 id="watch">Observe the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -103,7 +103,7 @@ Binding:
 <br/><h4 id="set">Set the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -123,13 +123,13 @@ Binding:
 <br/><h4 id="return">Dispose of the binding</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 
-    // observe the model property of the view model. This will create a disposable
+    // observe the model property of the viewModel. This will create a disposable
     // which we want to dispose of when the binding is torn down
     var disposable = viewModel.observe(property.name, function (...) { ... });
 

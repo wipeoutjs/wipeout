@@ -4,11 +4,11 @@
 
     <wipeout-docs.view-models.components.j-code-block>
         <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
-wo.viewModel("app.myType", wo.contentControl)
+wo.viewModel("demoApp.myType", wo.contentControl)
     .build();</code>
     </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
-        <code parser="s">&lt;app.my-type model="'Hello wipeout!'">
+        <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
         &lt;wo.content-control model="$context.find(app.myType).model">
             &lt;set-template>
@@ -16,7 +16,7 @@ wo.viewModel("app.myType", wo.contentControl)
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
-&lt;/app.my-type></code>
+&lt;/demo-app.my-type></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     

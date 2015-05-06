@@ -1,0 +1,11 @@
+<h1>Add a property parser</h1>
+<p>When creating viewModels, it is sometimes useful to alter how a property is parsed from a template. For instance, you may have a property <code>my-property="$model.value"</code> within a template. This property will be bound to the <code>value</code> property of the <code>model</code>, however you may wish it to be set to the string: <code>"$model.value"</code>. For this you can use a default parser.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .parser("myProperty", "string")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>There are a variety of parsers you can use, or you can define your own (TODOD link)</p>
+<br />
+<br />
+<br />

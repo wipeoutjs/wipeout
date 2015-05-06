@@ -2,13 +2,13 @@
 <p>Binding values together creates powerful chains of pluggable components which are the backbone of a wipeout application.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+wo.viewModel("demoApp.person")
     .templateId("/person.html")
     .build();
 		
-// view model 2
-wo.viewModel("app.name")
+// viewModel 2
+wo.viewModel("demoApp.name")
     .templateId("/name.html")
     .build();</code>
 </wipeout-docs.view-models.components.j-code-block>
@@ -16,8 +16,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
@@ -29,7 +29,7 @@ wo.viewModel("app.name")
 <br />
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
+	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>

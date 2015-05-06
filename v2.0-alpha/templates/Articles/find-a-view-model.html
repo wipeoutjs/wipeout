@@ -1,12 +1,12 @@
-<h1>Find a View Model</h1>
+<h1>Find a viewModel</h1>
 
-    <p>You can find a view model with the <code>$find</code> api. The find api accepts many search term types which are customisable. For each find type you can
+    <p>You can find a viewModel with the <code>$find</code> api. The find api accepts many search term types which are customisable. For each find type you can
     	either it's full name or its alias.
 </p>
 
-<h2>Search for a view model type</h2>
+<h2>Search for a viewModel type</h2>
 
-<p>You can select an ancestor view model by passing a view model type into the find block.</p>
+<p>You can select an ancestor viewModel by passing a viewModel type into the find block.</p>
 
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
@@ -65,7 +65,7 @@
 		<tr>
 			<td>$instanceof</td>
 			<td>$i</td>
-			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a view model type into $find</td>
+			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a viewModel type into $find</td>
 		</tr>
 		<tr>
 			<td>$type</td>
@@ -80,19 +80,19 @@
 		<tr>
 			<td>$number</td>
 			<td>$n</td>
-			<td>Describes when to stop when a view model is found. For example, if <code>$n === 0</code>, return the first match.
+			<td>Describes when to stop when a viewModel is found. For example, if <code>$n === 0</code>, return the first match.
 				If <code>$n === 1</code>, return the second match.</td>
 		</tr>
 		<tr>
 			<td>$model</td>
 			<td>$m</td>
-			<td>If set to true, signifies that we are looking for models, not view models.</td>
+			<td>If set to true, signifies that we are looking for models, not viewModels.</td>
 		</tr>
 		<tr>
 			<td>anything else</td>
 			<td>none</td>
 			<td>Anything on the search object which is not prefixed with a $ will be treated as a property search. For instance
-			using <code>{ myProperty: "hello"}</code> will return the first view model where <code>myProperty === hello</code> .</td>
+			using <code>{ myProperty: "hello"}</code> will return the first viewModel where <code>myProperty === hello</code> .</td>
 		</tr>
 	</tbody>
 </table>

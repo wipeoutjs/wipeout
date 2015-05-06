@@ -1,11 +1,11 @@
-<h1>Call a view model method</h1>
+<h1>Call a viewModel method</h1>
 
 <p>
 Using knockout event bindings always sets the context of your functions to the current scope. However, when using ancestors function, 
 it is generally more useful to have ancestor obect as the scope. The $call API will do this.
 <br />
 You simply spell out what you want to do rather than using the regular js syntax. For example, in order to call the <code>submit</code>
-function on the <code>model</code> of the <code>parent</code> view model, passing in the value of <code>true</code> , you would use:
+function on the <code>model</code> of the <code>parent</code> viewModel, passing in the value of <code>true</code> , you would use:
 <br />
 <code>$call($parent).dot("model").dot("submit").args(true)</code>.
 <br />

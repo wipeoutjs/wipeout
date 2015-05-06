@@ -1,0 +1,13 @@
+<h1>Add a static function</h1>
+<p>You can add a static function to any viewModel using the <code>staticFunction</code> function. Static functions are functions which are appended to the viewModel class, so for instance if you have a viewModel named <code>myNameSpace.myViewModel</code> and you add a staic function <code>function myStaticFunction () { }</code>, then <code>myNameSpace.myViewModel.myStaticValue()</code> will be valid.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .staticFunction("myStaticValue", function () {
+    // do something
+})
+.build();</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />

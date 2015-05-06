@@ -1,14 +1,14 @@
-<h1>View Models</h1>
-<p>Using simple functions as view models is ok for the most basic of functionality, however, in order to access the rich set of wipeout features, you must create view models.</p>
+<h1>viewModels</h1>
+<p>Using simple functions as viewModels is ok for the most basic of functionality, however, in order to access the rich set of wipeout features, you must create viewModels.</p>
 
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">// view model 1
-wo.viewModel("app.rootApplication")
+	<code parser="s">// viewModel 1
+wo.viewModel("demoApp.rootApplication")
     .templateId("/root-application.html")
     .build();
 		
-// view model 2
-wo.viewModel("app.innerViewModel")
+// viewModel 2
+wo.viewModel("demoApp.innerViewModel")
     .templateId("/inner-view-model.html")
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
@@ -19,8 +19,8 @@ wo.viewModel("app.innerViewModel")
 &lt;div>
     &lt;!-- as you can see the root-application
             contains an inner-view-model -->
-    &lt;app.inner-view-model>
-    &lt;/app.inner-view-model>
+    &lt;demo-app.inner-view-model>
+    &lt;/demo-app.inner-view-model>
 &lt;/div></code>
 </wipeout-docs.view-models.components.code-block>
 

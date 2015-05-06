@@ -1,9 +1,9 @@
 <h1>Functions and events</h1>
-<p>You can add custom functions to a view model which can then be called by user actions such as a mouse click.</p>
+<p>You can add custom functions to a viewModel which can then be called by user actions such as a mouse click.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// view model 1
-var person = wo.viewModel("app.person")
+	<code parser="s">// viewModel 1
+var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
     .build();
 
@@ -14,9 +14,9 @@ person.displayFullName = function () {
     }
 };
 		
-// view model 2
-wo.viewModel("app.name")
-    // for this view model type we want
+// viewModel 2
+wo.viewModel("demoApp.name")
+    // for this viewModel type we want
     // any changes to the "model" property
     // to reflect in the property it is bound to.
     // "tw" stands for "two way"
@@ -28,8 +28,8 @@ wo.viewModel("app.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;app.name model="$parent.model.firstName">&lt;/app.name> &lt;br />
-    Last name: &lt;app.name model="$parent.model.lastName">&lt;/app.name> &lt;br />
+    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
 
     &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
 &lt;/div></code>
@@ -43,7 +43,7 @@ wo.viewModel("app.name")
 <br />
 <p>So the following element in html:</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/app.person></code>
+	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br/>
 <br/>

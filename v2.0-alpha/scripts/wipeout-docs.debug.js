@@ -1607,24 +1607,32 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("With busybody", "get-started-with-busybody"),
                 new articleLink("With Hello World", "get-started-with-hello-world"),  
                 new articleLink("With dynamic values", "get-started-with-dynamic-values"),    
-                new articleLink("With View Models", "get-started-with-view-models"),           
+                new articleLink("With viewModels", "get-started-with-view-models"),           
                 new articleLink("With View Bindings", "get-started-with-bindings"),
                 new articleLink("With Functions and Events", "get-started-with-functions-and-events"),
                 new articleLink("With Computeds", "get-started-with-computeds"),
                 new articleLink("With lists", "get-started-with-lists"),
             ]
         }, {
-            header: new articleLink("Define view models", "define-view-models"),
+            header: new articleLink("Define viewModels", "define-view-models"),
             items: [
                 new articleLink("Add a default template", "add-a-default-template"),
+                new articleLink("Add a default value", "add-a-default-value"),
+                new articleLink("Add a function", "add-a-function"),
+                new articleLink("Add a static value", "add-a-static-value"),
+                new articleLink("Add a static function", "add-a-static-function"),
+                new articleLink("Alter the viewModel lifecycle", "view-model-lifecycle"),
+                new articleLink("Add a property binding", "add-a-property-binding"),
+                new articleLink("Add a property parser", "add-a-parser"),
+                new articleLink("Inherit from another viewModel", "inherit-from-another-view-model"),
             ]
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
             items: [
                 new articleLink("Bind to a static value", "bind-to-static-value"),      
-                new articleLink("Bind to a property on the view model", "bind-in-scope"),
+                new articleLink("Bind to a property on the viewModel", "bind-in-scope"),
                 new articleLink("Bind to a property on the model", "bind-to-model"),
-                new articleLink("Bind to a property on the parent's view model", "bind-to-parents-view-model"),
+                new articleLink("Bind to a property on the parent's viewModel", "bind-to-parents-view-model"),
                 new articleLink("Set the model from the parent's model", "bind-to-parents-model"),
                 new articleLink("Cascading models", "cascading-models"),
                 new articleLink("Bind to a global value", "bind-to-global"),
@@ -1643,7 +1651,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Change default binding", "change-default-binding"),
                 new articleLink("Custom binding", "custom-binding"),
 		]}, {        
-            header: new articleLink("Calling view model methods", "call-view-model-method"),
+            header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [
         ]}, {        
             header: new articleLink("Parsing values from html", "parsing-values-from-html"),
@@ -1685,7 +1693,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Creating custom list items", "items-control-custom-items"),
                 new articleLink("Self removing items", "items-control-self-removing-items")
             ]}, {        
-            header: new articleLink("Control the view model lifecycle", "control-the-view-model-lifecycle"),
+            header: new articleLink("Control the viewModel lifecycle", "control-the-view-model-lifecycle"),
             items: []
         }, {
             header: new articleLink("Use the if control", "if-control"),
@@ -1719,13 +1727,13 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             header: new articleLink("Wipeout Utilities", "wipeout-utilities"),
             items: []
         }, {
-            header: new articleLink("Bind to a specific view model", "bind-to-specific-view-model"),
+            header: new articleLink("Bind to a specific viewModel", "bind-to-specific-view-model"),
             items: [
                 new articleLink("Knockout binding context", "knockout-binding-context"),
-                new articleLink("Find a view model", "find-a-view-model"),
+                new articleLink("Find a viewModel", "find-a-view-model"),
                 new articleLink("Custom $find filters", "custom-find-filters"),
-                new articleLink("Call a view model method", "call-a-view-model-method"),
-                new articleLink("Find and call a view model method", "find-and-call-a-view-model-method")
+                new articleLink("Call a viewModel method", "call-a-view-model-method"),
+                new articleLink("Find and call a viewModel method", "find-and-call-a-view-model-method")
         ]}, {        
             header: new articleLink("Wipeout native classes", "wipeout-native-classes"),
             items: []
@@ -1972,6 +1980,19 @@ compiler.registerClass("wipeoutDocs.viewModels.components.newTemplateCodeBlock",
         this._super.apply(this, arguments);
     };
     
+    newTemplateCodeBlock.prototype.onCodeChanged = function(newVal) {
+        
+        if (this.newScriptId) {
+            var oldScript = document.getElementById(this.newScriptId);
+            if (oldScript)
+                oldScript.parentElement.removeChild(oldScript);
+                
+            delete wipeout.template.engine.instance.templates[this.newScriptId];
+        }
+        
+        return this._super.apply(this, arguments);
+    };
+    
     newTemplateCodeBlock.prototype.getTemplateHtml = function(newVal) {
         
         if(!this.newScriptId) throw "You must specify a script id";
@@ -2164,9 +2185,10 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         }
     };
     
-    HowDoIApplication.prototype.openArticle = function(article) { 
+    HowDoIApplication.prototype.openArticle = function(article) {
         $(".list-group-item-info", this.templateItems.leftNav).removeClass("list-group-item-info");
         
+        delete window.demoApp;
         this.contentTemplate = "Articles." + article;
         
         var current, groups = this.templateItems.articles.getItemViewModels();
