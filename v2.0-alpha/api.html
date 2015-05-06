@@ -439,7 +439,7 @@ The default binding is one way. This means that the object where the propery
 </p>
 
 <h3>camelCasing</h3>
-<p>Because HTML is not case sensitive, it is not advisable to use upper case letter in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase" target="_blank">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
+<p>Because HTML is not case sensitive, it is not advisable to use upper case letters in your element and attribute definitions. To get around this, wipeout supports <a href="http://en.wikipedia.org/wiki/CamelCase" target="_blank">camelCasing</a> using the "<code>-</code>" symbol as the indicator of an upper case letter.<br/>
 So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"&amp;gt;&amp;lt;/app.my-view-model&amp;gt;</code> will be read as <code>app.myViewModel</code> with the attribute <code>myAttribute="true"</code>.<br/>
 </p>
 </script>
@@ -447,7 +447,7 @@ So for instance, the element <code>&amp;lt;app.my-view-model my-attribute="true"
 <script id="Articles.bind-to-ancestor" type="text/template">
 <h1>Bind to the property of an ancestor</h1>
 
-    <p>There is a helper function which can find ancestors based on their proerties, type, depth or any other custom attribute you need.</p>
+    <p>There is a helper function which can find ancestors based on their properties, type, depth or any other custom attribute you need.</p>
 
     <wipeout-docs.view-models.components.j-code-block>
         <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
@@ -457,7 +457,7 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
         <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control model="$context.find(app.myType).model">
+        &lt;wo.content-control model="$context.find(demoApp.myType).model">
             &lt;set-template>
                 Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -707,6 +707,17 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 </script>
 
+<script id="Articles.boolean-parser" type="text/template">
+<h1>Boolean parser (b)</h1>
+
+<p>The boolean parser will parse a value to true or false. The aliases for the boolean parser are <code>b</code> and <code>boolean</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--b="True">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>true</code>.</p>
+</script>
+
 <script id="Articles.call-a-view-model-method" type="text/template">
 <h1>Call a viewModel method</h1>
 
@@ -871,7 +882,7 @@ You can write a custom binding which determines how properties are set. Simply a
 
 The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
 <h3>Arguments</h3>
@@ -913,7 +924,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 <br/><h4 id="value">Get the template value (setter string) of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -929,7 +940,7 @@ Binding:
 <br/><h4 id="get">Get the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -945,7 +956,7 @@ Binding:
 <br/><h4 id="watch">Observe the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -963,7 +974,7 @@ Binding:
 <br/><h4 id="set">Set the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -983,7 +994,7 @@ Binding:
 <br/><h4 id="return">Dispose of the binding</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.viewModel--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -1040,6 +1051,17 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 </wipeout-docs.view-models.components.code-block>
 
 <p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+</script>
+
+<script id="Articles.date-parser" type="text/template">
+<h1>Date parser (d)</h1>
+
+<p>The date parser will parse a string value to a date. The aliases for the date parser are <code>d</code> and <code>date</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--d="2000/01/01">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>Sat Jan 01 2000 00:00:00</code>.</p>
 </script>
 
 <script id="Articles.define-view-models" type="text/template">
@@ -1281,6 +1303,17 @@ theEvent.trigger("Hello wipeout!");
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.float-parser" type="text/template">
+<h1>Float parser (f)</h1>
+
+<p>The float parser will parse a value to a float. The aliases for the float parser are <code>f</code> and <code>float</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--f="2.1">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>2.1</code>.</p>
 </script>
 
 <script id="Articles.forcing-disposal" type="text/template">
@@ -1993,6 +2026,17 @@ console.log(account.balance);</code>
 <br/>
 </script>
 
+<script id="Articles.int-parser" type="text/template">
+<h1>Int parser (i)</h1>
+
+<p>The int parser will parse a value to an int. The aliases for the int parser are <code>i</code> and <code>int</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--i="2">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>2</code>.</p>
+</script>
+
 <script id="Articles.items-control-binding" type="text/template">
 <h1>The itemsControl binding</h1>
 
@@ -2119,6 +2163,17 @@ With a custom itemsControl you can control
 <p>
     If this is likely to happen it is important to bind the itemSource of the itemsControl <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=bind-two-way'" text="'two ways'" /> so that changes will propogate back up the model chain.
 </p>
+</script>
+
+<script id="Articles.json-parser" type="text/template">
+<h1>Json parser (j)</h1>
+
+<p>The json parser will parse a value to an object. The aliases for the json parser are <code>j</code> and <code>json</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--j='{"value": 3}'>&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>{value: 3}</code>.</p>
 </script>
 
 <script id="Articles.knockout-binding-context" type="text/template">
@@ -2348,6 +2403,17 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <br/>
 </script>
 
+<script id="Articles.parsers" type="text/template">
+<h1>Parsers</h1>
+<p>Within a template, most property setters are not parsed, but rather they are interpreted as javascript code, compiled and bound. This behavior can be altered with property parsers. An example of a property with a default property parser (TODOM link) is <code>id</code>, where:
+</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view id="myId">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the id of the current model to <code>"myId"</code>, and not to the value of any <code>myId</code> property.</p>
+</script>
+
 <script id="Articles.parsing-values-from-html" type="text/template">
 
 </script>
@@ -2380,7 +2446,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <p>In order to achieve this you can use property flags. Property flags are a method of splitting a property name into two parts. The first part is the property name, the second is a list of flags.</p>
 <p>The seperator for property flags is "<code>--</code>" and each subsequent flag is seperated by a "<code>-</code>".</p>
 
-<p>For instance the model property setter in the viewModel: <code>&amp;lt;wo.viewModel--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
+<p>For instance the model property setter in the viewModel: <code>&amp;lt;wo.view model--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
 
 </script>
 
@@ -2433,6 +2499,17 @@ manipulation within a viewModel, as it is called after the viewModel has been fu
 <p>Notice that the id property on the viewModel does not require inner quotations like other string properties. Id is a special property which does not go through the same property setting process</p>
 
 
+</script>
+
+<script id="Articles.regexp-parser" type="text/template">
+<h1>Regexp parser (r)</h1>
+
+<p>The regexp parser will parse a value to a regular expression. The aliases for the regexp parser are <code>r</code> and <code>regexp</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--r="^[a-z]$">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>/^[a-z]$/</code>.</p>
 </script>
 
 <script id="Articles.render-binding" type="text/template">
@@ -2786,6 +2863,17 @@ of un-needed scope.</p>
 </wipeout-docs.view-models.components.code-block>
 
 <p>The _super function will always be able to find the parent constructor.</p>
+</script>
+
+<script id="Articles.string-parser" type="text/template">
+<h1>String parser (s)</h1>
+
+<p>The string parser will parse a value to a string, in essence, not parsing the value. The aliases for the string parser are <code>s</code> and <code>string</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--s="hello">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the <code>value</code> property to <code>"hello"</code>.</p>
 </script>
 
 <script id="Articles.template-id" type="text/template">

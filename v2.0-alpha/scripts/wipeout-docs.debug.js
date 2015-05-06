@@ -1651,6 +1651,16 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Change default binding", "change-default-binding"),
                 new articleLink("Custom binding", "custom-binding"),
 		]}, {        
+            header: new articleLink("Parsers", "parsers"),
+            items: [
+                new articleLink("Boolean Parser", "boolean-parser"),
+                new articleLink("Date Parser", "date-parser"),
+                new articleLink("Float Parser", "float-parser"),
+                new articleLink("Int Parser", "int-parser"),
+                new articleLink("Json Parser", "json-parser"),
+                new articleLink("Regexp Parser", "regexp-parser"),
+                new articleLink("String Parser", "string-parser"),
+		]}, {        
             header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [
         ]}, {        

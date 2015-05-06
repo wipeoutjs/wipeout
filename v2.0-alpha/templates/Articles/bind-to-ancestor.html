@@ -1,6 +1,6 @@
 <h1>Bind to the property of an ancestor</h1>
 
-    <p>There is a helper function which can find ancestors based on their proerties, type, depth or any other custom attribute you need.</p>
+    <p>There is a helper function which can find ancestors based on their properties, type, depth or any other custom attribute you need.</p>
 
     <wipeout-docs.view-models.components.j-code-block>
         <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
@@ -10,7 +10,7 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
         <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control model="$context.find(app.myType).model">
+        &lt;wo.content-control model="$context.find(demoApp.myType).model">
             &lt;set-template>
                 Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
