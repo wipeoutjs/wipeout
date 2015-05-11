@@ -5,6 +5,32 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
     }
 });
 
+test("$model", function() {
+    
+    integrationTestSetup();
+    application.model = "Hello";
+    application.setTemplate = '<input type="text" id="theTextBox" wo-value="$model" />';
+    application.onRendered = function () {
+        
+        var tb = document.getElementById("theTextBox");
+        strictEqual(tb.value, "Hello");
+        application.observe("model", function (oldVal, newVal) {
+            strictEqual(oldVal, "Hello");
+            strictEqual(newVal, "Goodbye");
+            
+            integrationTestTeardown();
+            start();
+        });
+        
+        tb.value = "Goodbye";
+        var event = document.createEvent("UIEvents");
+        event.initUIEvent("change", true, true, null, 1);
+        tb.dispatchEvent(event);
+    }
+    
+    stop();
+});
+
 test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");
