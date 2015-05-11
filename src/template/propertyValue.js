@@ -28,8 +28,17 @@ Class("wipeout.template.propertyValue", function () {
 		}
 	});
 	
-	// virtual
 	propertyValue.prototype.value = function () {
+		///<summary>Get the value</summary>
+        ///<returns type="String">The value</returns>
+		
+		return this.hasOwnProperty("_cachedValue") ?
+            this._cachedValue : 
+            (this._cachedValue = this.getValue());
+	};
+	
+	// virtual
+	propertyValue.prototype.getValue = function () {
 		///<summary>Get the value</summary>
         ///<returns type="String">The value</returns>
 		

@@ -17,7 +17,26 @@ testUtils.testWithUtils("constructor", "parser", false, function(methods, classe
     strictEqual(subject.parser("234"), 234);
 });
 
-testUtils.testWithUtils("value", null, false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("value", "has cached", false, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+	strictEqual(subject._cachedValue = {}, invoker());
+});
+
+testUtils.testWithUtils("value", "no cached", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.getValue = function () {
+        return "XYZ";
+    };
+    
+	// act
+	// assert
+	strictEqual("XYZ", invoker());
+	strictEqual(subject._cachedValue, "XYZ");
+});
+
+testUtils.testWithUtils("getValue", null, false, function(methods, classes, subject, invoker) {
 	// arrange
 	// act
 	// assert

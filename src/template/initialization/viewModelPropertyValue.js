@@ -28,13 +28,11 @@ Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 	};
 	
 	// override
-	viewModelPropertyValue.prototype.value = function() {
+	viewModelPropertyValue.prototype.getValue = function() {
         ///<summary>Get the value</summary>
         ///<returns type="String">The value</returns>
 		
-        return this.hasOwnProperty("_valueAsString") ?
-            this._valueAsString :
-            (this._valueAsString = this._super().serializeContent());
+        return this._super().serializeContent();
     };
 	
 	return viewModelPropertyValue;
