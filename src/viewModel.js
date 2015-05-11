@@ -119,7 +119,7 @@ function viewModel (name, extend, doNotWarn) {
 			return output.build();
 		},
 
-		method: function (name, method) {
+		addFunction: function (name, method) {
 			///<summary>Add a function to the view model class</summary>
 			///<param name="name" type="String">The method name</param>
 			///<param name="method" type="Function">The method</param>
@@ -149,7 +149,7 @@ function viewModel (name, extend, doNotWarn) {
 				return output.constructor(value);
 
 			if (value instanceof Function)
-				return output.method(name, value);
+				return output.addFunction(name, value);
 
 			if (values[name])
 				throw "You have already added a value: " + name;
@@ -293,7 +293,7 @@ function viewModel (name, extend, doNotWarn) {
 			
 			if (!isDisposable) throw "The parent class must be, or inherit from busybody.disposable to use this method.";
 			
-			return output.method("dispose", function () {
+			return output.addFunction("dispose", function () {
 				this._super();
 				dispose.call(this);
 			});

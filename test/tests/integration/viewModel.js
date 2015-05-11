@@ -110,7 +110,7 @@ test("basic with method, value, dynamic value, static method, static property", 
 		staticValue = 678;
 	
 	var builder = wo.viewModel("vms.test")
-		.method("method", method)
+		.addFunction("method", method)
 		.value("value", value)
 		.dynamicValue("dynamicValue", dynamicValue)
 		.staticFunction("staticFunction", staticFunction)
