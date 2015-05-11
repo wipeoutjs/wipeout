@@ -179,7 +179,7 @@ Class("wipeout.template.propertyValue", function () {
 			return;
 		}
 		
-        //TODO: issue 71
+        //TODO: issue-71
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
 			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.").replace(/^\s*\$model\s*$/, "$model")) :
 			renderContext.getComputed(this.buildGetter());
