@@ -220,7 +220,7 @@ Class("wipeout.template.propertyValue", function () {
 		
         //TODO: issue-71
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.").replace(/^\s*\$model\s*$/, "$model")) :
+			new busybody.observeTypes.pathObserver(renderContext, this.value()) :
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);

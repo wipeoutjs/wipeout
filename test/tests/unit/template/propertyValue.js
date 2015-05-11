@@ -352,7 +352,6 @@ testUtils.testWithUtils("replace$model", ", $model", true, function (methods, cl
     strictEqual(", $this.model", output);
 });
 
-
 testUtils.testWithUtils("replace$model", "x$model", true, function (methods, classes, subject, invoker) {
 	// arrange
 	var input = "x$model"
