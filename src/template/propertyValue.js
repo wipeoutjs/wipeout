@@ -44,14 +44,14 @@ Class("wipeout.template.propertyValue", function () {
         
         input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
         
-        var rx = /\$model(?![\w\$])/g, current, i, replace;
+        var rx = /\$model(?![\w\$]|(\s*\:))/g, current, i, replace;
         while (current = rx.exec(input.output)) {
             replace = true;
             for (i = current.index - 1; i >= 0; i--) {
                 if (/\s/.test(input.output[i]))
                     continue;
                 
-                if (/\./.test(input.output[i]) || (i === current.index - 1 && /[\w\$]/.test(input.output[i])))
+                if (input.output[i] === "." || (i === current.index - 1 && /[\w\$]/.test(input.output[i])))
                     replace = false;
                     
                 break;

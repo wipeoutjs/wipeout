@@ -384,3 +384,26 @@ testUtils.testWithUtils("replace$model", "$modelx", true, function (methods, cla
 	// assert
     strictEqual(input, output);
 });
+
+testUtils.testWithUtils("replace$model", "{$model: 33}", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "{$model: 33}"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(input, output);
+});
+
+
+testUtils.testWithUtils("replace$model", "{$model : 33}", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "{$model : 33}"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(input, output);
+});
