@@ -6,3 +6,22 @@
 	<li>Not bound, only set (TODOD link)</li>
 </ul>
 </p>
+<h3>One way binding</h3>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-ow'">
+    <code parser="s">&lt;wo.content-control model="{ innerValue: 'Hello wipeout!' }">
+    &lt;set-template>
+        Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
+        &lt;wo.content-control model--ow="$parent.model.innerValue">
+            &lt;set-template>
+                Child: &lt;input wo-on-event="keyup" wo-value="$model" />
+            &lt;/set-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'binding-types-ow'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 

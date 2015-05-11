@@ -4396,7 +4396,7 @@ Class("wipeout.template.propertyValue", function () {
 		this.name = name;
 		
 		///<summary type="String">The value of the property</summary>
-		this._value = value;
+		this._value = value.replace(/^\s*$model/, "$this.model");
         
         ///<summary type="Function">The parser if any</summary>
         this.parser = null;

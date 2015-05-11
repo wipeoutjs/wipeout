@@ -173,9 +173,9 @@ myViewModel.function2 = function () {
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">wo.viewModel("myNamespace.myViewModel")
     .staticFunction("myStaticValue", function () {
-    // do something
-})
-.build();</code>
+        // do something
+    })
+    .build();</code>
 </wipeout-docs.view-models.components.code-block>
 <br />
 <br />
@@ -703,6 +703,26 @@ By default, all bindings are one way. This means that the object where the prope
 	<li>Not bound, only set (TODOD link)</li>
 </ul>
 </p>
+<h3>One way binding</h3>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-ow'">
+    <code parser="s">&lt;wo.content-control model="{ innerValue: 'Hello wipeout!' }">
+    &lt;set-template>
+        Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
+        &lt;wo.content-control model--ow="$parent.model.innerValue">
+            &lt;set-template>
+                Child: &lt;input wo-on-event="keyup" wo-value="$model" />
+            &lt;/set-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'binding-types-ow'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
 </script>
 
 <script id="Articles.boolean-parser" type="text/template">
@@ -1371,7 +1391,7 @@ wo.viewModel("demoApp.name")
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
     First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name>
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
@@ -1403,7 +1423,7 @@ wo.viewModel("demoApp.name")
 
 <script id="Articles.get-started-with-computeds" type="text/template">
 <h1>Computeds</h1>
-<p>Computeds are properties whose values are defined by the result of a function. If anything within the function changes, the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a> and the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function.</p>
+<p>Computeds are properties whose values are defined by the result of a function. If anything within the function changes, the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a>, the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function and the the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observeTypes.computed'" text="'computed'"></wipeout-docs.rl> class.</p>
 
 <wipeout-docs.view-models.components.j-code-block>
 	<code parser="s">// viewModel 1
@@ -1780,7 +1800,7 @@ wo.viewModel("demoApp.name")
 		
         &lt;hello-to-the-world>&lt;/hello-to-the-world>
         
-        &lt;!-- Required scripts -->
+        &lt;!-- Required script -->
         &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
         
         &lt;!-- The application viewModel -->
@@ -1864,7 +1884,7 @@ wo.viewModel("demoApp.innerViewModel")
 <wipeout-docs.view-models.components.code-block>
 	<code parser="s">&lt;h1>Welcome to wipeout&lt;/h1>
 &lt;div>
-    &lt;!-- as you can see the root-application
+    &lt;!-- as you can see, the root-application
             contains an inner-view-model -->
     &lt;demo-app.inner-view-model>
     &lt;/demo-app.inner-view-model>
@@ -2970,7 +2990,7 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 <h1>View mode lifecycle</h1>
 <p>There are several events within the viewModel lifecycle which you may wish to execute code:</p>
 <ol>
-    <li><code>initialize</code>, will be run after the viewModel is initialized (i.e. it's values are set from the template) but before it is rendered.</li>
+    <li><code>initialize</code>, will be run after the viewModel is initialized (i.e. it's values are bound from the template) but before it is rendered.</li>
     <li><code>rendered</code>, will be run after each time the templateId changes and the viewModel is rendered.</li>
     <li><code>unRendered</code>, will be run after each time the templateId changes and the viewModel is unRendered. unRender will be called before render.</li>
     <li><code>dispose</code>, will be run when the viewModel is disposed of,</li>
