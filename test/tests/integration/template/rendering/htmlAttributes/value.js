@@ -31,6 +31,20 @@ test("$model", function() {
     stop();
 });
 
+test("initial value", function() {
+    
+    integrationTestSetup();
+    application.setTemplate = '<input type="text" id="theTextBox" wo-value="$this.XXX" />';
+    application.onRendered = function () {
+        strictEqual(document.getElementById("theTextBox").value, "");
+            
+        integrationTestTeardown();
+        start();
+    }
+    
+    stop();
+});
+
 test("textbox", function() {
 	$("#qunit-fixture").html("<input type='text' id='hello' />")
 	var input = document.getElementById("hello");

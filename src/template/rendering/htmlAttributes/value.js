@@ -90,6 +90,9 @@ HtmlAttr("value", function () {
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
 		attribute.watch(renderContext, function (oldVal, newVal) {
+            if (newVal == null) 
+                newVal = "";
+            
 			if (textarea && element.innerHTML !== newVal)
                 element.innerHTML = newVal;
 			else if (!textarea && element.value !== newVal)
