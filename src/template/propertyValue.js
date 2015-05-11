@@ -53,8 +53,8 @@ Class("wipeout.template.propertyValue", function () {
 				if (!wipeout.template.filters[split[1]])
 					throw "Invalid filter: " + split[1];	//TODE
 				
-				if (wipeout.template.filters[split[1]].downwards)
-					val = "wipeout.template.filters[\"" + split[1] + "\"].downwards(" + split[0] + ")";
+				if (wipeout.template.filters[split[1]].downward)
+					val = "wipeout.template.filters[\"" + split[1] + "\"].downward(" + split[0] + ")";
 				else
 					val = split[0].split(",")[0];
 			}

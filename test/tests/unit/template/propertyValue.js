@@ -69,7 +69,7 @@ testUtils.testWithUtils("buildGetter", "good filter, with to child part", false,
 	// arrange
 	var op = {};
 	wo.filters["good-filter"] = {
-		downwards: methods.method(['hello shane', 'another hello'], op)
+		downward: methods.method(['hello shane', 'another hello'], op)
 	};
 	subject.value = methods.method([], "'hello shane', 'another hello' => good-filter");
 	
