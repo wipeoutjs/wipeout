@@ -8,7 +8,7 @@ function viewModel (name, extend, doNotWarn) {
 	
 	setTimeout(function () {
 		if (!$constructor)
-			warn("The view model \"" + name + "\" was not built. You must call \".build()\" to actually create the view model class. To supress this warning use the \"doNotWarn\" argument of the wo.viewModel method, or set wipeout.settings.displayWarnings to false.");
+			warn("The view model \"" + name + "\" was not built. You must call \".build()\" to actually create the view model class. To supress this warning use the \"doNotWarn\" argument of the wo.viewModel method.");
 	}, 1000);
 		
 	extend = extend || wipeout.viewModels.view;
