@@ -44,14 +44,14 @@ Class("wipeout.template.propertyValue", function () {
         
         input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
         
-        var rx = /\$model(?![\w\$])/, current, i, replace;
+        var rx = /\$model(?![\w\$])/g, current, i, replace;
         while (current = rx.exec(input.output)) {
             replace = true;
             for (i = current.index - 1; i >= 0; i--) {
-                if (/\s/.test(current[i]))
+                if (/\s/.test(input.output[i]))
                     continue;
                 
-                if (/\./.test(current[i]) || (i === current.index - 1 && /[\w\$]/.test(current[i])))
+                if (/\./.test(input.output[i]) || (i === current.index - 1 && /[\w\$]/.test(input.output[i])))
                     replace = false;
                     
                 break;
@@ -60,6 +60,9 @@ Class("wipeout.template.propertyValue", function () {
             if (replace)
                 input.output = input.output.substring(0, current.index + 1) + "this." + input.output.substring(current.index + 1);
         }
+        
+        if (/(^|\s)var\s+\$this\.model/.test(input.output))
+            throw "You cannot define a $model variable in this scope. $model is reserved for the model of the curren view model.";
         
         return input.addTokens(input.output);
     };

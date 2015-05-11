@@ -306,3 +306,82 @@ testUtils.testWithUtils("prime", "not caching", false, function(methods, classes
 	ok(tmp instanceof Array);
 	ok(!subject._caching);
 });
+
+testUtils.testWithUtils("replace$model", "no $model, with strings and comments", true, function(methods, classes, subject, invoker) {
+	// arrange
+	var input1 = "//$model\n/*$model*/", input2 = "'$model'\n\"$model\"";
+	
+	// act
+	var output = invoker(input1 + input2);
+	
+	// assert
+    strictEqual("\n" + input2, output);
+});
+
+testUtils.testWithUtils("replace$model", "var $model", true, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+    throws(function () {
+	   invoker("var $model;");
+    });
+    throws(function () {
+	   invoker(" var $model;");
+    });
+});
+
+testUtils.testWithUtils("replace$model", "$model", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "$model"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual("$this.model", output);
+});
+
+testUtils.testWithUtils("replace$model", ", $model", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = ", $model"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(", $this.model", output);
+});
+
+
+testUtils.testWithUtils("replace$model", "x$model", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "x$model"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(input, output);
+});
+
+testUtils.testWithUtils("replace$model", "x.$model", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "x.$model"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(input, output);
+});
+
+testUtils.testWithUtils("replace$model", "$modelx", true, function (methods, classes, subject, invoker) {
+	// arrange
+	var input = "$modelx"
+	
+	// act
+	var output = invoker(input);
+	
+	// assert
+    strictEqual(input, output);
+});
