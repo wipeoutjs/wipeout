@@ -6,16 +6,7 @@ module("wipeout.template.initialization.viewModelPropertyValue", {
     }
 });
 
-testUtils.testWithUtils("value", "has val", false, function(methods, classes, subject, invoker) {
-    // arrange
-	subject._valueAsString = "LKBLKNLBLJB";
-    
-	// act
-    // assert
-    strictEqual(invoker(), subject._valueAsString);
-});
-
-testUtils.testWithUtils("value", "no val", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getValue", "no val", false, function(methods, classes, subject, invoker) {
     // arrange
 	var val = "KJBKJBKJBKJBJ";
 	subject._super = function () {
@@ -27,7 +18,6 @@ testUtils.testWithUtils("value", "no val", false, function(methods, classes, sub
 	// act
     // assert
     strictEqual(invoker(), val);
-    strictEqual(val, subject._valueAsString);
 });
 
 testUtils.testWithUtils("onPropertyChanged", "no val", false, function(methods, classes, subject, invoker) {

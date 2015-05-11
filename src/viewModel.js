@@ -75,7 +75,7 @@ function viewModel (name, extend, doNotWarn) {
 				mod = values.model;
 				delete values[model];
 			}
-//"onInitialized", "onRendered", "onUnrendered", "onApplicationInitialized"
+            
 			var split = name.split(".");
 			$constructor = new Function("extend", "getParentConstructorArgs", "values", "viewModelLifecycle",
 "return function " + split[split.length - 1] + " (templateId, model) {\n" +
@@ -119,7 +119,7 @@ function viewModel (name, extend, doNotWarn) {
 			return output.build();
 		},
 
-		method: function (name, method) {
+		addFunction: function (name, method) {
 			///<summary>Add a function to the view model class</summary>
 			///<param name="name" type="String">The method name</param>
 			///<param name="method" type="Function">The method</param>
@@ -149,7 +149,7 @@ function viewModel (name, extend, doNotWarn) {
 				return output.constructor(value);
 
 			if (value instanceof Function)
-				return output.method(name, value);
+				return output.addFunction(name, value);
 
 			if (values[name])
 				throw "You have already added a value: " + name;
@@ -178,7 +178,7 @@ function viewModel (name, extend, doNotWarn) {
 			return output;
 		},
 
-		staticMethod: function (name, method) {
+		staticFunction: function (name, method) {
 			///<summary>Add a static function to the view model class</summary>
 			///<param name="name" type="String">The method name</param>
 			///<param name="method" type="Function">The method</param>
@@ -250,7 +250,7 @@ function viewModel (name, extend, doNotWarn) {
 			
 			return output.value("templateId", templateId);
 		},
-		onInitialized: function (onInitialized) {
+		initialize: function (onInitialized) {
 			///<summary>Add a method to be called when the view model is initialized</summary>
 			///<param name="onInitialized" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>
@@ -262,7 +262,7 @@ function viewModel (name, extend, doNotWarn) {
 			
 			return output;
 		},
-		onRendered: function (onRendered) {
+		rendered: function (onRendered) {
 			///<summary>Add a method to be called when the view model is rendered</summary>
 			///<param name="onRendered" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>
@@ -274,7 +274,7 @@ function viewModel (name, extend, doNotWarn) {
 			
 			return output;
 		},
-		onUnrendered: function (onUnrendered) {
+		unRendered: function (onUnrendered) {
 			///<summary>Add a method to be called when the view model is un rendered</summary>
 			///<param name="onUnrendered" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>
@@ -286,19 +286,19 @@ function viewModel (name, extend, doNotWarn) {
 			
 			return output;
 		},
-		onDisposed: function (dispose) {
+		dispose: function (dispose) {
 			///<summary>Add a method to be called when the view model is disposed</summary>
 			///<param name="dispose" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>
 			
 			if (!isDisposable) throw "The parent class must be, or inherit from busybody.disposable to use this method.";
 			
-			return output.method("dispose", function () {
+			return output.addFunction("dispose", function () {
 				this._super();
 				dispose.call(this);
 			});
 		},
-		onApplicationInitialized: function (onApplicationInitialized) {
+		initializeApplication: function (onApplicationInitialized) {
 			///<summary>Add a method to be called when the view model is initialized, if the view model is a root application</summary>
 			///<param name="onApplicationInitialized" type="Function">The method</param>
 			///<returns type="Object">The view model builder</returns>

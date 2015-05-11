@@ -28,8 +28,47 @@ Class("wipeout.template.propertyValue", function () {
 		}
 	});
 	
-	// virtual
 	propertyValue.prototype.value = function () {
+		///<summary>Get the value</summary>
+        ///<returns type="String">The value</returns>
+		
+		return this.hasOwnProperty("_cachedValue") ?
+            this._cachedValue : 
+            (this._cachedValue = propertyValue.replace$model(this.getValue()));
+	};
+    
+    propertyValue.replace$model = function (input) {
+		///<summary>Replaces all instances of $model in a javascript string with $this.model</summary>
+        ///<param name="input" type="String">The input</param>
+        ///<returns type="String">The value</returns>
+        
+        input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
+        
+        var rx = /\$model(?![\w\$]|(\s*\:))/g, current, i, replace;
+        while (current = rx.exec(input.output)) {
+            replace = true;
+            for (i = current.index - 1; i >= 0; i--) {
+                if (/\s/.test(input.output[i]))
+                    continue;
+                
+                if (input.output[i] === "." || (i === current.index - 1 && /[\w\$]/.test(input.output[i])))
+                    replace = false;
+                    
+                break;
+            }
+            
+            if (replace)
+                input.output = input.output.substring(0, current.index + 1) + "this." + input.output.substring(current.index + 1);
+        }
+        
+        if (/(^|\s)var\s+\$this\.model/.test(input.output))
+            throw "You cannot define a $model variable in this scope. $model is reserved for the model of the curren view model.";
+        
+        return input.addTokens(input.output);
+    };
+	
+	// virtual
+	propertyValue.prototype.getValue = function () {
 		///<summary>Get the value</summary>
         ///<returns type="String">The value</returns>
 		
@@ -53,8 +92,8 @@ Class("wipeout.template.propertyValue", function () {
 				if (!wipeout.template.filters[split[1]])
 					throw "Invalid filter: " + split[1];	//TODE
 				
-				if (wipeout.template.filters[split[1]].downwards)
-					val = "wipeout.template.filters[\"" + split[1] + "\"].downwards(" + split[0] + ")";
+				if (wipeout.template.filters[split[1]].downward)
+					val = "wipeout.template.filters[\"" + split[1] + "\"].downward(" + split[0] + ")";
 				else
 					val = split[0].split(",")[0];
 			}
@@ -180,7 +219,7 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
 		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new busybody.observeTypes.pathObserver(renderContext, this.value().replace(/^\s*\$model\./, "$this.model.")) :
+			new busybody.observeTypes.pathObserver(renderContext, this.value()) :
 			renderContext.getComputed(this.buildGetter());
 		
 		this._caching.push(watched);

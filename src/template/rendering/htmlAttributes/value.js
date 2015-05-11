@@ -90,13 +90,16 @@ HtmlAttr("value", function () {
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
 		attribute.watch(renderContext, function (oldVal, newVal) {
+            if (newVal == null) 
+                newVal = "";
+            
 			if (textarea && element.innerHTML !== newVal)
                 element.innerHTML = newVal;
 			else if (!textarea && element.value !== newVal)
                 element.value = newVal;
         }, true);
 		
-		attribute.onElementEvent(attribute.getData(element, "wo-on-event") || "change", renderContext, function () {
+		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", renderContext, function () {
 			attribute.set(renderContext, textarea ? element.innerHTML : element.value, element);
         });
     }

@@ -5,16 +5,80 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-value", {
     }
 });
 
+test("$model", function() {
+    
+    integrationTestSetup();
+    application.model = "Hello";
+    application.setTemplate = '<input type="text" id="theTextBox" wo-value="$model" />';
+    application.onRendered = function () {
+        
+        var tb = document.getElementById("theTextBox");
+        strictEqual(tb.value, "Hello");
+        application.observe("model", function (oldVal, newVal) {
+            strictEqual(oldVal, "Hello");
+            strictEqual(newVal, "Goodbye");
+            
+            integrationTestTeardown();
+            start();
+        });
+        
+        tb.value = "Goodbye";
+        var event = document.createEvent("UIEvents");
+        event.initUIEvent("change", true, true, null, 1);
+        tb.dispatchEvent(event);
+    }
+    
+    stop();
+});
+
+
+test("value before event", function() {
+    
+    integrationTestSetup();
+    application.model = "Hello";
+    application.setTemplate = '<input type="text" id="theTextBox" wo-value="$model" wo-on-event="keyup" />';
+    application.onRendered = function () {
+        
+        var tb = document.getElementById("theTextBox");
+        application.observe("model", function (oldVal, newVal) {
+            strictEqual(oldVal, "Hello");
+            strictEqual(newVal, "Goodbye");
+            
+            integrationTestTeardown();
+            start();
+        });
+        
+        tb.value = "Goodbye";
+        var event = document.createEvent("UIEvents");
+        event.initUIEvent("keyup", true, true, null, 1);
+        tb.dispatchEvent(event);
+    }
+    
+    stop();
+});
+
+test("initial value", function() {
+    
+    integrationTestSetup();
+    application.setTemplate = '<input type="text" id="theTextBox" wo-value="$this.XXX" />';
+    application.onRendered = function () {
+        strictEqual(document.getElementById("theTextBox").value, "");
+            
+        integrationTestTeardown();
+        start();
+    }
+    
+    stop();
+});
+
 test("textbox", function() {
-	$("#qunit-fixture").html("<input type='text' id='hello' />")
+	$("#qunit-fixture").html("<input type='text' id='hello' wo-on-event='blur' />")
 	var input = document.getElementById("hello");
 	var model = busybody.makeObservable({theVal: 234});
-	var onEvent = new wipeout.template.rendering.htmlPropertyValue("wo-on-event", "blur"),
-		attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
+	var attribute = new wipeout.template.rendering.htmlPropertyValue("wo-value", "$this.theVal");
 	
 	// act
-	var disp = wipeout.template.rendering.builder.applyToElement(onEvent, input, new wipeout.template.context(model));
-	disp.push.apply(disp, wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model)));
+	var disp = wipeout.template.rendering.builder.applyToElement(attribute, input, new wipeout.template.context(model));
 	
 	// assert
 	strictEqual(input.value, "234");

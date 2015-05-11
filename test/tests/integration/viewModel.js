@@ -106,14 +106,14 @@ test("basic with method, value, dynamic value, static method, static property", 
 	var method = function () {}, 
 		value = 234, 
 		dynamicValue = function () { return 456 }, 
-		staticMethod = function () { },
+		staticFunction = function () { },
 		staticValue = 678;
 	
 	var builder = wo.viewModel("vms.test")
-		.method("method", method)
+		.addFunction("method", method)
 		.value("value", value)
 		.dynamicValue("dynamicValue", dynamicValue)
-		.staticMethod("staticMethod", staticMethod)
+		.staticFunction("staticFunction", staticFunction)
 		.staticValue("staticValue", staticValue);
 		
 	// act
@@ -126,7 +126,7 @@ test("basic with method, value, dynamic value, static method, static property", 
 	strictEqual(vms.test.prototype.method, method);
 	strictEqual(new vms.test().value, value);
 	strictEqual(new vms.test().dynamicValue, dynamicValue());
-	strictEqual(vms.test.staticMethod, staticMethod);
+	strictEqual(vms.test.staticFunction, staticFunction);
 	strictEqual(vms.test.staticValue, staticValue);
 });
 
@@ -142,13 +142,13 @@ test("templateId with eager load", function() {
 test("convenience methods", function() {
 	//arrange
 	var functions = {
-		onInitialized: function (a) {
+		initialize: function (a) {
 		},
-		onRendered: function (b) {
+		rendered: function (b) {
 		},
-		onUnrendered: function (c) {
+		unRendered: function (c) {
 		},
-		onApplicationInitialized: function (d) {
+		initializeApplication: function (d) {
 		}
 	};
 	
@@ -162,12 +162,28 @@ test("convenience methods", function() {
 	var subject = new (builder.build().statics)();
 
 	// assert
-	for (var i in functions) {
-		strictEqual(subject["$" + i].length, 1);
-		strictEqual(subject["$" + i][0], functions[i]);
-	}
+    strictEqual(subject["$onInitialized"].length, 1);
+    strictEqual(subject["$onInitialized"][0], functions.initialize);
+    strictEqual(subject["$onRendered"].length, 1);
+    strictEqual(subject["$onRendered"][0], functions.rendered);
+    strictEqual(subject["$onUnrendered"].length, 1);
+    strictEqual(subject["$onUnrendered"][0], functions.unRendered);
+    strictEqual(subject["$onApplicationInitialized"].length, 1);
+    strictEqual(subject["$onApplicationInitialized"][0], functions.initializeApplication);
 	
 	strictEqual(subject.templateId, 123);
+});
+
+testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
+	//arrange
+	var builder = wo.viewModel("vms.test").dispose(methods.method());
+	
+	var subject = new (builder.build().statics)();
+    subject._super = methods.method();
+    
+	// act
+    // assert
+    subject.dispose();
 });
 
 test("global binding/parser", function() {
