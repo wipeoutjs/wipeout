@@ -13,7 +13,7 @@ window.wo = function (model, htmlElement) {
 	
 	function woAnElement (element, elementParent) {
 		if (wipeout.utils.viewModels.getViewModel(element, elementParent)) {
-			warn("Attempting to create a wo application twice.", element);	//TODE
+			warn("Attempting to create a wo application twice.", element);
 			return;
 		}
 		

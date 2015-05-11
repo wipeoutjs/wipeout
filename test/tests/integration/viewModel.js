@@ -106,14 +106,14 @@ test("basic with method, value, dynamic value, static method, static property", 
 	var method = function () {}, 
 		value = 234, 
 		dynamicValue = function () { return 456 }, 
-		staticMethod = function () { },
+		staticFunction = function () { },
 		staticValue = 678;
 	
 	var builder = wo.viewModel("vms.test")
 		.method("method", method)
 		.value("value", value)
 		.dynamicValue("dynamicValue", dynamicValue)
-		.staticMethod("staticMethod", staticMethod)
+		.staticFunction("staticFunction", staticFunction)
 		.staticValue("staticValue", staticValue);
 		
 	// act
@@ -126,7 +126,7 @@ test("basic with method, value, dynamic value, static method, static property", 
 	strictEqual(vms.test.prototype.method, method);
 	strictEqual(new vms.test().value, value);
 	strictEqual(new vms.test().dynamicValue, dynamicValue());
-	strictEqual(vms.test.staticMethod, staticMethod);
+	strictEqual(vms.test.staticFunction, staticFunction);
 	strictEqual(vms.test.staticValue, staticValue);
 });
 

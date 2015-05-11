@@ -178,7 +178,7 @@ function viewModel (name, extend, doNotWarn) {
 			return output;
 		},
 
-		staticMethod: function (name, method) {
+		staticFunction: function (name, method) {
 			///<summary>Add a static function to the view model class</summary>
 			///<param name="name" type="String">The method name</param>
 			///<param name="method" type="Function">The method</param>
