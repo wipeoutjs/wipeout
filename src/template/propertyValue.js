@@ -34,8 +34,35 @@ Class("wipeout.template.propertyValue", function () {
 		
 		return this.hasOwnProperty("_cachedValue") ?
             this._cachedValue : 
-            (this._cachedValue = this.getValue());
+            (this._cachedValue = propertyValue.replace$model(this.getValue()));
 	};
+    
+    propertyValue.replace$model = function (input) {
+		///<summary>Replaces all instances of $model in a javascript string with $this.model</summary>
+        ///<param name="input" type="String">The input</param>
+        ///<returns type="String">The value</returns>
+        
+        input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
+        
+        var rx = /\$model(?![\w\$])/, current, i, replace;
+        while (current = rx.exec(input.output)) {
+            replace = true;
+            for (i = current.index - 1; i >= 0; i--) {
+                if (/\s/.test(current[i]))
+                    continue;
+                
+                if (/\./.test(current[i]) || (i === current.index - 1 && /[\w\$]/.test(current[i])))
+                    replace = false;
+                    
+                break;
+            }
+            
+            if (replace)
+                input.output = input.output.substring(0, current.index + 1) + "this." + input.output.substring(current.index + 1);
+        }
+        
+        return input.addTokens(input.output);
+    };
 	
 	// virtual
 	propertyValue.prototype.getValue = function () {
