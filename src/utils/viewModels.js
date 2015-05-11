@@ -15,6 +15,27 @@ Class("wipeout.utils.viewModels", function () {
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};
 	
+	viewModels.getViewModel = function (htmlNode, endAt) {
+        ///<summary>Get the view model which rendered this node (if any)</summary>
+        ///<param name="htmlNode" type="Element">The node</param>
+        ///<param name="endAt" type="Element" optional="true">An element which definitely has not view model, meaning all parent elements will also not have a view model.</param>
+        ///<returns type="Object">The view model</returns>
+		
+		if (!htmlNode || htmlNode === endAt)
+			return;
+		
+		if (htmlNode.wipeoutOpening)
+			return htmlNode.wipeoutOpening.viewModel;
+		if (htmlNode.wipeoutClosing)
+			return htmlNode.wipeoutClosing.viewModel;
+		
+		var ps = htmlNode.previousSibling;
+		if (ps && ps.wipeoutClosing)
+			ps = ps.wipeoutClosing.openingTag.previousSibling || htmlNode.parentNode;
+				
+		return viewModels.getViewModel(ps);
+	};
+	
 	viewModels.getViewModelConstructor = function (wmlElement) {
         ///<summary>A constructor for a view model (if any) given a specific element</summary>
         ///<param name="wmlElement" type="wipeout.wml.wmlElement">The element</param>

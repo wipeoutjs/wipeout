@@ -3,33 +3,44 @@ window.wo = function (model, htmlElement) {
     ///<summary>Create a new observable array</summary>
     ///<param name="model" type="Any" optional="true">The root model</param>
     ///<param name="htmlElement" type="HTMLElement or String" optional="true">The root html element. Can be an element or an id</param>
-
-	var output = new busybody.disposable();
 	
     if (arguments.length < 2)
-        htmlElement = document.getElementsByTagName("body")[0];
+        htmlElement = document.body;
     else if (typeof htmlElement === "string")
         htmlElement = document.getElementById(htmlElement);
+	else if (!htmlElement)
+		return;
+	
+	function woAnElement (element, elementParent) {
+		if (wipeout.utils.viewModels.getViewModel(element, elementParent)) {
+			warn("Attempting to create a wo application twice.", element);	//TODE
+			return;
+		}
+		
+		if (wipeout.utils.viewModels.getViewModelConstructor(element)) {
+			var vme = new wipeout.template.rendering.viewModelElement(element);
+			if (model != null)
+				vme.createdViewModel.model = model;
 
-	if (wipeout.utils.viewModels.getViewModelConstructor(htmlElement)) {
-		var vme = new wipeout.template.rendering.viewModelElement(htmlElement);
-		if (model != null)
-			vme.createdViewModel.model = model;
-		output.registerDisposable(vme);
-	} else {
-		enumerateArr(wipeout.utils.obj.copyArray(htmlElement.getElementsByTagName("*")), function (element) {
+			return vme;
+		} else {
+			var disp = new busybody.disposable();
+			enumerateArr(Array.prototype.slice.call(element.childNodes), function (n) {
+				if (n.nodeType !== 1 || !element.contains(n))
+					return;
 
-			// element may have been removed since get all elements
-			if (htmlElement.contains(element) && wipeout.utils.viewModels.getViewModelConstructor(element)) {
-				var vme = new wipeout.template.rendering.viewModelElement(element);
-				if (model != null)
-					vme.createdViewModel.model = model;
-				output.registerDisposable(vme);
-			}
-		});
+				var rendered;
+				if (rendered = woAnElement(n, element))
+					disp.registerDisposable(rendered);
+			});
+			
+			if (disp.$disposables)
+				for (var i in disp.$disposables)
+					return disp;
+		}
 	}
 	
-	return output;
+	return woAnElement(htmlElement);
 };
 
 window.addEventListener("load", function () {
