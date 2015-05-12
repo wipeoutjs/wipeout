@@ -156,7 +156,7 @@ Class("wipeout.template.propertyValue", function () {
 				this._setter = null;
 			} else {
 				var getSetterRoot = wipeout.template.context.buildGetter(attributeValue.substring(0, attributeValue.length - property[0].length));
-				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
+				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/g, "");
 				if (getter) {
 					getter = wipeout.template.context.buildGetter(splitValue.addTokens(getter));
 					this._setter = function (renderContext, value) {

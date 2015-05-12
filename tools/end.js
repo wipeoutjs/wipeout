@@ -15,7 +15,7 @@ expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
 expose("filters", wipeout.template.filters);
 
-expose("addHtmlAttribute", HtmlAttr);
+expose("addHtmlAttribute", SimpleHtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);

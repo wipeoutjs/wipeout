@@ -78,7 +78,7 @@ var Class = function(classFullName, accessorFunction) {
 	return current[classFullName[classFullName.length - 1]] = accessorFunction();
 };
 
-var HtmlAttr = function(attributeName, accessorFunction) {
+function HtmlAttr(attributeName, accessorFunction) {
 	///<summary>Create a wipeout html attribute</summary>
 	///<param name="attributeName" type="String">The name of the attribute</param>
 	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
@@ -92,6 +92,16 @@ var HtmlAttr = function(attributeName, accessorFunction) {
 		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, accessorFunction);
 	
 	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, accessorFunction);
+};
+
+function SimpleHtmlAttr(attributeName, attribute) {
+	///<summary>Create a wipeout html attribute</summary>
+	///<param name="attributeName" type="String">The name of the attribute</param>
+	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
+	
+    return HtmlAttr(attributeName, function () {
+        return attribute;
+    });
 };
     
 var _trimString = /^\s+|\s+$/g;
