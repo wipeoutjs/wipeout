@@ -4,7 +4,6 @@ You can write a custom binding which determines how properties are set. Simply a
 
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-
     // Use this function to set up the binding
 };</code>
 </wipeout-docs.view-models.components.code-block> 
@@ -53,14 +52,18 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 <br/><h4 id="value">Get the template value (setter string) of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$model.aProperty">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
-    // for a regular binding, will return "$parent.model"
-    var theValue = property.value();
+    // for a regular binding, will return "$model.aProperty"
+    var theValue = property.value(true);
+        
+    // for a regular binding, will return "$this.model.aProperty". This value
+    // should be used if you will compile the value into javascript
+    var theOptomisedValue = property.value();
 		
     // Do any binding stuff here
 };</code>

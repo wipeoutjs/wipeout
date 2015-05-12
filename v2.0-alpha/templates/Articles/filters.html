@@ -1,0 +1,133 @@
+<h1>Binding filters</h1>
+
+<p>
+Binding filters are an extremely powerful way of altering a property value before the parent binding updates are executed. Filters can be used for both viewModel and html element properties.
+</p>
+<p>
+Filters are added to <code>wo.filters</code> and have 2 functions. 
+    <ol>
+        <li>The <code>downward</code> function describes how to alter a value when setting the child property.</li>
+        <li>The <code>upward</code> function describes how to alter a value when setting the parent property.</li>
+    </ol>
+
+Both functions are optional.
+</p>
+
+<h2>Example 1, filter the values of a list</h2>
+
+<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
+    <code parser="s">// add filters to wo.filters
+wo.filters.ageFilter = {
+    // This filter only returns those properties whose
+    // age is greater than the min age
+    downward: function (rockstars, age) {
+        if (!rockstars)
+            return [];
+        
+        age = age || 0;
+        var output = [];
+        for (var i = 0; i &lt; rockstars.length; i++) {
+            if (rockstars[i].age >= age)
+                output.push(rockstars[i]);
+        }
+        
+        return output;
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
+    <code parser="s">&lt;wo.content-control min-age="40">
+    &lt;model>[
+        {name: "John", age: 25},
+        {name: "Paul", age: 2},
+        {name: "George", age: 81},
+        {name: "Ringo", age: 44},
+        {name: "Mick", age: 65},
+        {name: "Keith", age: 13},
+        {name: "Ronnie", age: 52},
+        {name: "Charlie", age: 30}
+    ]&lt;/model>
+    &lt;set-template>
+        Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
+        &lt;wo.items-control items="$parent.model, $parent.minAge => ageFilter">
+            &lt;item-template>
+                &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
+            &lt;/item-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<p>In the above example, the filter is defined as follows:
+    <ol>
+        <li>The first argument is the primary argument. If you are using a <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-two-way" text="'two way binding'"></wipeout-docs.rl> and the child property changes, the primary argument will be set</li>
+        <li>All subsequent arguments are filter values</li>
+        <li>The argument after the <code>=></code> is the filter. </li>
+        </ol></p>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h2>Example 2, parse a date value</h2>
+
+<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
+    <code parser="s">
+function addZeroes (value, requiredLength) {
+    value = value.toString();
+    while (value.length &lt; requiredLength)
+        value = "0" + value;
+
+    return value;
+}
+    
+// add filters to wo.filters
+wo.filters.dateParser = {
+    // This filter parses from strings to dates
+    downward: function (date, format) {
+        if (format === "dd/mm/yyyy") {
+            return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else if (format === "mm/dd/yyyy") {
+            return addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else {
+            return date;
+        }
+    },
+    upward: function (dateString, format) {
+        if (format === "dd/mm/yyyy") {
+            var date = new Date();        
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(3, 2)) - 1);
+            date.setDate(dateString.substr(0, 2));
+        
+            return date;
+        } else if (format === "mm/dd/yyyy") {
+            var date = new Date();
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(0, 2)) - 1);
+            date.setDate(dateString.substr(3, 2));
+        
+            return date;
+        } else {
+            return date;
+        }
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'min-age', 'ageFilter']">
+    <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
+    &lt;set-template>
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
+        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
+        &lt;br />
+        Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
+        Actual value: &lt;b wo-content="$model">&lt;/b>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-parse-date'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<br />
+<br />

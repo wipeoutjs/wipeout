@@ -1661,6 +1661,9 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Regexp Parser", "regexp-parser"),
                 new articleLink("String Parser", "string-parser"),
 		]}, {        
+            header: new articleLink("Binding Filters", "filters"),
+            items: [
+		]}, {        
             header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [
         ]}, {        
@@ -1922,6 +1925,17 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
     codeBlock.prototype.onRendered = function() {
         this._super.apply(this, arguments);
         prettyPrint(null, this.templateItems.codeBlock);
+        
+        this.highlightParts();
+    };
+    
+    codeBlock.prototype.highlightParts = function () {
+        if (!this.highlight) return;
+        
+        enumerate(this.highlight instanceof Array ? this.highlight : [this.highlight], function (item) {
+            $("span:contains('" + item + "')", this.templateItems.codeBlock)
+                .css("font-weight", "bold").css("background", "yellow");
+        }, this);
     };
     
     return codeBlock;
@@ -2228,7 +2242,8 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(!$(articleElement).hasClass("active"))
             $(articleElement).addClass("list-group-item-info");
         
-        var _do = function() {      
+        var _do = function() {
+            window.scrollTo(0, 0);
             $(this.templateItems.leftNav).animate({
                 scrollTop: $(articleElement).offset().top + this.templateItems.leftNav.scrollTop - 80
             }, 500);

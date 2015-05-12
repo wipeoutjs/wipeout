@@ -1,19 +1,20 @@
 <h1>One way to source</h1>
 
-<p>(TODOD diagram)
+<img src="/wipeout/## insert: site-directory ##/content/images/oneWayToSourceBinding.png" />
+<p>
 By default, all bindings are one way from the parent (source) to the child (destination). This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. Sometimes you may wish to reverse this behavior, using the <code>oneWayToSource</code> binding.
-    One way to source bindings use the <code>--owts</code> flag (TODOD link).
+    One way to source bindings use the <code>--owts</code> <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=property-flags" text="'flag'"></wipeout-docs.rl>.
 </p>
 
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-owts-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-owts-script-1'" highlight--s="--owts">
         <code parser="s">&lt;wo.content-control>
     &lt;set-template>
         One way to source bindings: &lt;span wo-content="$this.model">&lt;/span>
         &lt;br />
         &lt;wo.content-control input-value--owts="$parent.model">
             &lt;set-template>
-                &lt;input type="text" wo-value="$this.inputValue" />
+                &lt;input type="text" wo-value="$this.inputValue" wo-on-event="keyup"/>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>

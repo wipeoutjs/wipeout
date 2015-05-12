@@ -82,6 +82,9 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Regexp Parser", "regexp-parser"),
                 new articleLink("String Parser", "string-parser"),
 		]}, {        
+            header: new articleLink("Binding Filters", "filters"),
+            items: [
+		]}, {        
             header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [
         ]}, {        

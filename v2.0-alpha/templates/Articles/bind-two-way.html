@@ -1,12 +1,13 @@
 <h1>Two way bindings</h1>
 
-<p>(TODOD diagram)
+<img src="/wipeout/## insert: site-directory ##/content/images/twoWayBinding.png" />
+<p>
 By default, all bindings are one way. This means that the object where the propery 
     is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified.
-    This can be remedied by using a two way binding. Two way bindings use the <code>--tw</code> flag (TODOD link).
+    This can be remedied by using a two way binding. Two way bindings use the <code>--tw</code> <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=property-flags" text="'flag'"></wipeout-docs.rl>.
 </p>
 
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'">
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'" highlight--s="--tw">
         <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
         &lt;wo.content-control model--tw="$parent.model.value">

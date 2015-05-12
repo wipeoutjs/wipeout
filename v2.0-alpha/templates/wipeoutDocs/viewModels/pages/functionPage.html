@@ -2,7 +2,7 @@
 <h2 wo-content="$this.title || $model.fullyQualifiedName"></h2>
 <div wo-content="$model.summary"></div>
 <wo.if condition="$model.arguments.length">
-    <true-template>
+    <if-true>
         <h3>Arguments</h3>
         <wo.items-control items="$model.arguments">
             <set-template>
@@ -27,22 +27,22 @@
                 </div>
             </item-template>
         </wo.items-control>
-    </true-template>
+    </if-true>
 </wo.if>
 <wo.if condition="$this.showReturnValue">
-	<true-template>
+	<if-true>
 		<h2 wo-visible="$this.showReturnValue">
 			Returns: <span wo-content="$model.returns.type"></span>
 		</h2>
 		<span wo-content="$model.returns.summary"></span>
-	</true-template>
+	</if-true>
 </wo.if>
 <div>
     <h3 style="display: inline-block" wo-content="$this.functionDefinitionText || 'Function definition'"></h3>
     <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
     <wo.if condition="$this.showCode">
-        <true-template>
+        <if-true>
             <wipeout-docs.view-models.components.code-block code="$model['function'].toString()"></wipeout-docs.view-models.components.code-block>
-        </true-template>
+        </if-true>
     </wo.if>
 </div>
