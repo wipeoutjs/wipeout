@@ -30,6 +30,7 @@ Class("wipeout.template.propertyValue", function () {
 	
 	propertyValue.prototype.value = function (useUnAltered) {
 		///<summary>Get the value</summary>
+        ///<param name="useUnAltered" type="Boolean" optional="true">If set to true, the returned value will be un altered, otherwise, it will be optimised for javascript.</param>
         ///<returns type="String">The value</returns>
         
         return useUnAltered ?
