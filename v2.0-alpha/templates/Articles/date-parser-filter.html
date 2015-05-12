@@ -1,0 +1,73 @@
+<h1>A two way date formatter</h1>
+
+<p>The following example is of a date textbox where the user can choose the format of the date they enter. It uses both the <code>upward</code> and <code>downward</code> filter parts.</p>
+
+<wipeout-docs.view-models.components.j-code-block highlight="['downward', 'upward']">
+    <code parser="s">
+// simple function to convert "5" to "05" etc...
+function addZeroes (value, requiredLength) {
+    value = value.toString();
+    while (value.length &lt; requiredLength)
+        value = "0" + value;
+
+    return value;
+}
+    
+// add filters to wo.filters
+wo.filters.dateParser = {
+    // This filter parses from strings to dates
+    downward: function (date, format) {
+        if (format === "dd/mm/yyyy") {
+            return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else if (format === "mm/dd/yyyy") {
+            return addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else {
+            return date;
+        }
+    },
+    // This filter parses from dates to strings
+    upward: function (dateString, format) {
+        if (format === "dd/mm/yyyy") {
+            var date = new Date();        
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(3, 2)) - 1);
+            date.setDate(dateString.substr(0, 2));
+        
+            return date;
+        } else if (format === "mm/dd/yyyy") {
+            var date = new Date();
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(0, 2)) - 1);
+            date.setDate(dateString.substr(3, 2));
+        
+            return date;
+        } else {
+            return date;
+        }
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
+    <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
+    &lt;set-template>
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
+        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
+        &lt;br />
+        Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
+        Actual value: &lt;b wo-content="$model">&lt;/b>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<p>In the above example, the filter is defined as follows:
+    <ol>
+        <li>The first argument is the primary argument. When the value in the textbox changes, it is the value which will be set.</li>
+        <li>All subsequent arguments are simple filter values.</li>
+        <li>The argument after the <code>=></code> is the filter. </li>
+        </ol></p>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-parse-date'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<br />
+<br />

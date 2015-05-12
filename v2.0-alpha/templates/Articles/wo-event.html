@@ -1,0 +1,17 @@
+<h1>The Event attribute</h1>
+<h3><code>wo-event-eventName="value"</code></h3>
+<h3><code>data-wo-event-eventName="value"</code></h3>
+<p>The event attribute defines a html event handler on an element. The event name will be the end of the <code>wo-event-</code> definition.</p>
+<p>Many common events such as <code>click</code> and <code>blur</code> have their own html attributes. Either approach is equally valid.</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-event-attr'" highlight--s="wo-event">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;button wo-event-click="logic: alert($this.model)">Click me&lt;/button>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-event-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>

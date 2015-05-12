@@ -60,6 +60,30 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Set properties using XML elements", "bind-with-elements"),
                 new articleLink("Find an ancestor to bind to", "bind-to-ancestor")
         ]}, {        
+            header: new articleLink("Html Attributes", "html-attributes"),
+            items: [
+                new articleLink("Attribute", "wo-attr"),
+                new articleLink("Blur", "wo-blur"),
+                new articleLink("Change", "wo-change"),
+                new articleLink("Class", "wo-class"),
+                new articleLink("Click", "wo-click"),
+                new articleLink("Content", "wo-content"),
+                new articleLink("Event", "wo-event"),
+                new articleLink("Focus", "wo-focus"),
+                new articleLink("Keydown", "wo-keydown"),
+                new articleLink("Keypress", "wo-keypress"),
+                new articleLink("Keyup", "wo-keyup"),
+                new articleLink("Mousedown", "wo-mousedown"),
+                new articleLink("Mouseout", "wo-mouseout"),
+                new articleLink("Mouseover", "wo-mouseover"),
+                new articleLink("Mouseup", "wo-mouseup"),
+                new articleLink("Render", "wo-render"),
+                new articleLink("Style", "wo-style"),
+                new articleLink("Submit", "wo-submit"),
+                new articleLink("Value", "wo-value"),
+                new articleLink("Visible", "wo-visible"),
+                new articleLink("Custom html attributes", "custom-html-attributes")
+        ]}, {        
             header: new articleLink("Property flags", "property-flags"),
             items: [
 		]}, {        
@@ -84,6 +108,8 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
 		]}, {        
             header: new articleLink("Binding Filters", "filters"),
             items: [
+                new articleLink("A List Filter", "list-filter"),
+                new articleLink("A Two Way Date Formatter", "date-parser-filter")
 		]}, {        
             header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [

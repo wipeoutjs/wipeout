@@ -1,0 +1,23 @@
+<h1>Custom html attributes</h1>
+<p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
+<wipeout-docs.view-models.components.j-code-block>
+	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function () {
+    return function (element, attribute, renderContext) {
+            
+        attribute.onElementEvent("click", renderContext, function () {
+            element.value = "";
+        });
+    }
+});</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-custom-html-attribute-1'" highlight--s="wo-render">
+    <code parser="s">&lt;wo.content-control>
+    &lt;set-template>
+        &lt;input wo-clear-when-clicked /> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-custom-html-attribute-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>

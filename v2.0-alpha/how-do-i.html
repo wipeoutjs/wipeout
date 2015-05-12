@@ -1136,6 +1136,108 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
 </script>
 
+<script id="Articles.custom-html-attributes" type="text/template">
+<h1>Custom html attributes</h1>
+<p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
+<wipeout-docs.view-models.components.j-code-block>
+	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function () {
+    return function (element, attribute, renderContext) {
+            
+        attribute.onElementEvent("click", renderContext, function () {
+            element.value = "";
+        });
+    }
+});</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-custom-html-attribute-1'" highlight--s="wo-render">
+    <code parser="s">&lt;wo.content-control>
+    &lt;set-template>
+        &lt;input wo-clear-when-clicked /> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-custom-html-attribute-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+</script>
+
+<script id="Articles.date-parser-filter" type="text/template">
+<h1>A two way date formatter</h1>
+
+<p>The following example is of a date textbox where the user can choose the format of the date they enter. It uses both the <code>upward</code> and <code>downward</code> filter parts.</p>
+
+<wipeout-docs.view-models.components.j-code-block highlight="['downward', 'upward']">
+    <code parser="s">
+// simple function to convert "5" to "05" etc...
+function addZeroes (value, requiredLength) {
+    value = value.toString();
+    while (value.length &lt; requiredLength)
+        value = "0" + value;
+
+    return value;
+}
+    
+// add filters to wo.filters
+wo.filters.dateParser = {
+    // This filter parses from strings to dates
+    downward: function (date, format) {
+        if (format === "dd/mm/yyyy") {
+            return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else if (format === "mm/dd/yyyy") {
+            return addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getYear() + 1900, 4);
+        } else {
+            return date;
+        }
+    },
+    // This filter parses from dates to strings
+    upward: function (dateString, format) {
+        if (format === "dd/mm/yyyy") {
+            var date = new Date();        
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(3, 2)) - 1);
+            date.setDate(dateString.substr(0, 2));
+        
+            return date;
+        } else if (format === "mm/dd/yyyy") {
+            var date = new Date();
+            date.setYear(dateString.substr(6));
+            date.setMonth(parseInt(dateString.substr(0, 2)) - 1);
+            date.setDate(dateString.substr(3, 2));
+        
+            return date;
+        } else {
+            return date;
+        }
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
+    <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
+    &lt;set-template>
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
+        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
+        &lt;br />
+        Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
+        Actual value: &lt;b wo-content="$model">&lt;/b>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<p>In the above example, the filter is defined as follows:
+    <ol>
+        <li>The first argument is the primary argument. When the value in the textbox changes, it is the value which will be set.</li>
+        <li>All subsequent arguments are simple filter values.</li>
+        <li>The argument after the <code>=></code> is the filter. </li>
+        </ol></p>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-parse-date'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<br />
+<br />
+</script>
+
 <script id="Articles.date-parser" type="text/template">
 <h1>Date parser (d)</h1>
 
@@ -1280,125 +1382,24 @@ Filters are added to <code>wo.filters</code> and have 2 functions.
 
 Both functions are optional.
 </p>
-
-<h2>Example 1, filter the values of a list</h2>
-
-<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
-    <code parser="s">// add filters to wo.filters
-wo.filters.ageFilter = {
-    // This filter only returns those properties whose
-    // age is greater than the min age
-    downward: function (rockstars, age) {
-        if (!rockstars)
-            return [];
+<wipeout-docs.view-models.components.code-block highlight="['downward', 'upward']">
+    <code parser="string">wo.filters.exampleFilter = {
+    downward: function (input1, input2, etc...) {
+        // use this filter to alter values from a view model
+        // before they are applied to a html element or child view model
         
-        age = age || 0;
-        var output = [];
-        for (var i = 0; i &lt; rockstars.length; i++) {
-            if (rockstars[i].age >= age)
-                output.push(rockstars[i]);
-        }
-        
-        return output;
-    }
-};</code>
-</wipeout-docs.view-models.components.j-code-block>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
-    <code parser="s">&lt;wo.content-control min-age="40">
-    &lt;model>[
-        {name: "John", age: 25},
-        {name: "Paul", age: 2},
-        {name: "George", age: 81},
-        {name: "Ringo", age: 44},
-        {name: "Mick", age: 65},
-        {name: "Keith", age: 13},
-        {name: "Ronnie", age: 52},
-        {name: "Charlie", age: 30}
-    ]&lt;/model>
-    &lt;set-template>
-        Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-        &lt;wo.items-control items="$parent.model, $parent.minAge => ageFilter">
-            &lt;item-template>
-                &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
-            &lt;/item-template>
-        &lt;/wo.content-control>
-    &lt;/set-template>
-&lt;/wo.content-control></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-<p>In the above example, the filter is defined as follows:
-    <ol>
-        <li>The first argument is the primary argument. If you are using a <wipeout-docs.rl href--s="/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way" text="'two way binding'"></wipeout-docs.rl> and the child property changes, the primary argument will be set</li>
-        <li>All subsequent arguments are filter values</li>
-        <li>The argument after the <code>=></code> is the filter. </li>
-        </ol></p>
-
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.usage-code-block> 
-
-<h2>Example 2, parse a date value</h2>
-
-<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
-    <code parser="s">
-function addZeroes (value, requiredLength) {
-    value = value.toString();
-    while (value.length &lt; requiredLength)
-        value = "0" + value;
-
-    return value;
-}
-    
-// add filters to wo.filters
-wo.filters.dateParser = {
-    // This filter parses from strings to dates
-    downward: function (date, format) {
-        if (format === "dd/mm/yyyy") {
-            return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
-        } else if (format === "mm/dd/yyyy") {
-            return addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getYear() + 1900, 4);
-        } else {
-            return date;
-        }
+        return alteredValues;
     },
-    upward: function (dateString, format) {
-        if (format === "dd/mm/yyyy") {
-            var date = new Date();        
-            date.setYear(dateString.substr(6));
-            date.setMonth(parseInt(dateString.substr(3, 2)) - 1);
-            date.setDate(dateString.substr(0, 2));
+    upward: function (input1, input2, etc...) {
+        // use this filter to alter values from a html element or
+        // child view model before they are applied to the parent.
         
-            return date;
-        } else if (format === "mm/dd/yyyy") {
-            var date = new Date();
-            date.setYear(dateString.substr(6));
-            date.setMonth(parseInt(dateString.substr(0, 2)) - 1);
-            date.setDate(dateString.substr(3, 2));
-        
-            return date;
-        } else {
-            return date;
-        }
+        return alteredValues;
     }
-};</code>
-</wipeout-docs.view-models.components.j-code-block>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'min-age', 'ageFilter']">
-    <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
-    &lt;set-template>
-        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
-        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
-        &lt;br />
-        Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
-        Actual value: &lt;b wo-content="$model">&lt;/b>
-    &lt;/set-template>
-&lt;/wo.content-control></code>
-</wipeout-docs.view-models.components.new-template-code-block>
+}</code>
+</wipeout-docs.view-models.components.code-block>
 
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'filter-parse-date'">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.usage-code-block> 
-
-<br />
-<br />
+<p>See the <wipeout-docs.rl href--s="/wipeout/v2.0-alpha/how-do-i.html?article=list-filter" text="'list filter'"></wipeout-docs.rl> and <wipeout-docs.rl href--s="/wipeout/v2.0-alpha/how-do-i.html?article=date-parser-filter" text="'date formatter'"></wipeout-docs.rl> for usage examples.</p>
 </script>
 
 <script id="Articles.find-a-view-model" type="text/template">
@@ -2149,6 +2150,19 @@ wo.view.prototype.dispose = function() {
 </wipeout-docs.view-models.components.code-block>
 </script>
 
+<script id="Articles.html-attributes" type="text/template">
+<h1>Html Attributes</h1>
+<p>In order to bind your values to html element, you can use one of a range of built in html attributes, or define your own</p>
+TODOD: article on value attrs (like wo-content)
+TODOD: article on event attrs (like wo-blur)
+<!--
+
+
+custom
+
+-->
+</script>
+
 <script id="Articles.if-control" type="text/template">
 <h1>The if control</h1>
 
@@ -2408,6 +2422,64 @@ With a custom itemsControl you can control
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
 </ol>
+</script>
+
+<script id="Articles.list-filter" type="text/template">
+<h1>A list filter</h1>
+
+<p>The following example is of a list of people filtered by age</p>
+
+<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
+    <code parser="s">// add filters to wo.filters
+wo.filters.ageFilter = {
+    // This filter only returns those properties whose
+    // age is greater than the min age
+    downward: function (rockstars, age) {
+        if (!rockstars)
+            return [];
+        
+        age = age || 0;
+        var output = [];
+        for (var i = 0; i &lt; rockstars.length; i++) {
+            if (rockstars[i].age >= age)
+                output.push(rockstars[i]);
+        }
+        
+        return output;
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
+    <code parser="s">&lt;wo.content-control min-age="40">
+    &lt;model>[
+        {name: "John", age: 25},
+        {name: "Paul", age: 2},
+        {name: "George", age: 81},
+        {name: "Ringo", age: 44},
+        {name: "Mick", age: 65},
+        {name: "Keith", age: 13},
+        {name: "Ronnie", age: 52},
+        {name: "Charlie", age: 30}
+    ]&lt;/model>
+    &lt;set-template>
+        Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
+        &lt;wo.items-control items="$parent.model, $parent.minAge => ageFilter">
+            &lt;item-template>
+                &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
+            &lt;/item-template>
+        &lt;/wo.content-control>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<p>In the above example, the filter is defined as follows:
+    <ol>
+        <li>The left hand side are arguments. All arguments will be passed into the filter.</li>
+        <li>The argument after the <code>=></code> is the filter name.</li>
+        </ol></p>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.local-overrides" type="text/template">
@@ -3366,6 +3438,375 @@ without breaking anything you wouldn't expect to break in javascript.</p>
     <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wipeout.utils.ko'" text="'wo.ko'" /></li>
 </ul>
 </p>
+</script>
+
+<script id="Articles.wo-attr" type="text/template">
+<h1>The Attribute attribute</h1>
+<h3><code>wo-attr-attrName="value"</code></h3>
+<h3><code>data-wo-attr-attrName="value"</code></h3>
+<p>The attr attribute defines an attribute on a html element. The attribute name will be the end of the <code>wo-attr-</code> definition.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-attr-attr'" highlight--s="wo-attr">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-attr-value="$model" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-attr-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-blur" type="text/template">
+<h1>The Blur attribute</h1>
+<h3><code>wo-blur="eventHandler"</code></h3>
+<h3><code>data-wo-blur="eventHandler"</code></h3>
+<p>The blur attribute defines an event handler to be fired when the element blurs.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-blur-attr'" highlight--s="wo-blur">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-blur="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-blur-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-change" type="text/template">
+<h1>The Change attribute</h1>
+<h3><code>wo-change="eventHandler"</code></h3>
+<h3><code>data-wo-change="eventHandler"</code></h3>
+<p>The change attribute defines an event handler to be fired when the element value changes.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-change-attr'" highlight--s="wo-change">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-change="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-change-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-class" type="text/template">
+<h1>The Class attribute</h1>
+<h3><code>wo-class-className="value"</code></h3>
+<h3><code>data-wo-class-className="value"</code></h3>
+<p>The class attribute defines an switches a html class on or off for a given element. The class name will be the end of the <code>wo-class-</code> definition.</p>
+<style>.green {background-color: #98FB98}</style>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-class-attr'" highlight--s="wo-class">
+    <code parser="s">&lt;wo.content-control model="true">
+    &lt;set-template>
+        &lt;span wo-class-green="$model">This class is applied&lt;/span> <br />
+        &lt;span wo-class-green="!$model">This class is not applied&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-class-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-click" type="text/template">
+<h1>The Click attribute</h1>
+<h3><code>wo-click="eventHandler"</code></h3>
+<h3><code>data-wo-click="eventHandler"</code></h3>
+<p>The click attribute defines an event handler to be fired when the element is clicked.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-click-attr'" highlight--s="wo-click">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;button wo-click="logic: alert($this.model)">Click me&lt;/button>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-click-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-content" type="text/template">
+<h1>The Content attribute</h1>
+<h3><code>wo-content="value"</code></h3>
+<h3><code>data-wo-content="value"</code></h3>
+<p>The content attribute defines the html content of an element.</p>
+<p>The content attribute is similar to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-render'" text="'render'"></wipeout-docs.rl> attibute but is less powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag (TODOD: this doesn't render) (<code>{{$this.someValue}}</code>).</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-content-attr'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;span wo-content="$model">&lt;/span> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-content-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-event" type="text/template">
+<h1>The Event attribute</h1>
+<h3><code>wo-event-eventName="value"</code></h3>
+<h3><code>data-wo-event-eventName="value"</code></h3>
+<p>The event attribute defines a html event handler on an element. The event name will be the end of the <code>wo-event-</code> definition.</p>
+<p>Many common events such as <code>click</code> and <code>blur</code> have their own html attributes. Either approach is equally valid.</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-event-attr'" highlight--s="wo-event">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;button wo-event-click="logic: alert($this.model)">Click me&lt;/button>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-event-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+</script>
+
+<script id="Articles.wo-focus" type="text/template">
+<h1>The Focus attribute</h1>
+<h3><code>wo-focus="eventHandler"</code></h3>
+<h3><code>data-wo-focus="eventHandler"</code></h3>
+<p>The focus attribute defines an event handler to be fired when the element receives focus.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-focus-attr'" highlight--s="wo-focus">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-focus="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-focus-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-keydown" type="text/template">
+<h1>The Keydown attribute</h1>
+<h3><code>wo-keydown="eventHandler"</code></h3>
+<h3><code>data-wo-keydown="eventHandler"</code></h3>
+<p>The keydown attribute defines an event handler to be fired when a key is pressed.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keydown-attr'" highlight--s="wo-keydown">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-keydown="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-keydown-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-keypress" type="text/template">
+<h1>The Keypress attribute</h1>
+<h3><code>wo-keypress="eventHandler"</code></h3>
+<h3><code>data-wo-keypress="eventHandler"</code></h3>
+<p>The keypress attribute defines an event handler to be fired when a key is pressed and released.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keypress-attr'" highlight--s="wo-keypress">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-keypress="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-keypress-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-keyup" type="text/template">
+<h1>The Keyup attribute</h1>
+<h3><code>wo-keyup="eventHandler"</code></h3>
+<h3><code>data-wo-keyup="eventHandler"</code></h3>
+<p>The keyup attribute defines an event handler to be fired when a key is released.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keyup-attr'" highlight--s="wo-keyup">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-keyup="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-keyup-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-mousedown" type="text/template">
+<h1>The Mousedown attribute</h1>
+<h3><code>wo-mousedown="eventHandler"</code></h3>
+<h3><code>data-wo-mousedown="eventHandler"</code></h3>
+<p>The mousedown attribute defines an event handler to be fired when a mouse button is pressed.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mousedown-attr'" highlight--s="wo-mousedown">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-mousedown="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-mousedown-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-mouseout" type="text/template">
+<h1>The Mouseout attribute</h1>
+<h3><code>wo-mouseout="eventHandler"</code></h3>
+<h3><code>data-wo-mouseout="eventHandler"</code></h3>
+<p>The mouseout attribute defines an event handler to be fired when a mouse leaves the element.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseout-attr'" highlight--s="wo-mouseout">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-mouseout="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-mouseout-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-mouseover" type="text/template">
+<h1>The Mouseover attribute</h1>
+<h3><code>wo-mouseover="eventHandler"</code></h3>
+<h3><code>data-wo-mouseover="eventHandler"</code></h3>
+<p>The mouseover attribute defines an event handler to be fired when a mouse is moved within the element.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseover-attr'" highlight--s="wo-mouseover">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-mouseover="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-mouseover-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-mouseup" type="text/template">
+<h1>The Mouseup attribute</h1>
+<h3><code>wo-mouseup="eventHandler"</code></h3>
+<h3><code>data-wo-mouseup="eventHandler"</code></h3>
+<p>The mouseup attribute defines an event handler to be fired when a mouse button is released.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseup-attr'" highlight--s="wo-mouseup">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-mouseup="logic: alert($this.model)" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-mouseup-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-render" type="text/template">
+<h1>The Render attribute</h1>
+<h3><code>wo-render="value"</code></h3>
+<h3><code>data-wo-render="value"</code></h3>
+<p>The render attribute renders a piece of data or a view model. </p>
+<p>The render attribute is similar to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-content'" text="'content'"></wipeout-docs.rl> attibute but is more powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag (TODOD: this doesn't render) (<code>{{$this.someValue}}</code>).</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-1'" highlight--s="wo-render">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;span wo-render="$model">&lt;/span> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-render-attr-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+
+<h3>Rendering without a html tag</h3>
+<p>You can also render items without surrounding them by a tag, using the (TODOD: this doesn't render)<code>{{value}}</code> notation.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-2'" highlight--s="wo-render">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        {{$model}}
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-render-attr-2'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+</script>
+
+<script id="Articles.wo-style" type="text/template">
+<h1>The Style attribute</h1>
+<h3><code>wo-style-styleName="value"</code></h3>
+<h3><code>data-wo-style-styleName="value"</code></h3>
+<p>The style attribute defines an style on a html element. The style name will be the end of the <code>wo-style-</code> definition.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-attr-style'" highlight--s="wo-style">
+    <code parser="s">&lt;wo.content-control model--s="#98FB98">
+    &lt;set-template>
+        &lt;span wo-style-background-color="$model">Hello wipeout!&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-attr-style'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-submit" type="text/template">
+<h1>The Submit attribute</h1>
+<h3><code>wo-submit="eventHandler"</code></h3>
+<h3><code>data-wo-submit="eventHandler"</code></h3>
+<p>The submit attribute defines an event handler to be fired when a form is submitted.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-submit-attr'" highlight--s="wo-submit">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;form wo-submit="logic: alert($this.model)">
+            &lt;input type="submit" value="Click me" />
+        &lt;/form>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-submit-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
+<script id="Articles.wo-value" type="text/template">
+(TODOD)
+</script>
+
+<script id="Articles.wo-visible" type="text/template">
+<h1>The Visible attribute</h1>
+<h3><code>wo-visible="value"</code></h3>
+<h3><code>data-wo-visible="value"</code></h3>
+<p>The visible attribute defines whether an element is visible or not.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-visible-attr'" highlight--s="wo-visible">
+    <code parser="s">&lt;wo.content-control model="true">
+    &lt;set-template>
+        &lt;span wo-visible="$model">This is visible&lt;/span> <br />
+        &lt;span wo-visible="!$model">This is not visible&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-visible-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.working-with-lists" type="text/template">
