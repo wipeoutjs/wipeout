@@ -28,13 +28,17 @@ Class("wipeout.template.propertyValue", function () {
 		}
 	});
 	
-	propertyValue.prototype.value = function () {
+	propertyValue.prototype.value = function (useUnAltered) {
 		///<summary>Get the value</summary>
         ///<returns type="String">The value</returns>
-		
-		return this.hasOwnProperty("_cachedValue") ?
-            this._cachedValue : 
-            (this._cachedValue = propertyValue.replace$model(this.getValue()));
+        
+        return useUnAltered ?
+            (this.hasOwnProperty("_unAlteredCachedValue") ?
+                this._unAlteredCachedValue : 
+                (this._unAlteredCachedValue = this.getValue())) :
+            (this.hasOwnProperty("_cachedValue") ?
+                this._cachedValue : 
+                (this._cachedValue = propertyValue.replace$model(this.getValue())));
 	};
     
     propertyValue.replace$model = function (input) {
@@ -44,6 +48,7 @@ Class("wipeout.template.propertyValue", function () {
         
         input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
         
+        // "$model", not followed by another character or a ":"
         var rx = /\$model(?![\w\$]|(\s*\:))/g, current, i, replace;
         while (current = rx.exec(input.output)) {
             replace = true;
@@ -113,7 +118,7 @@ Class("wipeout.template.propertyValue", function () {
 		var parser = this.getParser(propertyOwner);
 		
 		return parser ? 
-			(parser(parser.useRawXmlValue ? this._value : this.value(), this.name, renderContext)) : 
+			(parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)) : 
 			this.buildGetter().apply(null, renderContext.asGetterArgs());
 	};
 	
