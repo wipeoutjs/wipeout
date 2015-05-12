@@ -218,9 +218,18 @@ Class("wipeout.template.propertyValue", function () {
 			return;
 		}
 		
-		var watched = /^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value()) ?
-			new busybody.observeTypes.pathObserver(renderContext, this.value()) :
-			renderContext.getComputed(this.buildGetter());
+        var watched;
+        if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
+            // the renderContext will not be observable, so will not work with
+            // a path observer
+            var split = wipeout.utils.obj.splitPropertyName(this.value());
+            
+			watched = new busybody.observeTypes.pathObserver(
+                renderContext[split.splice(0, 1)[0]], 
+                wipeout.utils.obj.joinPropertyName(split));
+        } else {
+            watched = renderContext.getComputed(this.buildGetter());
+        }
 		
 		this._caching.push(watched);
 		return watched.onValueChanged(callback, evaluateImmediately);
