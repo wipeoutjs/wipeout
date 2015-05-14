@@ -136,7 +136,7 @@ test("disposal", function() {
 	model.theVal = 456;
 	stop();
 });
-
+/*
 test("radio", function() {
 	$("#qunit-fixture").html("<input type='radio' id='hello1' value='1' /><input type='radio' id='hello2' value='2' />")
 	var input1 = document.getElementById("hello1"), input2 = document.getElementById("hello2");
@@ -355,4 +355,4 @@ test("disposal", function() {
 	
 	model.theVal = false;
 	stop();
-});
+});*/
