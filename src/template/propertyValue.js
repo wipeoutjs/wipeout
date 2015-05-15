@@ -110,6 +110,26 @@ Class("wipeout.template.propertyValue", function () {
 		return this._getter;
 	};
 	
+    //TODO: test
+	propertyValue.prototype.buildPermanentGetter = function (renderContext, propertyOwner) {
+		///<summary>Return a function which will return the value of this property whether the property is primed or not</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Function">A function with no arguments which returns the value</returns>
+		
+		var parser = this.getParser(propertyOwner);
+		
+		if (parser) 
+            return (function () {
+			     return parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)
+            }).bind(this);
+        
+        var getter = this.buildGetter();
+        return function () {
+            return getter.apply(null, renderContext.asGetterArgs());
+        };
+	};
+	
 	propertyValue.prototype.get = function (renderContext, propertyOwner) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>

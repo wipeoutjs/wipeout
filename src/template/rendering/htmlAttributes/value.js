@@ -72,7 +72,7 @@ HtmlAttr("value", function () {
 	
 	//TODE
 	return function value (element, attribute, renderContext) {
-        ///<summary>Bind to the value of a htl element</summary>
+        ///<summary>Bind to the value of a html element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>

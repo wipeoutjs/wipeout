@@ -104,8 +104,17 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	htmlPropertyValue.prototype.otherAttribute = function (name, logic) {
 		///<summary>Use another html attribute from this node. If the other attribute does not exist, the logic will not be executed.</summary>
         ///<param name="name" type="String">The attribute. Do not include the "wo-" or "data-wo-" parts</param>
-        ///<param name="logic" type="Function">The logic to invoke. The first argument passed into the logic is the other attribute.</param>
+        ///<param name="logic" type="Function" optional="True">The logic to invoke. The first argument passed into the logic is the other attribute.</param>
         ///<returns type="Boolean">Whether the attribute exists or not</returns>
+        
+        if (!logic) {
+            for (var i = 0, ii = this.otherAttributes.length; i < ii; i++)
+                // remove wo- and data-wo-
+                if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name)
+                    return true;
+            
+            return false;
+        }
         
         this.primed();
         
