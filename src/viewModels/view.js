@@ -52,7 +52,7 @@ Class("wipeout.viewModels.view", function () {
 		if (!renderContext)
 			return [];
 						
-		var op = renderContext.$xxxYyy.slice();	
+		var op = renderContext.$parents.slice();	
 		if (renderContext.$this !== this)	// if share parent scope
 			op.splice(0, 0, renderContext.$this);
 		

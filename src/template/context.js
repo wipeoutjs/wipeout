@@ -22,12 +22,12 @@ Class("wipeout.template.context", function () {
             this.$parent = parentContext.$this;
 			
 			///<summary type="Array" generic0="Any">A list of all ancestor view models</summary>
-            this.$xxxYyy = [parentContext.$this];
-            this.$xxxYyy.push.apply(this.$xxxYyy, parentContext.$xxxYyy);
+            this.$parents = [parentContext.$this];
+            this.$parents.push.apply(this.$parents, parentContext.$parents);
         } else {
 			this.$parentContext = null;
 			this.$parent = null;
-			this.$xxxYyy = [];
+			this.$parents = [];
 		}
 		
 		if (arrayIndex != null) {
@@ -68,7 +68,7 @@ Class("wipeout.template.context", function () {
 		///<summary>Return a version of this to be plugged into a function creted by context.buildGetter(...)</summary>
         ///<returns type="Array">the arguments</returns>
 		
-		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$xxxYyy, this.$index]);
+		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
 	};
 	
 	context.prototype.asWatchVariables = function () {
@@ -79,7 +79,7 @@ Class("wipeout.template.context", function () {
 			$context: this, 
 			$this: this.$this, 
 			$parent: this.$parent, 
-			$xxxYyy: this.$xxxYyy, 
+			$parents: this.$parents, 
 			$index: this.$index
 		});
 	};
@@ -112,7 +112,7 @@ Class("wipeout.template.context", function () {
 		
 		try {
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
-			return new Function("$context", "$this", "$parent", "$xxxYyy", "$index", "return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
 		} catch (e) {
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
@@ -130,7 +130,7 @@ Class("wipeout.template.context", function () {
 			logic += "(e, element)";
 			
 		try {
-			return new Function("$context", "$this", "$parent", "$xxxYyy", "$index", "e", "element", logic);
+			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", logic);
 		} catch (e) {
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	

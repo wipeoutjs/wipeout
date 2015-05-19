@@ -15,7 +15,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
 	// assert
 	strictEqual(subject.$this, vm);
 	strictEqual(subject.$parent, null);
-	strictEqual(subject.$xxxYyy.length, 0);
+	strictEqual(subject.$parents.length, 0);
 	strictEqual(subject.$parentContext, null);
 });
 
@@ -35,7 +35,7 @@ testUtils.testWithUtils("constructor", "with parent context", false, function(me
     // arrange
 	var vm = {}, parent = {}, grandParent = {}, context = {
 		$this: parent,
-		$xxxYyy: [grandParent]
+		$parents: [grandParent]
 	};
 	
 	// act
@@ -44,9 +44,9 @@ testUtils.testWithUtils("constructor", "with parent context", false, function(me
 	// assert
 	strictEqual(subject.$this, vm);
 	strictEqual(subject.$parent, parent);
-	strictEqual(subject.$xxxYyy.length, 2);
-	strictEqual(subject.$xxxYyy[0], parent)
-	strictEqual(subject.$xxxYyy[1], grandParent);;
+	strictEqual(subject.$parents.length, 2);
+	strictEqual(subject.$parents[0], parent)
+	strictEqual(subject.$parents[1], grandParent);;
 	strictEqual(subject.$parentContext, context);
 });
 
@@ -99,7 +99,7 @@ testUtils.testWithUtils("asGetterArgs", null, false, function(methods, classes, 
     // arrange
 	subject.$this = {};
 	subject.$this = {};
-	subject.$xxxYyy = {};
+	subject.$parents = {};
 	subject.$index = {};
 	
 	// act
@@ -111,7 +111,7 @@ testUtils.testWithUtils("asGetterArgs", null, false, function(methods, classes, 
 	strictEqual(output1[0], subject);
 	strictEqual(output1[1], subject.$this);
 	strictEqual(output1[2], subject.$parent);
-	strictEqual(output1[3], subject.$xxxYyy);
+	strictEqual(output1[3], subject.$parents);
 	strictEqual(output1[4], subject.$index);
 });
 
@@ -119,7 +119,7 @@ testUtils.testWithUtils("asWatchVariables", null, false, function(methods, class
     // arrange
 	subject.$this = {};
 	subject.$this = {};
-	subject.$xxxYyy = {};
+	subject.$parents = {};
 	subject.$index = {};
 	
 	// act
@@ -131,7 +131,7 @@ testUtils.testWithUtils("asWatchVariables", null, false, function(methods, class
 	strictEqual(output1.$context, subject);
 	strictEqual(output1.$this, subject.$this);
 	strictEqual(output1.$this, subject.$this);
-	strictEqual(output1.$xxxYyy, subject.$xxxYyy);
+	strictEqual(output1.$parents, subject.$parents);
 	strictEqual(output1.$index, subject.$index);
 });
 
@@ -174,7 +174,7 @@ testUtils.testWithUtils("buildEventCallback", "no added brackets", true, functio
 	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
 	
 	// act
-	invoker("$context.theFunction($context, $this, $parent, $xxxYyy, $index, e, element)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	invoker("$context.theFunction($context, $this, $parent, $parents, $index, e, element)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	
 	// assert
 });
@@ -185,7 +185,7 @@ testUtils.testWithUtils("buildEventCallback", "logic:", true, function(methods, 
 	arg1.theFunction = methods.method([arg1, arg2, arg3, arg4, arg5, arg6, arg7, 5]);
 	
 	// act
-	invoker("logic: var t = 5; $context.theFunction($context, $this, $parent, $xxxYyy, $index, e, element, t)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	invoker("logic: var t = 5; $context.theFunction($context, $this, $parent, $parents, $index, e, element, t)")(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	
 	// assert
 });

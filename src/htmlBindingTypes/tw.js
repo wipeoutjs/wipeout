@@ -13,14 +13,14 @@ Class("wipeout.htmlBindingTypes.tw", function () {
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		
 		// skip to first observable object, only paths one level off renderContext
-		// or one index of renderContexts.$xxxYyy are allowed
+		// or one index of renderContexts.$parents are allowed
 		var current = renderContext, split = busybody.utils.obj.splitPropertyName(val);
 		
 		if (busybody.getObserver(renderContext[split[0]])) {
 			renderContext = renderContext[split[0]];
 			val = busybody.utils.obj.joinPropertyName(split.slice(1));
-		} else if (split[0] === "$xxxYyy" && renderContext.$xxxYyy && busybody.getObserver(renderContext.$xxxYyy[split[1]])) {
-			renderContext = renderContext.$xxxYyy[split[1]];
+		} else if (split[0] === "$parents" && renderContext.$parents && busybody.getObserver(renderContext.$parents[split[1]])) {
+			renderContext = renderContext.$parents[split[1]];
 			val = busybody.utils.obj.joinPropertyName(split.slice(2));
 		}
 		

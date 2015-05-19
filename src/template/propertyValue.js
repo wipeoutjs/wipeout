@@ -249,7 +249,7 @@ Class("wipeout.template.propertyValue", function () {
             // the renderContext will not be observable, so will not work with
             // a path observer
             
-            //TODO: this is not complete. It doesn't take into account window. or $xxxYyy[2].
+            //TODO: this is not complete. It doesn't take into account window. or $parents[2].
             var split = wipeout.utils.obj.splitPropertyName(this.value());
             
 			watched = new busybody.observeTypes.pathObserver(
