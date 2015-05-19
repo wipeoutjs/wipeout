@@ -40,18 +40,19 @@ HtmlAttr("checked-value", function () {
             valueGetter = value.buildPermanentGetter(renderContext);
         });
         
-        function set() {
+        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.get(renderContext))
+            element.setAttribute("checked", "checked");
+        
+        function set(first) {
             if (element.checked)
                 attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
             else if (element.type !== "radio")
                 attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
-            else if (noRadiosAreSelected(element.name))
+            else if (!first && noRadiosAreSelected(element.name))
                 attribute.set(renderContext, null, element);
         }
         
-        set();
-        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.get(renderContext))
-            element.addAttribute("checked", "checked");
+        set(true);
         
 		attribute.onElementEvent(
             element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
