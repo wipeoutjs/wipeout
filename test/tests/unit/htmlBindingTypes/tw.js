@@ -7,9 +7,9 @@ module("wipeout.htmlBindingTypes.tw", {
 
 testUtils.testWithUtils("binding", "render context has no observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {}, op = {};
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$this.value";}}, rc = {}, op = {};
 	classes.mock("busybody.tryBind", function () {
-		methods.method([rc, "$parent.value", vm, set.name, true]).apply(null, arguments);
+		methods.method([rc, "$this.value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
 	
@@ -22,9 +22,9 @@ testUtils.testWithUtils("binding", "render context has no observable", false, fu
 
 testUtils.testWithUtils("binding", "render context has an observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: new busybody.observable()}, op = {};
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$this.value";}}, rc = {$this: new busybody.observable()}, op = {};
 	classes.mock("busybody.tryBind", function () {
-		methods.method([rc.$parent, "value", vm, set.name, true]).apply(null, arguments);
+		methods.method([rc.$this, "value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
 	
@@ -52,9 +52,9 @@ testUtils.testWithUtils("binding", "render context has $xxxYyy observable", fals
 
 testUtils.testWithUtils("binding", "render context has a deep observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parent.value";}}, rc = {$parent: {value: new busybody.observable()}}, op = {};
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$this.value";}}, rc = {$this: {value: new busybody.observable()}}, op = {};
 	classes.mock("busybody.tryBind", function () {
-		methods.method([rc, "$parent.value", vm, set.name, true]).apply(null, arguments);
+		methods.method([rc, "$this.value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
 	

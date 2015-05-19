@@ -98,7 +98,7 @@ testUtils.testWithUtils("contextFor", null, false, function(methods, classes, su
 testUtils.testWithUtils("asGetterArgs", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	subject.$this = {};
-	subject.$parent = {};
+	subject.$this = {};
 	subject.$xxxYyy = {};
 	subject.$index = {};
 	
@@ -118,7 +118,7 @@ testUtils.testWithUtils("asGetterArgs", null, false, function(methods, classes, 
 testUtils.testWithUtils("asWatchVariables", null, false, function(methods, classes, subject, invoker) {
     // arrange
 	subject.$this = {};
-	subject.$parent = {};
+	subject.$this = {};
 	subject.$xxxYyy = {};
 	subject.$index = {};
 	
@@ -130,7 +130,7 @@ testUtils.testWithUtils("asWatchVariables", null, false, function(methods, class
 	strictEqual(output1, output2);
 	strictEqual(output1.$context, subject);
 	strictEqual(output1.$this, subject.$this);
-	strictEqual(output1.$parent, subject.$parent);
+	strictEqual(output1.$this, subject.$this);
 	strictEqual(output1.$xxxYyy, subject.$xxxYyy);
 	strictEqual(output1.$index, subject.$index);
 });

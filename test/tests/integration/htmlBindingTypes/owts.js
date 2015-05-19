@@ -8,7 +8,7 @@ test("binding, bindOneWay", function () {
 	// arrange
 	var viewModel = new busybody.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$parent.val")),
+		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$this.val")),
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	var val1 = viewModel[name] = {}, val2 = {};
@@ -19,11 +19,11 @@ test("binding, bindOneWay", function () {
 	});
 	
 	// assert
-	strictEqual(renderContext.$parent.val, val1);
+	strictEqual(renderContext.$this.val, val1);
 	
 	
-	renderContext.$parent.observe("val", function () {
-		strictEqual(renderContext.$parent.val, val2);
+	renderContext.$this.observe("val", function () {
+		strictEqual(renderContext.$this.val, val2);
 		start();
 		
 		enumerateArr(disp, function (disp) {

@@ -12,7 +12,7 @@ test("set model", function() {
 	
 	application.model = model1;
 	application.setTemplate = '<wo.view id="v1"></wo.view>\
-<wo.view id="v2" model="$parent.model.model2"></wo.view>\
+<wo.view id="v2" model="$this.model.model2"></wo.view>\
 <views.my-view id="v3"></views.my-view>';
 	
 	application.onRendered = function () {
@@ -31,7 +31,7 @@ test("all property setter types", function() {
 	clearIntegrationStuff();
 	
 	// arrange
-	var template = wipeout.wml.wmlParser('<object val0="$parent.theValue" val1="true" val2--s="true">\
+	var setter = wipeout.wml.wmlParser('<object val0="$this.theValue" val1="true" val2--s="true">\
 	<val3 value="true"></val3>\
 	<val4 value--s="true"></val4>\
 	<val5>true</val5>\
@@ -39,7 +39,7 @@ test("all property setter types", function() {
 	<val7>\
 		<js-object>\
 			<val1 value="55"></val1>\
-			<val2 value="$parent.theValue"></val2>\
+			<val2 value="$this.theValue"></val2>\
 		</js-object>\
 	</val7>\
 	<div wo-el="val8">777</div>\
@@ -47,10 +47,10 @@ test("all property setter types", function() {
 <object>')[0];
 	
 	var theValue = {}, theVm = {};
-	var rc = new wipeout.template.context({theValue: theValue}).contextFor(theVm);
+	var rc = new wipeout.template.context({theValue: theValue});
 	
 	// act
-	new wipeout.template.initialization.compiledInitializer(template).initialize(theVm, rc);
+	new wipeout.template.initialization.compiledInitializer(setter).initialize(theVm, rc);
 	
 	// assert
 	strictEqual(theVm.val0, theValue);

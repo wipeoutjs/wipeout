@@ -26,7 +26,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
             this.setters.model = compiledInitializer.modelSetter ||
-				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
+				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$this.model")));
         }
     };
     

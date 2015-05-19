@@ -39,10 +39,9 @@ Class("wipeout.viewModels.view", function () {
         ///<returns type="Any">The parent view model</returns>
         
 		var renderContext = this.getRenderContext();
-		if (!renderContext)
-			return null;
-					
-        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
+        return renderContext ? 
+            (renderContext.$this === this ? renderContext.$parent : renderContext.$this) : 
+            null;
     };
     
     view.prototype.getParents = function() {

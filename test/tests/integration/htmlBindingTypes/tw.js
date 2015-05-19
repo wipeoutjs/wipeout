@@ -8,10 +8,10 @@ test("binding", function () {
 	// arrange
 	var viewModel = new busybody.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$parent.val")),
+		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$this.val")),
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
-	var val1 = renderContext.$parent.val = {}, val2 = {}, val3 = {};
+	var val1 = renderContext.$this.val = {}, val2 = {}, val3 = {};
 	
 	// act
 	var dispose = setter.prime(viewModel, function () {
@@ -26,15 +26,15 @@ test("binding", function () {
 		dis.dispose();
 		
 		strictEqual(viewModel[name], val2);
-		dis = renderContext.$parent.observe("val", function () {
+		dis = renderContext.$this.observe("val", function () {
 			dis.dispose();
 			
-			strictEqual(renderContext.$parent.val, val3);
+			strictEqual(renderContext.$this.val, val3);
 			enumerateArr(dispose, function (d) { d.dispose(); });
-			renderContext.$parent.val = {};
+			renderContext.$this.val = {};
 			viewModel[name] = {};
 			
-			renderContext.$parent.observe("val", function () { ok(false, "should have been disposed of"); });
+			renderContext.$this.observe("val", function () { ok(false, "should have been disposed of"); });
 			viewModel.observe(name, function () { ok(false, "should have been disposed of"); });
 			
 			start();
@@ -44,7 +44,7 @@ test("binding", function () {
 	});
 	
 	// re-act 
-	renderContext.$parent.val = val2;
+	renderContext.$this.val = val2;
 	stop();
 });
 
@@ -56,7 +56,7 @@ test("concurrency, ow", function() {
         this._super();
     });
         
-    application.setTemplate = "<views.view model--tw='$parent.property' id='" + id + "'></views.view>";
+    application.setTemplate = "<views.view model--tw='$this.property' id='" + id + "'></views.view>";
     
 	application.onRendered = function () {
 	
