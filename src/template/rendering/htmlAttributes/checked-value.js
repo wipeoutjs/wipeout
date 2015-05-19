@@ -17,7 +17,12 @@ HtmlAttr("checked-value", function () {
     }
     
     function noRadiosAreSelected(name) {
-        return !document.querySelector('input[type=radio][name="' + name.replace('"', '\\"') + '"][checked]');
+        var radios = document.querySelectorAll('input[type=radio][name="' + name.replace('"', '\\"') + '"]');
+        for (var i = 0, ii = radios.length; i < ii; i++)
+            if (radios[i].checked)
+                return false;
+        
+        return true;
     }
     
     return function checkedValue (element, attribute, renderContext) {
@@ -36,7 +41,7 @@ HtmlAttr("checked-value", function () {
         });
         
         function set() {
-            if (element.hasAttribute("checked"))
+            if (element.checked)
                 attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
             else if (element.type !== "radio")
                 attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
