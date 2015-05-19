@@ -72,21 +72,18 @@ HtmlAttr("value", function () {
 	
 	//TODE
 	return function value (element, attribute, renderContext) {
-        ///<summary>Bind to the value of a htl element</summary>
+        ///<summary>Bind to the value of a html element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		if (element.type === "checkbox")
-			return checkbox(element, attribute, renderContext);
+        // for checkboxes, radios and options "value" works in conjunction with "checked-value"
+		if (element.type === "checkbox" || element.type === "radio" || trimToLower(element.tagName) === "option")
+			return;
 		
-		if (element.type === "radio")
-			return radio(element, attribute, renderContext);
-		
-		var val = attribute.value();
         if (!attribute.canSet())
-            throw "Cannot bind to the property \"" + val + "\".";
+            throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
 		attribute.watch(renderContext, function (oldVal, newVal) {

@@ -28,13 +28,18 @@ Class("wipeout.template.propertyValue", function () {
 		}
 	});
 	
-	propertyValue.prototype.value = function () {
+	propertyValue.prototype.value = function (useUnAltered) {
 		///<summary>Get the value</summary>
+        ///<param name="useUnAltered" type="Boolean" optional="true">If set to true, the returned value will be un altered, otherwise, it will be optimised for javascript.</param>
         ///<returns type="String">The value</returns>
-		
-		return this.hasOwnProperty("_cachedValue") ?
-            this._cachedValue : 
-            (this._cachedValue = propertyValue.replace$model(this.getValue()));
+        
+        return useUnAltered ?
+            (this.hasOwnProperty("_unAlteredCachedValue") ?
+                this._unAlteredCachedValue : 
+                (this._unAlteredCachedValue = this.getValue())) :
+            (this.hasOwnProperty("_cachedValue") ?
+                this._cachedValue : 
+                (this._cachedValue = propertyValue.replace$model(this.getValue())));
 	};
     
     propertyValue.replace$model = function (input) {
@@ -44,6 +49,7 @@ Class("wipeout.template.propertyValue", function () {
         
         input = wipeout.utils.jsParse.removeCommentsTokenStrings(input);
         
+        // "$model", not followed by another character or a ":"
         var rx = /\$model(?![\w\$]|(\s*\:))/g, current, i, replace;
         while (current = rx.exec(input.output)) {
             replace = true;
@@ -104,6 +110,26 @@ Class("wipeout.template.propertyValue", function () {
 		return this._getter;
 	};
 	
+    //TODO: test
+	propertyValue.prototype.buildPermanentGetter = function (renderContext, propertyOwner) {
+		///<summary>Return a function which will return the value of this property whether the property is primed or not</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Function">A function with no arguments which returns the value</returns>
+		
+		var parser = this.getParser(propertyOwner);
+		
+		if (parser) 
+            return (function () {
+			     return parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)
+            }).bind(this);
+        
+        var getter = this.buildGetter();
+        return function () {
+            return getter.apply(null, renderContext.asGetterArgs());
+        };
+	};
+	
 	propertyValue.prototype.get = function (renderContext, propertyOwner) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
@@ -113,7 +139,7 @@ Class("wipeout.template.propertyValue", function () {
 		var parser = this.getParser(propertyOwner);
 		
 		return parser ? 
-			(parser(parser.useRawXmlValue ? this._value : this.value(), this.name, renderContext)) : 
+			(parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)) : 
 			this.buildGetter().apply(null, renderContext.asGetterArgs());
 	};
 	
@@ -150,7 +176,7 @@ Class("wipeout.template.propertyValue", function () {
 				this._setter = null;
 			} else {
 				var getSetterRoot = wipeout.template.context.buildGetter(attributeValue.substring(0, attributeValue.length - property[0].length));
-				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/, "");
+				property = property[0].replace(/(^\s*\.+\s*)|(\s*$)/g, "");
 				if (getter) {
 					getter = wipeout.template.context.buildGetter(splitValue.addTokens(getter));
 					this._setter = function (renderContext, value) {
@@ -183,7 +209,7 @@ Class("wipeout.template.propertyValue", function () {
 		///<summary>Return the parser for the </summary>
         ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Function">The parser</returns>
-		
+        
 		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
 		
 		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
@@ -262,38 +288,4 @@ Class("wipeout.template.propertyValue", function () {
 	};
 	
 	return propertyValue;
-	
-	/*TESTS
-	
-	
-testUtils.testWithUtils("splitValue", "no filter", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var input = "KJBKJBKJB";
-	subject.getValue = function () { return input; };
-	
-	// act
-	var output = invoker(input);
-	
-    // assert
-    strictEqual(output.filter, "passthrough");
-    strictEqual(output.inputs.length, 1);
-    strictEqual(output.inputs[0], input);
-});
-	
-testUtils.testWithUtils("splitValue", "filter and args", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var input1 = "KJBKJBKJB", input2 = "dada'eterte'sdad", filter = "fdsfsdff";
-	subject.getValue = function () { return input1 + ", " + input2 + " => " + filter; };
-	
-	// act
-	var output = invoker();
-	
-    // assert
-    strictEqual(output.filter, filter);
-    strictEqual(output.inputs.length, 2);
-    strictEqual(output.inputs[0], input1);
-    strictEqual(output.inputs[1], input2);
-});
-	
-	*/
 });

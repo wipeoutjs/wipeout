@@ -85,6 +85,55 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		
 		return wipeout.utils.domData.exists(element, name);
 	};
+
+	htmlPropertyValue.prototype.prime = function (propertyOwner, logic, allPropertyValues) {
+		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
+        ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="logic" type="Function">The logic to invoke</param>
+        ///<param name="allSetters" type="Function">A list of all other setters on the element</param>
+        ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
+        
+        try {
+            this.otherAttributes = allPropertyValues;
+            return this._super(propertyOwner, logic);
+        } finally {        
+            this.otherAttributes = null;
+        }
+    };
+
+	htmlPropertyValue.prototype.otherAttribute = function (name, logic) {
+		///<summary>Use another html attribute from this node. If the other attribute does not exist, the logic will not be executed.</summary>
+        ///<param name="name" type="String">The attribute. Do not include the "wo-" or "data-wo-" parts</param>
+        ///<param name="logic" type="Function" optional="True">The logic to invoke. The first argument passed into the logic is the other attribute.</param>
+        ///<returns type="Boolean">Whether the attribute exists or not</returns>
+        
+        if (!logic) {
+            for (var i = 0, ii = this.otherAttributes.length; i < ii; i++)
+                // remove wo- and data-wo-
+                if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name)
+                    return true;
+            
+            return false;
+        }
+        
+        this.primed();
+        
+        for (var i = 0, ii = this.otherAttributes.length; i < ii; i++) {
+            // remove wo- and data-wo-
+            if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name) {
+                Array.prototype.push.apply(this._caching, 
+                    this.otherAttributes[i].prime(this.propertyOwner, (function () {
+                        var op;
+                        if (op = logic(this.otherAttributes[i]))
+                            this._caching.push(op);
+                    }).bind(this), this.otherAttributes));
+                
+                return true;
+            }
+        }
+        
+        return false;
+    };
 	
 	return htmlPropertyValue;
 });

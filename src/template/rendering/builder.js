@@ -41,13 +41,13 @@ Class("wipeout.template.rendering.builder", function () {
         this.html = htmlFragments.join("");
     };
 	
-	builder.applyToElement = function (setter, element, renderContext) {
+	builder.applyToElement = function (setter, element, renderContext, allSetters) {
 		///<summary>Apply this attribute to an element</summary>
         ///<param name="setter" type="wipeout.template.rendering.htmlAttributeSetter">The setter</param>
         ///<param name="element" type="Element">The element</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="allSetters" type="[wipeout.template.rendering.htmlAttributeSetter]">All of the setters on the current element</param>
         ///<returns type="Array">An array of disposables</returns>
-		
 		var op = [];
 		op.push.apply(op, setter.prime(element, function () {
 			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
@@ -55,7 +55,7 @@ Class("wipeout.template.rendering.builder", function () {
 				op.push(o);
 			else if (o instanceof Function)
 				op.push({ dispose: o });
-		}));
+		}, allSetters));
 		
 		return op;
 	};
@@ -73,7 +73,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(setter) {				
-				output.push.apply(output, builder.applyToElement(setter, element, renderContext));
+				output.push.apply(output, builder.applyToElement(setter, element, renderContext, elementAction.actions));
             });
         }, this);
     

@@ -36,6 +36,25 @@ testUtils.testWithUtils("value", "no cached", false, function(methods, classes, 
 	strictEqual(subject._cachedValue, "XYZ");
 });
 
+testUtils.testWithUtils("value", "raw, has cached", false, function(methods, classes, subject, invoker) {
+	// arrange
+	// act
+	// assert
+	strictEqual(subject._unAlteredCachedValue = {}, invoker(true));
+});
+
+testUtils.testWithUtils("value", "raw, no cached", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.getValue = function () {
+        return "XYZ";
+    };
+    
+	// act
+	// assert
+	strictEqual("XYZ", invoker(true));
+	strictEqual(subject._unAlteredCachedValue, "XYZ");
+});
+
 testUtils.testWithUtils("getValue", null, false, function(methods, classes, subject, invoker) {
 	// arrange
 	// act
@@ -119,7 +138,7 @@ testUtils.testWithUtils("get", "with parser", false, function(methods, classes, 
 	// arrange
 	var op = {}, val = {}, rc = {};
 	subject.name = {};
-	subject.value = methods.method([], val);
+	subject.value = methods.method([true], val);
 	var parser = methods.method([val, subject.name, rc], op);
 	subject.getParser = methods.method([], parser);
 	

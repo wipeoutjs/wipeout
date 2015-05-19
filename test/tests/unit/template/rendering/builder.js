@@ -32,7 +32,7 @@ testUtils.testWithUtils("execute", null, false, function(methods, classes, subje
 		actions: [{}]
 	}];
 	classes.mock("wipeout.template.rendering.builder.applyToElement", function () {
-		methods.method([subject.elements[0].actions[0], element, rc]).apply(null, arguments);
+		methods.method([subject.elements[0].actions[0], element, rc, subject.elements[0].actions]).apply(null, arguments);
 		return [{
 			dispose: methods.method()
 		}];
