@@ -22,12 +22,12 @@ Class("wipeout.template.context", function () {
             this.$parent = parentContext.$this;
 			
 			///<summary type="Array" generic0="Any">A list of all ancestor view models</summary>
-            this.$parents = [parentContext.$this];
-            this.$parents.push.apply(this.$parents, parentContext.$parents);
+            this.$xxxYyy = [parentContext.$this];
+            this.$xxxYyy.push.apply(this.$xxxYyy, parentContext.$xxxYyy);
         } else {
 			this.$parentContext = null;
 			this.$parent = null;
-			this.$parents = [];
+			this.$xxxYyy = [];
 		}
 		
 		if (arrayIndex != null) {
@@ -68,7 +68,7 @@ Class("wipeout.template.context", function () {
 		///<summary>Return a version of this to be plugged into a function creted by context.buildGetter(...)</summary>
         ///<returns type="Array">the arguments</returns>
 		
-		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$parents, this.$index]);
+		return this.getterArgs || (this.getterArgs = [this, this.$this, this.$parent, this.$xxxYyy, this.$index]);
 	};
 	
 	context.prototype.asWatchVariables = function () {
@@ -79,7 +79,7 @@ Class("wipeout.template.context", function () {
 			$context: this, 
 			$this: this.$this, 
 			$parent: this.$parent, 
-			$parents: this.$parents, 
+			$xxxYyy: this.$xxxYyy, 
 			$index: this.$index
 		});
 	};
@@ -110,9 +110,9 @@ Class("wipeout.template.context", function () {
         ///<param name="logic" type="String">The logic</param>
         ///<returns type="Function">A getter</returns>
 		
-		try {			
+		try {
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
+			return new Function("$context", "$this", "$parent", "$xxxYyy", "$index", "return " + logic + ";");
 		} catch (e) {
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	
@@ -130,7 +130,7 @@ Class("wipeout.template.context", function () {
 			logic += "(e, element)";
 			
 		try {
-			return new Function("$context", "$this", "$parent", "$parents", "$index", "e", "element", logic);
+			return new Function("$context", "$this", "$parent", "$xxxYyy", "$index", "e", "element", logic);
 		} catch (e) {
 			throw "Invalid function logic. Function logic must contain only one line of code and must not have a 'return' statement ";
 		}	

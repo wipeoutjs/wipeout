@@ -123,16 +123,16 @@ test("execute, $parent", function() {
 	});
 });
 
-test("execute, $parents", function() {
+test("execute, $xxxYyy", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$parents");
+	var subject = new wipeout.template.propertyValue("hello", "$xxxYyy");
 	
 	// act
 	// assert
 	subject.prime({}, function () {
-		ok(context.$parents);
-		strictEqual(context.$parents, subject.get(context));
+		ok(context.$xxxYyy);
+		strictEqual(context.$xxxYyy, subject.get(context));
 	});
 });
 

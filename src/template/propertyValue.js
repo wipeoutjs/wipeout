@@ -248,6 +248,8 @@ Class("wipeout.template.propertyValue", function () {
         if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
             // the renderContext will not be observable, so will not work with
             // a path observer
+            
+            //TODO: this is not complete. It doesn't take into account window. or $xxxYyy[2].
             var split = wipeout.utils.obj.splitPropertyName(this.value());
             
 			watched = new busybody.observeTypes.pathObserver(

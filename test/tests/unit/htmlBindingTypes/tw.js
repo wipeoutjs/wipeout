@@ -35,11 +35,11 @@ testUtils.testWithUtils("binding", "render context has an observable", false, fu
 	strictEqual(output, op);
 });
 
-testUtils.testWithUtils("binding", "render context has $parents observable", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("binding", "render context has $xxxYyy observable", false, function(methods, classes, subject, invoker) {
     // arrange
-	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$parents[0].value";}}, rc = {$parents: [new busybody.observable()]}, op = {};
+	var vm = {}, set = {name: {}, getParser:function () {}, value: function () {return "$xxxYyy[0].value";}}, rc = {$xxxYyy: [new busybody.observable()]}, op = {};
 	classes.mock("busybody.tryBind", function () {
-		methods.method([rc.$parents[0], "value", vm, set.name, true]).apply(null, arguments);
+		methods.method([rc.$xxxYyy[0], "value", vm, set.name, true]).apply(null, arguments);
 		return op;
 	}, 1);
 	

@@ -145,7 +145,7 @@ testUtils.testWithUtils("getParents", "no parents", false, function (methods, cl
 testUtils.testWithUtils("getParents", "has parent", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent0 = {}, parent1 = {};
-	subject.getRenderContext = methods.method([], {$this: subject, $parents: [parent0, parent1]});
+	subject.getRenderContext = methods.method([], {$this: subject, $xxxYyy: [parent0, parent1]});
     
     // act
     var actual = invoker();
@@ -159,7 +159,7 @@ testUtils.testWithUtils("getParents", "has parent", false, function (methods, cl
 testUtils.testWithUtils("getParents", "has parent, share parent scope", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent0 = {}, parent1 = {}, parent2 = {};
-	subject.getRenderContext = methods.method([], {$this: parent0, $parents: [parent1, parent2]});
+	subject.getRenderContext = methods.method([], {$this: parent0, $xxxYyy: [parent1, parent2]});
     
     // act
     var actual = invoker();
