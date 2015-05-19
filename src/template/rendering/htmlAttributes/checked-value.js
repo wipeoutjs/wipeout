@@ -50,6 +50,8 @@ HtmlAttr("checked-value", function () {
         }
         
         set();
+        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.get(renderContext))
+            element.addAttribute("checked", "checked");
         
 		attribute.onElementEvent(
             element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
