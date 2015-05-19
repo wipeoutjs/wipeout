@@ -1,13 +1,13 @@
 <h1>Set the model from the parent's model</h1>
 
 <p>
-In order to keep clean contextual boundaries, the model property of a child viewModel can be bound to a property of its parent's model using the keywords <code>$parent.model</code>.
+In order to keep clean contextual boundaries, the model property of a child viewModel can be bound to a property of its parent's model using the keywords <code>$this.model</code>.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
         <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control model="$parent.model.value">
+        &lt;wo.content-control model="$this.model.value">
             &lt;set-template>
                 Binding to a property on parent's model: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -22,7 +22,7 @@ In order to keep clean contextual boundaries, the model property of a child view
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     In this example there is a parent viewModel which has a child viewModel. 
-    The model of the child is bound to a property of the model of the parent. <code>$parent</code> points to the scope of the viewModel 1 level up
+    The model of the child is bound to a property of the model of the parent. <code>$this</code> points to the scope of the viewModel 1 level up
     
 </p>
 <br/>

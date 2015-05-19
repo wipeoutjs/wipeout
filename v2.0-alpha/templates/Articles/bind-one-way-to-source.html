@@ -12,7 +12,7 @@ By default, all bindings are one way from the parent (source) to the child (dest
     &lt;set-template>
         One way to source bindings: &lt;span wo-content="$this.model">&lt;/span>
         &lt;br />
-        &lt;wo.content-control input-value--owts="$parent.model">
+        &lt;wo.content-control input-value--owts="$this.model">
             &lt;set-template>
                 &lt;input type="text" wo-value="$this.inputValue" wo-on-event="keyup"/>
             &lt;/set-template>

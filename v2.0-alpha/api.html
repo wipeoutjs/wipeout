@@ -322,32 +322,6 @@ They will be appended to the prototype, effectively making them static. Put inst
 </p>
 </script>
 
-<script id="Articles.bind-in-scope" type="text/template">
-<h1>Binding to the current viewModel</h1>
-
-<p>
-You can bind properties of a viewModel to itself using the <code>$this</code> keyword.
-</p>
-
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-in-scope-script-1'">
-        <code parser="s">&lt;wo.content-control my-value="{ value: 'Hello wipeout!' }" my-inner-value="$this.myValue.value">
-    &lt;set-template>
-        Binding to current scope: &lt;span wo-content="$this.myInnerValue">&lt;/span>
-    &lt;/set-template>
-&lt;/wo.content-control></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
-
-    
-    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'bind-in-scope-script-1'">&lt;/wo.view></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
-<p>
-    This particular example works because <code>myValue</code> was bound before <code>myInnerValue</code>. Therefore, <code>myInnerValue</code> could point to a property on <code>myValue</code>. 
-    This method is far more useful in binding to properties explicitly defined in the viewModel onInitialized method or constructor.
-    
-</p>
-</script>
-
 <script id="Articles.bind-no-way" type="text/template">
 <h1>Setting an object from viewModel</h1>
 
@@ -358,7 +332,7 @@ You can bind properties of a viewModel to itself using the <code>$this</code> ke
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'" highlight--s="--nb">
         <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--nb="$parent.model.value">
+        &lt;wo.content-control model--nb="$this.model.value">
             &lt;set-template>
                 Setter bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -387,7 +361,7 @@ By default, all bindings are one way from the parent (source) to the child (dest
     &lt;set-template>
         One way to source bindings: &lt;span wo-content="$this.model">&lt;/span>
         &lt;br />
-        &lt;wo.content-control input-value--owts="$parent.model">
+        &lt;wo.content-control input-value--owts="$this.model">
             &lt;set-template>
                 &lt;input type="text" wo-value="$this.inputValue" wo-on-event="keyup"/>
             &lt;/set-template>
@@ -419,7 +393,7 @@ The default binding is one way. This means that the object where the propery
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-one-way-script-1'" highlight--s="--ow">
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--ow="$parent.model.value">
+        &lt;wo.content-control model--ow="$this.model.value">
             &lt;set-template>
                 One way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -535,13 +509,13 @@ Renders:
 <h1>Set the model from the parent's model</h1>
 
 <p>
-In order to keep clean contextual boundaries, the model property of a child viewModel can be bound to a property of its parent's model using the keywords <code>$parent.model</code>.
+In order to keep clean contextual boundaries, the model property of a child viewModel can be bound to a property of its parent's model using the keywords <code>$this.model</code>.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
         <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control model="$parent.model.value">
+        &lt;wo.content-control model="$this.model.value">
             &lt;set-template>
                 Binding to a property on parent's model: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -556,7 +530,7 @@ In order to keep clean contextual boundaries, the model property of a child view
     </wipeout-docs.view-models.components.usage-code-block> 
 <p>
     In this example there is a parent viewModel which has a child viewModel. 
-    The model of the child is bound to a property of the model of the parent. <code>$parent</code> points to the scope of the viewModel 1 level up
+    The model of the child is bound to a property of the model of the parent. <code>$this</code> points to the scope of the viewModel 1 level up
     
 </p>
 <br/>
@@ -567,13 +541,13 @@ In order to keep clean contextual boundaries, the model property of a child view
 <h1>Bind to a property on the parents viewModel</h1>
 
 <p>
-You may wish to bind to someting 1 level up in the viewModel hierarchy. You can do this using the <code>$parent</code> keyword.
+You may wish to bind to someting 1 level up in the viewModel hierarchy. You can do this using the <code>$this</code> keyword.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
         <code parser="s">&lt;wo.content-control value="{ innerValue: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control value="$parent.value.innerValue">
+        &lt;wo.content-control value="$this.value.innerValue">
             &lt;set-template>
                 Binding to a property on parent's viewModel: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
@@ -589,7 +563,7 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 
 
 <br/>
-<p>You can walk further up the chain of ancestors using the <code>$parents</code> keyword. <code>$parents</code> is an array, meaning <code>$parents[0] === $parent</code>, <code>$parents[1] === grand parent</code>, <code>$parents[2] === great grand parent</code>, etc...</p>
+<p>You can walk further up the chain of ancestors using the <code>$xyxyxy</code> keyword. <code>$xyxyxy</code> is an array, meaning <code>$xyxyxy[0] === $this</code>, <code>$xyxyxy[1] === grand parent</code>, <code>$xyxyxy[2] === great grand parent</code>, etc...</p>
 
 <br/>
 <br/>
@@ -649,7 +623,7 @@ By default, all bindings are one way. This means that the object where the prope
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'" highlight--s="--tw">
         <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--tw="$parent.model.value">
+        &lt;wo.content-control model--tw="$this.model.value">
             &lt;set-template>
                 Two way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
@@ -717,7 +691,7 @@ By default, all bindings are one way. This means that the object where the prope
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--ow="$parent.model.innerValue">
+        &lt;wo.content-control model--ow="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -737,7 +711,7 @@ By default, all bindings are one way. This means that the object where the prope
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--tw="$parent.model.innerValue">
+        &lt;wo.content-control model--tw="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -756,7 +730,7 @@ By default, all bindings are one way. This means that the object where the prope
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--owts="$parent.model.innerValue">
+        &lt;wo.content-control model--owts="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -775,7 +749,7 @@ By default, all bindings are one way. This means that the object where the prope
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--nb="$parent.model.innerValue">
+        &lt;wo.content-control model--nb="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -963,7 +937,7 @@ You can write a custom binding which determines how properties are set. Simply a
 
 The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
 <h3>Arguments</h3>
@@ -1025,7 +999,7 @@ Binding:
 <br/><h4 id="get">Get the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -1041,13 +1015,13 @@ Binding:
 <br/><h4 id="watch">Observe the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
-    // for a regular binding, will return "$parent.model"
+    // for a regular binding, will return "$this.model"
     property.watch(renderContext, function (oldVal, newVal) {
         // code for when the model value of the parent changes here
     }, true);
@@ -1059,14 +1033,14 @@ Binding:
 <br/><h4 id="set">Set the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 	
-    // It is possible to set the property "$parent.model".
-    // It would not be possible to set something like "$parent.model ? $parent.model : null"
+    // It is possible to set the property "$this.model".
+    // It would not be possible to set something like "$this.model ? $this.model : null"
     if (property.canSet()) {
         // set the model of the parent to "Hello!"
         property.set(renderContext, "Hello!");
@@ -1079,7 +1053,7 @@ Binding:
 <br/><h4 id="return">Dispose of the binding</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -1209,7 +1183,7 @@ function addZeroes (value, requiredLength) {
     
 // add filters to wo.filters
 wo.filters.dateParser = {
-    // This filter parses from strings to dates
+    // This filter parses from dates to strings
     downward: function (date, format) {
         if (format === "dd/mm/yyyy") {
             return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
@@ -1219,7 +1193,7 @@ wo.filters.dateParser = {
             return date;
         }
     },
-    // This filter parses from dates to strings
+    // This filter parses from strings to dates
     upward: function (dateString, format) {
         if (format === "dd/mm/yyyy") {
             var date = new Date();        
@@ -1244,8 +1218,8 @@ wo.filters.dateParser = {
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
     <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
     &lt;set-template>
-        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
-        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-checked-value="$this.format" name="format" checked="checked" /> dd/mm/yyyy 
+        &lt;input type="radio" value="mm/dd/yyyy" wo-checked-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
         &lt;br />
         Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
         Actual value: &lt;b wo-content="$model">&lt;/b>
@@ -1647,8 +1621,8 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name>
+    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name>
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
@@ -1687,7 +1661,7 @@ wo.viewModel("demoApp.name")
 var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
     // this method initializes the viewModel
-    .onInitialized(function () {
+    .initialize(function () {
         // create a computed property "fullName" which is
         // an amalgamation of the first name and last name
         this.computed("fullName", function () {
@@ -1710,8 +1684,8 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
+    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name> &lt;br />
     &lt;br />
     Full name: &lt;span wo-content="$this.fullName">&lt;/span>
 &lt;/div></code>
@@ -1989,8 +1963,8 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
+    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name> &lt;br />
 
     &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
 &lt;/div></code>
@@ -2466,7 +2440,7 @@ With a custom itemsControl you can control
 <ol>
 	<li><code>$parent</code>: refers to the parent viewModel. This property is very important when setting the model of viewModel, as you 
 		will always want to set it to a property on <code>$parent.model</code>.</li>
-	<li><code>$parents[]</code>: refers to all ancestor viewModels. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
+	<li><code>$xyxyxy[]</code>: refers to all ancestor viewModels. So <code>$xyxyxy[0] === $parent</code>, <code>$xyxyxy[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
 </ol>
@@ -2511,7 +2485,7 @@ wo.filters.ageFilter = {
     ]&lt;/model>
     &lt;set-template>
         Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-        &lt;wo.items-control items="$parent.model, $parent.minAge => ageFilter">
+        &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
             &lt;item-template>
                 &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
             &lt;/item-template>
@@ -3154,7 +3128,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <h1>Share parent scope</h1>
 
     <p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'if'" />
- control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $parents[4].value"</code> which is an indicator
+ control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $xyxyxy[4].value"</code> which is an indicator
 of un-needed scope.</p>
     <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a viewModel.</p>
 
@@ -3229,7 +3203,7 @@ of un-needed scope.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;set-template>
-        &lt;wo.viewModel="$parent.model.subModel" template-id="'myTemplateId'" />
+        &lt;wo.viewModel="$this.model.subModel" template-id="'myTemplateId'" />
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.code-block>
@@ -3900,11 +3874,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
           
 <div class="leftNav leftNav-width" style="background-color: white">
     <div class="staticHeader-height"></div>
-    <wipeout-docs.view-models.components.tree-view-branch id="treeView" model="$parent.model.menu" />
+    <wipeout-docs.view-models.components.tree-view-branch id="treeView" model="$this.model.menu" />
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
-        <wipeout-docs.view-models.components.dynamic-render id="content" model="$parent.model.content" />
+        <wipeout-docs.view-models.components.dynamic-render id="content" model="$this.model.content" />
     </div>
 </div>
 </script>
@@ -3941,7 +3915,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
-        <wo.view template-id="$parent.contentTemplate"></wo.view>
+        <wo.view template-id="$this.contentTemplate"></wo.view>
     </div>
 </div>
 </script>
@@ -3989,14 +3963,14 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 <p wo-visible="$this.showDefinitionCode">Renders:</p>
 <div style="border: 1px solid #888; padding: 5px;">
-	<wo.content-control template-id="$parent.usage"></wo.content-control>
+	<wo.content-control template-id="$this.usage"></wo.content-control>
 </div>
 </script>
 
 <script id="wipeoutDocs.viewModels.pages.classItemRow" type="text/template">
 <div wo-el="tr">
     <div wo-el="td">
-        <wipeout-docs.rl href="wipeoutDocs.models.apiApplication.routableUrl($parent.model)" text="$model.name"></wipeout-docs.rl>
+        <wipeout-docs.rl href="wipeoutDocs.models.apiApplication.routableUrl($this.model)" text="$model.name"></wipeout-docs.rl>
     </div>
     <div wo-el="td" wo-content="$model.summary"></div>
 </div>
@@ -4020,7 +3994,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <script id="wipeoutDocs.viewModels.pages.classPage" type="text/template">
 
 <wipeout-docs.view-models.pages.function-page 
-                        model="$parent.model.classConstructor" 
+                        model="$this.model.classConstructor" 
                         title--s="Constructor" 
                         show-return-value="false"
 						function-definition-text--s="Constructor definition">
@@ -4131,7 +4105,7 @@ Welcome to wipeout. Browse the API on the left hand side
         <span>Using</span>
         <span wo-content="$model.propertyName"></span>
     </h2>
-    <wo.view template-id="$parent.usagesTemplateId" model="$parent.model.classConstructor" />
+    <wo.view template-id="$this.usagesTemplateId" model="$this.model.classConstructor" />
 </div>
 </script>
 

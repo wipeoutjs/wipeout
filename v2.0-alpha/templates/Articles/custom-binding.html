@@ -10,7 +10,7 @@ You can write a custom binding which determines how properties are set. Simply a
 
 The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
 <h3>Arguments</h3>
@@ -72,7 +72,7 @@ Binding:
 <br/><h4 id="get">Get the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
@@ -88,13 +88,13 @@ Binding:
 <br/><h4 id="watch">Observe the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
-    // for a regular binding, will return "$parent.model"
+    // for a regular binding, will return "$this.model"
     property.watch(renderContext, function (oldVal, newVal) {
         // code for when the model value of the parent changes here
     }, true);
@@ -106,14 +106,14 @@ Binding:
 <br/><h4 id="set">Set the value of the property</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 	
-    // It is possible to set the property "$parent.model".
-    // It would not be possible to set something like "$parent.model ? $parent.model : null"
+    // It is possible to set the property "$this.model".
+    // It would not be possible to set something like "$this.model ? $this.model : null"
     if (property.canSet()) {
         // set the model of the parent to "Hello!"
         property.set(renderContext, "Hello!");
@@ -126,7 +126,7 @@ Binding:
 <br/><h4 id="return">Dispose of the binding</h4>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$parent.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">

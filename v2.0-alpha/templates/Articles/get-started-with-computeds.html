@@ -6,7 +6,7 @@
 var person = wo.viewModel("demoApp.person")
     .templateId("/person.html")
     // this method initializes the viewModel
-    .onInitialized(function () {
+    .initialize(function () {
         // create a computed property "fullName" which is
         // an amalgamation of the first name and last name
         this.computed("fullName", function () {
@@ -29,8 +29,8 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$parent.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$parent.model.lastName">&lt;/demo-app.name> &lt;br />
+    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name> &lt;br />
     &lt;br />
     Full name: &lt;span wo-content="$this.fullName">&lt;/span>
 &lt;/div></code>

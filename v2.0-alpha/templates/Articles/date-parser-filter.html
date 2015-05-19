@@ -15,7 +15,7 @@ function addZeroes (value, requiredLength) {
     
 // add filters to wo.filters
 wo.filters.dateParser = {
-    // This filter parses from strings to dates
+    // This filter parses from dates to strings
     downward: function (date, format) {
         if (format === "dd/mm/yyyy") {
             return addZeroes(date.getDate(), 2) + "/" + addZeroes(date.getMonth() + 1, 2) + "/" + addZeroes(date.getYear() + 1900, 4);
@@ -25,7 +25,7 @@ wo.filters.dateParser = {
             return date;
         }
     },
-    // This filter parses from dates to strings
+    // This filter parses from strings to dates
     upward: function (dateString, format) {
         if (format === "dd/mm/yyyy") {
             var date = new Date();        
@@ -50,8 +50,8 @@ wo.filters.dateParser = {
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
     <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
     &lt;set-template>
-        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-value="$this.format" name="format" /> dd/mm/yyyy 
-        &lt;input type="radio" value="mm/dd/yyyy" wo-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-checked-value="$this.format" name="format" checked="checked" /> dd/mm/yyyy 
+        &lt;input type="radio" value="mm/dd/yyyy" wo-checked-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
         &lt;br />
         Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
         Actual value: &lt;b wo-content="$model">&lt;/b>

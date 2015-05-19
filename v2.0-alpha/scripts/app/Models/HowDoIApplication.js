@@ -50,8 +50,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
             items: [
-                new articleLink("Bind to a static value", "bind-to-static-value"),      
-                new articleLink("Bind to a property on the viewModel", "bind-in-scope"),
+                new articleLink("Bind to a static value", "bind-to-static-value"),
                 new articleLink("Bind to a property on the model", "bind-to-model"),
                 new articleLink("Bind to a property on the parent's viewModel", "bind-to-parents-view-model"),
                 new articleLink("Set the model from the parent's model", "bind-to-parents-model"),

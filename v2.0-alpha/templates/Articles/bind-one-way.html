@@ -9,7 +9,7 @@ The default binding is one way. This means that the object where the propery
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-one-way-script-1'" highlight--s="--ow">
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--ow="$parent.model.value">
+        &lt;wo.content-control model--ow="$this.model.value">
             &lt;set-template>
                 One way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>

@@ -3359,18 +3359,15 @@ Class("wipeout.htmlBindingTypes.viewModelId", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="busybody.disposable">Dispose of the binding</returns>
-		
-		// if $this !== vm then $this is the parent, otherwise $parent is the parent
-		var parent = renderContext.$this === viewModel ? renderContext.$parent : renderContext.$this;
-		
-		if (parent instanceof wipeout.viewModels.view)
-			parent.templateItems[setter.value()] = viewModel;
+				
+		if (renderContext.$this instanceof wipeout.viewModels.view)
+			renderContext.$this.templateItems[setter.value()] = viewModel;
 		
 		var output = wipeout.htmlBindingTypes.nb(viewModel, setter, renderContext) || new busybody.disposable();
 		output.registerDisposeCallback(function () {		
-			if (parent instanceof wipeout.viewModels.view &&
-			   parent.templateItems[setter.value()] === viewModel)
-				delete parent.templateItems[setter.value()];
+			if (renderContext.$this instanceof wipeout.viewModels.view &&
+			   renderContext.$this.templateItems[setter.value()] === viewModel)
+				delete renderContext.$this.templateItems[setter.value()];
 		});
 		
 		return output;
@@ -3522,7 +3519,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
         
         if(!this.setters.model) {
             this.setters.model = compiledInitializer.modelSetter ||
-				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$parent ? $parent.model : null")));
+				(compiledInitializer.modelSetter = compiledInitializer.createPropertyValue("model", new wipeout.wml.wmlAttribute("$this.model")));
         }
     };
     
@@ -3955,10 +3952,9 @@ Class("wipeout.viewModels.view", function () {
         ///<returns type="Any">The parent view model</returns>
         
 		var renderContext = this.getRenderContext();
-		if (!renderContext)
-			return null;
-					
-        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
+        return renderContext ? 
+            (renderContext.$this === this ? renderContext.$parent : renderContext.$this) : 
+            null;
     };
     
     view.prototype.getParents = function() {
@@ -4066,8 +4062,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered each time after a template is rendered</summary>
 		
 		enumerateArr(this.$onRendered, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
     
     // virtual
@@ -4075,8 +4071,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered just before a view is un rendered</summary>
 		
 		enumerateArr(this.$onUnrendered, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
     
     // virtual
@@ -4084,8 +4080,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>
 		
 		enumerateArr(this.$onApplicationInitialized, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
 	
     // virtual
@@ -4093,8 +4089,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
 		
 		enumerateArr(this.$onInitialized, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
 
     return view;
@@ -4559,6 +4555,26 @@ Class("wipeout.template.propertyValue", function () {
 		return this._getter;
 	};
 	
+    //TODO: test
+	propertyValue.prototype.buildPermanentGetter = function (renderContext, propertyOwner) {
+		///<summary>Return a function which will return the value of this property whether the property is primed or not</summary>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+        ///<returns type="Function">A function with no arguments which returns the value</returns>
+		
+		var parser = this.getParser(propertyOwner);
+		
+		if (parser) 
+            return (function () {
+			     return parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)
+            }).bind(this);
+        
+        var getter = this.buildGetter();
+        return function () {
+            return getter.apply(null, renderContext.asGetterArgs());
+        };
+	};
+	
 	propertyValue.prototype.get = function (renderContext, propertyOwner) {
 		///<summary>Return the value of this setter when applied to a renderContext</summary>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
@@ -4638,7 +4654,7 @@ Class("wipeout.template.propertyValue", function () {
 		///<summary>Return the parser for the </summary>
         ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Function">The parser</returns>
-		
+        
 		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
 		
 		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
@@ -4677,6 +4693,8 @@ Class("wipeout.template.propertyValue", function () {
         if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
             // the renderContext will not be observable, so will not work with
             // a path observer
+            
+            //TODO: this is not complete. It doesn't take into account window. or $parents[2].
             var split = wipeout.utils.obj.splitPropertyName(this.value());
             
 			watched = new busybody.observeTypes.pathObserver(
@@ -4717,40 +4735,6 @@ Class("wipeout.template.propertyValue", function () {
 	};
 	
 	return propertyValue;
-	
-	/*TESTS
-	
-	
-testUtils.testWithUtils("splitValue", "no filter", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var input = "KJBKJBKJB";
-	subject.getValue = function () { return input; };
-	
-	// act
-	var output = invoker(input);
-	
-    // assert
-    strictEqual(output.filter, "passthrough");
-    strictEqual(output.inputs.length, 1);
-    strictEqual(output.inputs[0], input);
-});
-	
-testUtils.testWithUtils("splitValue", "filter and args", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var input1 = "KJBKJBKJB", input2 = "dada'eterte'sdad", filter = "fdsfsdff";
-	subject.getValue = function () { return input1 + ", " + input2 + " => " + filter; };
-	
-	// act
-	var output = invoker();
-	
-    // assert
-    strictEqual(output.filter, filter);
-    strictEqual(output.inputs.length, 2);
-    strictEqual(output.inputs[0], input1);
-    strictEqual(output.inputs[1], input2);
-});
-	
-	*/
 });
 
 
@@ -5566,7 +5550,7 @@ Class("wipeout.template.context", function () {
         ///<param name="logic" type="String">The logic</param>
         ///<returns type="Function">A getter</returns>
 		
-		try {			
+		try {
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
 			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
 		} catch (e) {
@@ -5852,13 +5836,13 @@ Class("wipeout.template.rendering.builder", function () {
         this.html = htmlFragments.join("");
     };
 	
-	builder.applyToElement = function (setter, element, renderContext) {
+	builder.applyToElement = function (setter, element, renderContext, allSetters) {
 		///<summary>Apply this attribute to an element</summary>
         ///<param name="setter" type="wipeout.template.rendering.htmlAttributeSetter">The setter</param>
         ///<param name="element" type="Element">The element</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<param name="allSetters" type="[wipeout.template.rendering.htmlAttributeSetter]">All of the setters on the current element</param>
         ///<returns type="Array">An array of disposables</returns>
-		
 		var op = [];
 		op.push.apply(op, setter.prime(element, function () {
 			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
@@ -5866,7 +5850,7 @@ Class("wipeout.template.rendering.builder", function () {
 				op.push(o);
 			else if (o instanceof Function)
 				op.push({ dispose: o });
-		}));
+		}, allSetters));
 		
 		return op;
 	};
@@ -5884,7 +5868,7 @@ Class("wipeout.template.rendering.builder", function () {
             
             // run all actions on it
             enumerateArr(elementAction.actions, function(setter) {				
-				output.push.apply(output, builder.applyToElement(setter, element, renderContext));
+				output.push.apply(output, builder.applyToElement(setter, element, renderContext, elementAction.actions));
             });
         }, this);
     
@@ -6152,6 +6136,69 @@ HtmlAttr("attr", function () {
     }
 	
 	return attr;
+});
+
+
+HtmlAttr("checked-value", function () {
+    
+    function onChecked (element, attribute, valueGetter) {
+        
+        if (valueGetter)
+            return valueGetter();
+        
+        if (element.hasAttribute("value"))
+            return element.getAttribute("value")
+        
+        return true;
+    }
+    
+    function onUnChecked (element, attribute, valueGetter) {
+        return valueGetter || element.hasAttribute("value") ? null : false;
+    }
+    
+    function noRadiosAreSelected(name) {
+        return !document.querySelector('input[type=radio][name="' + name.replace('"', '\\"') + '"][checked]');
+    }
+    
+    return function checkedValue (element, attribute, renderContext) {
+        ///<summary>Bind to the value of a checked html element</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
+        
+        if (!attribute.canSet())
+            throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
+        
+        var valueGetter;
+        attribute.otherAttribute("value", function (value) {
+            valueGetter = value.buildPermanentGetter(renderContext);
+        });
+        
+        function set() {
+            if (element.checked)
+                attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
+            else if (element.type !== "radio")
+                attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
+            else if (noRadiosAreSelected(element.name))
+                attribute.set(renderContext, null, element);
+        }
+        
+        set();
+        
+		attribute.onElementEvent(
+            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
+            renderContext, 
+            set);
+        
+        // if value changes, update checked value
+        attribute.otherAttribute("value", function (value) {
+            value.watch(renderContext, function (oldVal, newVal) {
+                if (element.hasAttribute("checked"))
+                    attribute.set(renderContext, newVal, element);
+            });
+        });
+    };
 });
 
 
@@ -6465,21 +6512,18 @@ HtmlAttr("value", function () {
 	
 	//TODE
 	return function value (element, attribute, renderContext) {
-        ///<summary>Bind to the value of a htl element</summary>
+        ///<summary>Bind to the value of a html element</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		if (element.type === "checkbox")
-			return checkbox(element, attribute, renderContext);
+        // for checkboxes, radios and options "value" works in conjunction with "checked-value"
+		if (element.type === "checkbox" || element.type === "radio" || trimToLower(element.tagName) === "option")
+			return;
 		
-		if (element.type === "radio")
-			return radio(element, attribute, renderContext);
-		
-		var val = attribute.value();
         if (!attribute.canSet())
-            throw "Cannot bind to the property \"" + val + "\".";
+            throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
 		attribute.watch(renderContext, function (oldVal, newVal) {
@@ -6626,6 +6670,55 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		
 		return wipeout.utils.domData.exists(element, name);
 	};
+
+	htmlPropertyValue.prototype.prime = function (propertyOwner, logic, allPropertyValues) {
+		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
+        ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="logic" type="Function">The logic to invoke</param>
+        ///<param name="allSetters" type="Function">A list of all other setters on the element</param>
+        ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
+        
+        try {
+            this.otherAttributes = allPropertyValues;
+            return this._super(propertyOwner, logic);
+        } finally {        
+            this.otherAttributes = null;
+        }
+    };
+
+	htmlPropertyValue.prototype.otherAttribute = function (name, logic) {
+		///<summary>Use another html attribute from this node. If the other attribute does not exist, the logic will not be executed.</summary>
+        ///<param name="name" type="String">The attribute. Do not include the "wo-" or "data-wo-" parts</param>
+        ///<param name="logic" type="Function" optional="True">The logic to invoke. The first argument passed into the logic is the other attribute.</param>
+        ///<returns type="Boolean">Whether the attribute exists or not</returns>
+        
+        if (!logic) {
+            for (var i = 0, ii = this.otherAttributes.length; i < ii; i++)
+                // remove wo- and data-wo-
+                if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name)
+                    return true;
+            
+            return false;
+        }
+        
+        this.primed();
+        
+        for (var i = 0, ii = this.otherAttributes.length; i < ii; i++) {
+            // remove wo- and data-wo-
+            if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name) {
+                Array.prototype.push.apply(this._caching, 
+                    this.otherAttributes[i].prime(this.propertyOwner, (function () {
+                        var op;
+                        if (op = logic(this.otherAttributes[i]))
+                            this._caching.push(op);
+                    }).bind(this), this.otherAttributes));
+                
+                return true;
+            }
+        }
+        
+        return false;
+    };
 	
 	return htmlPropertyValue;
 });
@@ -6900,7 +6993,8 @@ Class("wipeout.template.rendering.viewModelElement", function () {
 			new wipeout.template.context(this.createdViewModel);
         
         // initialize the view model
-        var d2 = initializer.initialize(this.createdViewModel, this.renderContext);
+        // if there is no parent, use the new render context instead (application root only)
+        var d2 = initializer.initialize(this.createdViewModel, parentRenderContext || this.renderContext);
         
 		this.disposeOfViewModelBindings = function () {
 			//issue-#41, this could be a bit better
@@ -7448,12 +7542,135 @@ Class("wipeout.utils.viewModels", function () {
 
 		var constr, name = viewModels.getElementName(wmlElement);
 
-		if (constr = wipeout.utils.obj.getObject(name))
+		if (!viewModels.definitelyNotAViewModel[name] && (constr = wipeout.utils.obj.getObject(name)))
 			return {
 				name: name,
 				constructor: constr
 			};
 	};
+    
+    viewModels.definitelyNotAViewModel = {
+        "a": true,
+        "abbr": true,
+        "acronym": true,
+        "address": true,
+        "applet": true,
+        "area": true,
+        "article": true,
+        "aside": true,
+        "audio": true,
+        "b": true,
+        "base": true,
+        "basefont": true,
+        "bdi": true,
+        "bdo": true,
+        "big": true,
+        "blockquote": true,
+        "body": true,
+        "br": true,
+        "button": true,
+        "canvas": true,
+        "caption": true,
+        "center": true,
+        "cite": true,
+        "code": true,
+        "col": true,
+        "colgroup": true,
+        "command": true,
+        "datalist": true,
+        "dd": true,
+        "del": true,
+        "details": true,
+        "dfn": true,
+        "dir": true,
+        "div": true,
+        "dl": true,
+        "dt": true,
+        "em": true,
+        "embed": true,
+        "fieldset": true,
+        "figcaption": true,
+        "figure": true,
+        "font": true,
+        "footer": true,
+        "form": true,
+        "frame": true,
+        "frameset": true,
+        "h1": true,
+        "h2": true,
+        "h3": true,
+        "h4": true,
+        "h5": true,
+        "h6": true,
+        "head": true,
+        "header": true,
+        "hgroup": true,
+        "hr": true,
+        "html": true,
+        "i": true,
+        "iframe": true,
+        "img": true,
+        "input": true,
+        "ins": true,
+        "kbd": true,
+        "keygen": true,
+        "label": true,
+        "legend": true,
+        "li": true,
+        "link": true,
+        "map": true,
+        "mark": true,
+        "menu": true,
+        "meta": true,
+        "meter": true,
+        "nav": true,
+        "noframes": true,
+        "noscript": true,
+        "object": true,
+        "ol": true,
+        "optgroup": true,
+        "option": true,
+        "output": true,
+        "p": true,
+        "param": true,
+        "pre": true,
+        "progress": true,
+        "q": true,
+        "rp": true,
+        "rt": true,
+        "ruby": true,
+        "s": true,
+        "samp": true,
+        "script": true,
+        "section": true,
+        "select": true,
+        "small": true,
+        "source": true,
+        "span": true,
+        "strike": true,
+        "strong": true,
+        "style": true,
+        "sub": true,
+        "summary": true,
+        "sup": true,
+        "table": true,
+        "tbody": true,
+        "td": true,
+        "textarea": true,
+        "tfoot": true,
+        "th": true,
+        "thead": true,
+        "time": true,
+        "title": true,
+        "tr": true,
+        "track": true,
+        "tt": true,
+        "u": true,
+        "ul": true,
+        "var": true,
+        "video": true,
+        "wbr": true
+    };
 	
 	return viewModels;
 });
@@ -8923,12 +9140,13 @@ expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
 expose("filters", wipeout.template.filters);
 
+expose("definitelyNotAViewModel", wipeout.utils.viewModels.definitelyNotAViewModel);
+
 expose("addHtmlAttribute", SimpleHtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
 });
-
 }(window.orienteer, window.busybody));
 
 }());

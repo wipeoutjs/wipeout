@@ -12,7 +12,7 @@
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--ow="$parent.model.innerValue">
+        &lt;wo.content-control model--ow="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -32,7 +32,7 @@
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--tw="$parent.model.innerValue">
+        &lt;wo.content-control model--tw="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -51,7 +51,7 @@
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--owts="$parent.model.innerValue">
+        &lt;wo.content-control model--owts="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
@@ -70,7 +70,7 @@
     <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--nb="$parent.model.innerValue">
+        &lt;wo.content-control model--nb="$this.model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>

@@ -11,7 +11,7 @@
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;set-template>
-        &lt;wo.viewModel="$parent.model.subModel" template-id="'myTemplateId'" />
+        &lt;wo.viewModel="$this.model.subModel" template-id="'myTemplateId'" />
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.code-block>
