@@ -13,17 +13,11 @@ HtmlAttr("checked-value", function () {
     }
     
     function onUnChecked (element, attribute, valueGetter) {
-        
         return valueGetter || element.hasAttribute("value") ? null : false;
     }
     
     function noRadiosAreSelected(name) {
-        var inputs = document.getElementsByTagName("input");
-        for (var i = 0, ii = inputs.length; i < ii; i++)
-            if (inputs[i].type === "radio" && inputs[i].name === name && inputs[i].hasAttribute("checked"))
-                return false;
-        
-        return true;
+        return !document.querySelector('input[type=radio][name="' + name.replace('"', '\\"') + '"][checked]');
     }
     
     return function checkedValue (element, attribute, renderContext) {
