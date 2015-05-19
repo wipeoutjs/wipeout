@@ -48,12 +48,12 @@ wo.filters.dateParser = {
 };</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
-    <code parser="s">&lt;wo.content-control model="new Date()" format--s="dd/mm/yyyy">
+    <code parser="s">&lt;wo.content-control model="new Date()" format--s="mm/dd/yyyy">
     &lt;set-template>
-        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-checked-value="$this.format" name="format" checked="checked" /> dd/mm/yyyy 
+        Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-checked-value="$this.format" name="format" /> dd/mm/yyyy 
         &lt;input type="radio" value="mm/dd/yyyy" wo-checked-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
         &lt;br />
-        Enter date in correct format: &lt;input type="text" wo-value="$model, $this.format => dateParser" wo-on-event="blur" /> &lt;br />
+        Enter date in correct format: &lt;input type="text" wo-on-event="blur" wo-value="$model, $this.format => dateParser" /> &lt;br />
         Actual value: &lt;b wo-content="$model">&lt;/b>
     &lt;/set-template>
 &lt;/wo.content-control></code>

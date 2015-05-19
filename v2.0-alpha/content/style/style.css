@@ -73,11 +73,8 @@ ul.wo-navbar-right {
 }
 
 .center {
-    position: absolute;
-    margin-right: -62.5px;
-    margin-left: -62.5px;
-    left: 50%;
-    right: 50%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 ul.wo-navbar-right li {
@@ -120,8 +117,7 @@ ul.wo-navbar-right li {
 }
 
 .main-image-dimentions {
-    height: 125px;
-    width: 125px;
+    height: 250px;
 }
 
 .main-example-code>pre {

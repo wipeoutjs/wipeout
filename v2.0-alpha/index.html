@@ -35,43 +35,32 @@
             <div class="index-page">
     <div class="jumbotron">
         <h1>Wipeout</h1>
-        <p>MVVM on steroids for knockout.</p>
+        <p>Pure and powerful MVVM.</p>
         <br/>
         <br/>
-        <div class="columns" style="height: 170px;">
-            <div class="column-3">
-                <div class="center-container">
-                    <img class="main-image-dimentions center" src="content/images/boxingGlove.png"></img>
-                    <div class="main-image-dimentions"></div>
-                    <br/>
-                    <h4>The power of knockout</h4>
-                </div>
-            </div>
-            <div class="column-3">
-                <div class="center-container">
-                    <img class="main-image-dimentions center" src="content/images/xaml.svg"></img>
-                    <div class="main-image-dimentions"></div>
-                    <br/>
-                    <h4>The declaritive nature of XAML</h4> 
-                </div>
-            </div>
-            <div class="column-3">
-                <div class="center-container">
-                    <img class="main-image-dimentions center" src="content/images/oo.svg"></img>
-                    <div class="main-image-dimentions"></div>
-                    <br/> 
-                    <h4>The extensability of an OO framework</h4>
-                </div>
-            </div>
+        <div class="center">
+            <h3>Define plugable components</h3>
+            <img style="height: 300px; width: auto" src="content/images/title-page-define-widget.png"></img>
+        </div>
+        <div class="center">
+            <h3>Use them</h3>
+            <img style="height: 125px; width: auto" src="content/images/title-page-html.png"></img>
         </div>
     </div>
+<br/>
     <div class="main-page-section">
         <h1>What is Wipeout?</h1>
-        <p>Wipeout is a template engine for knockout. It leverages the superb client binding and templating capabilities of knockout, but goes one step further, introducing the basic functionalities and development patterns of XAML in a HTML/javascript environment.</p>
+        <p>Wipeout is an MVVM framework for html and javascript. It pushes the idea of large, scalable web applications built from pluggable components with a strict separation between business logic and presentation logic.</p>
     </div>
     <div class="main-page-section">
         <h1>What does it look like?</h1>
-        <p>Wipeout is built to look as much like WPF and Silverlight as possible. You define components in javascript, give them html templates and nest them like with XAML. Have a look:</p>
+        <p>Within wipeout you:
+            <ul>
+                <li>Define view models</li>
+                <li>Build templates</li>
+                <li>Create or bind models</li>
+        </ul>
+        </p>
         <div id="example">
             <h4>A collapsible component</h4>
             <div class="columns">
@@ -82,7 +71,7 @@ var collapsible = wo.viewModel("app.collapsible")
 
   .templateId("/app-collapsible.html")
   
-  .onInitialized(function () {
+  .initialize(function () {
     // defines whether the content is visible or not
     this.show = true;
   })
@@ -119,7 +108,7 @@ wo.viewModel("app.rootApplication")
 
   .templateId("/app-rootApplication.html")
   
-  .onInitialized(function () {
+  .initialize(function () {
     // add a model for our application
     this.model = {
       applicationName: "Wipeout demo",
@@ -137,7 +126,7 @@ wo.viewModel("app.rootApplication")
                     <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-rootApplication.html">&lt;div style="width: 300px; margin: 50px"
      class="panel panel-primary">
     &lt;h4 wo-content="$model.applicationName">&lt;/h4>
-    &lt;app.collapsible model="$parent.model.collapsibleContent">
+    &lt;app.collapsible model="$model.collapsibleContent">
     &lt;/app.collapsible>
 &lt;/div></pre>
                 </div>
@@ -145,15 +134,13 @@ wo.viewModel("app.rootApplication")
             <h4>Application definition</h4>
             <div class="columns">
                 <div class="column-2 main-example-code">
-                    Model and setup
-                    <pre class="prettyprint" data-script-type="text/javascript">/*Not needed*/</pre>
-                </div>
-                <div class="column-2 main-example-code">
                     Html definiton
                     <pre class="prettyprint" data-html="true">&lt;!-- html definition -->
                     
 &lt;app.root-application>
 &lt;/app.root-application></pre>
+                </div>
+                <div class="column-2 main-example-code">
                 </div>
             </div>
             
@@ -169,17 +156,12 @@ wo.viewModel("app.rootApplication")
         <ul>
             <li>
                 <h3>Custom Html elements</h3>
-                <p>Wipeout view models are used in the same way as standard html. So you can have standard <span class="tag">&lt;div>&lt;/div></span> and custom <span class="tag">&lt;shoppingCart /></span> tags side by side.</p>
+                <p>Wipeout view models are used in the same way as standard html. So you can have standard <code>&lt;div>&lt;/div></code> and custom <code>&lt;shopping-cart>&lt;/shopping-cart></code> tags side by side.</p>
             </li>
             <li>
                 <h3>More componentization than you can handle!</h3>
                 <p>In wipeout, everything is a component. From your root application to a visual component (like a collapsible) 
                     to a business component (like a shopping cart). This makes large complicated pieces of code quite pluggable.</p>
-            </li>
-            <li>
-                <h3>Leverage the knockout you know and love</h3>
-                <p>Wipeout is a template engine for knockout and so adds to it. Excluding 1 or 2 control flow bindings, all of knockout is available if using wipeout. 
-                    The missing content is either un necessary in the wipeout paradigm or replaced</p>
             </li>
             <li>
                 <h3>Strict seperation of concerns</h3>
@@ -196,13 +178,15 @@ wo.viewModel("app.rootApplication")
             </li>
             <li>
                 <h3>The framework that does not control</h3>
-                <p>Wipeout applications are self contained within a single html element. This is great for those who do not want to relinquish 
-                    all control to a framework or those with a fear of the SPA.
-                    <br />Plain old vanilla knockout and wipeout can also be used side by side.</p>
+                <p>Wipeout applications are self contained within a single html element. This is great for those who do not want to relinquish all control to a framework or those with a fear of the SPA.</p>
             </li>
             <li>
                 <h3>Your old friend jQuery is welcome</h3>
                 <p>Although, you will find that jQuery is not as relevant in the MVVM universe as it used to be.</p>
+            </li>
+            <li>
+                <h3>Leverages the latest and greatest</h3>
+                <p>Wipeout is built with progression in mind and will gently slip into new javascript functionality as it gains browser support.</p>
             </li>
         </ul>
     </div>
