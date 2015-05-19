@@ -1140,19 +1140,17 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <h1>Custom html attributes</h1>
 <p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function () {
-    return function (element, attribute, renderContext) {
+	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
             
-        attribute.onElementEvent("click", renderContext, function () {
-            element.value = "";
-        });
-    }
+    attribute.onElementEvent("click", renderContext, function () {
+        element.value = "";
+    });
 });</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-custom-html-attribute-1'" highlight--s="wo-render">
     <code parser="s">&lt;wo.content-control>
     &lt;set-template>
-        &lt;input wo-clear-when-clicked /> 
+        &lt;input value="click me" wo-clear-when-clicked /> 
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.new-template-code-block>
@@ -1160,6 +1158,35 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
     <code parser="s">&lt;wo.view template-id="'wo-custom-html-attribute-1'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block>
+
+<h3>Attribute arguments</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>element</td>
+			<td>The html element which the attributes is set on.</td>
+		</tr>
+		<tr>
+			<td>attribute</td>
+			<td>The attribute is a wipeout htmlPropertyValue. It contains functionality for getting setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue'" text--s="wipeout.template.initialization.rendering.htmlPropertyValue"></wipeout-docs.rl></td>
+		</tr>
+		<tr>
+			<td>renderContext</td>
+			<td>renderContext is the current render context with $this, $parent etc...</td>
+		</tr>
+		<tr>
+			<td>Returns</td>
+			<td>The return value is either a function or an object with a dispose function which will undo anything done in the html attribute. This is important to prevent memory leaks. Any actions using the <code>attribute</code> argument do not need to be disposed of.</td>
+		</tr>
+	</tbody>
+</table>
+(TODOD: lots of examples for the attribute property)
 </script>
 
 <script id="Articles.date-parser-filter" type="text/template">
@@ -1337,6 +1364,32 @@ Always remember to <code>build(...)</code> viewModels after all definitions.
     }
 });</code>
 </wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.event-attributes" type="text/template">
+<h1>Event Attributes</h1>
+<p>Event attributes are attributes which fire off a html event. One example of this is <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-click'" text="'click'"></wipeout-docs.rl>.</p>
+<p>With event attributes you can define the event handler in multiple ways:</p>
+<h4>As a logical string</h4>
+<p>If you prefix the click attribute value with <code>logic:</code>, the contents of the attribute will be executed.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;button wo-click="logic: console.log('The button was clicked')">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h4>As an event handler</h4>
+<p>You can point the event at an event handler anywhere within the current render context.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;button wo-click="$parent.logButtonClick">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h4>As an event handler with arguments</h4>
+<p>You can point the event at an event handler anywhere within the current render context and include arguments.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;!-- e is the html event arguments, element is the html element -->
+&lt;button wo-click="$this.logButtonClick($model, e, element, etc...)">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+
+
 </script>
 
 <script id="Articles.events" type="text/template">
@@ -2153,14 +2206,7 @@ wo.view.prototype.dispose = function() {
 <script id="Articles.html-attributes" type="text/template">
 <h1>Html Attributes</h1>
 <p>In order to bind your values to html element, you can use one of a range of built in html attributes, or define your own</p>
-TODOD: article on value attrs (like wo-content)
-TODOD: article on event attrs (like wo-blur)
-<!--
-
-
-custom
-
--->
+<p>Wipeout html attributes are prefixed with either <code>wo-</code> or <code>data-wo-</code> </p>
 </script>
 
 <script id="Articles.if-control" type="text/template">
@@ -3257,6 +3303,23 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 });</code>
         </wipeout-docs.view-models.components.code-block>
 </p>
+</script>
+
+<script id="Articles.value-attributes" type="text/template">
+<h1>Value Attributes</h1>
+<p>Value attributes are attributes which modify an element or view model property. One example which modifies both an element and view model property is <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-value'" text="'value'"></wipeout-docs.rl>.</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'value-attributes-example'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-value="$model" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'value-attributes-example'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
 <script id="Articles.view-model-lifecycle" type="text/template">

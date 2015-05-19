@@ -1,0 +1,22 @@
+<h1>Event Attributes</h1>
+<p>Event attributes are attributes which fire off a html event. One example of this is <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-click'" text="'click'"></wipeout-docs.rl>.</p>
+<p>With event attributes you can define the event handler in multiple ways:</p>
+<h4>As a logical string</h4>
+<p>If you prefix the click attribute value with <code>logic:</code>, the contents of the attribute will be executed.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;button wo-click="logic: console.log('The button was clicked')">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h4>As an event handler</h4>
+<p>You can point the event at an event handler anywhere within the current render context.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;button wo-click="$parent.logButtonClick">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h4>As an event handler with arguments</h4>
+<p>You can point the event at an event handler anywhere within the current render context and include arguments.</p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">&lt;!-- e is the html event arguments, element is the html element -->
+&lt;button wo-click="$this.logButtonClick($model, e, element, etc...)">Click me&lt;/button></code>
+</wipeout-docs.view-models.components.code-block>
+

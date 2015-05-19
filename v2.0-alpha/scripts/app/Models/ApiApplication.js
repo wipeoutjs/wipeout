@@ -218,7 +218,6 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-data"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-event"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.id"),
-                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-on-event"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-render"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-style"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-value"),

@@ -62,6 +62,8 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         ]}, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [
+                new articleLink("Value attributes", "value-attributes"),
+                new articleLink("Event attributes", "event-attributes"),
                 new articleLink("Attribute", "wo-attr"),
                 new articleLink("Blur", "wo-blur"),
                 new articleLink("Change", "wo-change"),

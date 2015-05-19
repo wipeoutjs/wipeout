@@ -403,7 +403,6 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-data"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-event"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.id"),
-                		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-on-event"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-render"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-style"),
                 		ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.template.rendering.htmlAttributes.wo-value"),
@@ -1641,6 +1640,8 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         ]}, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [
+                new articleLink("Value attributes", "value-attributes"),
+                new articleLink("Event attributes", "event-attributes"),
                 new articleLink("Attribute", "wo-attr"),
                 new articleLink("Blur", "wo-blur"),
                 new articleLink("Change", "wo-change"),

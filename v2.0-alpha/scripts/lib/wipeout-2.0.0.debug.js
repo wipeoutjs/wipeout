@@ -3110,7 +3110,7 @@ var Class = function(classFullName, accessorFunction) {
 	return current[classFullName[classFullName.length - 1]] = accessorFunction();
 };
 
-var HtmlAttr = function(attributeName, accessorFunction) {
+function HtmlAttr(attributeName, accessorFunction) {
 	///<summary>Create a wipeout html attribute</summary>
 	///<param name="attributeName" type="String">The name of the attribute</param>
 	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
@@ -3124,6 +3124,16 @@ var HtmlAttr = function(attributeName, accessorFunction) {
 		Class("wipeout.template.rendering.dynamicHtmlAttributes." + "wo-" + attributeName, accessorFunction);
 	
 	return Class("wipeout.template.rendering.htmlAttributes." + "data-wo-" + attributeName, accessorFunction);
+};
+
+function SimpleHtmlAttr(attributeName, attribute) {
+	///<summary>Create a wipeout html attribute</summary>
+	///<param name="attributeName" type="String">The name of the attribute</param>
+	///<param name="accessorFunction" type="Function">A function which returns the attribute handler</param>
+	
+    return HtmlAttr(attributeName, function () {
+        return attribute;
+    });
 };
     
 var _trimString = /^\s+|\s+$/g;
@@ -4469,6 +4479,7 @@ Class("wipeout.template.propertyValue", function () {
 	
 	propertyValue.prototype.value = function (useUnAltered) {
 		///<summary>Get the value</summary>
+        ///<param name="useUnAltered" type="Boolean" optional="true">If set to true, the returned value will be un altered, otherwise, it will be optimised for javascript.</param>
         ///<returns type="String">The value</returns>
         
         return useUnAltered ?
@@ -8912,7 +8923,7 @@ expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
 expose("filters", wipeout.template.filters);
 
-expose("addHtmlAttribute", HtmlAttr);
+expose("addHtmlAttribute", SimpleHtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
