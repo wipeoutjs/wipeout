@@ -65,3 +65,18 @@ test("getViewModel, parent and previous sibling have vms", function() {
 	// assert
 	strictEqual(wipeout.utils.viewModels.getViewModel(document.getElementById("theItem")).xxx, 555);
 });
+
+test("definitely not a view model", function() {
+    
+    try {
+        // arrange	
+        window.xxx = function (){};
+        strictEqual(wipeout.utils.viewModels.getViewModelConstructor({name: "xxx"}).constructor, xxx);
+        
+        wo.definitelyNotAViewModel.xxx = true;
+        strictEqual(wipeout.utils.viewModels.getViewModelConstructor({name: "xxx"}), undefined);
+    } finally {
+        delete window.xxx;
+        delete wo.definitelyNotAViewModel.xxx;
+    }
+});

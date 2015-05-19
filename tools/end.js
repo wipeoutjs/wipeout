@@ -15,10 +15,11 @@ expose("bindings", wipeout.htmlBindingTypes);
 expose("parsers", wipeout.template.initialization.parsers);
 expose("filters", wipeout.template.filters);
 
+expose("definitelyNotAViewModel", wipeout.utils.viewModels.definitelyNotAViewModel);
+
 expose("addHtmlAttribute", SimpleHtmlAttr);
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
 });
-
 }(window.orienteer, window.busybody));
