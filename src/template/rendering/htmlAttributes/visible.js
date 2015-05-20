@@ -10,7 +10,7 @@ HtmlAttr("visible", function () {
 		
 		element.style.display = attribute.getter()() ? "" : "none";
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (newVal && !oldVal)
                 element.style.display = "";
 			else if (!newVal && oldVal)

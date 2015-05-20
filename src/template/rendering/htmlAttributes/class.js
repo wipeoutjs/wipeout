@@ -41,7 +41,7 @@ HtmlAttr("class", function () {
 		else if (has && !getter())
 			removeClass(element, className);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (!oldVal && newVal)
 				addClass(element, className);
 			else if (oldVal && !newVal)
@@ -68,7 +68,7 @@ HtmlAttr("class", function () {
 		else
 			element.classList.remove(className);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (newVal)
 				element.classList.add(className);
 			else

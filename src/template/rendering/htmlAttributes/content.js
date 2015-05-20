@@ -8,7 +8,7 @@ HtmlAttr("content", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
         }, true);
     }

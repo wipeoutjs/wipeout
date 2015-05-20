@@ -62,7 +62,7 @@ HtmlAttr("checked-value", function () {
         
         // if value changes, update checked value
         attribute.otherAttribute("value", function (value) {
-            value.watch(renderContext, function (oldVal, newVal) {
+            value.watch(function (oldVal, newVal) {
                 if (element.hasAttribute("checked"))
                     setter(newVal);
             });

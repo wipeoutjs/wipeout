@@ -17,7 +17,7 @@ HtmlAttr("value", function () {
             throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             if (newVal == null) 
                 newVal = "";
             

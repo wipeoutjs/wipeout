@@ -6,7 +6,7 @@ Class("wipeout.htmlBindingTypes.ow", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		setter.watch(renderContext, function (oldVal, newVal) {
+		setter.watch(function (oldVal, newVal) {
 			viewModel[setter.name] = newVal;
 		}, true);
     };

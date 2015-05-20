@@ -215,9 +215,8 @@ Class("wipeout.template.propertyValue", function () {
         }).bind(this);
 	};
 	
-	propertyValue.prototype.watch = function (renderContext, callback, evaluateImmediately) {
+	propertyValue.prototype.watch = function (callback, evaluateImmediately) {
 		///<summary>When called within a wipeout binding function, will watch for a change in the value of the setter. Also handles all disposal in this case</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
         ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
         ///<returns type="busybody.diposable">A dispose function to dispose prematurely</returns>
@@ -240,10 +239,10 @@ Class("wipeout.template.propertyValue", function () {
             var split = wipeout.utils.obj.splitPropertyName(this.value());
             
 			watched = new busybody.observeTypes.pathObserver(
-                renderContext[split.splice(0, 1)[0]], 
+                this.renderContext[split.splice(0, 1)[0]], 
                 wipeout.utils.obj.joinPropertyName(split));
         } else {
-            watched = renderContext.getComputed(this.buildGetter());
+            watched = this.renderContext.getComputed(this.buildGetter());
         }
 		
 		this._caching.push(watched);

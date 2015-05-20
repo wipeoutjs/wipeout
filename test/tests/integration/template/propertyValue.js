@@ -33,7 +33,7 @@ test("prime and watch: computed", function() {
 	// act
 	// assert
 	var disp = subject.prime(model, new wipeout.template.context(model), function () {
-		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+		subject.watch(function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
 	});
@@ -73,7 +73,7 @@ test("prime and watch: pathObserver", function() {
 	// act
 	// assert
 	var disp = subject.prime(model, new wipeout.template.context(model), function () {
-		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+		subject.watch(function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
 	});

@@ -21,7 +21,7 @@ HtmlAttr("attr", function () {
 		
 		var attributeName = attribute.name.substr(attribute.name.indexOf("attr-") + 5);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             if (element.getAttribute(attributeName) !== newVal)
                 element.setAttribute(attributeName, newVal)
 		}, true);
