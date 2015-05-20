@@ -10,11 +10,10 @@ testUtils.testWithUtils("constructor", "bindOneWay", false, function(methods, cl
 	var vm = {},
 		setter = {
 			watch: methods.customMethod(function () {
-				strictEqual(arguments[0], rc);
 				var newV = {};
-				arguments[1](null, newV);
+				arguments[0](null, newV);
 				strictEqual(vm[setter.name], newV);
-				strictEqual(arguments[2], true);
+				strictEqual(arguments[1], true);
 			}),
 			name: "KBKJB"
 		},
