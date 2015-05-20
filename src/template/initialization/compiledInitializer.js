@@ -173,7 +173,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + name + "\".";
 		
 		var op = [];
-		op.push.apply(op, this.setters[name].prime(viewModel, (function () {
+		op.push.apply(op, this.setters[name].prime(viewModel, renderContext, (function () {
 			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this.setters[name], renderContext)
 			if (o && o.dispose instanceof Function)
 				op.push(o);

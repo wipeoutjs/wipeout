@@ -51,7 +51,7 @@ testUtils.testWithUtils("applyToElement", null, true, function(methods, classes,
 		methods.method([element, setter, rc]).apply(null, arguments);
 		return methods.method();
 	}, 1);
-	setter.prime = function () { arguments[1](); return []; };
+	setter.prime = function () { arguments[2](); return []; };
 	
 	// act
 	var output = invoker(setter, element, rc);

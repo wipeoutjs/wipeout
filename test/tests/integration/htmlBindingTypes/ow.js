@@ -12,7 +12,7 @@ test("binding, nb", function () {
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	
@@ -34,7 +34,7 @@ test("binding, bindOneWay", function () {
 	var val1 = renderContext.$this.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	

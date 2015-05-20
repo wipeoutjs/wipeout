@@ -86,16 +86,17 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		return wipeout.utils.domData.exists(element, name);
 	};
 
-	htmlPropertyValue.prototype.prime = function (propertyOwner, logic, allPropertyValues) {
+	htmlPropertyValue.prototype.prime = function (propertyOwner, renderContext, logic, allPropertyValues) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current render context</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<param name="allSetters" type="Function">A list of all other setters on the element</param>
         ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
         
         try {
             this.otherAttributes = allPropertyValues;
-            return this._super(propertyOwner, logic);
+            return this._super(propertyOwner, renderContext, logic);
         } finally {        
             this.otherAttributes = null;
         }
@@ -122,7 +123,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
             // remove wo- and data-wo-
             if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name) {
                 Array.prototype.push.apply(this._caching, 
-                    this.otherAttributes[i].prime(this.propertyOwner, (function () {
+                    this.otherAttributes[i].prime(this.propertyOwner, this.renderContext, (function () {
                         var op;
                         if (op = logic(this.otherAttributes[i]))
                             this._caching.push(op);

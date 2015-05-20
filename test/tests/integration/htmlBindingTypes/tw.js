@@ -14,7 +14,7 @@ test("binding", function () {
 	var val1 = renderContext.$this.val = {}, val2 = {}, val3 = {};
 	
 	// act
-	var dispose = setter.prime(viewModel, function () {
+	var dispose = setter.prime(viewModel, renderContext, function () {
 		setter._caching.push(wipeout.htmlBindingTypes.tw(viewModel, setter, renderContext));
 	});
 	

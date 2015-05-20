@@ -14,7 +14,7 @@ test("binding and disposal", function () {
 	
 	// act
 	var disp;
-	setter.prime(viewModel, function () {
+	setter.prime(viewModel, renderContext, function () {
 		disp = wipeout.htmlBindingTypes.viewModelId(viewModel, setter, renderContext);
 	});
 	

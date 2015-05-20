@@ -317,7 +317,7 @@ testUtils.testWithUtils("prime", "not caching", false, function(methods, classes
 	var tmp;
 	
 	// act
-	var output = invoker({}, function () {
+	var output = invoker({}, {}, function () {
 		tmp = subject._caching
 	});
 	

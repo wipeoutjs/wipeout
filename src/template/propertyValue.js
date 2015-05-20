@@ -263,9 +263,10 @@ Class("wipeout.template.propertyValue", function () {
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};
 
-	propertyValue.prototype.prime = function (propertyOwner, logic) {
+	propertyValue.prototype.prime = function (propertyOwner, renderContext, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current render context</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
 		
@@ -275,11 +276,13 @@ Class("wipeout.template.propertyValue", function () {
 		try {
 			this._caching = [];
 			this.propertyOwner = propertyOwner;
+			this.renderContext = renderContext;
 			logic();
 			return this._caching;
 		} finally {
-			delete this._caching;
-			delete this.propertyOwner;
+			this._caching = null;
+			this.propertyOwner = null;
+			this.renderContext = null;
 		}
 	};
 	

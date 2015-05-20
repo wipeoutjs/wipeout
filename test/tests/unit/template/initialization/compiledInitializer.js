@@ -356,7 +356,7 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 	var vm = {}, rc = {};
 	subject.setters = {
 		aaa: {
-			prime: function (x, input) { input.apply(this, arguments); }
+			prime: function (x, rc, input) { input.apply(this, arguments); }
 		}
 	};
 	

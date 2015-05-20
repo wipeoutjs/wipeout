@@ -20,7 +20,7 @@ test("binding", function () {
 	var val1 = renderContext.$this.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		setter._caching.push(wipeout.htmlBindingTypes.templateElementSetter(viewModel, setter, renderContext));
 	});
 	
