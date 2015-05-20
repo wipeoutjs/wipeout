@@ -27,8 +27,9 @@ HtmlAttr("value", function () {
                 element.value = newVal;
         }, true);
 		
+        var setter = attribute.setter();
 		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", renderContext, function () {
-			attribute.set(renderContext, textarea ? element.innerHTML : element.value, element);
+			setter(textarea ? element.innerHTML : element.value);
         });
     }
 });

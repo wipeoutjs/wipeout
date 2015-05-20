@@ -11,7 +11,7 @@ test("prime and other attribute", function() {
         ok(!attr.otherAttribute("not-an-attribute", function(){}));
         
         ok(attr.otherAttribute("visible", function (attr) {
-            strictEqual(attr.get(renderContext), "yes I Am");
+            strictEqual(attr.getter()(), "yes I Am");
             return {dispose: disp};
         }));
         

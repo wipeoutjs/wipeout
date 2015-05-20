@@ -81,6 +81,7 @@ Class("wipeout.template.propertyValue", function () {
 		return this._value;
 	};
 	
+    //TODO: rename. Too close to getter(...)
 	propertyValue.prototype.buildGetter = function () {
 		///<summary>Build a getter for this._value</summary>
         ///<returns type="Function">A function to get the value from render context parts</returns>
@@ -111,13 +112,13 @@ Class("wipeout.template.propertyValue", function () {
 	};
 	
     //TODO: test
-	propertyValue.prototype.buildPermanentGetter = function (renderContext, propertyOwner) {
-		///<summary>Return a function which will return the value of this property whether the property is primed or not</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+	propertyValue.prototype.getter = function () {
+		///<summary>Return a function which will return the value of this property</summary>
         ///<returns type="Function">A function with no arguments which returns the value</returns>
 		
-		var parser = this.getParser(propertyOwner);
+        this.primed();
+        
+		var parser = this.getParser(), renderContext = this.renderContext;
 		
 		if (parser) 
             return (function () {
@@ -130,19 +131,7 @@ Class("wipeout.template.propertyValue", function () {
         };
 	};
 	
-	propertyValue.prototype.get = function (renderContext, propertyOwner) {
-		///<summary>Return the value of this setter when applied to a renderContext</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
-        ///<returns type="Any">The returned value</returns>
-		
-		var parser = this.getParser(propertyOwner);
-		
-		return parser ? 
-			(parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)) : 
-			this.buildGetter().apply(null, renderContext.asGetterArgs());
-	};
-	
+    //TODO: rename: too close to setter(...)
 	propertyValue.prototype.buildSetter = function () {
 		///<summary>Build a setter for this._value</summary>
         ///<returns type="Function">A function to get the value from render context parts</returns>
@@ -197,35 +186,33 @@ Class("wipeout.template.propertyValue", function () {
 		return this._setter;
 	};
 	
-	propertyValue.prototype.canSet = function (propertyOwner) {
+	propertyValue.prototype.canSet = function () {
 		///<summary>Return whether this setter can set a value</summary>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
-		return !this.getParser(propertyOwner) && !!this.buildSetter();
+		return !this.getParser() && !!this.buildSetter();
 	};
 	
-	propertyValue.prototype.getParser = function (propertyOwner) {
+	propertyValue.prototype.getParser = function () {
 		///<summary>Return the parser for the </summary>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Function">The parser</returns>
         
-		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
+        this.primed();
 		
-		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
+		return this.parser || (this.propertyOwner instanceof wipeout.base.bindable && this.propertyOwner.getGlobalParser(this.name));
 	};
 	
-	propertyValue.prototype.set = function (renderContext, value, propertyOwner) {
-		///<summary>Return the value of this setter when applied to a renderContext</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="value" type="Any">The value to set</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the property. If null, the propertyValue must be primed</param>
-        ///<returns type="Boolean">Whether the value could be set or not</returns>
+	propertyValue.prototype.setter = function () {
+		///<summary>Build a function to set the value of the property</summary>
+        ///<returns type="Function">the setter. The setter has one argument: the value</returns>
 		
-		if (!this.canSet(propertyOwner))
-			throw "You cannot set the value of: " + this.value() + ".";	//TODE
+		if (!this.canSet())
+			throw "You cannot set the value of: " + this.value(true) + ".";	//TODE
 		
-		return this.buildSetter()(renderContext, value);
+        var renderContext = this.renderContext;
+		return (function (value) {
+            return this.buildSetter()(renderContext, value);
+        }).bind(this);
 	};
 	
 	propertyValue.prototype.watch = function (renderContext, callback, evaluateImmediately) {
@@ -239,7 +226,7 @@ Class("wipeout.template.propertyValue", function () {
 		
 		if (this.getParser() || /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/(?!\/)))\s*$/.test(this.value())) {
 			if (evaluateImmediately)
-				callback(undefined, this.get(renderContext));
+				callback(undefined, this.getter()());
 			
 			return;
 		}

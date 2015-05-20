@@ -37,19 +37,20 @@ HtmlAttr("checked-value", function () {
         
         var valueGetter;
         attribute.otherAttribute("value", function (value) {
-            valueGetter = value.buildPermanentGetter(renderContext);
+            valueGetter = value.getter();
         });
         
-        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.get(renderContext))
+        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.getter()())
             element.setAttribute("checked", "checked");
         
+        var setter = attribute.setter();
         function set(first) {
             if (element.checked)
-                attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
+                setter(onChecked(element, attribute, valueGetter));
             else if (element.type !== "radio")
-                attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
+                setter(onUnChecked(element, attribute, valueGetter));
             else if (!first && noRadiosAreSelected(element.name))
-                attribute.set(renderContext, null, element);
+                setter(null);
         }
         
         set(true);
@@ -63,7 +64,7 @@ HtmlAttr("checked-value", function () {
         attribute.otherAttribute("value", function (value) {
             value.watch(renderContext, function (oldVal, newVal) {
                 if (element.hasAttribute("checked"))
-                    attribute.set(renderContext, newVal, element);
+                    setter(newVal);
             });
         });
     };

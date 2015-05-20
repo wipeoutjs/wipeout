@@ -93,7 +93,7 @@ test("execute, $context", function() {
 	// act
 	// assert
 	subject.prime({}, context, function () {
-		strictEqual(context, subject.get(context));
+		strictEqual(context, subject.getter()());
 	});
 });
 
@@ -106,7 +106,7 @@ test("execute, $this", function() {
 	// assert
 	subject.prime({}, context, function () {
 		ok(context.$this);
-		strictEqual(context.$this, subject.get(context));
+		strictEqual(context.$this, subject.getter()());
 	});
 });
 
@@ -119,7 +119,7 @@ test("execute, $this", function() {
 	// assert
 	subject.prime({}, context, function () {
 		ok(context.$this);
-		strictEqual(context.$this, subject.get(context));
+		strictEqual(context.$this, subject.getter()());
 	});
 });
 
@@ -132,7 +132,7 @@ test("execute, $parents", function() {
 	// assert
 	subject.prime({}, context, function () {
 		ok(context.$parents);
-		strictEqual(context.$parents, subject.get(context));
+		strictEqual(context.$parents, subject.getter()());
 	});
 });
 
@@ -145,6 +145,6 @@ test("execute, $index", function() {
 	// assert
 	subject.prime({}, context, function () {
 		ok(context.$index);
-		strictEqual(context.$index, subject.get(context));
+		strictEqual(context.$index, subject.getter()());
 	});
 });
