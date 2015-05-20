@@ -82,9 +82,11 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Style", "wo-style"),
                 new articleLink("Submit", "wo-submit"),
                 new articleLink("Value", "wo-value"),
-                new articleLink("Visible", "wo-visible"),
-                new articleLink("Custom html attributes", "custom-html-attributes")
+                new articleLink("Visible", "wo-visible")
         ]}, {        
+            header: new articleLink("Custom html attributes", "custom-html-attributes"),
+            items: [
+		]}, {        
             header: new articleLink("Property flags", "property-flags"),
             items: [
 		]}, {        
@@ -94,11 +96,23 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Two way bindings", "bind-two-way"),
                 new articleLink("One way to source bindings", "bind-one-way-to-source"),
                 new articleLink("Setter binding", "bind-no-way"),
-                new articleLink("Change default binding", "change-default-binding"),
-                new articleLink("Custom binding", "custom-binding"),
+                new articleLink("Change default binding", "change-default-binding")
+		]}, {        
+            header: new articleLink("Custom binding", "custom-binding"),
+            items: [
+                new articleLink("Get the name of the property", "get-the-name-of-the-property"),
+                new articleLink("Get the setter string", "get-the-setter-string"),
+                new articleLink("Get the value of the property", "get-the-value-of-the-property"),
+                new articleLink("Get the value of the setter", "get-the-value-of-the-setter"),
+                new articleLink("Observe the value of the property", "observe-the-value-of-the-property"),
+                new articleLink("Observe the value of the setter", "observe-the-value-of-the-setter"),
+                new articleLink("Set the value of the property", "set-the-value-of-the-property"),
+                new articleLink("Set the value of the setter", "set-the-value-of-the-setter"),
+                new articleLink("Dispose of the binding", "dispose-of-the-binding"),
 		]}, {        
             header: new articleLink("Parsers", "parsers"),
             items: [
+                new articleLink("Using a parser", "using-a-parser"),
                 new articleLink("Boolean Parser", "boolean-parser"),
                 new articleLink("Date Parser", "date-parser"),
                 new articleLink("Float Parser", "float-parser"),
@@ -111,7 +125,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("A List Filter", "list-filter"),
                 new articleLink("A Two Way Date Formatter", "date-parser-filter")
-		]}, {        
+		]}/*, {        
             header: new articleLink("Calling viewModel methods", "call-view-model-method"),
             items: [
         ]}, {        
@@ -214,7 +228,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Global Overrides", "global-overrides"),
                 new articleLink("Local Overrides", "local-overrides")
             ]
-        }];
+        }*/];
         
         this.flatList = [];
         this.index();

@@ -16,8 +16,8 @@
                     </a>
                     <h1 style="float: left" id="headerText"></h1>                    
                     <ul class="wo-navbar-right">
-                        <li><a href="api.html"><button>Documentation</button></a></li>
-                        <li><a href="how-do-i.html"><button>How do I?</button></a></li>
+                        <li><a href="how-do-i.html"><button>Documentation</button></a></li>
+                        <li><a href="api.html"><button>API</button></a></li>
                         <li><a href="download.html"><button>Download</button></a></li>
                         <li><a target="_blank" href="http://github.com/wipeoutjs/wipeout"><button>GitHub</button></a></li>
                         <li class="dropdown">
@@ -953,7 +953,7 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 		</tr>
 		<tr>
 			<td>property</td>
-			<td>The property is a wipeout viewModelPropertyValue. It contains functionality for getting setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wipeout.template.initialization.viewModelPropertyValue'" text--s="wipeout.template.initialization.viewModelPropertyValue"></wipeout-docs.rl></td>
+			<td>The property is a wipeout viewModelPropertyValue. It contains functionality for getting, setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wipeout.template.initialization.viewModelPropertyValue'" text--s="wipeout.template.initialization.viewModelPropertyValue"></wipeout-docs.rl></td>
 		</tr>
 		<tr>
 			<td>renderContext</td>
@@ -965,111 +965,6 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 		</tr>
 	</tbody>
 </table>
-
-<h3>Examples</h3>
-<ul>
-	<li><a href="#value">Get the template value (setter string) of the property</a></li>
-	<li><a href="#get">Get the value of the property</a></li>
-	<li><a href="#watch">Observe the value of the property</a></li>
-	<li><a href="#set">Set the value of the property</a></li>
-    <li><a href="#return">Dispose of the binding</a></li>
-</ul>
-<br/><h4 id="value">Get the template value (setter string) of the property</h4>
-Declaration:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$model.aProperty">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.code-block>
-Binding:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-		
-    // for a regular binding, will return "$model.aProperty"
-    var theValue = property.value(true);
-        
-    // for a regular binding, will return "$this.model.aProperty". This value
-    // should be used if you will compile the value into javascript
-    var theOptomisedValue = property.value();
-		
-    // Do any binding stuff here
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-<br/><h4 id="get">Get the value of the property</h4>
-Declaration:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.code-block>
-Binding:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-		
-    // for a regular binding, will return the model property of the parent
-    var theValue = property.get(renderContext);
-		
-    // Do any binding stuff here
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-<br/><h4 id="watch">Observe the value of the property</h4>
-Declaration:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.code-block>
-Binding:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-		
-    // for a regular binding, will return "$this.model"
-    property.watch(renderContext, function (oldVal, newVal) {
-        // code for when the model value of the parent changes here
-    }, true);
-		
-    // Do any binding stuff here
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-<br/><h4 id="set">Set the value of the property</h4>
-Declaration:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.code-block>
-Binding:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-	
-    // It is possible to set the property "$this.model".
-    // It would not be possible to set something like "$this.model ? $this.model : null"
-    if (property.canSet()) {
-        // set the model of the parent to "Hello!"
-        property.set(renderContext, "Hello!");
-    }
-		
-    // Do any binding stuff here
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-<br/><h4 id="return">Dispose of the binding</h4>
-Declaration:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.code-block>
-Binding:
-<wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
-
-    // observe the model property of the viewModel. This will create a disposable
-    // which we want to dispose of when the binding is torn down
-    var disposable = viewModel.observe(property.name, function (...) { ... });
-
-    return function () {
-        disposable.dispose();
-    };
-
-    -- OR --
-
-    return disposable;
-};</code>
-</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.custom-find-filters" type="text/template">
@@ -1114,7 +1009,8 @@ wo.find.$namespace = function(currentItem, searchTerm, index) {
 <h1>Custom html attributes</h1>
 <p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
+	<code parser="s">// a custom html attribute which clears the value of an input when it is clicked
+wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
             
     attribute.onElementEvent("click", renderContext, function () {
         element.value = "";
@@ -1269,6 +1165,34 @@ Always remember to <code>build(...)</code> viewModels after all definitions.
 </p>
 </script>
 
+<script id="Articles.dispose-of-the-binding" type="text/template">
+<h1>Dispose of the binding</h1>
+
+<p>There are often subscriptions and other disposable scenarios which occur outside of the <code>property</code> argument to the binding. These must be disposed of manually to prevent memory leaks. In order to dispose of an item manually a dispose function must be returned from the binding function.</p>
+
+<br/>Declaration
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+
+    // observe the model property of the viewModel. This will create a disposable
+    // which we want to dispose of when the binding is torn down
+    var disposable = viewModel.observe(property.name, function (...) { ... });
+
+    return function () {
+        disposable.dispose();
+    };
+
+    -- OR --
+
+    return disposable;
+};</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
 <script id="Articles.disposing-of-subscriptions" type="text/template">
 <h1>Disposing of Subscriptions</h1>
 
@@ -1398,8 +1322,11 @@ theEvent.trigger("Hello wipeout!");
 <h1>Binding filters</h1>
 
 <p>
-Binding filters are an extremely powerful way of altering a property value before the parent binding updates are executed. Filters can be used for both viewModel and html element properties.
+Binding filters are an extremely powerful way of altering a property value before the parent binding updates are executed. Filters can be used for both viewModel and html element properties. Binding filters are used like this:
 </p>
+<wipeout-docs.view-models.components.code-block highlight--s="=>">
+    <code parser="string">&lt;wo.view filtered-value="$this.value => myFilter">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
 <p>
 Filters are added to <code>wo.filters</code> and have 2 functions. 
     <ol>
@@ -2139,6 +2066,111 @@ wo.viewModel("demoApp.innerViewModel")
 
 <p>
 Getting started is really easy. It's javascript easy! Just download the latest verion of <a href="/wipeout/v2.0-alpha/download.html" target="_blank">wipeout</a> and add it to your page.</p>
+<p>Included in wipeout are two external libraries:
+    <ul>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-orienteer'" text="'Orienteer'"></wipeout-docs.rl> is a simple object oriented library for javascript. It is used under the hood in wipeout and can be used for advanced wipeout view model building scenarios.
+        </li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-busybody'" text="'Busybody'"></wipeout-docs.rl> is a client binding library which allows you to observe for changes to the property of an object. It is used extensively by wipeout and you will most likely use it's <a href="https://github.com/ShaneGH/busybody#observing-a-value" target="_blank">observe</a> and <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">computed</a> functionality.
+        </li>
+</ul>
+</p>
+</script>
+
+<script id="Articles.get-the-name-of-the-property" type="text/template">
+<h1>Get the name of the property</h1>
+<p>To get the name of the property use the <code>name</code> property.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view a-property="$model.anotherProperty">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "aProperty"
+    var name = property.name;
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.get-the-setter-string" type="text/template">
+<h1>Get the raw setter for the property</h1>
+<p>To get the string value defined in the template use the <code>value</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model.aProperty">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$model.aProperty"
+    var theValue = property.value(true);
+        
+    // for a regular binding, will return "$this.model.aProperty". This value
+    // should be used if you will compile the value into javascript
+    var theOptomisedValue = property.value();
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.get-the-value-of-the-property" type="text/template">
+<h1>Get the value of the property</h1>
+<p>To get the property value use the <code>name</code> and <code>viewModel</code> items.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		        
+    // gets the value
+    var theValue = viewModel[property.name];
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.get-the-value-of-the-setter" type="text/template">
+<h1>Get the value of the setter</h1>
+<p>To get the setter value use the <code>getter</code> function to create a getter and use the getter to get the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // returns a function which can be used to get the value
+    var getter = property.getter();
+        
+    // returns the value
+    var theValue = getter();
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>getter</code>. The <code>property.getter()</code> function will only work synchronusly, however the result of the <code>getter</code> function can be invoked at any time </p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // cache the getter here
+    var getter = property.getter();
+    
+    // create an asynchronus function which will be called when the value changes
+    property.watch(function (oldValue, newValue) {
+        // use the getter here
+        var result = getter();
+    });
+};</code>
 </script>
 
 <script id="Articles.global-overrides" type="text/template">
@@ -2465,6 +2497,11 @@ wo.filters.ageFilter = {
                 output.push(rockstars[i]);
         }
         
+        // sort by age
+        output.sort(function (a, b) {
+            return a.age > b.age;
+        });
+        
         return output;
     }
 };</code>
@@ -2482,12 +2519,14 @@ wo.filters.ageFilter = {
         {name: "Charlie", age: 30}
     ]&lt;/model>
     &lt;set-template>
-        Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-        &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
-            &lt;item-template>
-                &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
-            &lt;/item-template>
-        &lt;/wo.content-control>
+        &lt;div style="min-height: 200px;">
+            Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
+            &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
+                &lt;item-template>
+                    &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
+                &lt;/item-template>
+            &lt;/wo.content-control>
+        &lt;/div>
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.new-template-code-block>
@@ -2496,10 +2535,11 @@ wo.filters.ageFilter = {
         <li>The left hand side are arguments. All arguments will be passed into the filter.</li>
         <li>The argument after the <code>=></code> is the filter name.</li>
         </ol></p>
-
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
     <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />
 </script>
 
 <script id="Articles.local-overrides" type="text/template">
@@ -2647,6 +2687,55 @@ role of a model is beyond the scope of this document.</p>
 <p>Now every class which inherits from wo.view has a uniqueId function</p>
 </script>
 
+<script id="Articles.observe-the-value-of-the-property" type="text/template">
+<h1>Observe the value of the property</h1>
+<p>If you need to observe the property value for change, you can use the <code>busybody.observe</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // will observe the model property of the view model for change
+    var dispose = busybody.observe(viewModel, property.name, function (oldValue, newValue) {
+        
+        // Do any binding stuff here
+    });
+        
+    // remember, an observation needs to be disposed of when the binding is torn down.
+    // to do this, return the dispose object
+    return dispose;	
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
+</script>
+
+<script id="Articles.observe-the-value-of-the-setter" type="text/template">
+<h1>Observe the value of the setter</h1>
+<p>If you need to observe the setter for change, you can use the <code>watch</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$this.model"
+    property.watch(function (oldVal, newVal) {
+        // code for when the model value of the parent changes here
+    }, true);
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
+</script>
+
 <script id="Articles.overriding-functionality" type="text/template">
 <h1>Overriding functionality</h1>
  
@@ -2750,8 +2839,9 @@ console.log(currentAccount.canWithdrawMoney());</code>
 
 <p>Sometimes you might like to say something about the property within the property itself. Examples of this are:</p>
 <ol>
-	<li>(TODOD, link) Defining how two properties will be bound (one way, two way etc...)</li>
-	<li>(TODOD, link) Defining how the string value in the property will be parsed</li>
+	<li><wipeout-docs.rl href--s="/wipeout/v2.0-alpha/how-do-i.html?article=binding-types" text="'Defining how two properties will be bound'"></wipeout-docs.rl> (one way, two way etc...)
+        </li>
+	<li><wipeout-docs.rl href--s="/wipeout/v2.0-alpha/how-do-i.html?article=parsers" text="'Defining how the string value in the property will be parsed'"></wipeout-docs.rl></li>
 </ol>
 
 <p>In order to achieve this you can use property flags. Property flags are a method of splitting a property name into two parts. The first part is the property name, the second is a list of flags.</p>
@@ -3122,6 +3212,53 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
     </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
+<script id="Articles.set-the-value-of-the-property" type="text/template">
+<h1>Set the value of the property</h1>
+<p>To set the property value use the <code>name</code> and <code>viewModel</code> items.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		        
+    // sets the value
+    viewModel[property.name] = true;
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.set-the-value-of-the-setter" type="text/template">
+<h1>Set the value of the setter</h1>
+<p>You may wish to set the value within the property setter. If this is the case, ensure you check this is possible with the <code>canSet</code> method and then use the <code>setter</code> method to set the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+	
+    // It IS possible to set the property "$this.model".
+    // It would NOT be possible to set something like "$this.model ? $this.model : null"
+    if (property.canSet()) {
+        // get a function which can be used to set the value
+        var setter = property.setter();
+        
+        // set the model of the parent to "Hello!"
+        setter("Hello!");
+    }
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>setter</code>. The <code>property.setter()</code> function will only work synchronusly, however the result of the <code>setter</code> function can be invoked at any time. See the example for a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-the-value-of-the-property'" text="'getter'"></wipeout-docs.rl> for details.</p>
+</script>
+
 <script id="Articles.share-parent-scope" type="text/template">
 <h1>Share parent scope</h1>
 
@@ -3277,6 +3414,27 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 });</code>
         </wipeout-docs.view-models.components.code-block>
 </p>
+</script>
+
+<script id="Articles.using-a-parser" type="text/template">
+<h1>Using a parser</h1>
+<p>You can use a parser in one of two ways:</p>
+
+<h3>1. Setting a default parser for a view model property</h3>
+<p>When you are defining a view model you can set a default parser</p>
+<wipeout-docs.view-models.components.code-block highlight--s=".parser">
+	<code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .parser("myProperty", "string")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>2. Setting a parser in the template</h3>
+<p>You can override any default parsers by setting the parser in the template</p>
+<wipeout-docs.view-models.components.code-block highlight--s="--s">
+	<code parser="s">&lt;wo.view my-property--string="Hello wipeout!">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>remember, most wipeout parsers also have short alieses, so rather than using <code>my-property--string</code> you can use the shorthand <code>my-property--s</code> </p>
 </script>
 
 <script id="Articles.value-attributes" type="text/template">

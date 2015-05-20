@@ -1,7 +1,8 @@
 <h1>Custom html attributes</h1>
 <p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
 <wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
+	<code parser="s">// a custom html attribute which clears the value of an input when it is clicked
+wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
             
     attribute.onElementEvent("click", renderContext, function () {
         element.value = "";

@@ -1,0 +1,18 @@
+<h1>Using a parser</h1>
+<p>You can use a parser in one of two ways:</p>
+
+<h3>1. Setting a default parser for a view model property</h3>
+<p>When you are defining a view model you can set a default parser</p>
+<wipeout-docs.view-models.components.code-block highlight--s=".parser">
+	<code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .parser("myProperty", "string")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>2. Setting a parser in the template</h3>
+<p>You can override any default parsers by setting the parser in the template</p>
+<wipeout-docs.view-models.components.code-block highlight--s="--s">
+	<code parser="s">&lt;wo.view my-property--string="Hello wipeout!">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>remember, most wipeout parsers also have short alieses, so rather than using <code>my-property--string</code> you can use the shorthand <code>my-property--s</code> </p>

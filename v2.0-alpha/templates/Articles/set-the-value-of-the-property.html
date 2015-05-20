@@ -1,0 +1,16 @@
+<h1>Set the value of the property</h1>
+<p>To set the property value use the <code>name</code> and <code>viewModel</code> items.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		        
+    // sets the value
+    viewModel[property.name] = true;
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>

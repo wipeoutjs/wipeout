@@ -18,6 +18,11 @@ wo.filters.ageFilter = {
                 output.push(rockstars[i]);
         }
         
+        // sort by age
+        output.sort(function (a, b) {
+            return a.age > b.age;
+        });
+        
         return output;
     }
 };</code>
@@ -35,12 +40,14 @@ wo.filters.ageFilter = {
         {name: "Charlie", age: 30}
     ]&lt;/model>
     &lt;set-template>
-        Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-        &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
-            &lt;item-template>
-                &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
-            &lt;/item-template>
-        &lt;/wo.content-control>
+        &lt;div style="min-height: 200px;">
+            Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
+            &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
+                &lt;item-template>
+                    &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
+                &lt;/item-template>
+            &lt;/wo.content-control>
+        &lt;/div>
     &lt;/set-template>
 &lt;/wo.content-control></code>
 </wipeout-docs.view-models.components.new-template-code-block>
@@ -49,7 +56,8 @@ wo.filters.ageFilter = {
         <li>The left hand side are arguments. All arguments will be passed into the filter.</li>
         <li>The argument after the <code>=></code> is the filter name.</li>
         </ol></p>
-
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
     <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />

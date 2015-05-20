@@ -1,0 +1,20 @@
+<h1>Get the raw setter for the property</h1>
+<p>To get the string value defined in the template use the <code>value</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model.aProperty">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$model.aProperty"
+    var theValue = property.value(true);
+        
+    // for a regular binding, will return "$this.model.aProperty". This value
+    // should be used if you will compile the value into javascript
+    var theOptomisedValue = property.value();
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
