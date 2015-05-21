@@ -1,0 +1,88 @@
+<h1>MVVM Basics</h1>
+<p>MVVM stands for <b>Model</b>, <b>View</b>, <b>ViewModel</b>. The meaning of the acronym has changed over the years, but the basic development concepts remain. You can read about MVVM <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel" target="_blank">here</a>.</p>
+
+<p>Within wipeout, MVVM aplications have three seperate and distinct types of object
+</p>
+<h3>1. View Models</h3>
+<p>View models are pieces of javascript code which 
+    <ol>
+        <li>Represent the state of something which has been rendered</li>
+        <li>Can modify the state of something which has been rendered</li>
+</ol>
+An example view model might look like this:
+    </p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    visible: true,
+    toggleVisibility: function () {
+        this.visible = !this.visible;
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+<h3>2. Models</h3>
+<p>Models are pieces of javascript code which represent non visual data, or business data. Models have no concept of appearence. They have never heard of the html DOM or jQuery and should never use them.
+An example model might look like this:
+    </p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">{
+    people: ["Mary", "John"],
+    addPerson: function (name) {
+        this.people.push(name);
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>
+Models are connected to view models in that each view model has a <code>model</code> property. So now our view model looks like this:</p>
+<wipeout-docs.view-models.components.code-block highlight--s="model">
+    <code parser="s">{
+    visible: true,
+    toggleVisibility: function () {
+        this.visible = !this.visible;
+    },
+    model: {
+        people: ["Mary", "John"],
+        addPerson: function (name) {
+            this.people.push(name);
+        }
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+<h3>3. Templates</h3>
+<p>Templates are pieces of html which describe the appearance of a view model. The template has access to the view model, and hence the model, as the model is a property on the view model.
+An example template might look like this:
+    </p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;!-- invoke the toggleVisibility function -->
+    &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
+        
+    &lt;!-- control the visiblility -->
+    &lt;div wo-visible="$this.visible">
+        &lt;!-- render the person names -->
+        {{$model.people}}
+    &lt;/div>
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>
+Templates are connected to view models in that each view model has a <code>templateId</code> property. So now our view model looks like this:</p>
+<wipeout-docs.view-models.components.code-block highlight--s="templateId">
+    <code parser="s">{
+    visible: true,
+    toggleVisibility: function () {
+        this.visible = !this.visible;
+    },
+    model: {
+        people: ["Mary", "John"],
+        addPerson: function (name) {
+            this.people.push(name);
+        }
+    },
+    templateId: "togglePeopleTemplate"
+}</code>
+</wipeout-docs.view-models.components.code-block>
+<wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-mvvm-interactions'" text="'continued >>'"></wipeout-docs.rl>
+
+<br />
+<br />

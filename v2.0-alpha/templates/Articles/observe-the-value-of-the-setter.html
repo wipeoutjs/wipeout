@@ -2,13 +2,13 @@
 <p>If you need to observe the setter for change, you can use the <code>watch</code> function.</p>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view model--mybinding="$this.model">&lt;/wo.view></code>
+	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 Binding:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
-    // for a regular binding, will return "$this.model"
+    // for a regular binding, will return "$model"
     property.watch(function (oldVal, newVal) {
         // code for when the model value of the parent changes here
     }, true);

@@ -1,0 +1,27 @@
+<h1>Custom Parsers</h1>
+<p>You can add a custom parser by adding it to <code>wo.parsers</code></p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">// a parser which parses the value in the setter to
+// an xml doc
+wo.parsers.xmldoc = function (value, propertyName, renderContext) {
+		
+    // value: is the string value of the setter
+        
+    // propertyName: is the property name to be set
+        
+    // renderContext: is the current context, with $this, $parent etc...
+        
+    var xmlParser = new DOMParser();
+    return xmlParser.parseFromString(value, "text/xml");
+};
+
+// it is often a good idea to create an
+// alias so as not to clutter the template
+wo.parsers.xml = wo.parsers.xmldoc;</code>
+</wipeout-docs.view-models.components.code-block>
+
+Usage:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value--xml="&lt;hello />">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>Be careful not to use a parser when a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=filters'" text="'filter'"></wipeout-docs.rl> will do. If you find you are parsing javascript code or that you also need to be able to set the value in the setter, you should use a filter.</p>

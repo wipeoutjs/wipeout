@@ -42,7 +42,7 @@ wo.filters.ageFilter = {
     &lt;set-template>
         &lt;div style="min-height: 200px;">
             Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-            &lt;wo.items-control items="$this.model, $this.minAge => ageFilter">
+            &lt;wo.items-control items="$model, $this.minAge => ageFilter">
                 &lt;item-template>
                     &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
                 &lt;/item-template>

@@ -28,8 +28,8 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name> &lt;br />
+    First name: &lt;demo-app.name model="$model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$model.lastName">&lt;/demo-app.name> &lt;br />
 
     &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
 &lt;/div></code>
@@ -37,7 +37,7 @@ wo.viewModel("demoApp.name")
 
 <p>And at the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;input type="text" wo-value="$this.model" /></code>
+	<code parser="s">&lt;input type="text" wo-value="$model" /></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <br />

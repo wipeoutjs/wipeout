@@ -10,9 +10,25 @@
 </wipeout-docs.view-models.components.code-block>
 
 <h3>2. Setting a parser in the template</h3>
+
 <p>You can override any default parsers by setting the parser in the template</p>
-<wipeout-docs.view-models.components.code-block highlight--s="--s">
+<br/><h4>For inline property definitions</h4>
+<wipeout-docs.view-models.components.code-block highlight--s="--string">
 	<code parser="s">&lt;wo.view my-property--string="Hello wipeout!">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>remember, most wipeout parsers also have short alieses, so rather than using <code>my-property--string</code> you can use the shorthand <code>my-property--s</code> </p>
+<br/><h4>For block definitions</h4>
+<wipeout-docs.view-models.components.code-block highlight--s="string">
+	<code parser="s">&lt;wo.view>
+    &lt;my-property parser="string">Hello wipeout!&lt;/my-property>
+&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><h4>For block value definitions</h4>
+<wipeout-docs.view-models.components.code-block highlight--s="string">
+	<code parser="s">&lt;wo.view>
+    &lt;my-property value--string="Hello wipeout!">&lt;/my-property>
+&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>Remember, most wipeout parsers also have short alieses, so rather than using <code>my-property--string</code> you can use the shorthand <code>my-property--s</code> </p>

@@ -16,14 +16,14 @@ wo.viewModel("demoApp.name")
 <p>At the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
 	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$this.model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$this.model.lastName">&lt;/demo-app.name>
+    First name: &lt;demo-app.name model="$model.firstName">&lt;/demo-app.name> &lt;br />
+    Last name: &lt;demo-app.name model="$model.lastName">&lt;/demo-app.name>
 &lt;/div></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <p>And at the URL "/person.html"</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;span wo-content="$this.model">&lt;/span></code>
+	<code parser="s">&lt;span wo-content="$model">&lt;/span></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <br />

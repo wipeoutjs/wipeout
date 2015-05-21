@@ -1,0 +1,82 @@
+<wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-mvvm-basics'" text="'<< previous'"></wipeout-docs.rl>
+<h1>MVVM Interactions</h1>
+<p>Expanding on the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-mvvm-basics'" text="'previous article'"></wipeout-docs.rl>, there are several ways in which the layers (model, viewModel, template) interact with one another.</p>
+<h2>View model -to- template</h2>
+<p>Within wipeout, the view model can interact with the template via it's <code>templateItems</code> property.</p>
+View model:
+<wipeout-docs.view-models.components.code-block highlight="['getNewName', 'templateItems']">
+    <code parser="s">{
+    visible: true,
+    templateItems: {},
+    toggleVisibility: function () {
+        this.visible = !this.visible;
+    },
+    getNewName: function () {
+        return this.templateItems.newName.value;
+    },
+    model: {
+        people: ["Mary", "John"],
+        addPerson: function (name) {
+            this.people.push(name);
+        }
+    },
+    templateId: "togglePeopleTemplate"
+}</code>
+</wipeout-docs.view-models.components.code-block>
+Template:
+<wipeout-docs.view-models.components.code-block highlight--s="newName">
+    <code parser="s">&lt;div>
+    &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
+    &lt;div wo-visible="$this.visible">
+        {{$model.people}}
+    &lt;/div>
+    &lt;input type="text" id="newName" />
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<h2>View model -to- model</h2>
+<p>The view model can alter the model directly</p>
+View model
+<wipeout-docs.view-models.components.code-block highlight--s="addNewName">
+    <code parser="s">{
+    visible: true,
+    templateItems: {},
+    toggleVisibility: function () {
+        this.visible = !this.visible;
+    },
+    getNewName: function () {
+        return this.templateItems.newName.value;
+    },
+    addNewName: function () {
+        var newPerson = this.getNewName();
+        this.model.addPerson(newPerson);
+    },
+    model: {
+        people: ["Mary", "John"],
+        addPerson: function (name) {
+            this.people.push(name);
+        }
+    },
+    templateId: "togglePeopleTemplate"
+}</code>
+</wipeout-docs.view-models.components.code-block>
+Template:
+<wipeout-docs.view-models.components.code-block highlight--s="addNewName">
+    <code parser="s">&lt;div>
+    &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
+    &lt;div wo-visible="$this.visible">
+        {{$model.people}}
+    &lt;/div>
+    &lt;input type="text" id="newName" />
+    &lt;button wo-click="$this.addNewName">Add&lt;/button>
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<h2>Model -to- view model</h2>
+<p>The model cannot alter the view model directly. In order to notify the view model, the model must use events (TODOD) which the view model must subscribe to.</p>
+<br />
+<h2>Model -to- template</h2>
+<p>The model has no concept of visual data and cannot access the templated html</p>
+<wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'continued >>'"></wipeout-docs.rl>
+<br />
+<br />
