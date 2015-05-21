@@ -2161,7 +2161,7 @@ If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orientee
 <h1>Pluggable MVVM components</h1>
 
 <p>Expanding on the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-mvvm-interactions'" text="'previous article'"></wipeout-docs.rl>, MVVM screams componentization. Wipeout has a few view model types for basic scenarios, and you can also create your own.</p>
-<p>In this example we will use the itemsControl (TODOD) component to render the person names in a list. You can set properties of a nested component within the template.</p>
+<p>In this example we will use the <code>itemsControl</code> (TODOD) component to render the person names in a list. You can set properties of a nested component within the template.</p>
 <wipeout-docs.view-models.components.code-block highlight="['$model.people', 'items-control']">
     <code parser="s">&lt;div>
     &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
@@ -4230,7 +4230,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
             <div class="list-group">
                 <wo.if condition="$model.header.visible">
                     <if-true>
-                        <wipeout-docs.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header" />
+                        <wipeout-docs.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header"></wipeout-docs.rl>
                     </if-true>
                 </wo.if>
                 <wo.items-control items="$model.items" id="items">
@@ -4240,7 +4240,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                     <item-template>
                         <wo.if condition="$model.visible">
                             <if-true>
-                                <wipeout-docs.rl text="$model.text" href="$model.href" class="'list-group-item'" style="'padding-left: 30px'" />
+                                <wipeout-docs.rl text="$model.text" href="$model.href" class="'list-group-item'" style="'padding-left: 30px'"></wipeout-docs.rl>
                             </if-true>
                         </wo.if>
                     </item-template>
