@@ -1,5 +1,5 @@
 <h1>Complex template properties</h1>
-<p>As well as binding using view model attributes, you can also bind using view model inner element.</p>
+<p>As well as binding using view model attributes, you can also bind using view model inner elements.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;wo.view value1="$model">
     &lt;value2>$model&lt;/value2>
@@ -12,3 +12,13 @@
 &lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 <p>There is more info on this here (TODOD link).</p>
+<p>This is especially useful for setting long strings</p>
+<div style="max-width: 500px;">
+    <wipeout-docs.view-models.components.code-block>
+        <code parser="s">&lt;wo.view>
+    &lt;my-entire-novel parser="string">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit urna id gravida bibendum. Quisque at nisi porttitor, viverra nisi a, convallis ligula. Integer vestibulum luctus tellus, egestas aliquam velit placerat non. Phasellus suscipit velit at ullamcorper iaculis. Duis nisl nulla, pretium quis volutpat ut, tincidunt sed lectus. Duis sit amet arcu tortor. Aliquam quis risus eget felis tristique varius. Donec tempor libero quis mi mollis, euismod euismod mi fermentum. In neque orci, dapibus ut tellus mattis, euismod sagittis enim. Ut a risus feugiat turpis gravida feugiat sit amet vel sapien....
+    &lt;/my-entire-novel>
+&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.code-block>
+</div>

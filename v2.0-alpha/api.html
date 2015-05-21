@@ -893,7 +893,7 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 
 <script id="Articles.complex-template-properties" type="text/template">
 <h1>Complex template properties</h1>
-<p>As well as binding using view model attributes, you can also bind using view model inner element.</p>
+<p>As well as binding using view model attributes, you can also bind using view model inner elements.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;wo.view value1="$model">
     &lt;value2>$model&lt;/value2>
@@ -906,6 +906,17 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 &lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 <p>There is more info on this here (TODOD link).</p>
+<p>This is especially useful for setting long strings</p>
+<div style="max-width: 500px;">
+    <wipeout-docs.view-models.components.code-block>
+        <code parser="s">&lt;wo.view>
+    &lt;my-entire-novel parser="string">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit urna id gravida bibendum. Quisque at nisi porttitor, viverra nisi a, convallis ligula. Integer vestibulum luctus tellus, egestas aliquam velit placerat non. Phasellus suscipit velit at ullamcorper iaculis. Duis nisl nulla, pretium quis volutpat ut, tincidunt sed lectus. Duis sit amet arcu tortor. Aliquam quis risus eget felis tristique varius. Donec tempor libero quis mi mollis, euismod euismod mi fermentum. In neque orci, dapibus ut tellus mattis, euismod sagittis enim. Ut a risus feugiat turpis gravida feugiat sit amet vel sapien....
+    &lt;/my-entire-novel>
+&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.code-block>
+</div>
+
 </script>
 
 <script id="Articles.content-control" type="text/template">
@@ -3608,6 +3619,7 @@ Given the view model:
 <wipeout-docs.view-models.components.j-code-block>
     <code parser="s">var viewOrEdit = wo.viewModel("demoApp.viewOrEdit")
     .value("text", "Edit")
+    .value("model", "Hi!")
     .templateId("view-or-edit-view")
     .build();
 
@@ -3634,7 +3646,7 @@ And templates:<br />
 </wipeout-docs.view-models.components.new-template-code-block>
 Result:
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;demo-app.view-or-edit model--s="">&lt;/demo-app.view-or-edit></code>
+    <code parser="s">&lt;demo-app.view-or-edit>&lt;/demo-app.view-or-edit></code>
 </wipeout-docs.view-models.components.usage-code-block>
 <br />
 
@@ -3757,7 +3769,7 @@ are cached in the virtual cache.</p>
 </script>
 
 <script id="Articles.where-to-put-a-template" type="text/template">
-<h1><a href="http://awoiaf.westeros.org/index.php/Tysha" target="_blank">Where do templates go?</a></h1>
+<h1>Where do templates go?</h1>
 <p>Templates can go in one of three places</p>
 <h2>1. Embedded within the DOM</h2>
 <p>The first place wipeout will look for a template is in the DOM. It will do a <code>document.getElementById(...)</code> lookup where the template id is the id of the element. To use this method, you should place your template within script tags like so:</p>
