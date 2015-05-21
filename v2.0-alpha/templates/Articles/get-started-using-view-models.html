@@ -1,0 +1,21 @@
+<wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-view-models'" text="'<< previous'"></wipeout-docs.rl>
+<h1>Using View Models</h1>
+<p>Expanding on the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-view-models'" text="'previous article'"></wipeout-docs.rl>, you can use your newly defined viewModel and template by adding it to your html document.</p>
+<wipeout-docs.view-models.components.code-block highlight="['my-app.root-view-model', 'togglePeopleTemplate', 'myViewModelDefinition.js']">
+	<code parser="s">&lt;!DOCTYPE>
+&lt;html>
+    &lt;head>
+        &lt;title>Names&lt;/title>
+    &lt;/head>
+    &lt;body>
+		
+        &lt;my-app.root-view-model>&lt;/my-app.root-view-model>
+        
+        &lt;script type="text/html" id="togglePeopleTemplate">
+            ... the template html goes here
+        &lt;/script>
+        &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
+        &lt;script type="text/javascript" src="myViewModelDefinition.js">&lt;/script>
+    &lt;/body>    
+&lt;/html></code>
+</wipeout-docs.view-models.components.code-block>

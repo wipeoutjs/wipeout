@@ -1,0 +1,31 @@
+<h1>Setting the template within a template</h1>
+<p>Within wipeout it is often useful to set the template within another template, rather than by id. To do this you can use the <code>contentControl</code> (TOTOD link) view model.</p>
+Nested content controls:
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="content-control-article-1" highlight--s="set-template">
+    <code parser="s">&lt;wo.content-control>
+    &lt;set-template>
+        Content control 1
+        &lt;div style="padding-left: 20px;">
+            &lt;wo.content-control>
+                &lt;set-template>
+                    Content control 2
+                    &lt;div style="padding-left: 20px;">
+                        &lt;wo.content-control>
+                            &lt;set-template>
+                                Content control 3
+                            &lt;/set-template>
+                        &lt;/wo.content-control>
+                    &lt;/div>
+                &lt;/set-template>
+            &lt;/wo.content-control>
+        &lt;/div>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+Renders:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'content-control-article-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<br/>

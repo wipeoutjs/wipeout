@@ -674,6 +674,42 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 </script>
 
+<script id="Articles.binding-setters" type="text/template">
+<h1>Binding Setters</h1>
+<p>There are many values available to you when setting view model properties or using <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=html-attributes'" text--s="wipeout html attributes">.
+    <ul>
+        <li><code>$this</code> references the view model which is being templated</li>
+        <li><code>$model</code> references the model of the view model being templated</li>
+        <li><code>$parent</code> references view model 1 level up</li>
+        <li><code>$parents</code> is an array of all view model ancestors where <code>$parents[0] === $parent</code>.</li>
+        <li><code>$parentContext</code> is the binding context of the <code>$parent</code>.</li>
+        <li><code>$index.value</code> is available to items in an itemsControl (TODOD link) and represents their index in the array.</li>
+        <li><code>$context.find(...)</code> (TODOD link) is a tool to find ancestors based on search terms.</li>
+    </ul>
+    </p>
+<p>You can put almost any code you want into a binding setter</p>
+Examples:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;!-- bind to the model -->
+&lt;wo.view model="$model">&lt;/wo.view>
+
+&lt;!-- bind to the value property of the view model -->
+&lt;wo.view model="$this.value">&lt;/wo.view>
+
+&lt;!-- bind to the value property of the parent view model -->
+&lt;wo.view model="$parent.value">&lt;/wo.view>
+
+&lt;!-- bind to a dynamic value -->
+&lt;wo.view model="$model != null ? true : false">&lt;/wo.view>
+
+&lt;!-- bind to a global value -->
+&lt;wo.view model="document">&lt;/wo.view>
+
+&lt;!-- find a view model and bind to it's model (TODOD link) -->
+&lt;wo.view model="$context.find(myViewModel).model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
 <script id="Articles.binding-types" type="text/template">
 <h1>Binding types</h1>
 <p>There are many ways of binding properties. By default properties are bound one way, but properties can also be bound
@@ -851,6 +887,57 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 	<li>wo.view.shareParentScope expects either the string true or false.</li>
 	<li>wo.view.id expects a string.</li>
 </ul>
+</script>
+
+<script id="Articles.complex-template-properties" type="text/template">
+<h1>Complex template properties</h1>
+<p>As well as binding using view model attributes, you can also bind using view model inner element.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view value1="$model">
+    &lt;value2>$model&lt;/value2>
+    &lt;value3 value="$model">&lt;/value3>
+    &lt;value4>
+        &lt;js-object>
+            &lt;value5>$model&lt;/value5>
+        &lt;/js-object>
+    &lt;/value4>
+&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>There is more info on this here (TODOD link).</p>
+</script>
+
+<script id="Articles.content-control" type="text/template">
+<h1>Setting the template within a template</h1>
+<p>Within wipeout it is often useful to set the template within another template, rather than by id. To do this you can use the <code>contentControl</code> (TOTOD link) view model.</p>
+Nested content controls:
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="content-control-article-1" highlight--s="set-template">
+    <code parser="s">&lt;wo.content-control>
+    &lt;set-template>
+        Content control 1
+        &lt;div style="padding-left: 20px;">
+            &lt;wo.content-control>
+                &lt;set-template>
+                    Content control 2
+                    &lt;div style="padding-left: 20px;">
+                        &lt;wo.content-control>
+                            &lt;set-template>
+                                Content control 3
+                            &lt;/set-template>
+                        &lt;/wo.content-control>
+                    &lt;/div>
+                &lt;/set-template>
+            &lt;/wo.content-control>
+        &lt;/div>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+Renders:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'content-control-article-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<br/>
 </script>
 
 <script id="Articles.control-the-view-model-lifecycle" type="text/template">
@@ -1557,43 +1644,28 @@ Both functions are optional.
 </wipeout-docs.view-models.components.code-block>
 </script>
 
-<script id="Articles.get-started-with-bindings" type="text/template">
-<h1>Bindings</h1>
-<p>Binding values together creates powerful chains of pluggable components which are the backbone of a wipeout application.</p>
-
-<wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// viewModel 1
-wo.viewModel("demoApp.person")
-    .templateId("/person.html")
-    .build();
+<script id="Articles.get-started-using-view-models" type="text/template">
+<wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-view-models'" text="'<< previous'"></wipeout-docs.rl>
+<h1>Using View Models</h1>
+<p>Expanding on the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-view-models'" text="'previous article'"></wipeout-docs.rl>, you can use your newly defined viewModel and template by adding it to your html document.</p>
+<wipeout-docs.view-models.components.code-block highlight="['my-app.root-view-model', 'togglePeopleTemplate', 'myViewModelDefinition.js']">
+	<code parser="s">&lt;!DOCTYPE>
+&lt;html>
+    &lt;head>
+        &lt;title>Names&lt;/title>
+    &lt;/head>
+    &lt;body>
 		
-// viewModel 2
-wo.viewModel("demoApp.name")
-    .templateId("/name.html")
-    .build();</code>
-</wipeout-docs.view-models.components.j-code-block>
-
-<p>At the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
-	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$model.lastName">&lt;/demo-app.name>
-&lt;/div></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<p>And at the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;span wo-content="$model">&lt;/span></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<br />
-<p>So the following element in html:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
-</wipeout-docs.view-models.components.usage-code-block>
-<br/>
-<br/>
-<br/>
+        &lt;my-app.root-view-model>&lt;/my-app.root-view-model>
+        
+        &lt;script type="text/html" id="togglePeopleTemplate">
+            ... the template html goes here
+        &lt;/script>
+        &lt;script type="text/javascript" src="wipeout.js">&lt;/script>
+        &lt;script type="text/javascript" src="myViewModelDefinition.js">&lt;/script>
+    &lt;/body>    
+&lt;/html></code>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.get-started-with-busybody" type="text/template">
@@ -1605,61 +1677,6 @@ wo.viewModel("demoApp.name")
 <p>
 	Check out the documentation for busybody <a href="https://github.com/ShaneGH/busybody" target="_blank">here</a>.
 </p>
-</script>
-
-<script id="Articles.get-started-with-computeds" type="text/template">
-<h1>Computeds</h1>
-<p>Computeds are properties whose values are defined by the result of a function. If anything within the function changes, the computed will re-evaluate and update the property. To learn more about computeds, see <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">the busybody documentation</a>, the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observableBase&functionName=computed&isStatic=false'" text="'computed'"></wipeout-docs.rl> function and the the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=busybody.observeTypes.computed'" text="'computed'"></wipeout-docs.rl> class.</p>
-
-<wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// viewModel 1
-var person = wo.viewModel("demoApp.person")
-    .templateId("/person.html")
-    // this method initializes the viewModel
-    .initialize(function () {
-        // create a computed property "fullName" which is
-        // an amalgamation of the first name and last name
-        this.computed("fullName", function () {
-            return this.model.firstName + " " + this.model.lastName;
-        });
-    })
-    .build();
-		
-// viewModel 2
-wo.viewModel("demoApp.name")
-    // for this viewModel type we want
-    // any changes to the "model" property
-    // to reflect in the property it is bound to.
-    // "tw" stands for "two way"
-    .binding("model", "tw")
-    .templateId("/name.html")
-    .build();</code>
-</wipeout-docs.view-models.components.j-code-block>
-
-<p>At the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
-	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$model.lastName">&lt;/demo-app.name> &lt;br />
-    &lt;br />
-    Full name: &lt;span wo-content="$this.fullName">&lt;/span>
-&lt;/div></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<p>And at the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;input type="text" wo-on-event="keyup" wo-value="$model" /></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<br />
-<p>So the following element in html:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;!-- in order to be observed, the model must be an observable -->
-&lt;demo-app.person model="busybody.makeObservable({firstName: 'Robert', lastName: 'Paulson'})">&lt;/demo-app.person></code>
-</wipeout-docs.view-models.components.usage-code-block>
-<br/>
-<br/>
-<br/>
 </script>
 
 <script id="Articles.get-started-with-custom-components" type="text/template">
@@ -1815,59 +1832,6 @@ wo.viewModel("demoApp.name")
 <br/>
 </script>
 
-<script id="Articles.get-started-with-functions-and-events" type="text/template">
-<h1>Functions and events</h1>
-<p>You can add custom functions to a viewModel which can then be called by user actions such as a mouse click.</p>
-
-<wipeout-docs.view-models.components.j-code-block>
-	<code parser="s">// viewModel 1
-var person = wo.viewModel("demoApp.person")
-    .templateId("/person.html")
-    .build();
-
-// add a function to the person which will display the name
-person.displayFullName = function () {
-    if (this.model) {
-        alert(this.model.firstName + " " + this.model.lastName);
-    }
-};
-		
-// viewModel 2
-wo.viewModel("demoApp.name")
-    // for this viewModel type we want
-    // any changes to the "model" property
-    // to reflect in the property it is bound to.
-    // "tw" stands for "two way"
-    .binding("model", "tw")
-    .templateId("/name.html")
-    .build();</code>
-</wipeout-docs.view-models.components.j-code-block>
-
-<p>At the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/person.html">
-	<code parser="s">&lt;div>
-    First name: &lt;demo-app.name model="$model.firstName">&lt;/demo-app.name> &lt;br />
-    Last name: &lt;demo-app.name model="$model.lastName">&lt;/demo-app.name> &lt;br />
-
-    &lt;button wo-click="$this.displayFullName">Display name&lt;/button>
-&lt;/div></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<p>And at the URL "/person.html"</p>
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="/name.html">
-	<code parser="s">&lt;input type="text" wo-value="$model" /></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<br />
-<p>So the following element in html:</p>
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="true">
-	<code parser="s">&lt;demo-app.person model="{firstName: 'Robert', lastName: 'Paulson'}">&lt;/demo-app.person></code>
-</wipeout-docs.view-models.components.usage-code-block>
-<br/>
-<br/>
-<br/>
-</script>
-
 <script id="Articles.get-started-with-hello-world" type="text/template">
 <h1>Hello World</h1>
 <p>Wipeout goes with the idea, "If I can create it, I can render it", so to create a basic wipeout app, you simply need to create a class, or in the case of javascript, a function</p>
@@ -1931,41 +1895,6 @@ wo.viewModel("demoApp.name")
 </wipeout-docs.view-models.components.code-block>
 </script>
 
-<script id="Articles.get-started-with-lists" type="text/template">
-<h1>Using lists of items</h1>
-
-<p>Lists of items are at the core of all javascript frameworks, and wipeout is no different. For simple objects you can simply render any array to render the sum of it's contents.</p>
-
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="gettingStartedWithLists1">
-	<code parser="s">&lt;div wo-render="[new Date(), ' Item 2 ', 3]">&lt;/div></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-Will render
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view template-id--s="gettingStartedWithLists1">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.usage-code-block>
-
-<p>Alternatively, you will more likely want to create a viewModel with a template for each item. You can do this using an 
-	<wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'">
-	</wipeout-docs.rl>
-</p>
-
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="gettingStartedWithLists2">
-	<code parser="s">&lt;ul>
-    &lt;wo.items-control items="[{itemText: 'Item 1'}, {itemText: 'Item 2'}]">
-        &lt;item-template>
-            &lt;li wo-content="$model.itemText">&lt;/li>
-        &lt;/item-template>
-    &lt;/wo.items-control>
-&lt;/ul></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-Will render
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-	<code parser="s">&lt;wo.view template-id--s="gettingStartedWithLists2">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.usage-code-block>
-<br/>
-<br/>
-</script>
-
 <script id="Articles.get-started-with-mvvm-basics" type="text/template">
 <h1>MVVM Basics</h1>
 <p>MVVM stands for <b>Model</b>, <b>View</b>, <b>ViewModel</b>. The meaning of the acronym has changed over the years, but the basic development concepts remain. You can read about MVVM <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel" target="_blank">here</a>.</p>
@@ -1975,8 +1904,9 @@ Will render
 <h3>1. View Models</h3>
 <p>View models are pieces of javascript code which 
     <ol>
-        <li>Represent the state of something which has been rendered</li>
-        <li>Can modify the state of something which has been rendered</li>
+        <li>Represent the state of something which has been rendered.</li>
+        <li>Can modify the state of something which has been rendered.</li>
+        <li>Don't really do much else. For instance ajax calls from a view model are generally to be avoided, as, whatever is happening on the server/external source is outside the domain of the visual.</li>
 </ol>
 An example view model might look like this:
     </p>
@@ -2159,7 +2089,7 @@ If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orientee
 <h1>Pluggable MVVM components</h1>
 
 <p>Expanding on the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-mvvm-interactions'" text="'previous article'"></wipeout-docs.rl>, MVVM screams componentization. Wipeout has a few view model types for basic scenarios, and you can also create your own.</p>
-<p>In this example we will use the <code>itemsControl</code> (TODOD) component to render the person names in a list. You can set properties of a nested component within the template.</p>
+<p>In this example we will use the <code>itemsControl</code> (TODOD link) component to render the person names in a list. You can set properties of a nested component within the template.</p>
 <wipeout-docs.view-models.components.code-block highlight="['$model.people', 'items-control']">
     <code parser="s">&lt;div>
     &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
@@ -2176,47 +2106,59 @@ If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orientee
     &lt;button wo-click="$this.addNewName">Add&lt;/button>
 &lt;/div></code>
 </wipeout-docs.view-models.components.code-block>
+<wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-view-models'" text="'continued >>'"></wipeout-docs.rl>
+<br />
+<br />
 </script>
 
 <script id="Articles.get-started-with-view-models" type="text/template">
-<h1>viewModels</h1>
-<p>Using simple functions as viewModels is ok for the most basic of functionality, however, in order to access the rich set of wipeout features, you must create viewModels.</p>
-
+<wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'<< previous'"></wipeout-docs.rl>
+<h1>Define View Models</h1>
+<p>Expanding on the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'previous article'"></wipeout-docs.rl>, you can define the view model using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> tool.</p>
 <wipeout-docs.view-models.components.code-block>
-	<code parser="s">// viewModel 1
-wo.viewModel("demoApp.rootApplication")
-    .templateId("/root-application.html")
+    <code parser="s">var rootViewModel = wo.viewModel("myApp.rootViewModel")
+    .templateId("togglePeopleTemplate")
+    .value("visible", true)
+    .initialize(function () {
+        this.model = {
+            people: busybody.array(["Mary", "John"]),
+            addPerson: function (name) {
+                this.people.push(name);
+            }
+        };
+    })
     .build();
-		
-// viewModel 2
-wo.viewModel("demoApp.innerViewModel")
-    .templateId("/inner-view-model.html")
-    .build();</code>
+    
+rootViewModel.toggleVisibility = function () {
+    this.visible = !this.visible;
+};
+        
+rootViewModel.getNewName = function () {
+    return this.templateItems.newName.value;
+};
+        
+rootViewModel.addNewName = function () {
+    var newPerson = this.getNewName();
+    this.model.addPerson(newPerson);
+};</code>
 </wipeout-docs.view-models.components.code-block>
-
-<p>At the URL "/root-application.html"</p>
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;h1>Welcome to wipeout&lt;/h1>
-&lt;div>
-    &lt;!-- as you can see, the root-application
-            contains an inner-view-model -->
-    &lt;demo-app.inner-view-model>
-    &lt;/demo-app.inner-view-model>
-&lt;/div></code>
-</wipeout-docs.view-models.components.code-block>
-
-<p>And at the URL "/inner-view-model.html"</p>
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;span>It supports templates&lt;/span></code>
-</wipeout-docs.view-models.components.code-block>
-
-<p>So an <code>&amp;lt;app.root-application></code> element in html will render:</p>
-<wipeout-docs.view-models.components.code-block>
-	<code parser="s">&lt;h1>Welcome to wipeout&lt;/h1>
-&lt;div>
-    &lt;span>It supports templates&lt;/span>
-&lt;/div></code>
-</wipeout-docs.view-models.components.code-block>
+<p>There are a few things to notice in this example.
+    <ol>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> creates a <a href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_blank">DSL</a> which has many functions to help you build the view model.</li>
+        <li>The name of this view model will be <code>myApp.rootViewModel</code> and the view model definition (class) will be appended to <code>window.myApp.rootViewModel</code>.</li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=add-a-default-template'" text="'templateId(...)'"></wipeout-docs.rl> is a function which sets the default template id of the view model.</li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=add-a-default-value'" text="'value(...)'"></wipeout-docs.rl></code> is a function which sets a default value.</li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=view-model-lifecycle'" text="'initialize(...)'"></wipeout-docs.rl></code> adds a callback which is used to in itialize the view model.</li>
+        <li>Within the <code>initialize</code> code we are building a model. In a fully fledged javascript app this value will normally come from an ajax call.</li>
+        <li><a href="https://github.com/ShaneGH/busybody#observable-arrays" target="_blank">busybody.array</a> makes the array observable. Now wipeout will see when the array changes and can update the DOM accordingly.</li>
+        <li>Notice how the <code>templateItems</code> (TODOD: link) property is missing from the definition. This property is automatically added to all view models.</li>
+    <li>The <code>build(...)</code> function tells wipeout to create the view model.</li>
+    <li>You can add view model <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=add-a-function'" text="'functions'"></wipeout-docs.rl> by simply adding them to the result of the <code>build(...)</code>.</li>
+</ol>
+    </p>
+<wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-using-view-models'" text="'next >>'"></wipeout-docs.rl>
+<br />
+<br />
 </script>
 
 <script id="Articles.get-started" type="text/template">
@@ -2395,6 +2337,32 @@ wo.view.prototype.dispose = function() {
     One thing to note, is that <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
     You can explicitly set this property to false in the template definition if this is not required.
 </p>
+</script>
+
+<script id="Articles.illegal-html-tags" type="text/template">
+<h1>Illegal html tags</h1>
+<p>In some areas, html has a strict schema which disallows you placing certain tags within other tags. One such example is that a <code>tbody</code> tag can only be placed within a <code>table</code> tag. To get around this you can use the <code>wo-el</code> or <code>data-wo-el</code> attributes.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;!-- this will not work -->
+&lt;wo.content-control>
+    &lt;set-template>
+        &lt;tbody>
+            ...
+        &lt;/tbody>
+    &lt;/set-template>
+&lt;/wo.content-control>
+        
+&lt;!-- this will work -->
+&lt;wo.content-control>
+    &lt;table wo-el="setTemplate">
+        &lt;tbody>
+            ...
+        &lt;/tbody>
+    &lt;/table>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The <code>wo-el</code> attribute changes the meaning of the element to wipeout, while still following html rules</p>
 </script>
 
 <script id="Articles.inherit-from-another-view-model" type="text/template">
@@ -3506,6 +3474,26 @@ of un-needed scope.</p>
 <p>Using this method, you can re-template any viewModel at any time by setting it's template id.</p>
 </script>
 
+<script id="Articles.template-items" type="text/template">
+<h1>Accessing html elements and view models</h1>
+<p>You can access any view models and html elements defined in a template by giving them an id and using the <code>templateItems</code> property.</p>
+Template:
+<wipeout-docs.view-models.components.code-block highlight="['theView', 'theDiv']">
+    <code parser="s">&lt;div id="theDiv">&lt;/div>
+&lt;wo.view id="theView">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+View model:
+<wipeout-docs.view-models.components.code-block highlight="['theView', 'theDiv']">
+    <code parser="s">wo.viewModel("myViewModel")
+    .rendered(function () {
+        var div = this.templateItems.theDiv;
+        var view = this.templateItems.theView;
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>The <code>rendered</code> function is defined <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=view-model-lifecycle'" text="'here'"></wipeout-docs.rl>.</p>
+</script>
+
 <script id="Articles.templates-content-control" type="text/template">
 <h1>Content Control</h1>
 
@@ -3613,6 +3601,44 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 
 <script id="Articles.using-templates" type="text/template">
 <h1>Templates</h1>
+<p>Templates are referenced by the <code>templateId</code> property of the view model. The template can be set or re-set at any time over the view model lifecycle. For instance:</p>
+Given the view model:
+<wipeout-docs.view-models.components.j-code-block>
+    <code parser="s">var viewOrEdit = wo.viewModel("demoApp.viewOrEdit")
+    .value("text", "Edit")
+    .templateId("view-or-edit-view")
+    .build();
+
+viewOrEdit.toggle = function () {
+    if (this.templateId === "view-or-edit-view") {
+        this.templateId = "view-or-edit-edit";
+        this.text = "View";
+    } else {
+        this.templateId = "view-or-edit-view"
+        this.text = "Edit";
+    }
+};</code>
+    </wipeout-docs.view-models.components.j-code-block>
+And templates:<br />
+<code>view-or-edit-view</code>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'view-or-edit-view'">
+    <code parser="s">&lt;span wo-content="$model">&lt;/span>&lt;br />
+&lt;button wo-click="$this.toggle" wo-content="$this.text">&lt;/button></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<code>view-or-edit-edit</code>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'view-or-edit-edit'">
+    <code parser="s">&lt;input type="text" wo-value="$model" />&lt;br />
+&lt;button wo-click="$this.toggle" wo-content="$this.text">&lt;/button></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+Result:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;demo-app.view-or-edit model--s="">&lt;/demo-app.view-or-edit></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br />
+
+<p>There is quite a lot of functionality in a wipeout template which is above and beyond standard html. The following articles explain this behavior.</p>
+<br />
+<br />
 </script>
 
 <script id="Articles.value-attributes" type="text/template">
@@ -3677,6 +3703,45 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 <br />
 </script>
 
+<script id="Articles.view-models-and-html-elements" type="text/template">
+<h1>View Models and Html Elements</h1>
+<p>Within wipeout templates, view models should be treated almost like html elements. They are defined in the same way and can sit side by side with elements</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;my-view-model>&lt;/my-view-model>
+    &lt;input type="text" />
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><p>There are some differences in setting the properties of view models and html elements</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;my-view-model model="$model.value">&lt;/my-view-model>
+    &lt;input type="text" data-model="$model.value" wo-value="$model.value" />
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>In this example we have bound:
+    <ol>
+        <li>The model of <code>my-view-model</code> to the <code>value</code> property of the model of the view model which the template was applied to.</li>
+        <li>The <code>data-model</code> property of the <code>input</code> to the string <code>"$model.value"</code> </li>
+        <li>The <code>value</code> of the <code>input</code> to the property of the model of the view model which the template was applied to. The difference between this case and the previous case is that <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-value'" text--s="wo-value"></wipeout-docs.rl> is a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=html-attributes'" text--s="wipeout html attribute"></wipeout-docs.rl>.</li>
+</ol>
+</p>
+<p>You can modify the way view model properties are bound using:
+<ul>
+    <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=parsers'" text--s="Parsers"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=binding-types'" text--s="Bindings"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=filters'" text--s="Filters"></wipeout-docs.rl></li>
+</ul></p>
+<p>You can modify the way wipeout html properties are bound using:
+<ul>
+    <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=parsers'" text--s="Parsers"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=filters'" text--s="Filters"></wipeout-docs.rl></li>
+</ul></p>
+
+</script>
+
 <script id="Articles.virtual-method-cache" type="text/template">
 <h1>The virtual method cache</h1>
 
@@ -3687,6 +3752,28 @@ are cached in the virtual cache.</p>
         this may cause problems. You can get around this by using the 
         <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.object&amp;functionName=clearVirtualCache&amp;isStatic=true'" text="'clearVirtualCache'" /> method and 
 <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.object&amp;propertyName=useVirtualCache&amp;isStatic=true'" text="'useVirtualCache'" /> property.</p>
+</script>
+
+<script id="Articles.where-to-put-a-template" type="text/template">
+<h1><a href="http://awoiaf.westeros.org/index.php/Tysha" target="_blank">Where do templates go?</a></h1>
+<p>Templates can go in one of three places</p>
+<h2>1. Embedded within the DOM</h2>
+<p>The first place wipeout will look for a template is in the DOM. It will do a <code>document.getElementById(...)</code> lookup where the template id is the id of the element. To use this method, you should place your template within script tags like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;script type="text/html" id="theTemplateId">
+    ... template code
+&lt;/script></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h2>2. Loaded from the server</h2>
+<p>If wipeout cannot find a template in the DOM it will take the templateId as a URL and try to find it with an ajax call. So for instance using a templateId like <code>http://www.mydomain.com/templates/myTemplate.html</code> will also work.</p>
+<p>You can disable this functionality by setting <code>wipeout.settings.asynchronousTemplates = false;</code></p>
+
+<h2>3. Compile a template from a string</h2>
+<p>Once a wipeout template is found, it is compiled and cached. You can skip the entire lookup process by compiling templates yourself:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wipeout.template.engine.instance.setTemplate(templateId, templateString);</code>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.wipeout-binding" type="text/template">

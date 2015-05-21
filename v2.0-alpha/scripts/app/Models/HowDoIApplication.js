@@ -31,14 +31,18 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("With MVVM interactions", "get-started-with-mvvm-interactions"),
                 new articleLink("With Pluggable MVVM components", "get-started-with-pluggable-mvvm-components"),
                 new articleLink("With viewModels", "get-started-with-view-models"),           
-                new articleLink("With View Bindings", "get-started-with-bindings"),
-                new articleLink("With Functions and Events", "get-started-with-functions-and-events"),
-                new articleLink("With Computeds", "get-started-with-computeds"),
-                new articleLink("With lists", "get-started-with-lists"),
+                new articleLink("Using viewModels and templates", "get-started-using-view-models")
             ]
         }, {
             header: new articleLink("Using templates", "using-templates"),
             items: [
+                new articleLink("Where do templates go?", "where-to-put-a-template"),
+                new articleLink("View Models and Html Elements", "view-models-and-html-elements"),
+                new articleLink("Accessing html elements and view models", "template-items"),
+                new articleLink("Binding Setters", "binding-setters"),
+                new articleLink("Setting the template within a template", "content-control"),
+                new articleLink("Complex template properties", "complex-template-properties"),
+                new articleLink("Illegal html tags", "illegal-html-tags")
             ]
         }, {
             header: new articleLink("Define viewModels", "define-view-models"),

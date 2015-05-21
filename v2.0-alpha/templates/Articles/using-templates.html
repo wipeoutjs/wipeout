@@ -1,1 +1,39 @@
 <h1>Templates</h1>
+<p>Templates are referenced by the <code>templateId</code> property of the view model. The template can be set or re-set at any time over the view model lifecycle. For instance:</p>
+Given the view model:
+<wipeout-docs.view-models.components.j-code-block>
+    <code parser="s">var viewOrEdit = wo.viewModel("demoApp.viewOrEdit")
+    .value("text", "Edit")
+    .templateId("view-or-edit-view")
+    .build();
+
+viewOrEdit.toggle = function () {
+    if (this.templateId === "view-or-edit-view") {
+        this.templateId = "view-or-edit-edit";
+        this.text = "View";
+    } else {
+        this.templateId = "view-or-edit-view"
+        this.text = "Edit";
+    }
+};</code>
+    </wipeout-docs.view-models.components.j-code-block>
+And templates:<br />
+<code>view-or-edit-view</code>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'view-or-edit-view'">
+    <code parser="s">&lt;span wo-content="$model">&lt;/span>&lt;br />
+&lt;button wo-click="$this.toggle" wo-content="$this.text">&lt;/button></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<code>view-or-edit-edit</code>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'view-or-edit-edit'">
+    <code parser="s">&lt;input type="text" wo-value="$model" />&lt;br />
+&lt;button wo-click="$this.toggle" wo-content="$this.text">&lt;/button></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+Result:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;demo-app.view-or-edit model--s="">&lt;/demo-app.view-or-edit></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br />
+
+<p>There is quite a lot of functionality in a wipeout template which is above and beyond standard html. The following articles explain this behavior.</p>
+<br />
+<br />

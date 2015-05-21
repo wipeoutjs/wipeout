@@ -1,0 +1,17 @@
+<h1>Accessing html elements and view models</h1>
+<p>You can access any view models and html elements defined in a template by giving them an id and using the <code>templateItems</code> property.</p>
+Template:
+<wipeout-docs.view-models.components.code-block highlight="['theView', 'theDiv']">
+    <code parser="s">&lt;div id="theDiv">&lt;/div>
+&lt;wo.view id="theView">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+View model:
+<wipeout-docs.view-models.components.code-block highlight="['theView', 'theDiv']">
+    <code parser="s">wo.viewModel("myViewModel")
+    .rendered(function () {
+        var div = this.templateItems.theDiv;
+        var view = this.templateItems.theView;
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>The <code>rendered</code> function is defined <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=view-model-lifecycle'" text="'here'"></wipeout-docs.rl>.</p>
