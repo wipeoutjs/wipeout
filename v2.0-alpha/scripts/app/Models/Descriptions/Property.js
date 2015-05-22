@@ -24,7 +24,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     property.getPropertySummaryXml = function(constructorFunction, propertyName, classFullName) {
         var result;
         if(result = property.getPropertyDescriptionOverride(classFullName + "." + propertyName))
-            return new DOMParser().parseFromString(result.description, "application/xml").documentElement;
+            return new DOMParser().parseFromString(typeof result === "string" ? result : result.description, "application/xml").documentElement;
         
         constructorFunction = constructorFunction.toString();
                 

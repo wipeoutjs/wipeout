@@ -189,8 +189,6 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
         if(window.wipeoutApi) return;
 		
 		var parents = [
-			{key: "EventTarget", value: EventTarget},	//TODO: take these out of the list
-			{key: "Window", value: Window},
 			{key: "Array", value: Array},
 			{key: "orienteer", value: orienteer},
 			{key: "busybody.disposable", value: busybody.disposable},
@@ -561,8 +559,16 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "orienteer", 
         while (classes.length) {
             var length = classes.length;
             
-            for(var i = classes.length - 1; i >= 0; i--) {
+            for (var i = classes.length - 1; i >= 0; i--) {
                 if(done.indexOf(apiBuilder.getParentClass(classes[i].value)) !== -1) {
+                    api.forClass(classes[i].key);
+                    done.push(classes[i].value);
+                    classes.splice(i, 1);
+                }
+            }
+        
+            for(var i = classes.length - 1; i >= 0; i--) {
+                if (apiBuilder.getParentClass(classes[i].value) === Window) {
                     api.forClass(classes[i].key);
                     done.push(classes[i].value);
                     classes.splice(i, 1);
@@ -1050,7 +1056,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "busybody.observ
         
         if(this.constructorFunction.constructor === Function) {
             var current = this.constructorFunction;
-            while((current = Object.getPrototypeOf(current.prototype).constructor) !== Object) {  
+            while((current = Object.getPrototypeOf(current.prototype).constructor) !== Object && current !== Window /*hack for wipeout.template.context*/) {  
                 var parentClass = this.api.getClassDescription(current);
                 if(!parentClass)
                     throw "Class has not been defined yet";
@@ -1340,7 +1346,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     property.getPropertySummaryXml = function(constructorFunction, propertyName, classFullName) {
         var result;
         if(result = property.getPropertyDescriptionOverride(classFullName + "." + propertyName))
-            return new DOMParser().parseFromString(result.description, "application/xml").documentElement;
+            return new DOMParser().parseFromString(typeof result === "string" ? result : result.description, "application/xml").documentElement;
         
         constructorFunction = constructorFunction.toString();
                 

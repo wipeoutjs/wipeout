@@ -119,7 +119,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "busybody.observ
         
         if(this.constructorFunction.constructor === Function) {
             var current = this.constructorFunction;
-            while((current = Object.getPrototypeOf(current.prototype).constructor) !== Object) {  
+            while((current = Object.getPrototypeOf(current.prototype).constructor) !== Object && current !== Window /*hack for wipeout.template.context*/) {  
                 var parentClass = this.api.getClassDescription(current);
                 if(!parentClass)
                     throw "Class has not been defined yet";

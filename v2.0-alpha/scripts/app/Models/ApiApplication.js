@@ -4,8 +4,6 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
         if(window.wipeoutApi) return;
 		
 		var parents = [
-			{key: "EventTarget", value: EventTarget},	//TODO: take these out of the list
-			{key: "Window", value: Window},
 			{key: "Array", value: Array},
 			{key: "orienteer", value: orienteer},
 			{key: "busybody.disposable", value: busybody.disposable},

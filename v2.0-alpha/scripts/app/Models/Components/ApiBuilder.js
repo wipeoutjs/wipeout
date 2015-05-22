@@ -28,8 +28,16 @@ compiler.registerClass("wipeoutDocs.models.components.apiBuilder", "orienteer", 
         while (classes.length) {
             var length = classes.length;
             
-            for(var i = classes.length - 1; i >= 0; i--) {
+            for (var i = classes.length - 1; i >= 0; i--) {
                 if(done.indexOf(apiBuilder.getParentClass(classes[i].value)) !== -1) {
+                    api.forClass(classes[i].key);
+                    done.push(classes[i].value);
+                    classes.splice(i, 1);
+                }
+            }
+        
+            for(var i = classes.length - 1; i >= 0; i--) {
+                if (apiBuilder.getParentClass(classes[i].value) === Window) {
                     api.forClass(classes[i].key);
                     done.push(classes[i].value);
                     classes.splice(i, 1);
