@@ -1,8 +1,15 @@
 
 HtmlAttr("value", function () {
 	
+    // ensure setByEvent is not used the first time
     var sbe = {};
+    
+	//TODE
     function select (select, attribute, renderContext) {
+		
+        if (!attribute.canSet())
+            throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
+        
         var getter = attribute.getter();
         select.value = getter();
         wipeout.utils.domData.set(select, "wo-value-getter", getter);
@@ -61,6 +68,9 @@ HtmlAttr("value", function () {
 		if (element.type === "checkbox" || element.type === "radio")
 			return;
         
+        if (trimToLower(element.tagName) === "select")
+            return select(element, attribute, renderContext);
+        
         // TODO: not terribly efficient. Getters should be lazy created
         if (trimToLower(element.tagName) === "option") {
             var getter = attribute.getter(), parentGetter;
@@ -72,11 +82,19 @@ HtmlAttr("value", function () {
                 element.selected = getter() === element.parentElement.value;
             }
             
+            // TODO: is this needed? (If so, needs tests)
+            /*attribute.watch(function (oldValue, newValue) {
+                if (element.selected && element.parentElement) {
+                    var event = document.createEvent("UIEvents");
+                    event.initUIEvent(
+                        element.parentElement.getAttribute("wo-on-event") || element.parentElement.getAttribute("data-wo-on-event") || "change", 
+                        true, true, null, 1);
+                    element.parentElement.dispatchEvent(event)
+                }
+            });*/
+            
             return;
         }
-        
-        if (trimToLower(element.tagName) === "select")
-            return select(element, attribute, renderContext);
 		
         if (!attribute.canSet())
             throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
