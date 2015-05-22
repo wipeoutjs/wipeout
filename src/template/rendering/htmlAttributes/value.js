@@ -1,6 +1,54 @@
 
 HtmlAttr("value", function () {
 	
+    var sbe = {};
+    function select (select, attribute, renderContext) {
+        var getter = attribute.getter();
+        select.value = getter();
+        wipeout.utils.domData.set(select, "wo-value-getter", getter);
+        
+        var setByEvent = sbe;
+        attribute.watch(function (oldValue, newValue) {
+            if (setByEvent === newValue)
+                return;
+            
+            var optionValue;
+            for (var i = 0, ii = select.options.length; i < ii; i++) {
+                if (optionValue = wipeout.utils.domData.get(select.options[i], "wo-value-getter")) {
+                    if (optionValue() === newValue) {
+                        select.selectedIndex = i;
+                        return;
+                    }
+                } else if (select.options[i].hasAttribute("value")) {
+                    if (select.options[i].value == newValue) {
+                        select.selectedIndex = i;
+                        return;
+                    }
+                } else if (select.options[i].innerHTML == newValue) {
+                    select.selectedIndex = i;
+                    return;
+                }
+            }
+        });
+        
+        var setter = attribute.setter();
+		attribute.onElementEvent(
+            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change", 
+            renderContext, 
+            function () {
+                var selected = select.options[select.selectedIndex], optionValue;
+                
+                if (!selected)
+                    setter(setByEvent = null);
+                else if (optionValue = wipeout.utils.domData.get(selected, "wo-value-getter"))
+                    setter(setByEvent = optionValue());
+                else if (selected.hasAttribute("value"))
+                    setter(setByEvent = selected.getAttribute("value"));
+                else
+                    setter(setByEvent = selected.innerHTML);
+            });
+    };
+    
 	//TODE
 	return function value (element, attribute, renderContext) {
         ///<summary>Bind to the value of a html element</summary>
@@ -10,8 +58,25 @@ HtmlAttr("value", function () {
         ///<returns type="Function">A dispose function</returns>
 		
         // for checkboxes, radios and options "value" works in conjunction with "checked-value"
-		if (element.type === "checkbox" || element.type === "radio" || trimToLower(element.tagName) === "option")
+		if (element.type === "checkbox" || element.type === "radio")
 			return;
+        
+        // TODO: not terribly efficient. Getters should be lazy created
+        if (trimToLower(element.tagName) === "option") {
+            var getter = attribute.getter(), parentGetter;
+            wipeout.utils.domData.set(element, "wo-value-getter", getter);
+                   
+            if (parentGetter = wipeout.utils.domData.get(element.parentElement, "wo-value-getter")) {
+                element.selected = getter() === parentGetter();
+            } else if (element.parentElement) {
+                element.selected = getter() === element.parentElement.value;
+            }
+            
+            return;
+        }
+        
+        if (trimToLower(element.tagName) === "select")
+            return select(element, attribute, renderContext);
 		
         if (!attribute.canSet())
             throw "Cannot bind to the property \"" + attribute.value(true) + "\".";

@@ -36,9 +36,4 @@ testUtils.testWithUtils("get, set, clear", "", false, function(methods, classes,
     // act 6
     wipeout.utils.domData.clear(element);
     strictEqual(element["__wipeout_domData"], undefined);
-    
-    // act 7
-    throws(function() {
-        wipeout.utils.domData.get(null);
-    });
 });
