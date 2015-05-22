@@ -37,7 +37,7 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     // assert
 	strictEqual(subject.setters.constructor, Object);
 	ok(subject.setters.model instanceof wipeout.template.initialization.viewModelPropertyValue);
-	strictEqual(subject.setters.model._value.value,  "$parent ? $parent.model : null");
+	strictEqual(subject.setters.model._value.value,  "$this.model");
 });
 
 testUtils.testWithUtils("addElement", "has setter already", false, function(methods, classes, subject, invoker) {
@@ -356,7 +356,7 @@ testUtils.testWithUtils("applyToViewModel", null, false, function(methods, class
 	var vm = {}, rc = {};
 	subject.setters = {
 		aaa: {
-			prime: function (x, input) { input.apply(this, arguments); }
+			prime: function (x, rc, input) { input.apply(this, arguments); }
 		}
 	};
 	

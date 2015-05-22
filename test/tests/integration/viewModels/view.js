@@ -32,7 +32,7 @@ test("nb", function() {
 	        
     // act
     application.setTemplate = '<wo.view id="item"\
-		nb--nb="$parent.nb" nbs--nb-s="$parent.nb"\
+		nb--nb="$this.nb" nbs--nb-s="$this.nb"\
     </wo.view>';
 	
 	application.onRendered = function () {
@@ -40,7 +40,7 @@ test("nb", function() {
 		
 		strictEqual(application.nb, nb);
 		strictEqual(application.nb, item.nb);
-		strictEqual("$parent.nb", item.nbs);
+		strictEqual("$this.nb", item.nbs);
 		
 		start();
 	};
@@ -55,7 +55,7 @@ test("ow", function() {
 	        
     // act
     application.setTemplate = '<wo.view id="item"\
-		ow--ow="$parent.ow" ows--ow-s="$parent.ow">\
+		ow--ow="$this.ow" ows--ow-s="$this.ow">\
     </wo.view>';
 	
 	application.onRendered = function () {
@@ -63,7 +63,7 @@ test("ow", function() {
 		
 		strictEqual(application.ow, ow);
 		strictEqual(application.ow, item.ow);
-		strictEqual("$parent.ow", item.ows);
+		strictEqual("$this.ow", item.ows);
 		
 		var d1 = item.observe("ow", function () {
 			d1.dispose();
@@ -85,7 +85,7 @@ test("tw", function() {
 	var tw = application.tw = {val: 1}, tw2 = {val: 2};
 	        
     // act
-    application.setTemplate = '<wo.view id="item" tw--tw="$parent.tw"></wo.view>';
+    application.setTemplate = '<wo.view id="item" tw--tw="$this.tw"></wo.view>';
 	
 	application.onRendered = function () {
 		var item = application.templateItems.item;
@@ -123,7 +123,7 @@ test("owts", function() {
 	        
     // act
     application.setTemplate = '<wo.view id="item"\
-		owts--owts="$parent.owts">\
+		owts--owts="$this.owts">\
     </wo.view>';
 	
 	application.onRendered = function () {
@@ -298,7 +298,7 @@ test("multi-dimentional binding", function() {
     var val;
     var model = busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ val: "" }) }) }) });
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
-    var open = "<wo.content-control id='" + id1 + "' model='$parent.model.inner'><set-template>", close = "</set-template></wo.content-control>";
+    var open = "<wo.content-control id='" + id1 + "' model='$this.model.inner'><set-template>", close = "</set-template></wo.content-control>";
     application.model = model;
     application.setTemplate = open + open + open + "<div id='" + id2 + "' wo-content='$this.model.val'></div>" + close + close + close;
     
@@ -372,7 +372,7 @@ test("shareParentScope", function() {
     <set-template>\
         <wo.content-control share-parent-scope="true" depth="2">\
             <set-template>\
-                <wo.view id="' + child + '" an-item="$parent.anItem" depth="3"></wo.view>\
+                <wo.view id="' + child + '" an-item="$this.anItem" depth="3"></wo.view>\
 				<div id="' + childNode + '"></div>\
             </set-template>\
         </wo.content-control>\

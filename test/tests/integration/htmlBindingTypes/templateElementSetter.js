@@ -9,7 +9,7 @@ test("binding", function () {
 	views.setView = busybody.observable.extend(function aaa () {this._super(); });
 	
 	var name = "daasdasd";
-	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$parent.val"><val2>3</val2></views.set-view></val>');
+	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$this.val"><val2>3</val2></views.set-view></val>');
 	var viewModel = new busybody.observable(),
 		setter = new wipeout.template.initialization.viewModelPropertyValue(name, {
 			xml: xml,
@@ -17,10 +17,10 @@ test("binding", function () {
 		}),
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
-	var val1 = renderContext.$parent.val = {}, val2 = {};
+	var val1 = renderContext.$this.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		setter._caching.push(wipeout.htmlBindingTypes.templateElementSetter(viewModel, setter, renderContext));
 	});
 	
@@ -33,10 +33,10 @@ test("binding", function () {
 		start();
 		
 		enumerateArr(disp, function(disp) { disp.dispose() });
-		renderContext.$parent.val = {};
+		renderContext.$this.val = {};
 	});
 	
 	// re-act 
-	renderContext.$parent.val = val2;
+	renderContext.$this.val = val2;
 	stop();
 });

@@ -32,8 +32,8 @@ test("prime and watch: computed", function() {
 	
 	// act
 	// assert
-	var disp = subject.prime(model, function () {
-		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+	var disp = subject.prime(model, new wipeout.template.context(model), function () {
+		subject.watch(function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
 	});
@@ -72,8 +72,8 @@ test("prime and watch: pathObserver", function() {
 	
 	// act
 	// assert
-	var disp = subject.prime(model, function () {
-		subject.watch(new wipeout.template.context(model), function (oldVal, newVal) {
+	var disp = subject.prime(model, new wipeout.template.context(model), function () {
+		subject.watch(function (oldVal, newVal) {
 			assert.assert(oldVal, newVal);
 		}, true);
 	});
@@ -92,8 +92,8 @@ test("execute, $context", function() {
 	
 	// act
 	// assert
-	subject.prime({}, function () {
-		strictEqual(context, subject.get(context));
+	subject.prime({}, context, function () {
+		strictEqual(context, subject.getter()());
 	});
 });
 
@@ -104,22 +104,22 @@ test("execute, $this", function() {
 	
 	// act
 	// assert
-	subject.prime({}, function () {
+	subject.prime({}, context, function () {
 		ok(context.$this);
-		strictEqual(context.$this, subject.get(context));
+		strictEqual(context.$this, subject.getter()());
 	});
 });
 
-test("execute, $parent", function() {
+test("execute, $this", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$parent");
+	var subject = new wipeout.template.propertyValue("hello", "$this");
 	
 	// act
 	// assert
-	subject.prime({}, function () {
-		ok(context.$parent);
-		strictEqual(context.$parent, subject.get(context));
+	subject.prime({}, context, function () {
+		ok(context.$this);
+		strictEqual(context.$this, subject.getter()());
 	});
 });
 
@@ -130,9 +130,9 @@ test("execute, $parents", function() {
 	
 	// act
 	// assert
-	subject.prime({}, function () {
+	subject.prime({}, context, function () {
 		ok(context.$parents);
-		strictEqual(context.$parents, subject.get(context));
+		strictEqual(context.$parents, subject.getter()());
 	});
 });
 
@@ -143,8 +143,8 @@ test("execute, $index", function() {
 	
 	// act
 	// assert
-	subject.prime({}, function () {
+	subject.prime({}, context, function () {
 		ok(context.$index);
-		strictEqual(context.$index, subject.get(context));
+		strictEqual(context.$index, subject.getter()());
 	});
 });

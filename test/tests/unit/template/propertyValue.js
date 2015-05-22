@@ -118,47 +118,52 @@ testUtils.testWithUtils("buildGetter", "good filter, with to child part", false,
 	delete wo.filters["good-filter"];
 });
 
-testUtils.testWithUtils("get", "no parser", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getter", "no parser", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var op = {}, getterArgs = {};
 	subject.getParser = function () {};
+    subject.primed = methods.method();
 	subject.buildGetter = methods.method([], {
 		apply: methods.method([null, getterArgs], op)
 	});
-	var rc = {
+	subject.renderContext = {
 		asGetterArgs: methods.method([], getterArgs)
 	};
 	
 	// act
 	// assert
-	strictEqual(op, invoker(rc));
+	strictEqual(op, invoker()());
 });
 
-testUtils.testWithUtils("get", "with parser", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getter", "with parser", false, function(methods, classes, subject, invoker) {
 	// arrange
-	var op = {}, val = {}, rc = {};
+	var op = {}, val = {};
 	subject.name = {};
 	subject.value = methods.method([true], val);
-	var parser = methods.method([val, subject.name, rc], op);
+    subject.primed = methods.method();
+    subject.renderContext = {};
+	var parser = methods.method([val, subject.name, subject.renderContext], op);
 	subject.getParser = methods.method([], parser);
 	
 	// act
 	// assert
-	strictEqual(op, invoker(rc));
+	strictEqual(op, invoker()());
 });
 
-testUtils.testWithUtils("get", "xml parser", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getter", "xml parser", false, function(methods, classes, subject, invoker) {
 	// arrange
-	var op = {}, val = {}, rc = {};
+	var op = {}, val = {};
+    subject.renderContext = {};
 	subject.name = {};
 	subject._value = val;
-	var parser = methods.method([val, subject.name, rc], op);
+    subject.primed = methods.method();
+	var parser = methods.method([val, subject.name, subject.renderContext], op);
 	parser.useRawXmlValue = true;
 	subject.getParser = methods.method([], parser);
 	
 	// act
 	// assert
-	strictEqual(op, invoker(rc));
+	strictEqual(op, invoker()());
 });
 
 testUtils.testWithUtils("canSet", "", false, function(methods, classes, subject, invoker) {
@@ -183,15 +188,16 @@ testUtils.testWithUtils("getParser", "primed, has parser", false, function(metho
 	strictEqual(subject.parser, invoker());
 });
 
-testUtils.testWithUtils("getParser", "not primed, has global parser", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getParser", "primed, has global parser", false, function(methods, classes, subject, invoker) {
 	// arrange
-	var vm = new (wipeout.base.bindable.extend(function () {this._super();}))();
-	vm.constructor.addGlobalParser("aaa", "s");
+	subject.primed = methods.method();
+	subject.propertyOwner = new (wipeout.base.bindable.extend(function () {this._super();}))();
+	subject.propertyOwner.constructor.addGlobalParser("aaa", "s");
 	subject.name = "aaa";
 	
 	// act
 	// assert
-	strictEqual(wo.parsers.s , invoker(vm));
+	strictEqual(wo.parsers.s , invoker());
 });
 
 testUtils.testWithUtils("buildSetter", "has setter", false, function(methods, classes, subject, invoker) {
@@ -268,7 +274,7 @@ testUtils.testWithUtils("buildSetter", "cannot set", false, function(methods, cl
 	strictEqual(subject._setter, null);
 });
 
-testUtils.testWithUtils("set", "cannot set", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("setter", "cannot set", false, function(methods, classes, subject, invoker) {
 	// arrange
 	var op = {};
 	subject.canSet = methods.method([op], false);
@@ -277,19 +283,20 @@ testUtils.testWithUtils("set", "cannot set", false, function(methods, classes, s
 	// act
 	// assert
 	throws(function () {
-		invoker(null, null, op);
+		invoker()(null);
 	});
 });
 
-testUtils.testWithUtils("set", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("setter", "", false, function(methods, classes, subject, invoker) {
 	// arrange
-	var po = {}, rc = {}, val = {}, op = {};
-	subject.canSet = methods.method([po], true);
-	subject.buildSetter = methods.method([], methods.method([rc, val], op));
+	var po = {}, val = {}, op = {};
+    subject.renderContext = {};
+	subject.canSet = methods.method([], true);
+	subject.buildSetter = methods.method([], methods.method([subject.renderContext, val]));
 	
 	// act
 	// assert
-	strictEqual(op,	invoker(rc, val, po));
+    invoker()(val);
 });
 
 testUtils.testWithUtils("watch", "not caching. Other logic tested in integration tests", false, function(methods, classes, subject, invoker) {
@@ -317,7 +324,7 @@ testUtils.testWithUtils("prime", "not caching", false, function(methods, classes
 	var tmp;
 	
 	// act
-	var output = invoker({}, function () {
+	var output = invoker({}, {}, function () {
 		tmp = subject._caching
 	});
 	

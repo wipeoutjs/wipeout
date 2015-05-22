@@ -9,7 +9,7 @@ test("removeItem routed event", function() {
     // arrange    
     var item = {};
     application.items = new busybody.array([{}, item]);
-    application.setTemplate = '<wo.items-control id="cc" items--tw="$parent.items"></wo.items-control>';
+    application.setTemplate = '<wo.items-control id="cc" items--tw="$this.items"></wo.items-control>';
     
     // act
 	application.onRendered = function () {		
@@ -31,7 +31,7 @@ test("getViewModel/getViewModels", function() {
     // arrange    
     var item = {};
     application.items = [{}, {}, {}];
-    application.setTemplate = '<wo.items-control id="cc" items="$parent.items"></wo.items-control>';
+    application.setTemplate = '<wo.items-control id="cc" items="$this.items"></wo.items-control>';
     
     // act
 	application.onRendered = function () {
@@ -64,7 +64,7 @@ test("basic items control with filters", function() {
 	};
 	application.items = new busybody.array([1,2,3,4,5]);
 	application.filter = 1;
-	application.setTemplate = '<wo.items-control id="myItems" items="$parent.items, $parent.filter => divisibleBy">\
+	application.setTemplate = '<wo.items-control id="myItems" items="$this.items, $this.filter => divisibleBy">\
 	<item-template>\
 		<div wo-attr-id="\'theId\' + $this.model" wo-content="$this.model"></div>\
 	</item-template>\
@@ -239,7 +239,7 @@ test("advanced items control, creating/destroying", function() {
 test("items control, $index", function() {
 	
     // arrange
-    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$parentContext.$index.value" />');
+    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$index.value" />');
     
     var itemsControl = new wo.itemsControl();
     itemsControl.itemTemplateId = itemTemplateId;

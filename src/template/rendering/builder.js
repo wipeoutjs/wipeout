@@ -49,7 +49,7 @@ Class("wipeout.template.rendering.builder", function () {
         ///<param name="allSetters" type="[wipeout.template.rendering.htmlAttributeSetter]">All of the setters on the current element</param>
         ///<returns type="Array">An array of disposables</returns>
 		var op = [];
-		op.push.apply(op, setter.prime(element, function () {
+		op.push.apply(op, setter.prime(element, renderContext, function () {
 			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
 			if (o && o.dispose instanceof Function)
 				op.push(o);

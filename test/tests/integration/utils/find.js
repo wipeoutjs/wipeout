@@ -11,11 +11,15 @@ test("wipeout.utils.find", function() {
         <wo.content-control id="me2">\
             <set-template>\
 				<div id="theDiv"></div>\
-                <wo.content-control id="me3"\
-                    parent="$context.find(\'parent\')" grand-parent="$context.find({$a:\'grandParent\'})" great-grand-parent="$context.find({$a:\'greatGrandParent\'})"\
-                    cc0="$context.find(wo.contentControl)" cc1="$context.find({$t:wo.contentControl, $number: 1})"\
-                    v0="$context.find({$i:wo.view})" v1="$context.find({$instanceof:wo.view, $number: 1})"\
-                    f0="$context.find({id: \'me1\'})" f-y="$context.find({id: \'me1\'}, {$n:1})" f-x="$context.find({id: \'me3\'})">\
+                    <wo.content-control id="me3">\
+                        <set-template>\
+                            <wo.content-control id="me4"\
+                                parent="$context.find(\'parent\')" grand-parent="$context.find({$a:\'grandParent\'})" great-grand-parent="$context.find({$a:\'greatGrandParent\'})"\
+                                cc0="$context.find(wo.contentControl)" cc1="$context.find({$t:wo.contentControl, $number: 1})"\
+                                v0="$context.find({$i:wo.view})" v1="$context.find({$instanceof:wo.view, $number: 1})"\
+                                f0="$context.find({id: \'me1\'})" f-y="$context.find({id: \'me1\'}, {$n:1})" f-x="$context.find({id: \'me3\'})">\
+                            </wo.content-control>\
+                    </set-template>\
                 </wo.content-control>\
             </set-template>\
         </wo.content-control>\
@@ -24,7 +28,7 @@ test("wipeout.utils.find", function() {
 	
 	application.onRendered = function () {
     
-		var me = application.templateItems.me1.templateItems.me2.templateItems.me3;
+		var me = application.templateItems.me1.templateItems.me2.templateItems.me3.templateItems.me4;
 		ok(me);
 		
 		// act    

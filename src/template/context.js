@@ -110,7 +110,7 @@ Class("wipeout.template.context", function () {
         ///<param name="logic" type="String">The logic</param>
         ///<returns type="Function">A getter</returns>
 		
-		try {			
+		try {
 			//if this changes, look at propertyValue, it uses and arguments[x] argument
 			return new Function("$context", "$this", "$parent", "$parents", "$index", "return " + logic + ";");
 		} catch (e) {

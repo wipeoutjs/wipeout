@@ -8,9 +8,9 @@ HtmlAttr("visible", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		element.style.display = attribute.get(renderContext) ? "" : "none";
+		element.style.display = attribute.getter()() ? "" : "none";
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (newVal && !oldVal)
                 element.style.display = "";
 			else if (!newVal && oldVal)

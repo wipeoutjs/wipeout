@@ -120,7 +120,6 @@ test("radio, 3 types", function() {
 <input type="radio" wo-checked-value="$this.val" wo-value="$this.theValue" id="theRadio3" />';
     
     application.onRendered = function () {
-        strictEqual(application.val, null);
         
         var disp = application.observe("val", function () {
             disp.dispose();

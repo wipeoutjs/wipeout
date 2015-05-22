@@ -110,7 +110,7 @@ testUtils.testWithUtils("getParent", "no parent", false, function (methods, clas
 testUtils.testWithUtils("getParent", "has parent", false, function (methods, classes, subject, invoker) {
     // arrange
 	var parent = {};
-	subject.getRenderContext = methods.method([], {$parent: parent, $this: subject});
+	subject.getRenderContext = methods.method([], {$this: parent, $parent: subject});
     
     // act
     var actual = invoker();

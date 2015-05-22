@@ -17,7 +17,12 @@ HtmlAttr("checked-value", function () {
     }
     
     function noRadiosAreSelected(name) {
-        return !document.querySelector('input[type=radio][name="' + name.replace('"', '\\"') + '"][checked]');
+        var radios = document.querySelectorAll('input[type=radio][name="' + name.replace('"', '\\"') + '"]');
+        for (var i = 0, ii = radios.length; i < ii; i++)
+            if (radios[i].checked)
+                return false;
+        
+        return true;
     }
     
     return function checkedValue (element, attribute, renderContext) {
@@ -32,19 +37,23 @@ HtmlAttr("checked-value", function () {
         
         var valueGetter;
         attribute.otherAttribute("value", function (value) {
-            valueGetter = value.buildPermanentGetter(renderContext);
+            valueGetter = value.getter();
         });
         
-        function set() {
-            if (element.hasAttribute("checked"))
-                attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
+        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.getter()())
+            element.setAttribute("checked", "checked");
+        
+        var setter = attribute.setter();
+        function set(first) {
+            if (element.checked)
+                setter(onChecked(element, attribute, valueGetter));
             else if (element.type !== "radio")
-                attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
-            else if (noRadiosAreSelected(element.name))
-                attribute.set(renderContext, null, element);
+                setter(onUnChecked(element, attribute, valueGetter));
+            else if (!first && noRadiosAreSelected(element.name))
+                setter(null);
         }
         
-        set();
+        set(true);
         
 		attribute.onElementEvent(
             element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
@@ -53,9 +62,9 @@ HtmlAttr("checked-value", function () {
         
         // if value changes, update checked value
         attribute.otherAttribute("value", function (value) {
-            value.watch(renderContext, function (oldVal, newVal) {
+            value.watch(function (oldVal, newVal) {
                 if (element.hasAttribute("checked"))
-                    attribute.set(renderContext, newVal, element);
+                    setter(newVal);
             });
         });
     };

@@ -12,7 +12,7 @@ test("binding, nb", function () {
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	
@@ -28,13 +28,13 @@ test("binding, bindOneWay", function () {
 	// arrange
 	var viewModel = new busybody.observable(),
 		name = "KJBKJBKJB",
-		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$parent.val")),
+		setter = new wipeout.template.initialization.viewModelPropertyValue(name, new wipeout.wml.wmlAttribute("$this.val")),
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
-	var val1 = renderContext.$parent.val = {}, val2 = {};
+	var val1 = renderContext.$this.val = {}, val2 = {};
 	
 	// act
-	var disp = setter.prime(viewModel, function () {
+	var disp = setter.prime(viewModel, renderContext, function () {
 		wipeout.htmlBindingTypes.ow(viewModel, setter, renderContext);
 	});
 	
@@ -47,11 +47,11 @@ test("binding, bindOneWay", function () {
 		start();
 		
 		enumerateArr(disp, function (a) { a.dispose() });
-		renderContext.$parent.val = {};
+		renderContext.$this.val = {};
 	});
 	
 	// re-act 
-	renderContext.$parent.val = val2;
+	renderContext.$this.val = val2;
 	stop();
 });
 
@@ -62,7 +62,7 @@ test("integration test", function() {
         this._super();
     });
         
-    application.setTemplate = "<views.view property='$parent.property' id='" + id + "'></views.view>";
+    application.setTemplate = "<views.view property='$this.property' id='" + id + "'></views.view>";
     
 	application.onRendered = function () {
 	

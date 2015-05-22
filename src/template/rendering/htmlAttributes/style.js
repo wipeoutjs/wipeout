@@ -20,7 +20,7 @@ HtmlAttr("style", function () {
 		if (!test(attribute.name)) return;
 		
 		var styleName = attribute.name.substr(attribute.name.indexOf("style-") + 6);
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (element.style[styleName] != newVal)
 				element.style[styleName] = newVal;
 		}, true);

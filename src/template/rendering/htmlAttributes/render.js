@@ -16,7 +16,7 @@ HtmlAttr("render", function () {
 		
         var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             htmlContent.render(newVal);
         }, true);
         

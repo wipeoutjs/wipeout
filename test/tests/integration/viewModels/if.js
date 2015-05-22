@@ -66,9 +66,9 @@ test("elseTemplate", function() {
 test("shareParentScope = false", function() {
     // arrange
     application.hello = busybody.observe(busybody.observe({hello: "xxx"}));
-    application.setTemplate = '<wo.if share-parent-scope="false" condition="$parent.hello" id="target">\
+    application.setTemplate = '<wo.if share-parent-scope="false" condition="$this.hello" id="target">\
     <if-true>\
-        <div id="myDiv" wo-content="$parent.hello.hello"></div>\
+        <div id="myDiv" wo-content="$this.hello.hello"></div>\
     </if-true>\
 </wo.if>';
     

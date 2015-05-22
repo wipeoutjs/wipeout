@@ -39,10 +39,9 @@ Class("wipeout.viewModels.view", function () {
         ///<returns type="Any">The parent view model</returns>
         
 		var renderContext = this.getRenderContext();
-		if (!renderContext)
-			return null;
-					
-        return renderContext.$this === this ? renderContext.$parent : renderContext.$this;
+        return renderContext ? 
+            (renderContext.$this === this ? renderContext.$parent : renderContext.$this) : 
+            null;
     };
     
     view.prototype.getParents = function() {
@@ -150,8 +149,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered each time after a template is rendered</summary>
 		
 		enumerateArr(this.$onRendered, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
     
     // virtual
@@ -159,8 +158,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered just before a view is un rendered</summary>
 		
 		enumerateArr(this.$onUnrendered, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
     
     // virtual
@@ -168,8 +167,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Triggered after the entire application has been initialized. Will only be triggered on the viewModel created directly by the wipeout binding</summary>
 		
 		enumerateArr(this.$onApplicationInitialized, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
 	
     // virtual
@@ -177,8 +176,8 @@ Class("wipeout.viewModels.view", function () {
         ///<summary>Called by the template engine after a view is created and all of its properties are set</summary>
 		
 		enumerateArr(this.$onInitialized, function (f) {
-			f();
-		});
+			f.call(this);
+		}, this);
     };
 
     return view;

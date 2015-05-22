@@ -9,7 +9,7 @@ test("routed event, from model", function() {
     var eventArgs = {}, triggered1 = false, triggered2 = false;
     var aRoutedEvent = new wo.routedEvent();
     application.model = {child:{child:{child:new wipeout.events.routedEventModel()}}};
-    var open1 = "<wo.content-control name='", open2 = "' id='item' model='$parent.model.child'><set-template>", close = "</set-template></wo.content-control>";
+    var open1 = "<wo.content-control name='", open2 = "' id='item' model='$this.model.child'><set-template>", close = "</set-template></wo.content-control>";
     application.setTemplate = open1 + "1" + open2 + open1 + "2" + open2 + open1 + "3" + open2 + "<div>hi</div>" + close + close + close;
 	
 	application.onRendered = function () {

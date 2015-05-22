@@ -6,6 +6,6 @@ Class("wipeout.htmlBindingTypes.nb", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-        viewModel[setter.name] = setter.get(renderContext);
+        viewModel[setter.name] = setter.getter()();
     }
 });

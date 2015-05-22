@@ -8,7 +8,7 @@ Class("wipeout.htmlBindingTypes.tw", function () {
         ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		var val;
-        if (setter.getParser(viewModel) ||
+        if (setter.getParser() ||
 			!/^([\$\w\s\.]|(\[\d+\]))+$/.test(val = setter.value()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		

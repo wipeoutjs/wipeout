@@ -29,7 +29,8 @@ Class("wipeout.template.rendering.viewModelElement", function () {
 			new wipeout.template.context(this.createdViewModel);
         
         // initialize the view model
-        var d2 = initializer.initialize(this.createdViewModel, this.renderContext);
+        // if there is no parent, use the new render context instead (application root only)
+        var d2 = initializer.initialize(this.createdViewModel, parentRenderContext || this.renderContext);
         
 		this.disposeOfViewModelBindings = function () {
 			//issue-#41, this could be a bit better
