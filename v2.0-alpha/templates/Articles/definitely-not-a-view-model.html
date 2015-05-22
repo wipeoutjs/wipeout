@@ -1,0 +1,7 @@
+<h1>Html element/ViewModel name clashes</h1>
+<p>There may be some cases where wipeout view model and a html tag names can clash. For instance, if you were to set the value of <code>window.div = function () { };</code>. When this occurs, and the wipeout template engine sees a <code>&amp;lt;div></code> tag it will attempt to create an insance of <code>window.div</code> and render it.</p>
+<p>To ensure this does not happen there is a full list of html tags at <code>wo.definitelyNotAViewModel</code> which are on a <b>do not render</b> list.</p>
+<p>If you have a custom tag, e.g. <code>&amp;lt;my-custom-tag></code> which is definitely not a view model, you can add it to the list:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.definitelyNotAViewModel.myCustomTag = true;</code>
+</wipeout-docs.view-models.components.code-block>

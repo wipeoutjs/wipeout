@@ -36,13 +36,15 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         }, {
             header: new articleLink("Using templates", "using-templates"),
             items: [
+                new articleLink("Camel casing", "camel-casing"),
                 new articleLink("Where do templates go?", "where-to-put-a-template"),
                 new articleLink("View Models and Html Elements", "view-models-and-html-elements"),
                 new articleLink("Accessing html elements and view models", "template-items"),
                 new articleLink("Binding Setters", "binding-setters"),
                 new articleLink("Setting the template within a template", "content-control"),
                 new articleLink("Complex template properties", "complex-template-properties"),
-                new articleLink("Illegal html tags", "illegal-html-tags")
+                new articleLink("Illegal html tags", "illegal-html-tags"),
+                new articleLink("Html element/ViewModel name clashes", "definitely-not-a-view-model")
             ]
         }, {
             header: new articleLink("Define viewModels", "define-view-models"),

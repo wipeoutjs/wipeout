@@ -1,6 +1,6 @@
 <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'<< previous'"></wipeout-docs.rl>
 <h1>Define View Models</h1>
-<p>Expanding on the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'previous article'"></wipeout-docs.rl>, you can define the view model using the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> tool.</p>
+<p>Expanding on the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-with-pluggable-mvvm-components'" text="'previous article'"></wipeout-docs.rl>, you can define the viewModel using the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> tool.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">var rootViewModel = wo.viewModel("myApp.rootViewModel")
     .templateId("togglePeopleTemplate")
@@ -30,16 +30,16 @@ rootViewModel.addNewName = function () {
 </wipeout-docs.view-models.components.code-block>
 <p>There are a few things to notice in this example.
     <ol>
-        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> creates a <a href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_blank">DSL</a> which has many functions to help you build the view model.</li>
-        <li>The name of this view model will be <code>myApp.rootViewModel</code> and the view model definition (class) will be appended to <code>window.myApp.rootViewModel</code>.</li>
-        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=add-a-default-template'" text="'templateId(...)'"></wipeout-docs.rl> is a function which sets the default template id of the view model.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=define-view-models'" text="'wo.viewModel(...)'"></wipeout-docs.rl> creates a <a href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_blank">DSL</a> which has many functions to help you build the viewModel.</li>
+        <li>The name of this viewModel will be <code>myApp.rootViewModel</code> and the viewModel definition (class) will be appended to <code>window.myApp.rootViewModel</code>.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=add-a-default-template'" text="'templateId(...)'"></wipeout-docs.rl> is a function which sets the default template id of the viewModel.</li>
         <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=add-a-default-value'" text="'value(...)'"></wipeout-docs.rl></code> is a function which sets a default value.</li>
-        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=view-model-lifecycle'" text="'initialize(...)'"></wipeout-docs.rl></code> adds a callback which is used to in itialize the view model.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=view-model-lifecycle'" text="'initialize(...)'"></wipeout-docs.rl></code> adds a callback which is used to in itialize the viewModel.</li>
         <li>Within the <code>initialize</code> code we are building a model. In a fully fledged javascript app this value will normally come from an ajax call.</li>
         <li><a href="https://github.com/ShaneGH/busybody#observable-arrays" target="_blank">busybody.array</a> makes the array observable. Now wipeout will see when the array changes and can update the DOM accordingly.</li>
-        <li>Notice how the <code>templateItems</code> (TODOD: link) property is missing from the definition. This property is automatically added to all view models.</li>
-    <li>The <code>build(...)</code> function tells wipeout to create the view model.</li>
-    <li>You can add view model <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=add-a-function'" text="'functions'"></wipeout-docs.rl> by simply adding them to the result of the <code>build(...)</code>.</li>
+        <li>Notice how the <code>templateItems</code> (TODOD: link) property is missing from the definition. This property is automatically added to all viewModels.</li>
+    <li>The <code>build(...)</code> function tells wipeout to create the viewModel.</li>
+    <li>You can add viewModel <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=add-a-function'" text="'functions'"></wipeout-docs.rl> by simply adding them to the result of the <code>build(...)</code>.</li>
 </ol>
     </p>
 <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-started-using-view-models'" text="'next >>'"></wipeout-docs.rl>
