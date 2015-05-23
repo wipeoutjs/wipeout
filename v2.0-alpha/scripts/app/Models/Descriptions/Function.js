@@ -103,7 +103,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
                 name: argument,
                 type: comment.getAttribute("type"),
                 optional: wo.parsers.bool(comment.getAttribute("optional")),
-                description: comment.innerHTML,
+                description: comment.textContent || comment.innerHTML,
                 genericTypes: generics
             };  
         }
@@ -125,7 +125,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
         }
         
         if(comment) {  
-            return comment.innerHTML;
+            return comment.textContent || comment.innerHTML;
         }
         
         return "";   
@@ -143,7 +143,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
                 }
                 
                 return {
-                    summary: xmlSummary.childNodes[i].innerHTML,
+                    summary: xmlSummary.childNodes[i].textContent || xmlSummary.childNodes[i].innerHTML,
                     type: xmlSummary.childNodes[i].getAttribute("type"),
                     genericTypes: generics
                 };

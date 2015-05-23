@@ -11,6 +11,11 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
 		appss.push(this);
     };
     
+    ApiApplication.prototype.onApplicationInitialized = function() { 
+        this._super();
+        alert();
+    };
+    
     ApiApplication.prototype.route = function(query) { 
         var temp = wipeoutDocs.models.apiApplication.getModel(query);        
         if (temp)

@@ -18,7 +18,8 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     
     var summary = /^\/\/\/<[sS]ummary\s*type=".+".*>.*<\/[sS]ummary>/;
     property.getPropertySummary = function(constructorFunction, propertyName, classFullName) {
-        return (property.getPropertySummaryXml(constructorFunction, propertyName, classFullName) || {}).innerHTML;
+        var summary = (property.getPropertySummaryXml(constructorFunction, propertyName, classFullName) || {});
+        return summary.textContent || summary.innerHTML;
     };
     
     property.getPropertySummaryXml = function(constructorFunction, propertyName, classFullName) {

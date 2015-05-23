@@ -1265,7 +1265,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
                 name: argument,
                 type: comment.getAttribute("type"),
                 optional: wo.parsers.bool(comment.getAttribute("optional")),
-                description: comment.innerHTML,
+                description: comment.textContent || comment.innerHTML,
                 genericTypes: generics
             };  
         }
@@ -1287,7 +1287,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
         }
         
         if(comment) {  
-            return comment.innerHTML;
+            return comment.textContent || comment.innerHTML;
         }
         
         return "";   
@@ -1305,7 +1305,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.function", "wipeoutDocs.
                 }
                 
                 return {
-                    summary: xmlSummary.childNodes[i].innerHTML,
+                    summary: xmlSummary.childNodes[i].textContent || xmlSummary.childNodes[i].innerHTML,
                     type: xmlSummary.childNodes[i].getAttribute("type"),
                     genericTypes: generics
                 };
@@ -1340,7 +1340,8 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
     
     var summary = /^\/\/\/<[sS]ummary\s*type=".+".*>.*<\/[sS]ummary>/;
     property.getPropertySummary = function(constructorFunction, propertyName, classFullName) {
-        return (property.getPropertySummaryXml(constructorFunction, propertyName, classFullName) || {}).innerHTML;
+        var summary = (property.getPropertySummaryXml(constructorFunction, propertyName, classFullName) || {});
+        return summary.textContent || summary.innerHTML;
     };
     
     property.getPropertySummaryXml = function(constructorFunction, propertyName, classFullName) {
@@ -1909,6 +1910,11 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
 		});
 		
 		appss.push(this);
+    };
+    
+    ApiApplication.prototype.onApplicationInitialized = function() { 
+        this._super();
+        alert();
     };
     
     ApiApplication.prototype.route = function(query) { 
