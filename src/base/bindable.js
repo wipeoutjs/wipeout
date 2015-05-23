@@ -45,9 +45,9 @@ Class("wipeout.base.bindable", function () {
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
-		///<summary>Add a global parser for this property</summary>
+		///<summary>Add a global binding type for this property</summary>
         ///<param name="forProperty" type="String">The property to add a parser for</param>
-        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param>
 		
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODE
@@ -65,9 +65,9 @@ Class("wipeout.base.bindable", function () {
     };
 	
 	bindable.prototype.addGlobalBindingType = function (forProperty, bindingType) {
-		///<summary>Add a global parser for this property</summary>
+		///<summary>Add a global binding type for this property</summary>
         ///<param name="forProperty" type="String">The property to add a parser for</param>
-        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param>
 		
 		return bindable.addGlobalBindingType.apply(this.constructor, arguments);
 	};

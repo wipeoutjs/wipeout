@@ -64,7 +64,7 @@
     
     renderedContent.prototype.detatch = function() {
 		///<summary>This renderedContent and all of it's html from the DOM</summary>
-        ///<returns type="Array" generic0="Element">The html</retruns>
+        ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (!this.detatched) {		
 			var current = this.openingTag;
@@ -81,7 +81,7 @@
     
     renderedContent.prototype.allHtml = function() {
 		///<summary>Get all of the html for this</summary>
-        ///<returns type="Array" generic0="Element">The html</retruns>
+        ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (this.detatched) return this.detatch();
 		

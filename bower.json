@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "busybody": "ShaneGH/busybody#0.1.0-alpha"
+    "busybody": "ShaneGH/busybody#0.1.1-alpha"
   }
 }
