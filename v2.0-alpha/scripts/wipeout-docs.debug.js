@@ -1585,12 +1585,15 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
 
 compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", function() {
     
-    function articleLink(title, article) {
+    var articleLink = busybody.observable.extend(function articleLink(title, article) {
+        
+        this._super();
+        
         this.text = title;
         this.article = article;
         this.href = buildHref({article: article});
         this.visible = true;
-    };
+    });
     
     var buildHref = function(parameters) {
         if(parameters.article && !wo.contentControl.templateExists("Articles." + parameters.article))
@@ -1901,15 +1904,13 @@ compiler.registerClass("wipeoutDocs.models.pages.landingPage", "wipeoutDocs.mode
 
 
 compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.viewModels.application", function() {
-    window.appss = [];
+    
     function ApiApplication() {
         this._super("wipeoutDocs.viewModels.apiApplication");
 		
 		this.observe("model.content.title", function (oldVal, newVal) {
 			$("#headerText").html(newVal);
 		});
-		
-		appss.push(this);
     };
     
     ApiApplication.prototype.onApplicationInitialized = function() { 

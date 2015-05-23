@@ -1,14 +1,12 @@
 
 compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.viewModels.application", function() {
-    window.appss = [];
+    
     function ApiApplication() {
         this._super("wipeoutDocs.viewModels.apiApplication");
 		
 		this.observe("model.content.title", function (oldVal, newVal) {
 			$("#headerText").html(newVal);
 		});
-		
-		appss.push(this);
     };
     
     ApiApplication.prototype.onApplicationInitialized = function() { 

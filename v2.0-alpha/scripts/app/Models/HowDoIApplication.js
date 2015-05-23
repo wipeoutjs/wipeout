@@ -1,11 +1,14 @@
 compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", function() {
     
-    function articleLink(title, article) {
+    var articleLink = busybody.observable.extend(function articleLink(title, article) {
+        
+        this._super();
+        
         this.text = title;
         this.article = article;
         this.href = buildHref({article: article});
         this.visible = true;
-    };
+    });
     
     var buildHref = function(parameters) {
         if(parameters.article && !wo.contentControl.templateExists("Articles." + parameters.article))
