@@ -3979,6 +3979,62 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
+<script id="Articles.wo-checked-value" type="text/template">
+<h1>The Checked Value attribute</h1>
+<h3><code>wo-checked-value="value"</code></h3>
+<h3><code>data-wo-checked-value="value"</code></h3>
+<p>The value attribute defines what value to set if a checkbox or radio button is checked. It can be used in conjunction with the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-value'" text="'wo-value'"></wipeout-docs.rl> or <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes" target="_blank">value</a> attributes. If no value is provided a default value of <code>true</code> is used.</p>
+<p>For checkboxes and radio buttons see: <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-checked-value'" text="'wo-checked-value'"></wipeout-docs.rl></p>
+
+<h3>Radio button</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-radio'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content-control model="1">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;label>Value 1:&lt;/label> &lt;input type="radio" wo-checked-value="$model" wo-value="1" name="radio" /> &lt;br />
+        &lt;label>Value 2:&lt;/label> &lt;input type="radio" wo-checked-value="$model" value="2" name="radio" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-radio'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3>Checkbox with value</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-1'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model == null ? 'null' : $model">&lt;/span> &lt;br />
+        &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" value="Hello Wipeout!" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-checkbox-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3>Checkbox without value</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-2'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content-control model="true">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" />
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-checkbox-2'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />
+<br />
+<br />
+<br />
+</script>
+
 <script id="Articles.wo-class" type="text/template">
 <h1>The Class attribute</h1>
 <h3><code>wo-class-className="value"</code></h3>
@@ -4272,7 +4328,62 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </script>
 
 <script id="Articles.wo-value" type="text/template">
-(TODOD)
+<h1>The Value attribute</h1>
+<h3><code>wo-value="value"</code></h3>
+<h3><code>data-wo-value="value"</code></h3>
+<p>The value attribute defines the html value of an element. The value attribute works best with the <code>&amp;lt;input></code>, <code>&amp;lt;textarea></code>, <code>&amp;lt;select></code> and <code>&amp;lt;option></code> tags.</p>
+<p>For checkboxes and radio buttons see: <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-checked-value'" text="'wo-checked-value'"></wipeout-docs.rl></p>
+
+<h3><code>&amp;lt;input></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-input'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-value="$model" /> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-input'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3><code>&amp;lt;textarea></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-textarea'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;textarea wo-value="$model">&lt;/textarea>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-textarea'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3><code>&amp;lt;select>, &amp;lt;option></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-select'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model="1">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;select wo-value="$model">
+            &lt;option wo-value="1">Option 1&lt;/option>
+            &lt;option wo-value="2">Option 2&lt;/option>
+            &lt;option wo-value="3">Option 3&lt;/option>
+            &lt;option wo-value="4">Option 4&lt;/option>
+        &lt;/select>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-select'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 </script>
 
 <script id="Articles.wo-visible" type="text/template">

@@ -81,6 +81,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Attribute", "wo-attr"),
                 new articleLink("Blur", "wo-blur"),
                 new articleLink("Change", "wo-change"),
+                new articleLink("Checked Value", "wo-checked-value"),
                 new articleLink("Class", "wo-class"),
                 new articleLink("Click", "wo-click"),
                 new articleLink("Content", "wo-content"),

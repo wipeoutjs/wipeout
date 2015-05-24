@@ -1,1 +1,56 @@
-(TODOD)
+<h1>The Value attribute</h1>
+<h3><code>wo-value="value"</code></h3>
+<h3><code>data-wo-value="value"</code></h3>
+<p>The value attribute defines the html value of an element. The value attribute works best with the <code>&amp;lt;input></code>, <code>&amp;lt;textarea></code>, <code>&amp;lt;select></code> and <code>&amp;lt;option></code> tags.</p>
+<p>For checkboxes and radio buttons see: <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-checked-value'" text="'wo-checked-value'"></wipeout-docs.rl></p>
+
+<h3><code>&amp;lt;input></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-input'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;input wo-value="$model" /> 
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-input'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3><code>&amp;lt;textarea></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-textarea'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;textarea wo-value="$model">&lt;/textarea>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-textarea'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3><code>&amp;lt;select>, &amp;lt;option></code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-select'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content-control model="1">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;select wo-value="$model">
+            &lt;option wo-value="1">Option 1&lt;/option>
+            &lt;option wo-value="2">Option 2&lt;/option>
+            &lt;option wo-value="3">Option 3&lt;/option>
+            &lt;option wo-value="4">Option 4&lt;/option>
+        &lt;/select>
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-value-attr-select'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
