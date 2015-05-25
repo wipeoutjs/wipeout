@@ -30,9 +30,9 @@ Class("wipeout.viewModels.if", function () {
         ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
         this.ifFalseId = _if.blankTemplateId;
         
-        this.observe("ifTrueId", this.reEvaluate, this);
-        this.observe("ifFalseId", this.reEvaluate, this);
-        this.observe("condition", this.reEvaluate, this);
+        this.observe("ifTrueId", this.reEvaluate, {context: this});
+        this.observe("ifFalseId", this.reEvaluate, {context: this});
+        this.observe("condition", this.reEvaluate, {context: this});
         
         ///<Summary type="String">Anonymous version of ifTrueId</Summary>
         this.ifTrue = "";

@@ -12,8 +12,11 @@ testUtils.testWithUtils("constructor", "", false, function (methods, classes, su
     subject._super = methods.method([templateId]);
     subject._onModelChanged = {};
 	subject.observe = methods.customMethod(function () {
-		methods.method(["model", subject._onModelChanged, subject]).apply(null, Array.prototype.slice.call(arguments, 0, 3));
-		ok(arguments[3].activateImmediately);
+        strictEqual("model", arguments[0]);
+        strictEqual(subject._onModelChanged, arguments[1]);
+        strictEqual(subject, arguments[2].context);
+        
+		ok(arguments[2].activateImmediately);
 	});
 	
     // act

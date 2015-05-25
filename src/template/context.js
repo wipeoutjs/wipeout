@@ -102,7 +102,7 @@ Class("wipeout.template.context", function () {
         ///<param name="forFunction" type="Function">The function</param>
         ///<returns type="busybody.observeTypes.computed">The computed</returns>
 		
-		return new busybody.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
+		return new busybody.observeTypes.computed(forFunction, {watchVariables: this.asWatchVariables()});
 	}
 	
 	context.buildGetter = function (logic) {

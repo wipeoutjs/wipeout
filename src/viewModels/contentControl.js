@@ -78,8 +78,8 @@ Class("wipeout.viewModels.contentControl", function () {
         // bind template to template id for the first time
         this.refreshTemplate(this.currentTemplateId);
         
-        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        
-        this.d2 = owner.observe(templateProperty, this.onTemplateChange, this);
+        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, {context: this});
+        this.d2 = owner.observe(templateProperty, this.onTemplateChange, {context: this});
     };
         
     boundTemplate.prototype.dispose = function() {

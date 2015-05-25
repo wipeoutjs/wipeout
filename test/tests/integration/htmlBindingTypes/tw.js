@@ -67,14 +67,14 @@ test("concurrency, ow", function() {
 			v.push(arguments[1]);
 			assert();
 			i++;
-		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+		}, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
 		var a = [];
 		application.observe("property", function() {
 			a.push(arguments[1]);
 			assert();
 			i++;
-		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+		}, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
 		var timeout = 15 * (busybody.useObjectObserve ? 1 : 2);
 		

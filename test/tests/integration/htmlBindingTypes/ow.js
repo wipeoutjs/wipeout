@@ -76,7 +76,7 @@ test("integration test", function() {
 				assert();
 			
 			i++;
-		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+		}, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
 		var a = [];
 		application.observe("property", function() {
@@ -86,7 +86,7 @@ test("integration test", function() {
 				assert();
 			
 			i++;
-		}, null, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
+		}, {evaluateOnEachChange: true, evaluateIfValueHasNotChanged: true});
 
 
 		// act
