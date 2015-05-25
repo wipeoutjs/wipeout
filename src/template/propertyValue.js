@@ -250,6 +250,17 @@ Class("wipeout.template.propertyValue", function () {
 		return watched.onValueChanged(callback, evaluateImmediately);
 	};
 
+	propertyValue.prototype.getBindingStrategy = function () {
+		///<summary>Get the binding strtegy for this view model</summary>
+        ///<returns type="Number">The binding strategy</returns>
+        
+        this.primed();
+        
+        return this.renderContext.$this.hasOwnProperty("$bindingStrategy") ?
+            this.renderContext.$this.$bindingStrategy :
+            wipeout.settings.bindingStrategy;
+    };
+
 	propertyValue.prototype.prime = function (propertyOwner, renderContext, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>

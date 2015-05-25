@@ -62,6 +62,31 @@ testUtils.testWithUtils("getValue", null, false, function(methods, classes, subj
 	strictEqual(subject._value = {}, invoker());
 });
 
+testUtils.testWithUtils("getBindingStrategy", "has strategy", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.primed = methods.method();
+    subject.renderContext = {
+        $this: {
+            $bindingStrategy: {}
+        }
+    };
+    
+	// act
+	// assert
+	strictEqual(subject.renderContext.$this.$bindingStrategy, invoker());
+});
+
+testUtils.testWithUtils("getBindingStrategy", "no strategy", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.primed = methods.method();
+    subject.renderContext = {$this: {}};
+    
+	// act
+	// assert
+	ok(wipeout.settings.hasOwnProperty("bindingStrategy"));
+	strictEqual(wipeout.settings.bindingStrategy, invoker());
+});
+
 testUtils.testWithUtils("buildGetter", "has getter", false, function(methods, classes, subject, invoker) {
 	// arrange
 	// act
