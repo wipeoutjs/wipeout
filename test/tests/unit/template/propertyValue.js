@@ -62,29 +62,61 @@ testUtils.testWithUtils("getValue", null, false, function(methods, classes, subj
 	strictEqual(subject._value = {}, invoker());
 });
 
-testUtils.testWithUtils("getBindingStrategy", "has strategy", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getBindingStrategyOptions", "has strategy 0", false, function(methods, classes, subject, invoker) {
 	// arrange
     subject.primed = methods.method();
     subject.renderContext = {
         $this: {
-            $bindingStrategy: {}
+            $bindingStrategy: 0
         }
     };
     
 	// act
 	// assert
-	strictEqual(subject.renderContext.$this.$bindingStrategy, invoker());
+	strictEqual(undefined, invoker());
 });
 
-testUtils.testWithUtils("getBindingStrategy", "no strategy", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("getBindingStrategyOptions", "has strategy 1", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.primed = methods.method();
+    subject.renderContext = {
+        $this: {
+            $bindingStrategy: 1
+        }
+    };
+    
+	// act
+	// assert
+	ok(invoker().trackPartialObservable);
+	ok(!invoker().forceObserve);
+});
+
+testUtils.testWithUtils("getBindingStrategyOptions", "has strategy 2", false, function(methods, classes, subject, invoker) {
+	// arrange
+    subject.primed = methods.method();
+    subject.renderContext = {
+        $this: {
+            $bindingStrategy: 2
+        }
+    };
+    
+	// act
+	// assert
+	ok(!invoker().trackPartialObservable);
+	ok(invoker().forceObserve);
+});
+
+testUtils.testWithUtils("getBindingStrategyOptions", "no strategy", false, function(methods, classes, subject, invoker) {
 	// arrange
     subject.primed = methods.method();
     subject.renderContext = {$this: {}};
+    var result1 = invoker();
+    subject.renderContext.$this.$bindingStrategy = wipeout.settings.bindingStrategy;
     
 	// act
 	// assert
 	ok(wipeout.settings.hasOwnProperty("bindingStrategy"));
-	strictEqual(wipeout.settings.bindingStrategy, invoker());
+	deepEqual(result1, invoker());
 });
 
 testUtils.testWithUtils("buildGetter", "has getter", false, function(methods, classes, subject, invoker) {

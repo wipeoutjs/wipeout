@@ -215,6 +215,7 @@ Class("wipeout.template.propertyValue", function () {
         }).bind(this);
 	};
 	
+    var fakeDispose = {dispose: function (){}};
 	propertyValue.prototype.watch = function (callback, evaluateImmediately) {
 		///<summary>When called within a wipeout binding function, will watch for a change in the value of the setter. Also handles all disposal in this case</summary>
         ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
@@ -231,34 +232,49 @@ Class("wipeout.template.propertyValue", function () {
 		}
 		
         // root.prop1.prop2 etc....
-        var watched;
         if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
             // the renderContext will not be observable, so will not work with
             // a path observer
             
-            //TODO: this is not complete. It doesn't take into account window. or $parents[2].
+            // you cannot watch a value like $this. It must be $this.something
             var split = wipeout.utils.obj.splitPropertyName(this.value());
+            if (split.length === 1)
+                return fakeDispose;
             
-			watched = new busybody.observeTypes.pathObserver(
+            var tmp = busybody.observe(
                 this.renderContext[split.splice(0, 1)[0]], 
-                wipeout.utils.obj.joinPropertyName(split));
-        } else {
-            watched = this.renderContext.getComputed(this.buildGetter());
+                wipeout.utils.obj.joinPropertyName(split),
+                callback,
+                this.getBindingStrategyOptions());
+            
+            if (tmp)
+		      this._caching.push(tmp);
+            
+            if (evaluateImmediately)
+                callback(undefined, this.getter()());
+		      
+            return tmp || fakeDispose;
         }
-		
-		this._caching.push(watched);
-		return watched.onValueChanged(callback, evaluateImmediately);
+        
+        var tmp = this.renderContext.getComputed(this.buildGetter(), this.getBindingStrategyOptions());
+		this._caching.push(tmp);
+		return tmp.onValueChanged(callback, evaluateImmediately);
 	};
 
-	propertyValue.prototype.getBindingStrategy = function () {
+	propertyValue.prototype.getBindingStrategyOptions = function () {
 		///<summary>Get the binding strtegy for this view model</summary>
         ///<returns type="Number">The binding strategy</returns>
         
         this.primed();
         
-        return this.renderContext.$this.hasOwnProperty("$bindingStrategy") ?
+        var strategy = this.renderContext.$this.hasOwnProperty("$bindingStrategy") ?
             this.renderContext.$this.$bindingStrategy :
             wipeout.settings.bindingStrategy;
+        
+        if (strategy === wipeout.settings.bindingStrategies.bindNonObservables)
+            return {trackPartialObservable: true};
+        if (strategy === wipeout.settings.bindingStrategies.createObservables)
+            return {forceObserve: true};
     };
 
 	propertyValue.prototype.prime = function (propertyOwner, renderContext, logic) {

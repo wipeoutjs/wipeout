@@ -1,9 +1,3 @@
-var bindingStrategies = {
-    onlyBindObservables: 0,
-    bindNonObservables: 1,
-    createObservables: 2
-};
-
 Class("wipeout.settings", function() {
     function settings (settings) {
         ///<summary>Change all settings</summary>
@@ -30,7 +24,7 @@ Class("wipeout.settings", function() {
         createObservables: 2
     };
     
-    settings.bindingStrategy = settings.bindingStrategies.createObservables;
+    settings.bindingStrategy = settings.bindingStrategies.onlyBindObservables;
 	
     return settings;
 });

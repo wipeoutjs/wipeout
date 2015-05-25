@@ -29,6 +29,8 @@ Class("wipeout.viewModels.view", function () {
 		this.$synchronusTemplateChange = new wipeout.events.event();
     });
 	
+    view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
+    
     view.addGlobalBindingType("shareParentScope", "shareParentScope");
 	
     view.addGlobalParser("id", "string");

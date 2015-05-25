@@ -66,6 +66,7 @@ module.exports = function(grunt) {
     var dependencies = [
         "src/utils/obj.js",
         "src/settings.js",
+		"src/htmlBindingTypes/bindingStrategy.js",
 		"src/htmlBindingTypes/viewModelId.js",
 		"src/htmlBindingTypes/shareParentScope.js",
         "src/template/initialization/parsers.js",
