@@ -24,7 +24,7 @@ Class("wipeout.settings", function() {
         createObservables: 2
     };
     
-    settings.bindingStrategy = settings.bindingStrategies.onlyBindObservables;
+    settings.bindingStrategy = settings.bindingStrategies.createObservables;
 	
     return settings;
 });
