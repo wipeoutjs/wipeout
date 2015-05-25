@@ -230,6 +230,7 @@ Class("wipeout.template.propertyValue", function () {
 			return;
 		}
 		
+        // root.prop1.prop2 etc....
         var watched;
         if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
             // the renderContext will not be observable, so will not work with
