@@ -2,7 +2,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     var treeViewBranch = function() {
         this._super(treeViewBranch.nullTemplate);
         
-        this.isOpen = null;
+        this.isOpen = false;
         
         this.computed("glyphClass", function() {
             var open = this.isOpen,
@@ -32,20 +32,9 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
     treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
-    
-    treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  
-        this._super(oldValues, newValues);
-                
-        this.isOpen = !!$(this.templateItems.content).filter(":visible").length;
-    };
 	
     treeViewBranch.prototype.select = function() {
-        var content = this.templateItems.content.templateItems.content;
-        
-        if(this.model.branches)
-            $(content).toggle();
-        
-        this.isOpen = !!$(content).filter(":visible").length;
+        this.isOpen = !this.isOpen;
                 
         if(this.model.href) {  
             if (this.isOpen || !this.model.branches || !this.model.branches.length) {

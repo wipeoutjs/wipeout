@@ -2157,7 +2157,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     var treeViewBranch = function() {
         this._super(treeViewBranch.nullTemplate);
         
-        this.isOpen = null;
+        this.isOpen = false;
         
         this.computed("glyphClass", function() {
             var open = this.isOpen,
@@ -2187,20 +2187,9 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
     treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
-    
-    treeViewBranch.prototype.onRendered = function(oldValues, newValues) {  
-        this._super(oldValues, newValues);
-                
-        this.isOpen = !!$(this.templateItems.content).filter(":visible").length;
-    };
 	
     treeViewBranch.prototype.select = function() {
-        var content = this.templateItems.content.templateItems.content;
-        
-        if(this.model.branches)
-            $(content).toggle();
-        
-        this.isOpen = !!$(content).filter(":visible").length;
+        this.isOpen = !this.isOpen;
                 
         if(this.model.href) {  
             if (this.isOpen || !this.model.branches || !this.model.branches.length) {
@@ -2242,7 +2231,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
             return;
         
         apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
-<wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder" />');
+<wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder"></wipeout-docs.view-models.components.dynamic-render>');
     };
     
     function HowDoIApplication() {
@@ -2381,6 +2370,22 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
 
             return wo.contentControl.createAnonymousTemplate("");
         });
+    };
+    
+    functionPage.prototype.fixJsFunction = function (func) {
+        var code = func.toString().replace(/\t/g, '    ').replace(/\s$/g, "");
+        var rx = /\n/g, result, tmp;
+        while (tmp = rx.exec(code))
+            result = tmp.index;
+        
+        if (!/^\s*\}$/.test(tmp = code.substr(result)))
+            return code;
+        
+        result = "\\n";
+        for (var i = 1, ii = tmp.length; i < ii && /^ $/.test(tmp[i]); i++)
+            result += " ";
+        
+        return code.replace(new RegExp(result, "g"), "\n");
     };
     
     functionPage.classUsagesTemplateSuffix = "_FunctionUsages";

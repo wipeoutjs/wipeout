@@ -12,26 +12,16 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     &lt;set-template>
         &lt;wo.content-control>
             &lt;set-template>
-                &lt;wo.content-control 
-                    binding1="$context.find(demoApp.myType).model"
-                    binding2="$context.find('parent').model"
-                    binding3="$context.find({$instanceof: demoApp.myType}).model"
-                    binding4="$context.find({value: 123}).model"
-                    binding5="$context.find({value: 'Hello wipeout!', $model: true})">
-            
-                    &lt;set-template>
-            
-                        Found ancestor by type: &lt;span wo-content="$this.binding1.value">&lt;/span> &lt;br />
-            
-                        Found ancestor by hirearchy: &lt;span wo-content="$this.binding2.value">&lt;/span> &lt;br />
-            
-                        Found ancestor by type: &lt;span wo-content="$this.binding3.value">&lt;/span> &lt;br />
-            
-                        Found ancestor by property value: &lt;span wo-content="$this.binding4.value">&lt;/span> &lt;br />
-            
-                        Found ancestor model by property value: &lt;span wo-content="$this.binding5.value">&lt;/span> &lt;br />
-                    &lt;/set-template>
-                &lt;/wo.content-control>
+                Found ancestor by type: 
+                &lt;span wo-content="$context.find(demoApp.myType).model.value">&lt;/span> &lt;br />
+                Found ancestor by hirearchy:
+                &lt;span wo-content="$context.find('parent').model.value">&lt;/span> &lt;br />
+                Found ancestor by type:
+                &lt;span wo-content="$context.find({$instanceof: demoApp.myType}).model.value">&lt;/span> &lt;br />
+                Found ancestor by property value:
+                &lt;span wo-content="$context.find({value: 123}).model.value">&lt;/span> &lt;br />
+                Found ancestor model by property value:
+                &lt;span wo-content="$context.find({value: 'Hello wipeout!', $model: true}).value">&lt;/span> &lt;br />
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>

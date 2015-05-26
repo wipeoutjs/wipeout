@@ -17,6 +17,22 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
         });
     };
     
+    functionPage.prototype.fixJsFunction = function (func) {
+        var code = func.toString().replace(/\t/g, '    ').replace(/\s$/g, "");
+        var rx = /\n/g, result, tmp;
+        while (tmp = rx.exec(code))
+            result = tmp.index;
+        
+        if (!/^\s*\}$/.test(tmp = code.substr(result)))
+            return code;
+        
+        result = "\\n";
+        for (var i = 1, ii = tmp.length; i < ii && /^ $/.test(tmp[i]); i++)
+            result += " ";
+        
+        return code.replace(new RegExp(result, "g"), "\n");
+    };
+    
     functionPage.classUsagesTemplateSuffix = "_FunctionUsages";
     
     return functionPage;
