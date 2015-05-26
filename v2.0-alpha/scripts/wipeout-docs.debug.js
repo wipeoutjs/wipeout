@@ -1656,8 +1656,9 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Set the model from the parent's model", "bind-to-parents-model"),
                 new articleLink("Cascading models", "cascading-models"),
                 new articleLink("Bind to a global value", "bind-to-global"),
-                new articleLink("Set properties using XML elements", "bind-with-elements"),
-                new articleLink("Find an ancestor to bind to", "bind-to-ancestor")
+                new articleLink("Set properties using HTML elements", "bind-with-elements"),
+                new articleLink("Find an ancestor to bind to", "bind-to-ancestor"),
+                new articleLink("Custom $context.find filters", "custom-find-filters")
         ]}, {        
             header: new articleLink("Binding to non observables", "binding-to-non-observables"),
             items: [
@@ -1685,6 +1686,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Mouseout", "wo-mouseout"),
                 new articleLink("Mouseover", "wo-mouseover"),
                 new articleLink("Mouseup", "wo-mouseup"),
+                new articleLink("On Event", "wo-on-event"),
                 new articleLink("Render", "wo-render"),
                 new articleLink("Style", "wo-style"),
                 new articleLink("Submit", "wo-submit"),

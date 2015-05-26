@@ -1,35 +1,35 @@
-<h1>Custom $find filters</h1>
+<h1>Custom $context.find filters</h1>
 
-    <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the 
-    	<wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wipeout.utils.find'" text="'wo.find'" /> function.
-    	You can add your own filter by adding a custom method. For example:</p>
-
-    <wipeout-docs.view-models.components.code-block>
-        <code>// find a viewmodel is a specific namespace
-wo.find.$namespace = function(currentItem, searchTerm, index) {
-	// searchTerm will be the namespace passed in
-	for(var i in searchTerm) {
-		if(searchTerm[i] === currentItem){
-			return true;
-		}
-	}
-	
-	return false;
+    <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the <code>wo.findFilters</code> object.
+    	You can add your own filter by adding a custom method. Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// find a viewmodel based on it's model
+wo.findFilters.$hasModel = function(currentItem, searchTerm, index) {
+    // searchTerm will be the namespace passed in
+    if (searchTerm)
+        return currentItem.model != null;
+    else 
+        return currentItem.model == null;
 }</code>
-    </wipeout-docs.view-models.components.code-block>
+    </wipeout-docs.view-models.components.j-code-block>
 
 <p>And then using the filter</p>
     
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;my-namespace.my-view-model model="'Hello wipeout!'">
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="custom-find-filters-1">
+    <code parser="s">&lt;wo.content-control model--s="Hello wipeout!">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find({$namespace: myNamespace})">
+        &lt;wo.content-control>
             &lt;set-template>
-                &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
+                &lt;span wo-content="$context.find({$hasModel: true}).model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
-&lt;/my-namespace.my-view-model></code>
-</wipeout-docs.view-models.components.code-block>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'custom-find-filters-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block>
 
-<p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+
+<br />
+<br />

@@ -9,7 +9,6 @@
     <body>
                 
         <div>
-            <div style="width: 100%; height: 200px;"></div>
             <div class="navbar navbar-default navbar-fixed-top">
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
                     <a href="index.html">
@@ -428,14 +427,29 @@ The default binding is one way. This means that the object where the propery
 wo.viewModel("demoApp.myType", wo.contentControl)
     .build();</code>
     </wipeout-docs.view-models.components.j-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
-        <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'" highlight--s="$context.find">
+        <code parser="s">&lt;demo-app.my-type model="{value: 'Hello wipeout!'}" value="123">
     &lt;set-template>
         &lt;wo.content-control>
             &lt;set-template>
-                &lt;wo.content-control model="$context.find(demoApp.myType).model">
+                &lt;wo.content-control 
+                    binding1="$context.find(demoApp.myType).model"
+                    binding2="$context.find('parent').model"
+                    binding3="$context.find({$instanceof: demoApp.myType}).model"
+                    binding4="$context.find({value: 123}).model"
+                    binding5="$context.find({value: 'Hello wipeout!', $model: true})">
+            
                     &lt;set-template>
-                        Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
+            
+                        Found ancestor by type: &lt;span wo-content="$this.binding1.value">&lt;/span> &lt;br />
+            
+                        Found ancestor by hirearchy: &lt;span wo-content="$this.binding2.value">&lt;/span> &lt;br />
+            
+                        Found ancestor by type: &lt;span wo-content="$this.binding3.value">&lt;/span> &lt;br />
+            
+                        Found ancestor by property value: &lt;span wo-content="$this.binding4.value">&lt;/span> &lt;br />
+            
+                        Found ancestor model by property value: &lt;span wo-content="$this.binding5.value">&lt;/span> &lt;br />
                     &lt;/set-template>
                 &lt;/wo.content-control>
             &lt;/set-template>
@@ -448,9 +462,62 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'bind-to-ancestor-script-1'">&lt;/wo.view></code>
     </wipeout-docs.view-models.components.usage-code-block> 
+
+<p>The value passed into <code>$context.find</code> can be
+    <ol>
+        <li>A view model type</li>
+        <li>A string indicating hirearchy (parent, grandparent, greatgrandparent etc...)</li>
+        <li>An object of search parameters.</li>
+</ol>
+If search parameters are used, the available parameters are as follows:
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Search type</th>
+			<th>Alias</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>$instanceof</td>
+			<td>$i</td>
+			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a viewModel type into $find</td>
+		</tr>
+		<tr>
+			<td>$type</td>
+			<td>$t</td>
+			<td>An exact type match. Is the same as <code>currentViewModel.constructor === searchTerm</code>.</td>
+		</tr>
+		<tr>
+			<td>$ancestory</td>
+			<td>$a</td>
+			<td>Find the parent, grandparent ect... Is the same as passing a string into the $context.find() method.</td>
+		</tr>
+		<tr>
+			<td>$number</td>
+			<td>$n</td>
+			<td>Describes when to stop when a viewModel is found. For example, if <code>$n === 0</code>, return the first match.
+				If <code>$n === 1</code>, return the second match.</td>
+		</tr>
+		<tr>
+			<td>$model</td>
+			<td>$m</td>
+			<td>If set to true, signifies that we are looking for models, not viewModels.</td>
+		</tr>
+		<tr>
+			<td>anything else</td>
+			<td>none</td>
+			<td>Anything on the search object which is not prefixed with a $ will be treated as a property search. For instance
+			using <code>{ myProperty: "hello"}</code> will return the first viewModel where <code>myProperty === hello</code> .</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+
+
 <br/>
 <br/>
-<p>There is a full customisable api for finding ancestors, documented <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=bind-to-specific-view-model'" text="'here'" /></p>
 </script>
 
 <script id="Articles.bind-to-global" type="text/template">
@@ -571,12 +638,7 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 <script id="Articles.bind-to-specific-view-model" type="text/template">
 <h1>Bind to a specific viewModel</h1>
 
-    <p>When binding viewModel properties and event handlers, either using <code>data-bind=""</code> for html elements or setting the properties
-    	on viewModels, the current scope is the viewModel itself. So for instance, the setter <code>property1="model().property1"</code>
-    	will bind the property1 to the property1 property of the model of the current viewModel. 
-    	</p>
-    <p>Often, it is useful to bind to ancestors, especially when using nested anonymous templates (contentControls), and there are
-    	four mechanisms for doing this:
+    <p>When binding or setting prperties it is often useful to bind to ancestors, especially when using nested anonymous templates (contentControls), and there are four mechanisms for doing this:
 <ol>
     <li><wipeout-docs.rl href="'/wipeout/how-do-i.html?article=knockout-binding-context'" text="'Knockout binding context'" /></li>
     <li><wipeout-docs.rl href="'/wipeout/how-do-i.html?article=find-a-view-model'" text="'$context.find(...)'" /></li>
@@ -644,23 +706,36 @@ By default, all bindings are one way. This means that the object where the prope
 </script>
 
 <script id="Articles.bind-with-elements" type="text/template">
-<h1>Set proerties using XML elements</h1>
+<h1>Set proerties using HTML elements</h1>
 
 <p>
-    To set more complex properties or long strings (such as templates) you can set properties as xml elements rather than xml attributes
+    To set more complex properties or long strings (such as templates) you can set properties as HTML elements rather than HTML attributes
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-with-elements-script-1'">
         <code parser="s">&lt;wo.content-control>
-    &lt;my-object-1>
+    &lt;!-- Setting the value within a html element -->
+    &lt;my-object-1>{val: "Hello Wipeout!"}&lt;/my-object-1>
+            
+    &lt;!-- Setting the value within a html element attribute -->
+    &lt;my-object-2 value--string="Hello Wipeout!">&lt;/my-object-2>
+
+    &lt;!-- Setting a complex value within a html element -->
+    &lt;my-object-3>
+        &lt;!-- Create an Object. The "js-" part lets wipeout 
+            know that the "o" in "object" should be upper case-->
         &lt;js-object>
-            &lt;val parser="s">
+            &lt;!-- Setting the value within a html element with a parser -->
+            &lt;val parser="string">
                 Hello Wipeout!
             &lt;/val>
         &lt;/js-object>
-    &lt;/my-object-1>
+    &lt;/my-object-3>
+            
     &lt;set-template>
-        Binding to element value: &lt;span wo-content="$this.myObject1.val">&lt;/span>
+        Binding to element value 1: &lt;span wo-content="$this.myObject1.val">&lt;/span> &lt;br />
+        Binding to element value 2: &lt;span wo-content="$this.myObject2">&lt;/span> &lt;br />
+        Binding to element value 3: &lt;span wo-content="$this.myObject3.val">&lt;/span> &lt;br />
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -669,10 +744,8 @@ By default, all bindings are one way. This means that the object where the prope
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'bind-with-elements-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
-<p>This example, the <code>myObject1</code> property of the viewModel was set to <code>{val: "Hello Wipeout!"}</code>. The <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=parsers'" text--s='parser="s"'></wipeout-docs.rl> part told the wipeout teplate engine that "Hello Wipeout!" should be interpreted as a string.</p>
-<p>There is more info on setting properties in this manner <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'"></wipeout-docs.rl>.(TODOD is this link valid)
-    
-</p>
+<br />
+<br />
 </script>
 
 <script id="Articles.binding-setters" type="text/template">
@@ -739,7 +812,7 @@ If <code>$model</code> were to be observable but <code>item1</code> were not, wi
 
 <h2>Configuration</h2>
 
-<p>In practice, the best strategy will be a mix of all three, setting a default which suits the application and altering specific view models to either increase or decreases the amount of view models created. You can alter the binding strategy:
+<p>In practice, the best strategy will be a mix of all three, setting a default which suits the application and altering specific view models to either increase or decreases the amount of observables created. You can alter the binding strategy:
     <ul>
         <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=global-binding-strategy'" text="'Globally'"></wipeout-docs.rl></li>
         <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=typed-binding-strategy'" text="'By view model type'"></wipeout-docs.rl></li>
@@ -1114,41 +1187,41 @@ The <code>mybinding</code> function will be called when setting up a binding on 
 </script>
 
 <script id="Articles.custom-find-filters" type="text/template">
-<h1>Custom $find filters</h1>
+<h1>Custom $context.find filters</h1>
 
-    <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the 
-    	<wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wipeout.utils.find'" text="'wo.find'" /> function.
-    	You can add your own filter by adding a custom method. For example:</p>
-
-    <wipeout-docs.view-models.components.code-block>
-        <code>// find a viewmodel is a specific namespace
-wo.find.$namespace = function(currentItem, searchTerm, index) {
-	// searchTerm will be the namespace passed in
-	for(var i in searchTerm) {
-		if(searchTerm[i] === currentItem){
-			return true;
-		}
-	}
-	
-	return false;
+    <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the <code>wo.findFilters</code> object.
+    	You can add your own filter by adding a custom method. Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// find a viewmodel based on it's model
+wo.findFilters.$hasModel = function(currentItem, searchTerm, index) {
+    // searchTerm will be the namespace passed in
+    if (searchTerm)
+        return currentItem.model != null;
+    else 
+        return currentItem.model == null;
 }</code>
-    </wipeout-docs.view-models.components.code-block>
+    </wipeout-docs.view-models.components.j-code-block>
 
 <p>And then using the filter</p>
     
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;my-namespace.my-view-model model="'Hello wipeout!'">
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="custom-find-filters-1">
+    <code parser="s">&lt;wo.content-control model--s="Hello wipeout!">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find({$namespace: myNamespace})">
+        &lt;wo.content-control>
             &lt;set-template>
-                &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
+                &lt;span wo-content="$context.find({$hasModel: true}).model">&lt;/span>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
-&lt;/my-namespace.my-view-model></code>
-</wipeout-docs.view-models.components.code-block>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'custom-find-filters-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block>
 
-<p>Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+
+<br />
+<br />
 </script>
 
 <script id="Articles.custom-html-attributes" type="text/template">
@@ -3067,7 +3140,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
 <p>In order to achieve this you can use property flags. Property flags are a method of splitting a property name into two parts. The first part is the property name, the second is a list of flags.</p>
 <p>The seperator for property flags is "<code>--</code>" and each subsequent flag is seperated by a "<code>-</code>".</p>
 
-<p>For instance the model property setter in the viewModel: <code>&amp;lt;wo.view model--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the (TODOD link) "No Binding" binding and the (TODOD link)"String" parser.</p>
+<p>For instance the model property setter in the viewModel: <code>&amp;lt;wo.view model--nb-s="Hello wipeout!">&amp;lt;/wo.view></code> uses the <wipeout-docs.rl text--s="no binding (nb)" href--s="/wipeout/v2.0-alpha/how-do-i.html?article=bind-no-way"></wipeout-docs.rl> binding and the <wipeout-docs.rl text--s="string (s)" href--s="/wipeout/v2.0-alpha/how-do-i.html?article=string-parser"></wipeout-docs.rl> parser.</p>
 
 </script>
 
@@ -4340,6 +4413,26 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
+<script id="Articles.wo-on-event" type="text/template">
+<h1>The Mouseup attribute</h1>
+<h3><code>wo-on-event="event name"</code></h3>
+<h3><code>data-wo-on-event="event name"</code></h3>
+<p>When combined with another html attribute, determines when that attribute will be fired.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseup-attr'" highlight--s="wo-on-event">
+    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;input wo-on-event="blur" wo-value="$model" type="text" /> Model will change when you leave the textbox &lt;br />
+        &lt;input wo-on-event="keyup" wo-value="$model" type="text" /> Model will change when you release a key
+    &lt;/set-template>
+&lt;/wo.content-control></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-mouseup-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+</script>
+
 <script id="Articles.wo-render" type="text/template">
 <h1>The Render attribute</h1>
 <h3><code>wo-render="value"</code></h3>
@@ -4778,6 +4871,7 @@ Welcome to wipeout. Browse the API on the left hand side
 				return !wipeout.template.engine.instance.compileTemplate(templateId, function (){});
 			};
 			
+            wo.findFilters = wipeout.utils.find;
 			//Another TODO: view.prototype.getRootNode()
 		</script>
         <script type="text/javascript" src="scripts/lib/prettify.js"></script>

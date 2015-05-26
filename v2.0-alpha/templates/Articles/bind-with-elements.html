@@ -1,20 +1,33 @@
-<h1>Set proerties using XML elements</h1>
+<h1>Set proerties using HTML elements</h1>
 
 <p>
-    To set more complex properties or long strings (such as templates) you can set properties as xml elements rather than xml attributes
+    To set more complex properties or long strings (such as templates) you can set properties as HTML elements rather than HTML attributes
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-with-elements-script-1'">
         <code parser="s">&lt;wo.content-control>
-    &lt;my-object-1>
+    &lt;!-- Setting the value within a html element -->
+    &lt;my-object-1>{val: "Hello Wipeout!"}&lt;/my-object-1>
+            
+    &lt;!-- Setting the value within a html element attribute -->
+    &lt;my-object-2 value--string="Hello Wipeout!">&lt;/my-object-2>
+
+    &lt;!-- Setting a complex value within a html element -->
+    &lt;my-object-3>
+        &lt;!-- Create an Object. The "js-" part lets wipeout 
+            know that the "o" in "object" should be upper case-->
         &lt;js-object>
-            &lt;val parser="s">
+            &lt;!-- Setting the value within a html element with a parser -->
+            &lt;val parser="string">
                 Hello Wipeout!
             &lt;/val>
         &lt;/js-object>
-    &lt;/my-object-1>
+    &lt;/my-object-3>
+            
     &lt;set-template>
-        Binding to element value: &lt;span wo-content="$this.myObject1.val">&lt;/span>
+        Binding to element value 1: &lt;span wo-content="$this.myObject1.val">&lt;/span> &lt;br />
+        Binding to element value 2: &lt;span wo-content="$this.myObject2">&lt;/span> &lt;br />
+        Binding to element value 3: &lt;span wo-content="$this.myObject3.val">&lt;/span> &lt;br />
     &lt;/set-template>
 &lt;/wo.content-control></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -23,7 +36,5 @@
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'bind-with-elements-script-1'" /></code>
     </wipeout-docs.view-models.components.usage-code-block> 
-<p>This example, the <code>myObject1</code> property of the viewModel was set to <code>{val: "Hello Wipeout!"}</code>. The <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=parsers'" text--s='parser="s"'></wipeout-docs.rl> part told the wipeout teplate engine that "Hello Wipeout!" should be interpreted as a string.</p>
-<p>There is more info on setting properties in this manner <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=set-properties-using-xml-elements'" text="'here'"></wipeout-docs.rl>.(TODOD is this link valid)
-    
-</p>
+<br />
+<br />
