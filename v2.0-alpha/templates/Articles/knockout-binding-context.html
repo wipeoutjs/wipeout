@@ -6,7 +6,7 @@
 <ol>
 	<li><code>$parent</code>: refers to the parent viewModel. This property is very important when setting the model of viewModel, as you 
 		will always want to set it to a property on <code>$parent.model</code>.</li>
-	<li><code>$xyxyxy[]</code>: refers to all ancestor viewModels. So <code>$xyxyxy[0] === $parent</code>, <code>$xyxyxy[1] === $parent.getParent(true)</code>
+	<li><code>$parents[]</code>: refers to all ancestor viewModels. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
 </ol>

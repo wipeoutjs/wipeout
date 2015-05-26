@@ -8,7 +8,8 @@
     </head>
     <body>
                 
-        <div>            
+        <div>
+            <div style="width: 100%; height: 200px;"></div>
             <div class="navbar navbar-default navbar-fixed-top">
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
                     <a href="index.html">
@@ -429,9 +430,13 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
         <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control model="$context.find(demoApp.myType).model">
+        &lt;wo.content-control>
             &lt;set-template>
-                Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
+                &lt;wo.content-control model="$context.find(demoApp.myType).model">
+                    &lt;set-template>
+                        Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
+                    &lt;/set-template>
+                &lt;/wo.content-control>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
@@ -556,7 +561,7 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 
 
 <br/>
-<p>You can walk further up the chain of ancestors using the <code>$xyxyxy</code> keyword. <code>$xyxyxy</code> is an array, meaning <code>$xyxyxy[0] === $this</code>, <code>$xyxyxy[1] === grand parent</code>, <code>$xyxyxy[2] === great grand parent</code>, etc...</p>
+<p>You can walk further up the chain of ancestors using the <code>$parents</code> keyword. <code>$parents</code> is an array, meaning <code>$parents[0] === $this</code>, <code>$parents[1] === grand parent</code>, <code>$parents[2] === great grand parent</code>, etc...</p>
 
 <br/>
 <br/>
@@ -703,6 +708,45 @@ Examples:
 &lt;!-- find a view model and bind to it's model (TODOD link) -->
 &lt;wo.view model="$context.find(myViewModel).model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.binding-to-non-observables" type="text/template">
+<h1>Binding to non observables</h1>
+<p>When something is bound within a template, part of the process is to watch 
+    the variable for change, so that the DOM, or other view models can be updated accordingly. Plain old 
+    javascript objects cannot be watched, they must first be converted to observables with
+    <a href="https://github.com/ShaneGH/busybody#attempting-to-observe-a-value" target="_blank">busybody.makeObservable</a>.
+</p>
+<h2>Strategies</h2>
+<p>There are three binding strategies you can use</p>
+<h3>1. Create Observables (default)</h3>
+<p>This strategy will bind to anything. Given the path:
+<code>$model.item1.item2</code>, where neither <code>$model</code> nor <code>item1</code> are observables, wipeout will convert these values to observables before binding so that any changes to <code>$model.item1</code> or <code>item1.item2</code> can be observed. Once the binding is destroyed or an item is no longer present in the path, the item will then be converted back to a non observable.
+</p>
+<p>There is overhead in creating observables, and if you are building a large SPA with many long binding paths, this strategy might not be optimal.</p>
+
+<h3>2. Bind non Observables</h3>
+<p>This strategy will bind to anything that it can. Given the path:
+<code>$model.item1.item2</code>, where <code>item1</code> is an observable, but <code>$model</code> is not, wipeout will do it's best to bind. This means that if <code>item1.item2</code> changes, wipeout will update the DOM, however, if <code>$model.item1</code> changes, wipeout will not.
+</p>
+
+<h3>3. Only Bind Observables</h3>
+<p>This strategy will only bind until it reaches a break in the observable chain. Given the path:
+<code>$model.item1.item2</code>, where <code>item1</code> is an observable, but <code>$model</code> is not wipeout will not bind, as the first link in the chain (<code>$model</code>) is not observable.<br />
+If <code>$model</code> were to be observable but <code>item1</code> were not, wipeout act the same as if <b>Bind non Observabls</b> were used, altering the DOM if <code>$model.item1</code> changes, but not if <code>item1.item2</code> changes.
+</p>
+
+<h2>Configuration</h2>
+
+<p>In practice, the best strategy will be a mix of all three, setting a default which suits the application and altering specific view models to either increase or decreases the amount of view models created. You can alter the binding strategy:
+    <ul>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=global-binding-strategy'" text="'Globally'"></wipeout-docs.rl></li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=typed-binding-strategy'" text="'By view model type'"></wipeout-docs.rl></li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=instance-binding-strategy'" text="'By view model instance'"></wipeout-docs.rl></li>
+</ul>
+</p>
+<br />
+<br />
 </script>
 
 <script id="Articles.binding-types" type="text/template">
@@ -2297,6 +2341,18 @@ Binding:
 };</code>
 </script>
 
+<script id="Articles.global-binding-strategy" type="text/template">
+<h1>Setting the global binding strategy</h1>
+<p>The global binding strategy is the default way bindings will be handled for all view models you can set the global binding strategy like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.createObservables;
+// - or -
+wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.bindNonObservables;
+// - or -
+wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.onlyBindObservables;</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
 <script id="Articles.global-overrides" type="text/template">
 <h1>Global Overrides</h1>
 
@@ -2461,6 +2517,19 @@ console.log(account.balance);</code>
 <br/>
 </script>
 
+<script id="Articles.instance-binding-strategy" type="text/template">
+<h1>Setting the binding strategy for a view model</h1>
+
+<p>You can set the binding strategy for a specific view model when you create it in a template.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view binding-strategy="createObservables">&lt;/wo.view>
+&lt;!-- or -->
+&lt;wo.view binding-strategy="bindNonObservables">&lt;/wo.view>
+&lt;!-- or -->
+&lt;wo.view binding-strategy="onlyBindObservables">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
 <script id="Articles.int-parser" type="text/template">
 <h1>Int parser (i)</h1>
 
@@ -2620,7 +2689,7 @@ With a custom itemsControl you can control
 <ol>
 	<li><code>$parent</code>: refers to the parent viewModel. This property is very important when setting the model of viewModel, as you 
 		will always want to set it to a property on <code>$parent.model</code>.</li>
-	<li><code>$xyxyxy[]</code>: refers to all ancestor viewModels. So <code>$xyxyxy[0] === $parent</code>, <code>$xyxyxy[1] === $parent.getParent(true)</code>
+	<li><code>$parents[]</code>: refers to all ancestor viewModels. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
 	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
 </ol>
@@ -3413,7 +3482,7 @@ Binding:
 <h1>Share parent scope</h1>
 
     <p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'if'" />
- control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $xyxyxy[4].value"</code> which is an indicator
+ control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>data-bind="value: $parents[4].value"</code> which is an indicator
 of un-needed scope.</p>
     <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code>. in a template definition or in the constructor of a viewModel.</p>
 
@@ -3584,6 +3653,20 @@ Wipeout viewModels alone do not have an appearance, for this we need templates. 
 });</code>
         </wipeout-docs.view-models.components.code-block>
 </p>
+</script>
+
+<script id="Articles.typed-binding-strategy" type="text/template">
+<h1>Setting the binding strategy for a view model type</h1>
+
+<p>You can set the binding strategy for all instances of a specific view model type when defining that view model type. Doing this overrides the global binding strategy.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .createObservables()
+    // - or -
+    .bindNonObservables()
+    // - or -
+    .onlyBindObservables();</code>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.using-a-parser" type="text/template">
@@ -4626,7 +4709,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
     <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
     <wo.if condition="$this.showCode">
         <if-true>
-            <wipeout-docs.view-models.components.code-block code="$model['function'].toString()"></wipeout-docs.view-models.components.code-block>
+            <wipeout-docs.view-models.components.code-block code="$model['function'].toString().replace(/\t/g, '    ')"></wipeout-docs.view-models.components.code-block>
         </if-true>
     </wo.if>
 </div>

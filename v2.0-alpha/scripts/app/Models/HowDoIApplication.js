@@ -60,7 +60,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Alter the viewModel lifecycle", "view-model-lifecycle"),
                 new articleLink("Add a property binding", "add-a-property-binding"),
                 new articleLink("Add a property parser", "add-a-parser"),
-                new articleLink("Inherit from another viewModel", "inherit-from-another-view-model"),
+                new articleLink("Inherit from another viewModel", "inherit-from-another-view-model")
             ]
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
@@ -73,6 +73,12 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Bind to a global value", "bind-to-global"),
                 new articleLink("Set properties using XML elements", "bind-with-elements"),
                 new articleLink("Find an ancestor to bind to", "bind-to-ancestor")
+        ]}, {        
+            header: new articleLink("Binding to non observables", "binding-to-non-observables"),
+            items: [
+                new articleLink("Setting the global binding strategy", "global-binding-strategy"),
+                new articleLink("Setting the binding strategy for a view model type", "typed-binding-strategy"),
+                new articleLink("Setting the binding strategy for a view model", "instance-binding-strategy")
         ]}, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [

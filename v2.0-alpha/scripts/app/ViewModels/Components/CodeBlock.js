@@ -3,7 +3,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = null;
         
-        this.observe("code", this._onCodeChanged, this);   
+        this.observe("code", this._onCodeChanged, {context: this});   
     };
 	
 	codeBlock.prototype.onInitialized = function () {

@@ -42,7 +42,7 @@
     <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
     <wo.if condition="$this.showCode">
         <if-true>
-            <wipeout-docs.view-models.components.code-block code="$model['function'].toString()"></wipeout-docs.view-models.components.code-block>
+            <wipeout-docs.view-models.components.code-block code="$model['function'].toString().replace(/\t/g, '    ')"></wipeout-docs.view-models.components.code-block>
         </if-true>
     </wo.if>
 </div>

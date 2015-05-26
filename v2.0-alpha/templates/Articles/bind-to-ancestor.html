@@ -10,9 +10,13 @@ wo.viewModel("demoApp.myType", wo.contentControl)
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'">
         <code parser="s">&lt;demo-app.my-type model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control model="$context.find(demoApp.myType).model">
+        &lt;wo.content-control>
             &lt;set-template>
-                Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
+                &lt;wo.content-control model="$context.find(demoApp.myType).model">
+                    &lt;set-template>
+                        Binding to a specific ancestor: &lt;span wo-content="$model">&lt;/span>
+                    &lt;/set-template>
+                &lt;/wo.content-control>
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>

@@ -1645,7 +1645,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Alter the viewModel lifecycle", "view-model-lifecycle"),
                 new articleLink("Add a property binding", "add-a-property-binding"),
                 new articleLink("Add a property parser", "add-a-parser"),
-                new articleLink("Inherit from another viewModel", "inherit-from-another-view-model"),
+                new articleLink("Inherit from another viewModel", "inherit-from-another-view-model")
             ]
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
@@ -1658,6 +1658,12 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Bind to a global value", "bind-to-global"),
                 new articleLink("Set properties using XML elements", "bind-with-elements"),
                 new articleLink("Find an ancestor to bind to", "bind-to-ancestor")
+        ]}, {        
+            header: new articleLink("Binding to non observables", "binding-to-non-observables"),
+            items: [
+                new articleLink("Setting the global binding strategy", "global-binding-strategy"),
+                new articleLink("Setting the binding strategy for a view model type", "typed-binding-strategy"),
+                new articleLink("Setting the binding strategy for a view model", "instance-binding-strategy")
         ]}, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [
@@ -1916,7 +1922,6 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     
     ApiApplication.prototype.onApplicationInitialized = function() { 
         this._super();
-        alert();
     };
     
     ApiApplication.prototype.route = function(query) { 
@@ -1971,7 +1976,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
         this._super(templateId || "wipeoutDocs.viewModels.components.codeBlock");        
         this.code = null;
         
-        this.observe("code", this._onCodeChanged, this);   
+        this.observe("code", this._onCodeChanged, {context: this});   
     };
 	
 	codeBlock.prototype.onInitialized = function () {
@@ -2174,7 +2179,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
 			} else {
 				this.templateId = treeViewBranch.nullTemplate;
 			}
-		}, this);
+		}, {context: this});
     };
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";

@@ -1,0 +1,9 @@
+<h1>Setting the global binding strategy</h1>
+<p>The global binding strategy is the default way bindings will be handled for all view models you can set the global binding strategy like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.createObservables;
+// - or -
+wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.bindNonObservables;
+// - or -
+wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.onlyBindObservables;</code>
+</wipeout-docs.view-models.components.code-block>

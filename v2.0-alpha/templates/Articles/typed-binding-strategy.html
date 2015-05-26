@@ -1,0 +1,11 @@
+<h1>Setting the binding strategy for a view model type</h1>
+
+<p>You can set the binding strategy for all instances of a specific view model type when defining that view model type. Doing this overrides the global binding strategy.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .createObservables()
+    // - or -
+    .bindNonObservables()
+    // - or -
+    .onlyBindObservables();</code>
+</wipeout-docs.view-models.components.code-block>

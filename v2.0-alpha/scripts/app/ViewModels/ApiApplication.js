@@ -11,7 +11,6 @@ compiler.registerClass("wipeoutDocs.viewModels.apiApplication", "wipeoutDocs.vie
     
     ApiApplication.prototype.onApplicationInitialized = function() { 
         this._super();
-        alert();
     };
     
     ApiApplication.prototype.route = function(query) { 

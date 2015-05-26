@@ -26,7 +26,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
 			} else {
 				this.templateId = treeViewBranch.nullTemplate;
 			}
-		}, this);
+		}, {context: this});
     };
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
