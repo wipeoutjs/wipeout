@@ -1,0 +1,23 @@
+<h1>Subscribe to an element event</h1>
+<p>To subscribe to a html event of the element, use the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue&functionName=onElementEvent&isStatic=false'" text="'onElementEvent'"></wipeout-docs.rl> function</p>
+
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$this.doSomething()">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+
+    // method 1, using the event handler in the attribute.
+    // when the div is clicked $this.doSomething() will be invoked
+    attribute.onElementEvent("click");
+        
+    // method 2, using another event handler.
+    // when the div is clicked the callback will be executed
+    attribute.onElementEvent("click", function () {
+        // event handler logic
+    });
+});</code>
+</wipeout-docs.view-models.components.code-block>

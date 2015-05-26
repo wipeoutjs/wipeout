@@ -1,0 +1,17 @@
+<h1>Observe the value of the setter</h1>
+<p>If you need to observe the setter for change, you can use the <code>watch</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    attribute.watch(function (oldVal, newVal) {
+        // code for when the model value of the parent changes here
+    }, true);
+});</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>

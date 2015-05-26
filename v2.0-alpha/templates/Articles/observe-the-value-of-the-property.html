@@ -1,5 +1,5 @@
 <h1>Observe the value of the property</h1>
-<p>If you need to observe the property value for change, you can use the <code>busybody.observe</code> function.</p>
+<p>If you need to observe the property value for change, you can use the <code>onPropertyChanged</code> function.</p>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
@@ -9,15 +9,11 @@ Binding:
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
     // will observe the model property of the view model for change
-    var dispose = busybody.observe(viewModel, property.name, function (oldValue, newValue) {
+    property.onPropertyChanged(function (oldValue, newValue) {
         
         // Do any binding stuff here
-    });
-        
-    // remember, an observation needs to be disposed of when the binding is torn down.
-    // to do this, return the dispose object
-    return dispose;	
+    }, true);
 };</code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
+<p>The second argument to <code>onPropertyChanged</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>

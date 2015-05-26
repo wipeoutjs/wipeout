@@ -1,0 +1,25 @@
+<h1>Dispose of the attribute</h1>
+
+<p>There are often subscriptions and other disposable scenarios which occur outside of the <code>attribute</code> argument to the attribute. These must be disposed of manually to prevent memory leaks. In order to dispose of an item manually a dispose function must be returned from the attribute function.</p>
+
+<br/>Declaration
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+
+    // observe the model property of the viewModel. This will create a disposable
+    // which we want to dispose of when the attribute is torn down
+    var disposable = renderContext.$this.observe("model", function (...) { ... });
+
+    return function () {
+        disposable.dispose();
+    };
+
+    -- OR --
+
+    return disposable;
+});</code>
+</wipeout-docs.view-models.components.code-block>

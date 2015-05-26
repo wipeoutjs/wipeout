@@ -110,6 +110,13 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         ]}, {        
             header: new articleLink("Custom html attributes", "custom-html-attributes"),
             items: [
+                new articleLink("Subscribe to an element event", "html-attr-on-element-event"),
+                new articleLink("Get the setter string", "html-attr-get-the-setter-string"),
+                new articleLink("Get the value of the setter", "html-attr-get-the-value-of-the-setter"),
+                new articleLink("Observe the value of the setter", "html-attr-observe-the-value-of-the-setter"),
+                new articleLink("Set the value of the setter", "html-attr-set-the-value-of-the-setter"),
+                new articleLink("Access another wipeout attribute", "html-attr-get-other-attr"),
+                new articleLink("Dispose of the attribute", "html-attr-dispose-of-the-attribute"),
 		]}, {        
             header: new articleLink("Property flags", "property-flags"),
             items: [

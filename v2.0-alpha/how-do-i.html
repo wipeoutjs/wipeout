@@ -2340,7 +2340,7 @@ Binding:
     // for a regular binding, will return "$model.aProperty"
     var theValue = property.value(true);
         
-    // for a regular binding, will return "$model.aProperty". This value
+    // for a regular binding, will return "$this.model.aProperty". This value
     // should be used if you will compile the value into javascript
     var theOptomisedValue = property.value();
 		
@@ -2450,6 +2450,188 @@ wo.view.prototype.dispose = function() {
     return dispose.apply(this, arguments);
 };</code>
 </wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.html-attr-dispose-of-the-attribute" type="text/template">
+<h1>Dispose of the attribute</h1>
+
+<p>There are often subscriptions and other disposable scenarios which occur outside of the <code>attribute</code> argument to the attribute. These must be disposed of manually to prevent memory leaks. In order to dispose of an item manually a dispose function must be returned from the attribute function.</p>
+
+<br/>Declaration
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+
+    // observe the model property of the viewModel. This will create a disposable
+    // which we want to dispose of when the attribute is torn down
+    var disposable = renderContext.$this.observe("model", function (...) { ... });
+
+    return function () {
+        disposable.dispose();
+    };
+
+    -- OR --
+
+    return disposable;
+});</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.html-attr-get-other-attr" type="text/template">
+<h1>Access another wipeout attribute</h1>
+<p>Some wipeout attributes depend on one another, and you may wish to access one attribute within another. You can do this with the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue&functionName=otherAttribute&isStatic=false'" text="'otherAttribute'"></wipeout-docs.rl> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;input type="text" wo-my-attr="$model" wo-value="$model.property1" /></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+	
+    var getter;
+    var success = attribute.otherAttribute("value", function (value) {
+        // value is the "wo-value" attribute for this element
+        getter = value.getter();
+    });
+        
+    if (success) {
+        var val = getter();
+    }
+});</code>
+</wipeout-docs.view-models.components.code-block>
+<p>The <code>attribute.otherAttribute</code> attempts to find the other attribute and returns <code>true/false</code> depending on it's success. If the attribute is found, the callback will be run and you can access the other attribute.</p>
+</script>
+
+<script id="Articles.html-attr-get-the-setter-string" type="text/template">
+<h1>Get the raw setter for the property</h1>
+<p>To get the string value defined in the template use the <code>value</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model.aProperty">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    // will return "$model.aProperty"
+    var theValue = attribute.value(true);
+        
+    // will return "$this.model.aProperty". This value
+    // should be used if you will compile the value into javascript
+    var theOptomisedValue = attribute.value();
+		
+    // Do any binding stuff here
+});</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.html-attr-get-the-value-of-the-setter" type="text/template">
+<h1>Get the value of the setter</h1>
+<p>To get the setter value use the <code>getter</code> function to create a getter and use the getter to get the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    // returns a function which can be used to get the value
+    var getter = attribute.getter();
+        
+    // returns the value
+    var theValue = getter();
+});</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the attribute), it is important to cache the <code>getter</code>. The <code>attribute.getter()</code> function will only work synchronusly, however the result of the <code>getter</code> function can be invoked at any time </p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr  (element, attribute, renderContext) {
+		
+    // cache the getter here
+    var getter = attribute.getter();
+    
+    // create an asynchronus function which will be called when the value changes
+    attribute.watch(function (oldValue, newValue) {
+        // use the getter here
+        var result = getter();
+    });
+};</code>
+</script>
+
+<script id="Articles.html-attr-observe-the-value-of-the-setter" type="text/template">
+<h1>Observe the value of the setter</h1>
+<p>If you need to observe the setter for change, you can use the <code>watch</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    attribute.watch(function (oldVal, newVal) {
+        // code for when the model value of the parent changes here
+    }, true);
+});</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
+</script>
+
+<script id="Articles.html-attr-on-element-event" type="text/template">
+<h1>Subscribe to an element event</h1>
+<p>To subscribe to a html event of the element, use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue&functionName=onElementEvent&isStatic=false'" text="'onElementEvent'"></wipeout-docs.rl> function</p>
+
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$this.doSomething()">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+
+    // method 1, using the event handler in the attribute.
+    // when the div is clicked $this.doSomething() will be invoked
+    attribute.onElementEvent("click");
+        
+    // method 2, using another event handler.
+    // when the div is clicked the callback will be executed
+    attribute.onElementEvent("click", function () {
+        // event handler logic
+    });
+});</code>
+</wipeout-docs.view-models.components.code-block>
+</script>
+
+<script id="Articles.html-attr-set-the-value-of-the-setter" type="text/template">
+<h1>Set the value of the setter</h1>
+<p>You may wish to set the value within the attribute setter. If this is the case, ensure you check this is possible with the <code>canSet</code> method and then use the <code>setter</code> method to set the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+	
+    // It IS possible to set the property "$model".
+    // It would NOT be possible to set something like "$model ? $model : null"
+    if (attribute.canSet()) {
+        // get a function which can be used to set the value
+        var setter = attribute.setter();
+        
+        // set the model of the parent to "Hello!"
+        setter("Hello!");
+    }
+});</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the attribute), it is important to cache the <code>setter</code>. The <code>attribute.setter()</code> function will only work synchronusly, however the result of the <code>setter</code> function can be invoked at any time. See the example for a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=html-attr-get-the-value-of-the-setter'" text="'getter'"></wipeout-docs.rl> for details.</p>
 </script>
 
 <script id="Articles.html-attributes" type="text/template">
@@ -2971,7 +3153,7 @@ role of a model is beyond the scope of this document.</p>
 
 <script id="Articles.observe-the-value-of-the-property" type="text/template">
 <h1>Observe the value of the property</h1>
-<p>If you need to observe the property value for change, you can use the <code>busybody.observe</code> function.</p>
+<p>If you need to observe the property value for change, you can use the <code>onPropertyChanged</code> function.</p>
 Declaration:
 <wipeout-docs.view-models.components.code-block show-definition-code="false">
 	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
@@ -2981,18 +3163,14 @@ Binding:
 	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
 		
     // will observe the model property of the view model for change
-    var dispose = busybody.observe(viewModel, property.name, function (oldValue, newValue) {
+    property.onPropertyChanged(function (oldValue, newValue) {
         
         // Do any binding stuff here
-    });
-        
-    // remember, an observation needs to be disposed of when the binding is torn down.
-    // to do this, return the dispose object
-    return dispose;	
+    }, true);
 };</code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
+<p>The second argument to <code>onPropertyChanged</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>
 </script>
 
 <script id="Articles.observe-the-value-of-the-setter" type="text/template">
@@ -3538,7 +3716,7 @@ Binding:
 };</code>
 </wipeout-docs.view-models.components.code-block>
 
-<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>setter</code>. The <code>property.setter()</code> function will only work synchronusly, however the result of the <code>setter</code> function can be invoked at any time. See the example for a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-the-value-of-the-property'" text="'getter'"></wipeout-docs.rl> for details.</p>
+<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>setter</code>. The <code>property.setter()</code> function will only work synchronusly, however the result of the <code>setter</code> function can be invoked at any time. See the example for a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-the-value-of-the-setter'" text="'getter'"></wipeout-docs.rl> for details.</p>
 </script>
 
 <script id="Articles.share-parent-scope" type="text/template">
@@ -4865,6 +5043,8 @@ Welcome to wipeout. Browse the API on the left hand side
 			};
 			
             wo.findFilters = wipeout.utils.find;
+            
+            wo.htmlAttributes = wipeout.template.rendering.htmlAttributes;
 			//Another TODO: view.prototype.getRootNode()
 		</script>
         <script type="text/javascript" src="scripts/lib/prettify.js"></script>
