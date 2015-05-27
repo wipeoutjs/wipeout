@@ -1,32 +1,32 @@
 <h1>Models</h1>
 
-<p>The role of the model object is generally to hold the business logic and business data of the application. It shold NEVER concern itself with appearence or manipulate the DOM. A definitive guide to the
-role of a model is beyond the scope of this document.</p>
-
-<p>In wipeout, a model manifests as a special property of the viewModel. It is special in two ways:
-    <ol>
-        <li>
-            Unless explicitely set to null, every viewModel is gaurenteed to have a model. This is because models cascade downwards. If you do not have the model set on a viewModel, it will 
-            be assigned the model of it's parent.
-            <wipeout-docs.view-models.components.code-block>
-        <code parser="s">&lt;wo.content-control model="'Hello wipeout!'">
+<p>View models have a special property to deal with business logic and business data. This is the model property. The model is the driver of the application. It provides and recieves almost all data from both the server and the user. It is also the initial argumnent to <code>wo();</code> (TODOD link) which creates an application in the first place.</p>
+<p> The model property is special in that:</p>
+<ol>
+    <li>It has it's own alias within a template binding. Rather than use <code>$this.model</code>, you can simply use <code>$model</code> instead.</li>
+    <li>Models cascade. If you do not explicitly set the model of a view model within the template or <code><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=view-model-lifecycle'" text="'initialize(...)'"></wipeout-docs.rl></code> function of the <code>wo.viewModel(...)</code> tool then it will receive the model of it's parent.</li>
+</ol>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="models-example" highlight--s="notice how the">
+    <code parser="s">&lt;wo.content-control model--string="Hello wipeout!">
     &lt;set-template>
+        &lt;!-- notice how the model property is not set -->
         &lt;wo.content-control>
             &lt;set-template>
-                &lt;div data-bind="text: model">(This text will be replaced by "Hello wipeout!")&lt;/div>
+                $model:
+                &lt;span wo-content="$model">&lt;/span> &lt;br />
+                $this.model:
+                &lt;span wo-content="$this.model">&lt;/span> &lt;br />
+                $this.model === $model:
+                &lt;span wo-content="$this.model === $model">&lt;/span>  &lt;br />
+                $model === $parent.model:
+                &lt;span wo-content="$model === $parent.model">&lt;/span>  &lt;br />
             &lt;/set-template>
         &lt;/wo.content-control>
     &lt;/set-template>
 &lt;/wo.content-control></code>
-    </wipeout-docs.view-models.components.code-block>
-            In this example the second contentControl has bee automatically given the model of its parent
-        </li>
-        <li>
-            There is a pre defined hook <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=onModelChanged&amp;isStatic=false'" text="'onModelChanged'" /> which 
-            can be overridden in derived viewModels to get a notification each time a model changes.
-        </li>
-    </ol>
-</p>
-<p>
-    The model is driver of you applicaiton. It is the object passed into the <code>ko.applyBindings(...)</code> function which kicks off the entire wipeout process.
-</p>
+</wipeout-docs.view-models.components.new-template-code-block>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'models-example'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+<br />
+<br />

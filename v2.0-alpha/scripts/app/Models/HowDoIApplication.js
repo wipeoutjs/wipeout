@@ -63,6 +63,9 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Inherit from another viewModel", "inherit-from-another-view-model")
             ]
         }, {        
+            header: new articleLink("Use the model layer", "models"),
+            items: []
+        }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
             items: [
                 new articleLink("Bind to a static value", "bind-to-static-value"),
@@ -80,6 +83,13 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Setting the global binding strategy", "global-binding-strategy"),
                 new articleLink("Setting the binding strategy for a view model type", "typed-binding-strategy"),
                 new articleLink("Setting the binding strategy for a view model", "instance-binding-strategy")
+        ]}, {        
+            header: new articleLink("Work with lists", "working-with-lists"),
+            items: [
+                new articleLink("Setting the list template", "items-control-list-template"),
+                new articleLink("List item lifecycle", "items-control-item-lifecycle"),
+                new articleLink("Creating custom list items", "items-control-custom-items"),
+                new articleLink("Self removing items", "items-control-self-removing-items")
         ]}, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [
@@ -157,61 +167,13 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("A List Filter", "list-filter"),
                 new articleLink("A Two Way Date Formatter", "date-parser-filter")
-		]}/*, {        
-            header: new articleLink("Calling viewModel methods", "call-view-model-method"),
-            items: [
-        ]}, {        
-            header: new articleLink("Parsing values from html", "parsing-values-from-html"),
-            items: [
-        ]}, {        
-            header: new articleLink("Set properties using XML elements", "set-properties-using-xml-elements"),
-            items: [
-                new articleLink("String Properties", "set-string-property"),
-                new articleLink("Boolean Properties", "set-boolean-property"),
-                new articleLink("Int Properties", "set-int-property"),
-                new articleLink("Float Properties", "set-float-property"),
-                new articleLink("Date Properties", "set-date-property"),
-                new articleLink("JSON Properties", "set-json-property"),
-                new articleLink("Add custom parser", "add-property-parser"),
-                new articleLink("Set Complex Properties", "set-complex-properties"),
-            ]}, {
-            header: new articleLink("Use the wipeout OO framework", "wipeout-oo"),
-            items: [
-                new articleLink("Inheritance", "inheritance"),
-                new articleLink("Overriding methods", "overriding-methods"),
-                new articleLink("Another extend syntax", "another-extend-syntax"),
-                new articleLink("Virtual method cache", "virtual-method-cache"),
-                new articleLink("Strict mode", "strict-mode")
-            ]}, {        
-            header: new articleLink("Use the model layer", "models"),
+		]}, {        
+            header: new articleLink("Share parent scope", "share-parent-scope"),
             items: []
-        }, {        
-            header: new articleLink("Use templates", "templates"),
-            items: [
-                new articleLink("template id", "template-id"),
-                new articleLink("Referencing items in a template", "referencing-items-in-a-template"),
-                new articleLink("Asynchronus templates", "asynchronous-templates"),
-                new articleLink("wo.contentControl", "templates-content-control"),
-            ]}, {        
-            header: new articleLink("Work with lists", "working-with-lists"),
-            items: [
-                new articleLink("Setting the list template", "items-control-list-template"),
-                new articleLink("List item lifecycle", "items-control-item-lifecycle"),
-                new articleLink("Creating custom list items", "items-control-custom-items"),
-                new articleLink("Self removing items", "items-control-self-removing-items")
-            ]}, {        
-            header: new articleLink("Control the viewModel lifecycle", "control-the-view-model-lifecycle"),
-            items: []
-        }, {
+        }/*  {
             header: new articleLink("Use the if control", "if-control"),
             items: []
         }, {
-            header: new articleLink("Use wipeout bindings", "wipeout-bindings"),
-            items: [
-                new articleLink("The wipeout binding", "wipeout-binding"),
-                new articleLink("The itemsControl binding", "items-control-binding"),
-                new articleLink("The render binding", "render-binding"),
-            ]}, {
             header: new articleLink("Work with events", "events"),
             items: [
                 new articleLink("Advanced events", "advanced-events")
@@ -220,46 +182,12 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("Advanced routed events", "advanced-routed-events"),
                 new articleLink("Routed event models", "routed-event-models")
-            ]}, {
-        
-            header: new articleLink("Share Parent Scope", "share-parent-scope"),
-            items: []
-        }, {
-            header: new articleLink("Disposing of Subscriptions", "disposing-of-subscriptions"),
-            items: [
-                new articleLink("Disposing using a callback", "disposing-using-a-callback"),
-                new articleLink("Disposing using a disposable object", "disposing-using-a-disposable-object"),
-                new articleLink("Forcing disposal", "forcing-disposal")
-            ]}, {
-            header: new articleLink("Wipeout Utilities", "wipeout-utilities"),
-            items: []
-        }, {
-            header: new articleLink("Bind to a specific viewModel", "bind-to-specific-view-model"),
-            items: [
-                new articleLink("Knockout binding context", "knockout-binding-context"),
-                new articleLink("Find a viewModel", "find-a-view-model"),
-                new articleLink("Custom $find filters", "custom-find-filters"),
-                new articleLink("Call a viewModel method", "call-a-view-model-method"),
-                new articleLink("Find and call a viewModel method", "find-and-call-a-view-model-method")
-        ]}, {        
+            ]}, {        
             header: new articleLink("Wipeout native classes", "wipeout-native-classes"),
-            items: []
-        }, {        
-            header: new articleLink("Reserved Tags", "reserved-tags"),
             items: []
         }, {        
             header: new articleLink("Profiling", "profiling"),
             items: []
-        }, {        
-            header: new articleLink("Wipeout namespaces", "wipeout-namespaces"),
-            items: []
-        }, {        
-            header: new articleLink("Overriding functionality (advanced)", "overriding-functionality"),
-            items: [
-                new articleLink("New global functionality", "new-global-functionality"),
-                new articleLink("Global Overrides", "global-overrides"),
-                new articleLink("Local Overrides", "local-overrides")
-            ]
         }*/];
         
         this.flatList = [];

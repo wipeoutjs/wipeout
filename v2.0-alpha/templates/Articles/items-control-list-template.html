@@ -1,28 +1,29 @@
 <h1>Setting the list template</h1>
 
 <p>
-    List items are rendered in a <code>div</code> tag by default. You can change this using the 
-    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=template&amp;isStatic=false'" text="'template'" /> property of the itemSource
+    List items are rendered unbounded by default. You can change this using the 
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=setTemplate&amp;isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property of the itemSource, and rendering the <code>$this.items</code> property.
 </p>
-    
-  
-<wipeout-docs.view-models.components.new-template-code-block new-script-id="'items-control-list-template-script-1'">
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="items-control-list-template-script-1">
     <code parser="s">&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;set-template>
-        &lt;ul data-bind="itemsControl: null">&lt;/ul>
+        &lt;ul>
+            {{$this.items}}
+        &lt;/ul>
     &lt;/set-template>
     &lt;item-template>
         &lt;li>
-            &lt;span data-bind="text: model">&lt;/span>
-            Index: &lt;span data-bind="text: $index">&lt;/span>
+            &lt;span wo-content="$model">&lt;/span>, 
+            Index: &lt;span wo-content="$index.value">&lt;/span>
         &lt;/li>
     &lt;/item-template>
 &lt;/wo.items-control></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'items-control-list-template-script-1'" /></code>
+    <code parser="s">&lt;wo.view template-id="'items-control-list-template-script-1'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
 
-<p>The <wipeout-docs.rl href="'/wipeout/how-do-i.html?article=items-control-binding'" text="'itemsControl'" /> binding is used to inform the template engine where to insert the items from the itemsControl. It does not need an argument.
-</p>
+<br />
+<br />

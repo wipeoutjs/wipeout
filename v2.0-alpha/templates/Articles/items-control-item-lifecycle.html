@@ -1,26 +1,34 @@
 <h1>List item lifecycle</h1>
 
+<p>You can inherit from the <code>itemsControl</code> to create lists with tighter control on the view models they render.</p>
+
 <p>
 With a custom itemsControl you can control
-    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemRendered&amp;isStatic=false'" text="'what happens when list items are added'" />
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemRendered&amp;isStatic=false'" text="'what happens when list items are added'"></wipeout-docs.rl>
     and 
-    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemDeleted&amp;isStatic=false'" text="'what happens when list items are removed'" />.
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemRemoved&amp;isStatic=false'" text="'what happens when list items are removed'"></wipeout-docs.rl>.
 </p>
-    
 <wipeout-docs.view-models.components.code-block>
-    <code>var myItemsControl = wo.itemsControl.extend({
-    constructor: function myItemsControl() {
-        this._super();
-    },
-    onItemRendered: function(item) {
-        this._super(item);
+    <code parser="s">var myItemsControl = wo.viewModel("myItemsControl", wo.itemsControl)
+    .build();
         
-        // do initialization logic here
-    },
-    onItemDeleted: function(item) {
-        this._super(item);
-        
-        // do cleanup logic here
-    }
-});</code>
+myItemsControl.onItemRendered = function(item) {
+    this._super(item);
+
+    // do initialization logic here
+};
+
+myItemsControl.onItemRemoved = function(item) {
+    this._super(item);
+
+    // do cleanup logic here
+};</code>
 </wipeout-docs.view-models.components.code-block>
+
+Usage:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;my-items-control items="...">...&lt;/my-items-control></code>
+</wipeout-docs.view-models.components.code-block>
+
+
+<p>Remember that <code>onItemRendered</code> and <code>onItemRemoved</code> are methods which already exist on the <code>wo.itemsControl</code> class. When you override a method of a parent class it is generally necessary to call the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=orienteer&amp;functionName=_super&amp;isStatic=false'" text="'_super'"></wipeout-docs.rl> method so that the method of the parent class is still invoked.</p>
