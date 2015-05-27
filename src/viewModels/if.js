@@ -10,7 +10,7 @@ Class("wipeout.viewModels.if", function () {
     };
     
     var _if = wipeout.viewModels.view.extend(function _if(ifTrueId, model) {
-        ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
+        ///<summary>Provides if/else functionality in a template</summary> 
         ///<param name="ifTrueId" type="String" optional="true">The template id if condition is true. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
@@ -30,9 +30,9 @@ Class("wipeout.viewModels.if", function () {
         ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
         this.ifFalseId = _if.blankTemplateId;
         
-        this.observe("ifTrueId", this.reEvaluate, this);
-        this.observe("ifFalseId", this.reEvaluate, this);
-        this.observe("condition", this.reEvaluate, this);
+        this.observe("ifTrueId", this.reEvaluate, {context: this});
+        this.observe("ifFalseId", this.reEvaluate, {context: this});
+        this.observe("condition", this.reEvaluate, {context: this});
         
         ///<Summary type="String">Anonymous version of ifTrueId</Summary>
         this.ifTrue = "";

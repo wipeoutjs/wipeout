@@ -12,6 +12,7 @@
 	<div id="qunit-fixture"></div>
 	<script src="lib/jquery/jquery-1.10.2.js"></script>
 	<script src="../build/wipeout.debug.js" data-cover></script>
+	<script type="application/javascript">wipeout.settings.bindingStrategy = wipeout.settings.bindingStrategies.onlyBindObservables;</script>
 
 	<script src="lib/qunit/qunit-1.17.1.js"></script>
 	<script src="lib/testUtils.js"></script>
@@ -54,6 +55,7 @@
 	
 	<script src="tests/integration/utils/domData.js"></script>
 	<script src="tests/integration/utils/find.js"></script>
+	<script src="tests/integration/utils/viewModels.js"></script>
 	
 	<script src="tests/integration/viewModels/contentControl.js"></script>
 	<script src="tests/integration/viewModels/if.js"></script>
@@ -68,6 +70,7 @@
 	<script src="tests/unit/events/routedEvent.js"></script>
 	<script src="tests/unit/events/routedEventModel.js"></script>
 	
+	<script src="tests/unit/htmlBindingTypes/bindingStrategy.js"></script>
 	<script src="tests/unit/htmlBindingTypes/ifTemplateProperty.js"></script>
 	<script src="tests/unit/htmlBindingTypes/nb.js"></script>
 	<script src="tests/unit/htmlBindingTypes/ow.js"></script>

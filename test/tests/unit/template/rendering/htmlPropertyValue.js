@@ -55,7 +55,7 @@ testUtils.testWithUtils("onElementEvent", null, true, function(methods, classes,
 	$("#qunit-fixture").html("<button></button>");
 	var button = $("#qunit-fixture")[0].firstChild;
 	var disp = subject.prime(button, new wipeout.template.context({}), function () {
-		subject.onElementEvent("click", new wipeout.template.context({}), function () {
+		subject.onElementEvent("click", function () {
 			ok(!executed);
 			executed = true;
 		});

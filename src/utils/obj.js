@@ -271,7 +271,7 @@ Class("wipeout.utils.obj", function () {
         ///<summary>The same as jQuery.extend</summary>
         ///<param name="extend" type="Object">The object to extend</param>
         ///<param name="extendWith" type="Object">The object to extend it with</param>
-        ///<returns type="Object">The object to extend</param>
+        ///<returns type="Object">The object to extend</returns>
 		
         if(extendWith && extend)
             for(var i in extendWith)

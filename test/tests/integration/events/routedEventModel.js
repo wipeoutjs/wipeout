@@ -40,7 +40,7 @@ test("routed event, from model", function() {
 
 				start();
 			});
-		}, null, {activateImmediately: true});
+		}, {activateImmediately: true});
 	};
 	
 	stop();

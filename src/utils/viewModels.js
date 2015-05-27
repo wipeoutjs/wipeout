@@ -9,8 +9,8 @@ Class("wipeout.utils.viewModels", function () {
         ///<returns type="String">The name</returns>
 
 		name = wmlElement instanceof Element ?
-			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(trimToLower( wmlElement.localName))) :
-			camelCase(trimToLower(wmlElement.name));
+			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(wmlElement.localName)) :
+			camelCase(trim(wmlElement.name));
 		
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};

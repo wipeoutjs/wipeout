@@ -80,7 +80,7 @@ test("prime and watch: pathObserver", function() {
 	
 	model.value = 0;
 	strictEqual(disp.length, 1);
-	ok(disp[0] instanceof busybody.observeTypes.pathObserver);
+	ok(disp[0].dispose instanceof Function);
 	
 	stop();
 });

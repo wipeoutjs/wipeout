@@ -1,10 +1,9 @@
-
 (function () {
  
 	var view = wipeout.viewModels.view;
     
     view.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>  
+        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>
         ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
         ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
         ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>

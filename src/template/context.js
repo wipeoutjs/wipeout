@@ -97,12 +97,16 @@ Class("wipeout.template.context", function () {
 		return args;
 	};
 	
-	context.prototype.getComputed = function (forFunction) {
+	context.prototype.getComputed = function (forFunction, options) {
 		///<summary>Get a computed from this and a given function</summary>
         ///<param name="forFunction" type="Function">The function</param>
+        ///<param name="options" type="Object" optional="True">The computed options</param>
         ///<returns type="busybody.observeTypes.computed">The computed</returns>
 		
-		return new busybody.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
+        options = options || {};
+        options.watchVariables = this.asWatchVariables();
+        
+		return new busybody.observeTypes.computed(forFunction, options);
 	}
 	
 	context.buildGetter = function (logic) {

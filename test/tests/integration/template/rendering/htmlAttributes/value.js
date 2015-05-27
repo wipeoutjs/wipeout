@@ -136,3 +136,185 @@ test("disposal", function() {
 	model.theVal = 456;
 	stop();
 });
+
+test("select, value, initial", function() {
+    
+    integrationTestSetup();
+    application.model = "2";
+    application.setTemplate = '<select id="theSelect" wo-value="$model">\
+    <option value="1" id="theOption1">the 1</option>\
+    <option value="2" id="theOption2">the 2</option>\
+</select>';
+    
+    application.onRendered = function () {
+        
+        var select = document.getElementById("theSelect"),
+            option1 = document.getElementById("theOption1"),
+            option2 = document.getElementById("theOption2");
+        
+        strictEqual(application.model, "2");
+        strictEqual(select.value, "2");
+        ok(option2.selected);
+        start();
+    }
+    
+    stop();
+});
+
+test("select, wo-value, initial", function() {
+    
+    integrationTestSetup();
+    application.model = 2;
+    application.setTemplate = '<select id="theSelect" wo-value="$model">\
+    <option wo-value="1" id="theOption1">the 1</option>\
+    <option wo-value="2" id="theOption2">the 2</option>\
+</select>';
+    
+    application.onRendered = function () {
+        
+        var select = document.getElementById("theSelect"),
+            option1 = document.getElementById("theOption1"),
+            option2 = document.getElementById("theOption2");
+        
+        strictEqual(application.model, 2);
+        strictEqual(select.value, "the 2");
+        ok(option2.selected);
+        start();
+    }
+    
+    stop();
+});
+
+test("select, option name, initial", function() {
+    
+    integrationTestSetup();
+    application.model = "the 2";
+    application.setTemplate = '<select id="theSelect" wo-value="$model">\
+    <option wo-value="1" id="theOption1">the 1</option>\
+    <option id="theOption2">the 2</option>\
+</select>';
+    
+    application.onRendered = function () {
+        
+        var select = document.getElementById("theSelect"),
+            option1 = document.getElementById("theOption1"),
+            option2 = document.getElementById("theOption2");
+        
+        strictEqual(application.model, "the 2");
+        strictEqual(select.value, "the 2");
+        ok(option2.selected);
+        start();
+    }
+    
+    stop();
+});
+
+var dispatchChangeEvent = function (element) {
+    var event = document.createEvent("UIEvents");
+    event.initUIEvent("change", true, true, null, 1);
+    element.dispatchEvent(event)
+}
+
+test("select, 3 types of options changing", function() {
+    
+    integrationTestSetup();
+    application.setTemplate = '<select id="theSelect" wo-value="$model">\
+    <option wo-value="1" id="theOption1">the 1</option>\
+    <option value="2" id="theOption2">the 2</option>\
+    <option id="theOption3">the 3</option>\
+</select>';
+    
+    application.onRendered = function () {
+        
+        var select = document.getElementById("theSelect"),
+            option1 = document.getElementById("theOption1"),
+            option2 = document.getElementById("theOption2"),
+            option3 = document.getElementById("theOption3");
+        
+        option1.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 0);
+        strictEqual(select.value, "the 1");
+        strictEqual(application.model, 1);
+        
+        option2.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 1);
+        strictEqual(select.value, "2");
+        strictEqual(application.model, "2");
+        
+        option3.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 2);
+        strictEqual(select.value, "the 3");
+        strictEqual(application.model, "the 3");
+        
+        start();
+    }
+    
+    stop();
+});
+
+test("select, select value changing", function() {
+    
+    integrationTestSetup();
+    application.setTemplate = '<select id="theSelect" wo-value="$model">\
+    <option wo-value="1" id="theOption1">the 1</option>\
+    <option value="2" id="theOption2">the 2</option>\
+    <option id="theOption3">the 3</option>\
+</select>';
+    
+    application.onRendered = function () {
+        
+        var select = document.getElementById("theSelect"),
+            option1 = document.getElementById("theOption1"),
+            option2 = document.getElementById("theOption2"),
+            option3 = document.getElementById("theOption3");
+        
+        var d = application.observe("model", function () {
+            setTimeout(function () {
+                d.dispose();
+                ok(option3.selected);
+                d = application.observe("model", function () {
+                    setTimeout(function () {
+                        d.dispose();
+                        ok(option2.selected);
+                        d = application.observe("model", function () {
+                            setTimeout(function () {
+                                d.dispose();
+                                ok(option1.selected);
+                                start();
+                            });
+                        });
+                        application.model = 1;
+                    });
+                });
+                application.model = 2;
+            });
+        });
+        application.model = "the 3";
+        return;
+        
+        option1.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 0);
+        strictEqual(select.value, "the 1");
+        strictEqual(application.model, 1);
+        
+        option2.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 1);
+        strictEqual(select.value, "2");
+        strictEqual(application.model, "2");
+        
+        option3.selected = true;
+        dispatchChangeEvent(select);
+        strictEqual(select.selectedIndex, 2);
+        strictEqual(select.value, "the 3");
+        strictEqual(application.model, "the 3");
+        
+        start();
+    }
+    
+    stop();
+});

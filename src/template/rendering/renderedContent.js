@@ -55,7 +55,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.disposeOfBindings = ra.dispose.bind(ra);
 		
         if (array instanceof busybody.array)
-            ra.registerDisposable(array.observe(ra.render, ra, {useRawChanges: true}));
+            ra.registerDisposable(array.observe(ra.render, {context: ra, useRawChanges: true}));
 		
 		ra.render([{
 			type: "splice",
@@ -91,7 +91,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
 				this.viewModel.$synchronusTemplateChange.register(this.templateHasChanged, this));
 			
             this.viewModel.$domRoot = this;
-            this.templateObserved = this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});
+            this.templateObserved = this.viewModel.observe("templateId", this._template, {context: this, activateImmediately: true});
 			
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);

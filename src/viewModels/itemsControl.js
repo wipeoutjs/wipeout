@@ -32,7 +32,7 @@ Class("wipeout.viewModels.itemsControl", function () {
 				if (vm.__createdByItemsControl)
 					vm.templateId = newVal;
 			});
-        }, this);
+        }, {context: this});
     });
     
     itemsControl.addGlobalParser("itemTemplate", "template");

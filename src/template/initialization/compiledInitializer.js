@@ -140,13 +140,17 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		if (property) {
 			disposal = this.applyToViewModel(property, viewModel, renderContext);
 		} else {
+			// set bindingStrategy as it affects other properties
+			disposal = this.setters.bindingStrategy ?
+				this.applyToViewModel("bindingStrategy", viewModel, renderContext) :
+                [];
+            
 			// only auto set model if model wasn't already set
-			disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
-				[] :
-				this.applyToViewModel("model", viewModel, renderContext);
+            if (this.setters.model !== compiledInitializer.modelSetter || viewModel.model == null)
+				disposal.push.apply(disposal, this.applyToViewModel("model", viewModel, renderContext));
 
 			for (var name in this.setters)
-				if (name !== "model")
+				if (name !== "bindingStrategy" && name !== "model")
 					disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
 		}
 		

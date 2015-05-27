@@ -130,6 +130,22 @@ test("basic with method, value, dynamic value, static method, static property", 
 	strictEqual(vms.test.staticValue, staticValue);
 });
 
+test("binding types", function() {
+    
+	// arrange
+	wo.viewModel("vms.test1").onlyBindObservables().build();
+	wo.viewModel("vms.test2").bindNonObservables().build();
+	wo.viewModel("vms.test3").createObservables().build();
+		
+	// act
+	// assert
+	strictEqual(new vms.test1().$bindingStrategy, wipeout.settings.bindingStrategies.onlyBindObservables);
+	strictEqual(new vms.test2().$bindingStrategy, wipeout.settings.bindingStrategies.bindNonObservables);
+	strictEqual(new vms.test3().$bindingStrategy, wipeout.settings.bindingStrategies.createObservables);
+    
+    delete window.vms;
+});
+
 test("templateId with eager load", function() {
 	// arrange
 	// act

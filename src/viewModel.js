@@ -237,8 +237,19 @@ function viewModel (name, extend, doNotWarn) {
 			bindingTypes[propertyName] = bindingType;
 			return output;
 		},
+        
+        // binding strategies
+        onlyBindObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.onlyBindObservables);
+        },
+        bindNonObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.bindNonObservables);
+        },
+        createObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.createObservables);
+        },
 
-		// convenience functions
+		// lifecycle functions
 		templateId: function (templateId, eagerLoad) {
 			///<summary>Add a default template id</summary>
 			///<param name="templateId" type="String">The template id</param>

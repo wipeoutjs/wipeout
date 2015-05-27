@@ -17,7 +17,7 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
         this.templateId = templateId;
         
-        this.observe("model", this._onModelChanged, this, {activateImmediately: true});
+        this.observe("model", this._onModelChanged, {context: this, activateImmediately: true});
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
@@ -29,6 +29,8 @@ Class("wipeout.viewModels.view", function () {
 		this.$synchronusTemplateChange = new wipeout.events.event();
     });
 	
+    view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
+    
     view.addGlobalBindingType("shareParentScope", "shareParentScope");
 	
     view.addGlobalParser("id", "string");
