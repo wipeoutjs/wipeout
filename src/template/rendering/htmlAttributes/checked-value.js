@@ -56,8 +56,7 @@ HtmlAttr("checked-value", function () {
         set(true);
         
 		attribute.onElementEvent(
-            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
-            renderContext, 
+            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change",
             set);
         
         // if value changes, update checked value

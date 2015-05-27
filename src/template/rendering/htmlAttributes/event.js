@@ -19,7 +19,7 @@ HtmlAttr("event", function () {
 		
 		if (!test(attribute.name)) return;
 		
-		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6), renderContext);
+		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6));
     };
 	
 	return event;
@@ -38,7 +38,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 			///<param name="renderContext" type="wipeout.template.context">The current context</param>
 			///<returns type="Function">A dispose function</returns>
 			
-			attribute.onElementEvent(event, renderContext);
+			attribute.onElementEvent(event);
 		};
 	});
 });

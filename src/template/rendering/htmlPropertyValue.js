@@ -22,20 +22,19 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	};
 	
 	 //TODE
-	htmlPropertyValue.prototype.onElementEvent = function (event, renderContext, callback, capture) {
+	htmlPropertyValue.prototype.onElementEvent = function (event, callback, capture) {
 		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
         ///<param name="event" type="String">The event</param>
-        ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
         ///<param name="callback" type="Function" optional="true">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback. If null, will use the callback set in the property</param>
         ///<param name="capture" type="Boolean">Capture the event within this element</param>
         ///<returns type="Function">A dispose function to dispose prematurely</returns>
 		
 		this.primed();
 		
-		var element = this.propertyOwner;
+		var element = this.propertyOwner, rc = this.renderContext;
 		callback = callback || (function (e) {
 			e.preventDefault();
-			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
+			this.eventBuild().apply(null, rc.asEventArgs(e, element));
 		}).bind(this);
 						
         element.addEventListener(event, callback, capture || false);

@@ -19,6 +19,8 @@ expose("definitelyNotAViewModel", wipeout.utils.viewModels.definitelyNotAViewMod
 
 expose("addHtmlAttribute", SimpleHtmlAttr);
 
+expose("findFilters", wipeout.utils.find);
+
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
 });

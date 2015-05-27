@@ -11,7 +11,7 @@ Class("wipeout.settings", function() {
         enumerateObj(settings, function(setting, i) {
             if (i === "bindingStrategies") return;
             wipeout.settings[i] = setting;
-        });        
+        });
     }
 
     settings.asynchronousTemplates = true;

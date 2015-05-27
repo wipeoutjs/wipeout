@@ -1,5 +1,5 @@
-wipeout-1
+wipeout
 =========
 
-A pure MVVM javascript framework based on knockout.
+A pure and powerful MVVM.
 See http://wipeoutjs.github.io/wipeout for details

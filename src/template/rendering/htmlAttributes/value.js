@@ -40,8 +40,7 @@ HtmlAttr("value", function () {
         
         var setter = attribute.setter();
 		attribute.onElementEvent(
-            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change", 
-            renderContext, 
+            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change",
             function () {
                 var selected = select.options[select.selectedIndex], optionValue;
                 
@@ -111,7 +110,7 @@ HtmlAttr("value", function () {
         }, true);
 		
         var setter = attribute.setter();
-		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", renderContext, function () {
+		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", function () {
 			setter(textarea ? element.innerHTML : element.value);
         });
     }
