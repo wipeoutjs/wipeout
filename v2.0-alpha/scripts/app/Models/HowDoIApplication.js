@@ -162,7 +162,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Regexp Parser", "regexp-parser"),
                 new articleLink("String Parser", "string-parser"),
                 new articleLink("Create a custom parser", "custom-parser")
-		]}, {        
+		]}, {
             header: new articleLink("Binding Filters", "filters"),
             items: [
                 new articleLink("A List Filter", "list-filter"),
