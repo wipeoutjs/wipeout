@@ -179,10 +179,8 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
             ]),
             new wipeoutDocs.models.components.treeViewBranch("events", null, [
 				ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.event"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEvent"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventArgs"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventModel"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventRegistration")
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.events.routedEventModel")
 			]),
             new wipeoutDocs.models.components.treeViewBranch("htmlBindingTypes", null, [
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.htmlBindingTypes.ifTemplateProperty"),
@@ -264,13 +262,13 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
             ApiApplication.treeViewBranchFor(woApi, "wo.addHtmlAttribute"),
 			ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
-            //ApiApplication.treeViewBranchFor(woApi, "wo.event"),
             ApiApplication.treeViewBranchFor(woApi, "wo.filters"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.findFilters"),
             ApiApplication.treeViewBranchFor(woApi, "wo.if"),
             ApiApplication.treeViewBranchFor(woApi, "wo.bindings"),
             ApiApplication.treeViewBranchFor(woApi, "wo.itemsControl"),
             ApiApplication.treeViewBranchFor(woApi, "wo.parsers"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.routedEvent"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.triggerEvent"),
             ApiApplication.treeViewBranchFor(woApi, "wo.view")
         ]);
         

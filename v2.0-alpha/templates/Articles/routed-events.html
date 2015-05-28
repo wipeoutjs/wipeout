@@ -6,49 +6,50 @@ parents, grandparents etc... until the event reaches the root viewModel</p>
 the ancestor viewModel will recieve any events triggered by it's decendants</p>
 
 
-<wipeout-docs.view-models.components.js-js-code-block>
-        <code>// this class triggers a custom routed event
-window.triggerEvent = wo.contentControl.extend({
-    constructor: function triggerEvent() {
-        this._super();
-    },
-    trigger: function() {
-        this.triggerRoutedEvent(triggerEvent.routedEvent);
-    },
-    statics: {
-        routedEvent: wo.routedEvent()
-    }
-});
+<wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// the routed event
+var myRoutedEvent = "increment";
+
+// this class triggers a custom routed event
+var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.contentControl)
+    .build();
+
+triggerEvent.trigger = function() {
+    this.triggerRoutedEvent(myRoutedEvent);
+};
             
 // this class subscribes to a custom routed event
-window.subscribeToEvent = wo.contentControl.extend({
-    constructor: function subscribeToEvent() {
-        this._super();
-            
-        this.routedEventTriggered = ko.observable(0);
-        this.registerRoutedEvent(triggerEvent.routedEvent, this.onRoutedEvent, this);
-    },
-    onRoutedEvent: function(args) {            
-        this.routedEventTriggered(this.routedEventTriggered() + 1);
-    }
-});</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'routed-events-script-1'">
-        <code parser="s">&lt;subscribe-to-event>
+var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.contentControl)
+    .initialize(function () {
+        this.routedEventTriggered = 0;
+        this.registerRoutedEvent(myRoutedEvent, this.onRoutedEvent, this);
+    })
+    .build();
+
+triggerEvent.onRoutedEvent = function(args) {
+    args.handled = true;
+    this.routedEventTriggered++;
+};</code>
+    </wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'routed-events-script-1'">
+    <code parser="s">&lt;demo-app.subscribe-to-event>
     &lt;set-template>
         &lt;div>
-            Routed event triggered: &lt;span data-bind="text: routedEventTriggered">&lt;/span> times
+            Routed event triggered: &lt;span wo-content="$this.routedEventTriggered">&lt;/span> times
         &lt;/div>
-        &lt;trigger-event>            
+        &lt;demo-app.trigger-event>            
             &lt;set-template>
-                &lt;button data-bind="click: trigger">Trigger routed event&lt;/button>
+                &lt;button wo-click="$this.trigger">Trigger routed event&lt;/button>
             &lt;/set-template>
-        &lt;/trigger-event>
+        &lt;/demo-app.trigger-event>
     &lt;/set-template>
-&lt;/subscribe-to-event></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
+&lt;/demo-app.subscribe-to-event></code>
+</wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'routed-events-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
+    </wipeout-docs.view-models.components.usage-code-block>
+<p>In the above example setting <code>args.handled = true;</code> will stop the event bubbling up to any more view models.</p>
+<br />
+<br />

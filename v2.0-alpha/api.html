@@ -234,30 +234,6 @@ myViewModel.function2 = function () {
     </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
-<script id="Articles.advanced-events" type="text/template">
-<h1>Advanced events</h1>
-
-    <p>The event <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.event&amp;functionName=register&amp;isStatic=false'" text="'register'" /> method also accepts other arguments to control the flow of the event.
-        See the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.event&amp;functionName=register&amp;isStatic=false'" text="'API'" /> for more details.
-</p>
-
-</script>
-
-<script id="Articles.advanced-routed-events" type="text/template">
-<h1>Advanced routed events</h1>
-
-    <p>The routed event <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.visual&amp;functionName=registerRoutedEvent&amp;isStatic=false'" text="'register'" />
-        method also accepts other arguments to control the flow of the event.</p>
-    <p>The <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs'" text="'routed event args'" /> class contains three properties:
-        <ol>
-            <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=data&amp;isStatic=false'" text="'data'" />: the event args passed in when the event was triggered.</li>
-            <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=originator&amp;isStatic=false'" text="'originator'" />: The viewModel which triggered the event.</li>
-            <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.routedEventArgs&amp;propertyName=handled&amp;isStatic=false'" text="'handled'" />: If set to true, the event will stop bubbling up the chain.</li>
-</ol>
-</p>
-
-</script>
-
 <script id="Articles.another-extend-syntax" type="text/template">
 <h1>An alternate extend syntax</h1>
 
@@ -1542,29 +1518,41 @@ Binding:
 <script id="Articles.events" type="text/template">
 <h1>Wipeout events</h1>
 
-    <p>Wipeout has a build in <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.event'" text="'eventing system'" />.</p>
+<p>Models can communicate with view modes through the use of events.</p>
 
 
-    <wipeout-docs.view-models.components.js-js-code-block>
-        <code>
-var theEvent = wo.event();
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .initialize(function () {
         
-function theEventHandler(args) {
-    console.log(args);
+        this.registerEvent("model", "eventName1", function (eventArgs, model) {
+            // the model has fired an event
+        });
+        
+        this.registerEvent("model.modelProperty", "eventName2", function (eventArgs, modelProperty) {
+            // the modelProperty has fired an event
+        });
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In the example above the model has subscribed to the <code>eventName1</code> event of it's <code>model</code> and the <code>eventName2</code> event of the <code>modelProperty</code> of it's <code>model</code>. <code>registerEvent</code> is described <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;functionName=registerEvent&amp;isStatic=false'" text="'here'"></wipeout-docs.rl>.</p>
+<p>To trigger an event you use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.triggerEvent'" text="'wo.triggerEvent'"></wipeout-docs.rl> function.</p>
+
+<wipeout-docs.view-models.components.code-block highlight--s="triggerEvent">
+    <code parser="s">var model = {
+    pokeViewModel: function (eventArgs) {
+        wo.triggerEvent(this, "eventName1", eventArgs);
+    },
+    modelProperty: {
+        pokeViewModel: function (eventArgs) {
+            wo.triggerEvent(this, "eventName2", eventArgs);
+        }
+    }
 }
-        
-var dispose = theEvent.register(theEventHandler);
-        
-// will log "Hello wipeout!"
-theEvent.trigger("Hello wipeout!");
-        
-dispose.dispose();
-            
-// will not log anything
-theEvent.trigger("Hello wipeout!");
-        
-        </code>
-    </wipeout-docs.view-models.components.js-js-code-block>
+
+model.pokeViewModel({});
+model.modelProperty.pokeViewModel({});</code>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.filters" type="text/template">
@@ -2645,22 +2633,22 @@ Attribute:
 <h1>The if control</h1>
 
 <p>
-    If/else functionality in a wipeout template is handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'wo.if'" /> control.
+    If/else functionality in a wipeout template is handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'wo.if'"></wipeout-docs.rl> control.
 </p>
 
     <wipeout-docs.view-models.components.code-block>
         <code parser="s">&lt;wo.if condition="true">
-    &lt;set-template>
+    &lt;if-true>
         The condition is true
-    &lt;/set-template>
-    &lt;else-template>
+    &lt;/if-true>
+    &lt;if-false>
         The condition is false
-    &lt;/else-template>
+    &lt;/if-false>
 &lt;/wo.if></code>
     </wipeout-docs.view-models.components.code-block>
 
 <p>
-    One thing to note, is that <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
+    One thing to note, is that <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'"></wipeout-docs.rl> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
     You can explicitly set this property to false in the template definition if this is not required.
 </p>
 </script>
@@ -3443,52 +3431,53 @@ parents, grandparents etc... until the event reaches the root viewModel</p>
 the ancestor viewModel will recieve any events triggered by it's decendants</p>
 
 
-<wipeout-docs.view-models.components.js-js-code-block>
-        <code>// this class triggers a custom routed event
-window.triggerEvent = wo.contentControl.extend({
-    constructor: function triggerEvent() {
-        this._super();
-    },
-    trigger: function() {
-        this.triggerRoutedEvent(triggerEvent.routedEvent);
-    },
-    statics: {
-        routedEvent: wo.routedEvent()
-    }
-});
+<wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// the routed event
+var myRoutedEvent = "increment";
+
+// this class triggers a custom routed event
+var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.contentControl)
+    .build();
+
+triggerEvent.trigger = function() {
+    this.triggerRoutedEvent(myRoutedEvent);
+};
             
 // this class subscribes to a custom routed event
-window.subscribeToEvent = wo.contentControl.extend({
-    constructor: function subscribeToEvent() {
-        this._super();
-            
-        this.routedEventTriggered = ko.observable(0);
-        this.registerRoutedEvent(triggerEvent.routedEvent, this.onRoutedEvent, this);
-    },
-    onRoutedEvent: function(args) {            
-        this.routedEventTriggered(this.routedEventTriggered() + 1);
-    }
-});</code>
-    </wipeout-docs.view-models.components.js-js-code-block>
-    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'routed-events-script-1'">
-        <code parser="s">&lt;subscribe-to-event>
+var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.contentControl)
+    .initialize(function () {
+        this.routedEventTriggered = 0;
+        this.registerRoutedEvent(myRoutedEvent, this.onRoutedEvent, this);
+    })
+    .build();
+
+triggerEvent.onRoutedEvent = function(args) {
+    args.handled = true;
+    this.routedEventTriggered++;
+};</code>
+    </wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'routed-events-script-1'">
+    <code parser="s">&lt;demo-app.subscribe-to-event>
     &lt;set-template>
         &lt;div>
-            Routed event triggered: &lt;span data-bind="text: routedEventTriggered">&lt;/span> times
+            Routed event triggered: &lt;span wo-content="$this.routedEventTriggered">&lt;/span> times
         &lt;/div>
-        &lt;trigger-event>            
+        &lt;demo-app.trigger-event>            
             &lt;set-template>
-                &lt;button data-bind="click: trigger">Trigger routed event&lt;/button>
+                &lt;button wo-click="$this.trigger">Trigger routed event&lt;/button>
             &lt;/set-template>
-        &lt;/trigger-event>
+        &lt;/demo-app.trigger-event>
     &lt;/set-template>
-&lt;/subscribe-to-event></code>
-    </wipeout-docs.view-models.components.new-template-code-block>
+&lt;/demo-app.subscribe-to-event></code>
+</wipeout-docs.view-models.components.new-template-code-block>
 
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'routed-events-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block> 
+    </wipeout-docs.view-models.components.usage-code-block>
+<p>In the above example setting <code>args.handled = true;</code> will stop the event bubbling up to any more view models.</p>
+<br />
+<br />
 </script>
 
 <script id="Articles.set-boolean-property" type="text/template">
@@ -3731,7 +3720,7 @@ Binding:
 <script id="Articles.share-parent-scope" type="text/template">
 <h1>Share parent scope</h1>
 
-<p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if'" text="'if'"></wipeout-docs.rl>(TODOD better link)
+<p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=if-control'" text="'wo.if'"></wipeout-docs.rl>
  control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>wo-value="$parents[4].value"</code> which is an indicator
 of un-needed scope.</p>
     <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code> in a template definition or as a value in the view model definition.</p>

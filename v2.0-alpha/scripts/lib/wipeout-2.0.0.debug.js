@@ -2836,11 +2836,9 @@ Class("busybody.utils.observeCycleHandler", function () {
 		///<summary>Make an object observable</summary>
 		///<param name="object" type="Object">The object</param>
 		///<returns type="Object">The object</returns>
-		        
+		
         if (!arguments.length)
             object = {};
-        else if (!object)
-            return object;
         
 		if (object instanceof busybody.array) {
 			if (busybody.getObserver(object)) 
@@ -3454,7 +3452,7 @@ Class("wipeout.settings", function() {
         enumerateObj(settings, function(setting, i) {
             if (i === "bindingStrategies") return;
             wipeout.settings[i] = setting;
-        });        
+        });
     }
 
     settings.asynchronousTemplates = true;
@@ -3891,6 +3889,20 @@ Class("wipeout.utils.dictionary", function () {
         return this.__keyArray;
     };
     
+    dictionary.prototype.values = function () {
+        ///<summary>Get all of the values in the dictionary</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.values_unsafe().slice();
+    };
+    
+    dictionary.prototype.values_unsafe = function () {
+        ///<summary>Get all of the values in the dictionary. DO NOT MODIFY THIS ARRAY</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.__valueArray;
+    };
+    
     dictionary.prototype.remove = function (key) {
         ///<summary>Remove a value from the dictionary</summary>
         ///<param name="key" type="Any">The key</param>
@@ -3913,6 +3925,13 @@ Class("wipeout.utils.dictionary", function () {
         ///<returns type="Any">The value</returns>
 		
         return this.__valueArray[this.__keyArray.indexOf(key)];
+    };
+    
+    dictionary.prototype.clear = function () {
+        ///<summary>Empty the dictionary</summary>
+        
+        this.__valueArray.length = 0;
+        this.__keyArray.length = 0;
     };
     
     return dictionary;
@@ -4089,13 +4108,9 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
-
-        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.$routedEventSubscriptions = [];
-		
-        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
-		this.$synchronusTemplateChange = new wipeout.events.event();
     });
+    
+    view.$synchronusTemplateChangeEvent = "$synchronusTemplateChange";
 	
     view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
     
@@ -4141,7 +4156,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
         
-        if(oldValue !== newValue)
+        if (oldValue !== newValue)
 			this.onModelChanged(newValue);
 	};
 	
@@ -4152,17 +4167,18 @@ Class("wipeout.viewModels.view", function () {
 		this.disposeOf(this.$modelRoutedEventKey);
 		this.$modelRoutedEventKey = null;
 
-		if(newValue instanceof wipeout.events.routedEventModel) {
-			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+		if (newValue instanceof wipeout.events.routedEventModel) {
+            var d1 = wipeout.events.event.instance.register(newValue, 
+                                                     wipeout.events.routedEventModel.triggerRoutedEvent, 
+                                                     this._onModelRoutedEvent, 
+                                                     this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
-        ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
-        
-        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
+        ///<param name="eventArgs" type="ObjectArgs" optional="false">The routed event args</param>
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };
@@ -4173,9 +4189,8 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
-			event.dispose();
-		});
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.dispose();
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {
@@ -4185,7 +4200,7 @@ Class("wipeout.viewModels.view", function () {
 		if (arguments.length)
 			this.templateId = templateId;
 		
-		this.$synchronusTemplateChange.trigger();
+        wipeout.events.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
@@ -4253,89 +4268,6 @@ Class("wipeout.viewModels.view", function () {
     return view;
 });
 
-
-
-Class("wipeout.events.routedEvent", function () {
-    
-    var routedEvent = function routedEvent() {
-        ///<summary>A routed event is triggered on a view and travels up to ancestor views all the way to the root of the application</summary>
-        
-        // allow for non use of the new key word
-        if(!(this instanceof routedEvent))
-           return new routedEvent();
-    };
-
-    routedEvent.prototype.trigger = function(triggerOnView, eventArgs) {
-        ///<summary>Trigger a routed event on a view</summary>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view where the routed event starts</param>
-        ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
-        
-        triggerOnView.triggerRoutedEvent(this, new wipeout.events.routedEventArgs(eventArgs, triggerOnView));
-    };
-    
-    routedEvent.prototype.unRegister = function (callback, triggerOnView, context /* optional */) {
-        ///<summary>Unregister a routed event on a view</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view passed into the register function</param>
-        ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-        return triggerOnView.unRegisterRoutedEvent(this, callback, context);
-    };
-    
-    routedEvent.prototype.register = function(callback, triggerOnView, context /* optional */) {
-        ///<summary>Register a routed event on a view</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view registered to the routed event</param>
-        ///<param name="context" type="Any" optional="true">The context "this" to use within the callback</param>
-        ///<returns type="wo.eventRegistration">A dispose function</returns>         
-        
-        return triggerOnView.registerRoutedEvent(this, callback, context);
-    };
-    
-    return routedEvent;
-});
-
-Class("wipeout.events.routedEventArgs", function () {
-    
-    var routedEventArgs = function routedEventArgs(eventArgs, originator) { 
-        ///<summary>Arguments passed to routed event handlers. Set handled to true to stop routed event propogation</summary>
-        ///<param name="eventArgs" type="Any" optional="true">The inner event args</param>
-        ///<param name="originator" type="Any" optional="false">A pointer to event raise object</param>
-        
-        ///<Summary type="Boolean">Signals whether the routed event has been handled and should not propagate any further</Summary>
-        this.handled = false;
-        
-        ///<Summary type="Any">The original event args used when the routedEvent has been triggered</Summary>
-        this.data = eventArgs;
-        
-        ///<Summary type="Any">The object which triggered the event</Summary>
-        this.originator = originator;
-    };
-    
-    return routedEventArgs;
-});
-    
-
-Class("wipeout.events.routedEventRegistration", function () {
-    
-    var routedEventRegistration = function routedEventRegistration(routedEvent) {  
-        ///<summary>Holds routed event registration details</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
-        
-        ///<Summary type="wo.routedEvent">The routed event</Summary>
-        this.routedEvent = routedEvent;
-        
-        ///<Summary type="wo.event">An inner event to handler triggering callbacks</Summary>
-        this.event = new wipeout.events.event();        
-    };
-    
-    routedEventRegistration.prototype.dispose = function() {
-        ///<summary>Dispose of the callbacks associated with this registration</summary>
-        this.event.dispose();
-    };
-    
-    return routedEventRegistration;
-});
 
 
 Class("wipeout.template.rendering.renderedContent", function () {
@@ -4427,7 +4359,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
 			this.templateChangeKey = this.registerDisposable(
-				this.viewModel.$synchronusTemplateChange.register(this.templateHasChanged, this));
+                wipeout.events.event.instance.register(this.viewModel, wipeout.viewModels.view.$synchronusTemplateChangeEvent, this.templateHasChanged, this));
 			
             this.viewModel.$domRoot = this;
             this.templateObserved = this.viewModel.observe("templateId", this._template, {context: this, activateImmediately: true});
@@ -4943,192 +4875,171 @@ Class("wipeout.debug", function () {
     }
 });
 
-
-Class("wipeout.events.eventRegistration", function () {
+Class("wipeout.events.event", function() {
     
-    return busybody.disposable.extend(function eventRegistration(callback, context, dispose) {
-        ///<summary>On object containing event registration details</summary>
-        ///<param name="callback" type="Any" optional="false">The event logic</param>
-        ///<param name="context" type="Any" optional="true">The context of the event logic</param>
-        ///<param name="dispose" type="Function" optional="false">A dispose function</param>
-        ///<param name="priority" type="Number">The event priorty. The lower the priority number the sooner the callback will be triggered.</param>
-        this._super();    
-               
-        ///<Summary type="Function">The callback to use when the event is triggered</Summary>
-        this.callback = callback;
-        
-        ///<Summary type="Any">The context to usse with the callback when the event is triggered</Summary>
-        this.context = context;                
-        
-        this.registerDisposeCallback(dispose);
-    });
-});
-
-Class("wipeout.events.event", function () {
-    
-    var event = function event() {
-        ///<summary>Defines a new event with register and trigger functinality</summary>
-        
-        // allow for non use of the new key word
-        if(!(this instanceof event))
-           return new event();
-        
-        ///<Summary type="Array" generic0="wipeout.events.eventRegistration">Array of callbacks to fire when event is triggered</Summary>
-        this._registrations = [];
-    };
-
-    event.prototype.trigger = function(eventArgs) {
-        ///<summary>Trigger the event, passing the eventArgs to each subscriber</summary>
-        ///<param name="eventArgs" type="Any" optional="true">The arguments to pass to event handlers</param>
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(eventArgs instanceof wipeout.events.routedEventArgs && eventArgs.handled) return;
-            
-            this._registrations[i].callback.call(this._registrations[i].context, eventArgs);
-        }
-    };
-    
-    event.prototype.unRegister = function (callback, context /* optional */) {
-        ///<summary>Un subscribe to an event. The callback and context must be the same as those passed in the original registration</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
-        
-        context = context == null ? window : context;
-        for(var i = 0; i < this._registrations.length; i++) {
-            if(this._registrations[i].callback === callback && this._registrations[i].context === context) {
-                this._registrations.splice(i, 1);
-                i--;
-            }
-        }
+    function eventDictionary () {
+        this.objects = new wipeout.utils.dictionary();
     }
     
-    event.prototype.dispose = function() {
-        ///<summary>Dispose of the event</summary>
-        this._registrations.length = 0;
+    eventDictionary.prototype.add = function (forObject, event, callback) {
+        
+        var objectCallbacks;
+        if (!(objectCallbacks = this.objects.value(forObject)))
+            this.objects.add(forObject, objectCallbacks = {});
+        
+        if (!objectCallbacks[event])
+            objectCallbacks[event] = [callback];
+        else
+            objectCallbacks[event].push(callback);
+        
+        return new busybody.disposable((function () {
+            var tmp, objectCallbacks = this.objects.value(forObject);
+
+            if (objectCallbacks && objectCallbacks[event] && (tmp = objectCallbacks[event].indexOf(callback)) !== -1) {
+                objectCallbacks[event].splice(tmp, 1);
+                if (!objectCallbacks[event].length) {
+                    delete objectCallbacks[event];
+                    for (var i in objectCallbacks)
+                        return;
+                    
+                    this.objects.remove(forObject);
+                }
+            }
+        }).bind(this));
+    };
+    
+    eventDictionary.prototype.callbacks = function (forObject, event) {
+        var tmp;
+        return (tmp = this.objects.value(forObject)) && tmp[event];
+    };
+    
+    function event () {
+        ///<summary>Handles events for wipeout objects</summary>
+        
+        this.dictionary = new eventDictionary();
     }
     
-    event.prototype.register = function(callback, context, priority) {
-        ///<summary>Subscribe to an event</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="context" type="Any" optional="true">The context "this" to use within the calback</param>
-        ///<param name="priority" type="Number" optional="true">The event priorty. The lower the priority number the sooner the callback will be triggered. The default is 0</param>
-        ///<returns type="wo.eventRegistration">An object with the details of the registration, including a dispose() function</returns>
+    var registerForAll = {};
+    event.prototype.registerForAll = function (event, callback, context, priority) {
+        ///<summary>Register an event triggered on all objects.</summary>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
         
-        if(!(callback instanceof Function))
-            throw "Invalid event callback";
-        
-        if(priority && !(priority instanceof Number))
-            throw "Invalid event priority";
-        
-        var reg = this._registrations;
-        var evnt = { 
-            priority: priority || 0,
-            callback: callback, 
-            context: context == null ? window : context,
-            dispose: function() {
-                if (!evnt) return;
-                
-                var index = reg.indexOf(evnt);
-                if(index >= 0)
-                    reg.splice(index, 1);
-                
-                evnt = null;
-            }
-        };
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(evnt.priority < this._registrations[i].priority) {
-                this._registrations.splice(i, 0, evnt);
-                break;
-            }
-        }
-        
-        if(i === ii)
-            this._registrations.push(evnt);
-        
-        return new wipeout.events.eventRegistration(evnt.callback, evnt.context, evnt.dispose, evnt.priority);
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(registerForAll, event, callback);
     };
+    
+    event.prototype.register = function (forObject, event, callback, context, priority) {
+        ///<summary>Register an event.</summary>
+        ///<param name="forObject" type="Object">The object which will fire the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
+        
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(forObject, event, callback);
+    };
+    
+    event.prototype.trigger = function (forObject, event, eventArgs) {
+        ///<summary>Trigger an event.</summary>
+        ///<param name="forObject" type="Object">The object triggering the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+        
+        var callbacks = this.dictionary.callbacks(forObject, event) || [];
+        callbacks.push.apply(callbacks, this.dictionary.callbacks(registerForAll, event));
+        
+        callbacks.sort(function (a, b) {
+            return a.priority < b.priority;
+        });
+
+        enumerateArr(callbacks, function (callback) {
+            callback(eventArgs, forObject);
+        }, this);
+    };
+    
+    event.prototype.dispose = function () {
+        ///<summary>Dispose of all event handlers.</summary>
+        
+        this.dictionary.objects.clear();
+    };
+    
+    event.instance = new event();
     
     return event;
+});
+
+Class("wipeout.events.routedEventArgs", function () {
+    
+    var routedEventArgs = function routedEventArgs(eventArgs, originator) { 
+        ///<summary>Arguments passed to routed event handlers. Set handled to true to stop routed event propogation</summary>
+        ///<param name="eventArgs" type="Any" optional="true">The inner event args</param>
+        ///<param name="originator" type="Any" optional="false">A pointer to event raise object</param>
+        
+        ///<Summary type="Boolean">Signals whether the routed event has been handled and should not propagate any further</Summary>
+        this.handled = false;
+        
+        ///<Summary type="Any">The original event args used when the routedEvent has been triggered</Summary>
+        this.data = eventArgs;
+        
+        ///<Summary type="Any">The object which triggered the event</Summary>
+        this.originator = originator;
+    };
+    
+    return routedEventArgs;
 });
 
 
 Class("wipeout.events.routedEventModel", function () {
     
+    //TODO: disposal
     
+    var routedEventName = "routed-event";
     var routedEventModel = orienteer.extend(function routedEventModel() {
         ///<summary>The base class for models if they wish to invoke routed events on their viewModel</summary>
         
 		this._super();
-		
-        ///<Summary type="wo.event">The event which will trigger a routed event on the owning view</Summary>
-        this.__triggerRoutedEventOnVM = new wipeout.events.event();
-        
-        ///<Summary type="Array" generic0="wo.routedEventRegistration">A placeholder for event subscriptions on this model</Summary>
-        this.__routedEventSubscriptions = [];
     });
+    
+    routedEventModel.triggerRoutedEvent = "__triggerRoutedEventOnVM";
         
     routedEventModel.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event which will propogate to any view models where this object is it's model and continue to bubble from there</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
         
         // Used by wo.model to acertain when a routed event should be fired
-        this.__triggerRoutedEventOnVM.trigger({routedEvent: routedEvent, eventArgs: eventArgs});
+        wipeout.events.event.instance.trigger(this, routedEventModel.triggerRoutedEvent, {routedEvent: routedEvent, eventArgs: eventArgs});
     };        
         
     routedEventModel.prototype.routedEventTriggered = function(routedEvent, eventArgs) {
         ///<summary>Called by the owning view model when a routed event is fired</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
                 
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
-        }
+        if (!this.__routedEventSubscriptions || eventArgs.handled)
+            return;
+        
+        this.__routedEventSubscriptions.trigger(routedEvent, routedEventName, routedEvent);
     };        
     
     routedEventModel.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.__routedEventSubscriptions[i];
-                break;
-            }
-        }
-
-        if(!rev) {
-            rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.__routedEventSubscriptions.push(rev);
-        }
-
-        return rev.event.register(callback, callbackContext, priority);
-    };
-    
-    routedEventModel.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>  
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
-        ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
-            }
-        }  
-
-        return false;
+        if (!this.__routedEventSubscriptions)
+            this.__routedEventSubscriptions = new wipeout.events.event();
+        
+        return this.__routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext || this, priority);
     };
     
     return routedEventModel;
@@ -6373,8 +6284,7 @@ HtmlAttr("checked-value", function () {
         set(true);
         
 		attribute.onElementEvent(
-            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
-            renderContext, 
+            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change",
             set);
         
         // if value changes, update checked value
@@ -6520,7 +6430,7 @@ HtmlAttr("event", function () {
 		
 		if (!test(attribute.name)) return;
 		
-		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6), renderContext);
+		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6));
     };
 	
 	return event;
@@ -6539,7 +6449,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 			///<param name="renderContext" type="wipeout.template.context">The current context</param>
 			///<returns type="Function">A dispose function</returns>
 			
-			attribute.onElementEvent(event, renderContext);
+			attribute.onElementEvent(event);
 		};
 	});
 });
@@ -6667,8 +6577,7 @@ HtmlAttr("value", function () {
         
         var setter = attribute.setter();
 		attribute.onElementEvent(
-            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change", 
-            renderContext, 
+            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change",
             function () {
                 var selected = select.options[select.selectedIndex], optionValue;
                 
@@ -6738,7 +6647,7 @@ HtmlAttr("value", function () {
         }, true);
 		
         var setter = attribute.setter();
-		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", renderContext, function () {
+		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", function () {
 			setter(textarea ? element.innerHTML : element.value);
         });
     }
@@ -6809,20 +6718,19 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	};
 	
 	 //TODE
-	htmlPropertyValue.prototype.onElementEvent = function (event, renderContext, callback, capture) {
+	htmlPropertyValue.prototype.onElementEvent = function (event, callback, capture) {
 		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
         ///<param name="event" type="String">The event</param>
-        ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
         ///<param name="callback" type="Function" optional="true">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback. If null, will use the callback set in the property</param>
         ///<param name="capture" type="Boolean">Capture the event within this element</param>
         ///<returns type="Function">A dispose function to dispose prematurely</returns>
 		
 		this.primed();
 		
-		var element = this.propertyOwner;
+		var element = this.propertyOwner, rc = this.renderContext;
 		callback = callback || (function (e) {
 			e.preventDefault();
-			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
+			this.eventBuild().apply(null, rc.asEventArgs(e, element));
 		}).bind(this);
 						
         element.addEventListener(event, callback, capture || false);
@@ -8351,7 +8259,7 @@ Class("wipeout.viewModels.if", function () {
     };
     
     var _if = wipeout.viewModels.view.extend(function _if(ifTrueId, model) {
-        ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
+        ///<summary>Provides if/else functionality in a template</summary> 
         ///<param name="ifTrueId" type="String" optional="true">The template id if condition is true. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
@@ -8441,11 +8349,11 @@ Class("wipeout.viewModels.itemsControl", function () {
     itemsControl.addGlobalParser("itemTemplate", "template");
     itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
         
-    itemsControl.removeItem = wipeout.events.routedEvent();
+    itemsControl.removeItem = {};
 	
     itemsControl.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
-        ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>
+        ///<param name="e" type="ObjectArgs" optional="false">The item to remove</param>
     
         if(this.items.indexOf(e.data) !== -1) {
             this.removeItem(e.data);
@@ -8516,80 +8424,80 @@ Class("wipeout.viewModels.itemsControl", function () {
     return itemsControl;
 });
 
-
 (function () {
  
+    function blank(){}
 	var view = wipeout.viewModels.view;
-    
-    view.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>  
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
-        ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
+    view.prototype.registerEvent = function(forPath, event, callback, callbackContext, priority) {
+        ///<summary>Register for a event</summary>
+        ///<param name="forPath" type="String" optional="false">The path to the object to subscribe to</param>
+        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
+        ///<param name="event" type="String" optional="false">The event name</param>
+        ///<param name="callbackContext" type="Any" optional="true">The "this" to use within the callback</param>
+        ///<param name="priority" type="Number" optional="true">The event priorty.</param>
+        ///<returns type="wo.eventRegistration">A dispose function</returns>
+        
+        if (!forPath)
+            return {dispose:blank};
+        
+        forPath = wipeout.utils.obj.splitPropertyName(forPath);
+        var length = forPath.length;
+        
+        var _this = this;
+        var disp = wipeout.events.event.instance.registerForAll(event, function (args, owner) {
+            if (owner) {
+                var current = _this;
+                for (var i = 0; current && i < length; i++)
+                    current = current[forPath[i]];
+                
+                if (current === owner)
+                    return callback.apply(this, arguments);
             }
-        }  
-
-        return false;
+        }, callbackContext, priority);
+        
+        this.registerDisposable(disp);
+        return disp;
     };
     
+    var routedEventName = "routed-event";
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.$routedEventSubscriptions[i];
-                break;
-            }
-        }
-
-        if(!rev) {
-            rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.$routedEventSubscriptions.push(rev);
-        }
-
-        return rev.event.register(callback, callbackContext, priority);
+        if (!this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions = new wipeout.events.event();
+        
+        return this.$routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext, priority);
     };
     
     view.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event. The event will bubble upwards to all ancestors of this view. Overrides wo.object.triggerRoutedEvent</summary>        
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
         // create routed event args if neccessary
         if(!(eventArgs instanceof wipeout.events.routedEventArgs)) {
             eventArgs = new wipeout.events.routedEventArgs(eventArgs, this);
         }
-
-        // trigger event on this
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
-        }
+        
+        if (eventArgs.handled) return;
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.trigger(routedEvent, routedEventName, eventArgs);
         
         // trigger event on model
-        if(eventArgs.handled) return;
-        if(this.model instanceof wipeout.events.routedEventModel) {
+        if (eventArgs.handled) return;
+        if (this.model instanceof wipeout.events.routedEventModel) {
             this.model.routedEventTriggered(routedEvent, eventArgs);
         }
 
         // trigger event on parent
-        if(eventArgs.handled) return;
+        if (eventArgs.handled) return;
         var nextTarget = this.getParent();
-        if(nextTarget) {
+        if (nextTarget) {
             nextTarget.triggerRoutedEvent(routedEvent, eventArgs);
         }
     };
@@ -9353,7 +9261,6 @@ function expose (name, value) {
 
 expose("viewModel", viewModel);
 
-expose("routedEvent", wipeout.events.routedEvent);
 expose("array", busybody.array);
 expose("observable", busybody.observable);
 
@@ -9364,6 +9271,18 @@ expose("filters", wipeout.template.filters);
 expose("definitelyNotAViewModel", wipeout.utils.viewModels.definitelyNotAViewModel);
 
 expose("addHtmlAttribute", SimpleHtmlAttr);
+
+expose("findFilters", wipeout.utils.find);
+
+// passing in a function from "bind" will break docs
+expose("triggerEvent", function triggerEvent (forObject, event, eventArgs) {
+    ///<summary>Trigger an event.</summary>
+    ///<param name="forObject" type="Object">The object triggering the event</param>
+    ///<param name="event" type="String">The event name</param>
+    ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+    
+    return wipeout.events.event.instance.trigger.apply(wipeout.events.event.instance, arguments)
+});
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);

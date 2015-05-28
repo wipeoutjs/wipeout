@@ -1,21 +1,21 @@
 <h1>The if control</h1>
 
 <p>
-    If/else functionality in a wipeout template is handled by the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if'" text="'wo.if'" /> control.
+    If/else functionality in a wipeout template is handled by the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if'" text="'wo.if'"></wipeout-docs.rl> control.
 </p>
 
     <wipeout-docs.view-models.components.code-block>
         <code parser="s">&lt;wo.if condition="true">
-    &lt;set-template>
+    &lt;if-true>
         The condition is true
-    &lt;/set-template>
-    &lt;else-template>
+    &lt;/if-true>
+    &lt;if-false>
         The condition is false
-    &lt;/else-template>
+    &lt;/if-false>
 &lt;/wo.if></code>
     </wipeout-docs.view-models.components.code-block>
 
 <p>
-    One thing to note, is that <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
+    One thing to note, is that <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'"></wipeout-docs.rl> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
     You can explicitly set this property to false in the template definition if this is not required.
 </p>

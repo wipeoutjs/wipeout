@@ -47,7 +47,8 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Setting the template within a template", "content-control"),
                 new articleLink("Complex template properties", "complex-template-properties"),
                 new articleLink("Illegal html tags", "illegal-html-tags"),
-                new articleLink("Html element/ViewModel name clashes", "definitely-not-a-view-model")
+                new articleLink("Html element/ViewModel name clashes", "definitely-not-a-view-model"),
+                new articleLink("Share parent scope", "share-parent-scope")
             ]
         }, {
             header: new articleLink("Define viewModels", "define-view-models"),
@@ -90,7 +91,10 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("List item lifecycle", "items-control-item-lifecycle"),
                 new articleLink("Creating custom list items", "items-control-custom-items"),
                 new articleLink("Self removing items", "items-control-self-removing-items")
-        ]}, {        
+        ]}, {
+            header: new articleLink("The if component", "if-control"),
+            items: []
+        }, {        
             header: new articleLink("Html Attributes", "html-attributes"),
             items: [
                 new articleLink("Value attributes", "value-attributes"),
@@ -167,25 +171,11 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("A List Filter", "list-filter"),
                 new articleLink("A Two Way Date Formatter", "date-parser-filter")
-		]}, {        
-            header: new articleLink("Share parent scope", "share-parent-scope"),
-            items: []
-        }/*  {
-            header: new articleLink("Use the if control", "if-control"),
-            items: []
-        }, {
-            header: new articleLink("Work with events", "events"),
+		]}, {
+            header: new articleLink("Events", "events"),
             items: [
-                new articleLink("Advanced events", "advanced-events")
-            ]}, {
-            header: new articleLink("Work with routed events", "routed-events"),
-            items: [
-                new articleLink("Advanced routed events", "advanced-routed-events"),
-                new articleLink("Routed event models", "routed-event-models")
-            ]}, {        
-            header: new articleLink("Wipeout native classes", "wipeout-native-classes"),
-            items: []
-        }, {        
+                new articleLink("Routed Events", "routed-events")
+		]}/*        
             header: new articleLink("Profiling", "profiling"),
             items: []
         }*/];
