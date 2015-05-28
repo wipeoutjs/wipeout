@@ -69,7 +69,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
         
-        if(oldValue !== newValue)
+        if (oldValue !== newValue)
 			this.onModelChanged(newValue);
 	};
 	
@@ -80,13 +80,17 @@ Class("wipeout.viewModels.view", function () {
 		this.disposeOf(this.$modelRoutedEventKey);
 		this.$modelRoutedEventKey = null;
 
-		if(newValue instanceof wipeout.events.routedEventModel) {
+		if (newValue instanceof wipeout.events.routedEventModel) {
             var d1 = wipeout.events.event.instance.register(newValue, 
                                                      wipeout.events.routedEventModel.triggerRoutedEvent, 
                                                      this._onModelRoutedEvent, 
                                                      this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
+        
+        enumerateArr(this.$modelEventRegistrations, function (sub) {
+            sub.resubscribe();
+        });
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
