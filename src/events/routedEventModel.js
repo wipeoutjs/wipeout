@@ -14,7 +14,7 @@ Class("wipeout.events.routedEventModel", function () {
         
     routedEventModel.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event which will propogate to any view models where this object is it's model and continue to bubble from there</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
         
         // Used by wo.model to acertain when a routed event should be fired
@@ -23,7 +23,7 @@ Class("wipeout.events.routedEventModel", function () {
         
     routedEventModel.prototype.routedEventTriggered = function(routedEvent, eventArgs) {
         ///<summary>Called by the owning view model when a routed event is fired</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
                 
         if (!this.__routedEventSubscriptions || eventArgs.handled)
@@ -35,7 +35,7 @@ Class("wipeout.events.routedEventModel", function () {
     routedEventModel.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         

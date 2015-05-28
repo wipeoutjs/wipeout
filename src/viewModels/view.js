@@ -91,9 +91,7 @@ Class("wipeout.viewModels.view", function () {
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
-        ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
-        
-        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
+        ///<param name="eventArgs" type="ObjectArgs" optional="false">The routed event args</param>
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };

@@ -5,7 +5,7 @@
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
@@ -18,7 +18,7 @@
     
     view.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event. The event will bubble upwards to all ancestors of this view. Overrides wo.object.triggerRoutedEvent</summary>        
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
         // create routed event args if neccessary

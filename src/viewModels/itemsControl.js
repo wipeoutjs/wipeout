@@ -38,11 +38,11 @@ Class("wipeout.viewModels.itemsControl", function () {
     itemsControl.addGlobalParser("itemTemplate", "template");
     itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
         
-    itemsControl.removeItem = wipeout.events.routedEvent();
+    itemsControl.removeItem = {};
 	
     itemsControl.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
-        ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>
+        ///<param name="e" type="ObjectArgs" optional="false">The item to remove</param>
     
         if(this.items.indexOf(e.data) !== -1) {
             this.removeItem(e.data);

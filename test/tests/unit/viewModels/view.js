@@ -84,7 +84,7 @@ testUtils.testWithUtils("getRenderContext", "no render context", false, function
 testUtils.testWithUtils("_onModelRoutedEvent", "", false, function (methods, classes, subject, invoker) {
     // arrange
     var eventArgs = {
-        routedEvent: new wipeout.events.routedEvent(),
+        routedEvent: {},
         eventArgs: {}
     };
     
