@@ -20,7 +20,15 @@ expose("addHtmlAttribute", SimpleHtmlAttr);
 
 expose("findFilters", wipeout.utils.find);
 
-expose("triggerEvent", wipeout.events.event.instance.trigger.bind(wipeout.events.event.instance));
+// passing in a function from "bind" will break docs
+expose("triggerEvent", function triggerEvent (forObject, event, eventArgs) {
+    ///<summary>Trigger an event.</summary>
+    ///<param name="forObject" type="Object">The object triggering the event</param>
+    ///<param name="event" type="String">The event name</param>
+    ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+    
+    return wipeout.events.event.instance.trigger.apply(wipeout.events.event.instance, arguments)
+});
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
