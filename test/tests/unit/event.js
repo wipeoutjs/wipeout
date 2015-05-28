@@ -82,20 +82,34 @@ testUtils.testWithUtils("event", "dispose is unique", false, function(methods, c
     // ensure references is deleted !important
     ok(!wipeout.event.instance.dictionary.objects.value(subject));
 });
-/*
-testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
+
+testUtils.testWithUtils("event", "priority", false, function(methods, classes, subject, invoker) {
     // arrange
-    var subject = new event();
-    function callback() {
-        ok(false, "callback should not have been called");
-    }
+    var context = {};
+    var subject = {}, event = "KJBKJBKJBKJ", c1 = false, c2 = false, c3 = false;
+    var callback1 = methods.customMethod(function () {
+        c1 = true;
+        ok(!c2);
+        ok(!c3);
+    }), callback2 = methods.customMethod(function () {
+        c2 = true;
+        ok(c1);
+        ok(!c3);
+    }), callback3 = methods.customMethod(function () {
+        ok(c1);
+        ok(c2);
+    });
     
-    subject.register(callback);
-        
     // act
-    subject.dispose();
-    subject.trigger({});
-    
     // assert
-    ok(true);
-});*/
+    
+    var dispose1 = wipeout.event.instance.register(subject, event, callback3, null, -10);
+    var dispose2 = wipeout.event.instance.register(subject, event, callback1, null, 10);
+    var dispose3 = wipeout.event.instance.register(subject, event, callback2, null);
+    
+    wipeout.event.instance.trigger(subject, event);
+    
+    dispose1.dispose();
+    dispose2.dispose();
+    dispose3.dispose();
+});

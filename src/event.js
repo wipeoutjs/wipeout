@@ -42,14 +42,17 @@ Class("wipeout.event", function() {
         this.dictionary = new eventDictionary();
     }
     
-    event.prototype.register = function (forObject, event, callback, context) {
+    event.prototype.register = function (forObject, event, callback, context, priority) {
         ///<summary>Register an event.</summary>
         ///<param name="forObject" type="Object">The object which will fire the event</param>
         ///<param name="event" type="String">The event name</param>
         ///<param name="callback" type="Function">The callback. The first argument will be the event args</param>
         ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
         
-        return this.dictionary.add(forObject, event, callback.bind(context));
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(forObject, event, callback);
     };
     
     event.prototype.trigger = function (forObject, event, eventArgs) {
@@ -58,9 +61,16 @@ Class("wipeout.event", function() {
         ///<param name="event" type="String">The event name</param>
         ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
         
-        enumerateArr(this.dictionary.callbacks(forObject, event), function (callback) {
-            callback(eventArgs);
-        }, this)
+        var callbacks = this.dictionary.callbacks(forObject, event);
+        if (callbacks) {
+            callbacks.sort(function (a, b) {
+                return a.priority < b.priority;
+            });
+        
+            enumerateArr(callbacks, function (callback) {
+                callback(eventArgs);
+            }, this);
+        }
     };
     
     event.instance = new event();
