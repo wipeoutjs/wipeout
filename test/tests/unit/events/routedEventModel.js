@@ -5,28 +5,15 @@ module("wipeout.events.routedEventModel", {
     }
 });
 
-var routedEventModel = wipeout.events.routedEventModel;
-
-testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
-    // arrange    
-	subject._super = methods.method();
-	
-    // act
-    invoker();
-    
-    // assert
-    strictEqual(subject.__triggerRoutedEventOnVM.constructor, wipeout.events.event);
-});
-
 testUtils.testWithUtils("triggerRoutedEvent", null, false, function(methods, classes, subject, invoker) {
-    // arrange    
+    // arrange
     var routedEvent = {}, eventArgs = {};
-    subject.__triggerRoutedEventOnVM = {
-        trigger: methods.customMethod(function() {
-            strictEqual(arguments[0].routedEvent, routedEvent);
-            strictEqual(arguments[0].eventArgs, eventArgs);
-        })
-    };
+    classes.mock("wipeout.event.instance.trigger", function () {
+        strictEqual(arguments[0], subject);
+        strictEqual(arguments[1], "__triggerRoutedEventOnVM");
+        strictEqual(arguments[2].routedEvent, routedEvent);
+        strictEqual(arguments[2].eventArgs, eventArgs);
+    }, 1);
     
     // act
     invoker(routedEvent, eventArgs);
@@ -47,9 +34,4 @@ testUtils.testWithUtils("registerRoutedEvent", null, false, function(methods, cl
     
     // assert
     strictEqual(actual, expected);
-});
-
-testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tests instead", false, function(methods, classes, subject, invoker) {
-    // arrange
-    ok(true);
 });

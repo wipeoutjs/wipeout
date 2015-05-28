@@ -8,10 +8,9 @@ Class("wipeout.events.routedEventModel", function () {
         ///<summary>The base class for models if they wish to invoke routed events on their viewModel</summary>
         
 		this._super();
-		
-        ///<Summary type="wo.event">The event which will trigger a routed event on the owning view</Summary>
-        this.__triggerRoutedEventOnVM = new wipeout.events.event();
     });
+    
+    routedEventModel.triggerRoutedEvent = "__triggerRoutedEventOnVM";
         
     routedEventModel.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event which will propogate to any view models where this object is it's model and continue to bubble from there</summary>
@@ -19,7 +18,7 @@ Class("wipeout.events.routedEventModel", function () {
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
         
         // Used by wo.model to acertain when a routed event should be fired
-        this.__triggerRoutedEventOnVM.trigger({routedEvent: routedEvent, eventArgs: eventArgs});
+        wipeout.event.instance.trigger(this, routedEventModel.triggerRoutedEvent, {routedEvent: routedEvent, eventArgs: eventArgs});
     };        
         
     routedEventModel.prototype.routedEventTriggered = function(routedEvent, eventArgs) {

@@ -82,7 +82,10 @@ Class("wipeout.viewModels.view", function () {
 		this.$modelRoutedEventKey = null;
 
 		if(newValue instanceof wipeout.events.routedEventModel) {
-			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+            var d1 = wipeout.event.instance.register(newValue, 
+                                                     wipeout.events.routedEventModel.triggerRoutedEvent, 
+                                                     this._onModelRoutedEvent, 
+                                                     this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
     };
