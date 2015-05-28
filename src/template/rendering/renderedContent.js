@@ -88,7 +88,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
 			this.templateChangeKey = this.registerDisposable(
-				this.viewModel.$synchronusTemplateChange.register(this.templateHasChanged, this));
+                wipeout.event.instance.register(this.viewModel, wipeout.viewModels.view.$synchronusTemplateChangeEvent, this.templateHasChanged, this));
 			
             this.viewModel.$domRoot = this;
             this.templateObserved = this.viewModel.observe("templateId", this._template, {context: this, activateImmediately: true});

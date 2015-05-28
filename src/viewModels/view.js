@@ -21,10 +21,9 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
-		
-        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
-		this.$synchronusTemplateChange = new wipeout.events.event();
     });
+    
+    view.$synchronusTemplateChangeEvent = "$synchronusTemplateChange";
 	
     view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
     
@@ -116,7 +115,7 @@ Class("wipeout.viewModels.view", function () {
 		if (arguments.length)
 			this.templateId = templateId;
 		
-		this.$synchronusTemplateChange.trigger();
+        wipeout.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
