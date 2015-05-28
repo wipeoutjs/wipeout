@@ -9,12 +9,16 @@
         ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
         ///<returns type="Boolean">Whether the event registration was found or not</returns>         
 
-        var rev = this.$routedEventSubscriptions.value(routedEvent);
-        if (rev) {
-            rev.event.unRegister(callback, callbackContext);
-        }
+        if (this.$routedEventSubscriptions) {
+            var rev = this.$routedEventSubscriptions.value(routedEvent);
+            if (rev) {
+                rev.event.unRegister(callback, callbackContext);
+            }
 
-        return !!rev;
+            return !!rev;
+        }
+        
+        return false;
     };
     
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
@@ -25,6 +29,9 @@
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
+        if (!this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions = new wipeout.utils.dictionary();
+        
         var rev = this.$routedEventSubscriptions.value(routedEvent);
         if(!rev) {
             rev = new wipeout.events.routedEventRegistration(routedEvent);
@@ -46,9 +53,11 @@
             return;
         }
         
-        var rev = this.$routedEventSubscriptions.value(routedEvent);
-        if (rev) {
-            rev.event.trigger(eventArgs);
+        if (this.$routedEventSubscriptions) {
+            var rev = this.$routedEventSubscriptions.value(routedEvent);
+            if (rev) {
+                rev.event.trigger(eventArgs);
+            }
         }
         
         // trigger event on model

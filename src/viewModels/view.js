@@ -21,9 +21,6 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
-
-        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.$routedEventSubscriptions = new wipeout.utils.dictionary();
 		
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
@@ -105,11 +102,13 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-		enumerateArr(this.$routedEventSubscriptions.values_unsafe(), function(event) {
-			event.dispose();
-		});
-        
-        this.$routedEventSubscriptions.clear();
+        if (this.$routedEventSubscriptions) {
+            enumerateArr(this.$routedEventSubscriptions.values_unsafe(), function(event) {
+                event.dispose();
+            });
+
+            this.$routedEventSubscriptions.clear();
+        }
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {
