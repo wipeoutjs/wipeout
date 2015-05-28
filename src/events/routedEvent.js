@@ -58,25 +58,3 @@ Class("wipeout.events.routedEventArgs", function () {
     
     return routedEventArgs;
 });
-    
-
-Class("wipeout.events.routedEventRegistration", function () {
-    
-    var routedEventRegistration = function routedEventRegistration(routedEvent) {  
-        ///<summary>Holds routed event registration details</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
-        
-        ///<Summary type="wo.routedEvent">The routed event</Summary>
-        this.routedEvent = routedEvent;
-        
-        ///<Summary type="wo.event">An inner event to handler triggering callbacks</Summary>
-        this.event = new wipeout.events.event();        
-    };
-    
-    routedEventRegistration.prototype.dispose = function() {
-        ///<summary>Dispose of the callbacks associated with this registration</summary>
-        this.event.dispose();
-    };
-    
-    return routedEventRegistration;
-});

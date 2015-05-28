@@ -8,7 +8,7 @@ module("wipeout.events.routedEventModel", {
 testUtils.testWithUtils("triggerRoutedEvent", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var routedEvent = {}, eventArgs = {};
-    classes.mock("wipeout.event.instance.trigger", function () {
+    classes.mock("wipeout.events.event.instance.trigger", function () {
         strictEqual(arguments[0], subject);
         strictEqual(arguments[1], "__triggerRoutedEventOnVM");
         strictEqual(arguments[2].routedEvent, routedEvent);

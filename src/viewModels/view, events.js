@@ -11,7 +11,7 @@
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
         if (!this.$routedEventSubscriptions)
-            this.$routedEventSubscriptions = new wipeout.event();
+            this.$routedEventSubscriptions = new wipeout.events.event();
         
         return this.$routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext, priority);
     };

@@ -18,7 +18,7 @@ Class("wipeout.events.routedEventModel", function () {
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
         
         // Used by wo.model to acertain when a routed event should be fired
-        wipeout.event.instance.trigger(this, routedEventModel.triggerRoutedEvent, {routedEvent: routedEvent, eventArgs: eventArgs});
+        wipeout.events.event.instance.trigger(this, routedEventModel.triggerRoutedEvent, {routedEvent: routedEvent, eventArgs: eventArgs});
     };        
         
     routedEventModel.prototype.routedEventTriggered = function(routedEvent, eventArgs) {
@@ -41,7 +41,7 @@ Class("wipeout.events.routedEventModel", function () {
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
         if (!this.__routedEventSubscriptions)
-            this.__routedEventSubscriptions = new wipeout.event();
+            this.__routedEventSubscriptions = new wipeout.events.event();
         
         return this.__routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext || this, priority);
     };

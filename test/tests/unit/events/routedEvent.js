@@ -72,38 +72,3 @@ testUtils.testWithUtils("constructor", null, false, function(methods, classes, s
     strictEqual(subject.data, data);
     strictEqual(subject.originator, originator);
 });
-
-var routedEventArgs = wipeout.events.routedEventArgs;
-
-module("wipeout.events.routedEventRegistration", {
-    setup: function() {
-    },
-    teardown: function() {
-    }
-});
-
-var routedEventRegistration = wipeout.events.routedEventRegistration;
-
-testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-    var routedEvent = {};
-    
-    // act
-    invoker(routedEvent);
-    
-    // assert
-    strictEqual(subject.routedEvent, routedEvent);
-    strictEqual(subject.event.constructor, wipeout.events.event);
-});
-
-testUtils.testWithUtils("dispose", null, false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.event = {
-        dispose: methods.method()
-    };
-    
-    // act
-    invoker();
-    
-    // assert
-});

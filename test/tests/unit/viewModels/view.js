@@ -49,7 +49,7 @@ testUtils.testWithUtils("onModelChanged", "", false, function (methods, classes,
     subject._onModelRoutedEvent = {};
 	var input = new wipeout.events.routedEventModel();
 	
-    classes.mock("wipeout.event.instance.register", function () {
+    classes.mock("wipeout.events.event.instance.register", function () {
         methods.method([input, wipeout.events.routedEventModel.triggerRoutedEvent, subject._onModelRoutedEvent, subject]).apply(null, arguments);
         return registration;
     }, 1);

@@ -81,7 +81,7 @@ Class("wipeout.viewModels.view", function () {
 		this.$modelRoutedEventKey = null;
 
 		if(newValue instanceof wipeout.events.routedEventModel) {
-            var d1 = wipeout.event.instance.register(newValue, 
+            var d1 = wipeout.events.event.instance.register(newValue, 
                                                      wipeout.events.routedEventModel.triggerRoutedEvent, 
                                                      this._onModelRoutedEvent, 
                                                      this);
@@ -115,7 +115,7 @@ Class("wipeout.viewModels.view", function () {
 		if (arguments.length)
 			this.templateId = templateId;
 		
-        wipeout.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
+        wipeout.events.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
