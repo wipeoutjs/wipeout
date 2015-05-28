@@ -9,9 +9,6 @@ Class("wipeout.events.routedEventModel", function () {
 		
         ///<Summary type="wo.event">The event which will trigger a routed event on the owning view</Summary>
         this.__triggerRoutedEventOnVM = new wipeout.events.event();
-        
-        ///<Summary type="Array" generic0="wo.routedEventRegistration">A placeholder for event subscriptions on this model</Summary>
-        this.__routedEventSubscriptions = [];
     });
         
     routedEventModel.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
@@ -28,12 +25,13 @@ Class("wipeout.events.routedEventModel", function () {
         ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
                 
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
-        }
+        if (!this.__routedEventSubscriptions)
+            return;
+        
+        if(eventArgs.handled) return;
+        var rev = this.__routedEventSubscriptions.value(routedEvent);
+        if (rev)
+            rev.event.trigger(eventArgs);
     };        
     
     routedEventModel.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
@@ -44,17 +42,13 @@ Class("wipeout.events.routedEventModel", function () {
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.__routedEventSubscriptions[i];
-                break;
-            }
-        }
-
-        if(!rev) {
+        if (!this.__routedEventSubscriptions)
+            this.__routedEventSubscriptions = new wipeout.utils.dictionary();
+        
+        var rev = this.__routedEventSubscriptions.value(routedEvent);
+        if (!rev) {
             rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.__routedEventSubscriptions.push(rev);
+            this.__routedEventSubscriptions.add(routedEvent, rev);
         }
 
         return rev.event.register(callback, callbackContext, priority);
@@ -67,13 +61,15 @@ Class("wipeout.events.routedEventModel", function () {
         ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
         ///<returns type="Boolean">Whether the event registration was found or not</returns>         
 
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
-            }
-        }  
-
+        if (!this.__routedEventSubscriptions)
+            return false;
+        
+        var rev = this.__routedEventSubscriptions.value(routedEvent);
+        if (rev) {
+            rev.event.unRegister(callback, callbackContext);
+            return true;
+        }
+        
         return false;
     };
     
