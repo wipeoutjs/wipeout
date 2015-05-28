@@ -9,14 +9,12 @@
         ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
         ///<returns type="Boolean">Whether the event registration was found or not</returns>         
 
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
-            }
-        }  
+        var rev = this.$routedEventSubscriptions.value(routedEvent);
+        if (rev) {
+            rev.event.unRegister(callback, callbackContext);
+        }
 
-        return false;
+        return !!rev;
     };
     
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
@@ -27,17 +25,10 @@
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.$routedEventSubscriptions[i];
-                break;
-            }
-        }
-
+        var rev = this.$routedEventSubscriptions.value(routedEvent);
         if(!rev) {
             rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.$routedEventSubscriptions.push(rev);
+            this.$routedEventSubscriptions.add(routedEvent, rev);
         }
 
         return rev.event.register(callback, callbackContext, priority);
@@ -51,14 +42,13 @@
         // create routed event args if neccessary
         if(!(eventArgs instanceof wipeout.events.routedEventArgs)) {
             eventArgs = new wipeout.events.routedEventArgs(eventArgs, this);
+        } else if (eventArgs.handled) {
+            return;
         }
-
-        // trigger event on this
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
+        
+        var rev = this.$routedEventSubscriptions.value(routedEvent);
+        if (rev) {
+            rev.event.trigger(eventArgs);
         }
         
         // trigger event on model

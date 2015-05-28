@@ -23,7 +23,7 @@ Class("wipeout.viewModels.view", function () {
         this.model = model == null ? null : model;
 
         ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.$routedEventSubscriptions = [];
+        this.$routedEventSubscriptions = new wipeout.utils.dictionary();
 		
         ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
 		this.$synchronusTemplateChange = new wipeout.events.event();
@@ -105,9 +105,11 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
+		enumerateArr(this.$routedEventSubscriptions.values_unsafe(), function(event) {
 			event.dispose();
 		});
+        
+        this.$routedEventSubscriptions.clear();
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {

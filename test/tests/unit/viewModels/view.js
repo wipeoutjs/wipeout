@@ -29,7 +29,10 @@ testUtils.testWithUtils("constructor", "", false, function (methods, classes, su
 testUtils.testWithUtils("dispose", "", false, function (methods, classes, subject, invoker) {
     // arrange
     subject._super = methods.method();
-    subject.$routedEventSubscriptions = [{dispose: methods.method()}, {dispose: methods.method()}];
+    subject.$routedEventSubscriptions = {
+        clear: methods.method(),
+        values_unsafe: methods.method([], [{dispose: methods.method()}, {dispose: methods.method()}])
+    };
     
     // act
     invoker();
@@ -176,26 +179,27 @@ testUtils.testWithUtils("getParents", "has parent, share parent scope", false, f
 
 testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function (methods, classes, subject, invoker) {
     // arrange
-    subject.$routedEventSubscriptions = [];
+    var ev = {};
+    subject.$routedEventSubscriptions = {value: methods.method([ev])};
     
     // act
-    var actual = invoker();
+    var actual = invoker(ev);
     
     // assert
     ok(!actual);
 });
 
-testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function (methods, classes, subject, invoker) {
+testUtils.testWithUtils("unRegisterRoutedEvent", null, false, function (methods, classes, subject, invoker) {
     // arrange
     var callback = {};
     var context = {};
     var routedEvent = {};
-    subject.$routedEventSubscriptions = [{
+    subject.$routedEventSubscriptions = {value: methods.method([routedEvent], {
 		routedEvent: routedEvent,
 		event: {
 			unRegister: methods.method([callback, context])
 		}
-	}];
+	})};
     
     // act
     var actual = invoker(routedEvent, callback, context);
@@ -210,12 +214,12 @@ testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function (
     var callback = {};
     var context = {};
     var routedEvent = {};
-    subject.$routedEventSubscriptions = [{
+    subject.$routedEventSubscriptions = {value: methods.method([routedEvent], {
 		routedEvent: routedEvent,
 		event: {
 			register: methods.method([callback, context], expected)
 		}
-	}];
+	})};
     
     // act
     var actual = invoker(routedEvent, callback, context);
@@ -230,13 +234,14 @@ testUtils.testWithUtils("registerRoutedEvent", "new event", false, function (met
     function callback() {};
     var context = {};
     var routedEvent = {};
-    subject.$routedEventSubscriptions = [];
+    subject.$routedEventSubscriptions = {value: methods.method([routedEvent]), add: methods.customMethod(function () {
+        strictEqual(arguments[0], routedEvent);
+    })};
     
     // act
     var actual = invoker(routedEvent, callback, context);
     
     // assert
-    strictEqual(subject.$routedEventSubscriptions.length, 1);
     strictEqual(actual.dispose.constructor, Function);
 });
 
