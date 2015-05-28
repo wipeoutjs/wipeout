@@ -1,25 +1,6 @@
 (function () {
  
-	var view = wipeout.viewModels.view;
-    
-    view.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
-        ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-
-        if (this.$routedEventSubscriptions) {
-            var rev = this.$routedEventSubscriptions.value(routedEvent);
-            if (rev) {
-                rev.event.unRegister(callback, callbackContext);
-            }
-
-            return !!rev;
-        }
-        
-        return false;
-    };
+	var view = wipeout.viewModels.view, routedEventName = "routed-event";
     
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
@@ -30,15 +11,9 @@
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
         if (!this.$routedEventSubscriptions)
-            this.$routedEventSubscriptions = new wipeout.utils.dictionary();
+            this.$routedEventSubscriptions = new wipeout.event();
         
-        var rev = this.$routedEventSubscriptions.value(routedEvent);
-        if(!rev) {
-            rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.$routedEventSubscriptions.add(routedEvent, rev);
-        }
-
-        return rev.event.register(callback, callbackContext, priority);
+        return this.$routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext, priority);
     };
     
     view.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
@@ -53,12 +28,8 @@
             return;
         }
         
-        if (this.$routedEventSubscriptions) {
-            var rev = this.$routedEventSubscriptions.value(routedEvent);
-            if (rev) {
-                rev.event.trigger(eventArgs);
-            }
-        }
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.trigger(routedEvent, routedEventName, eventArgs);
         
         // trigger event on model
         if(eventArgs.handled) return;

@@ -73,6 +73,12 @@ Class("wipeout.event", function() {
         }
     };
     
+    event.prototype.dispose = function () {
+        ///<summary>Dispose of all event handlers.</summary>
+        
+        this.dictionary.objects.clear();
+    };
+    
     event.instance = new event();
     
     return event;

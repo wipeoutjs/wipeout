@@ -102,13 +102,8 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-        if (this.$routedEventSubscriptions) {
-            enumerateArr(this.$routedEventSubscriptions.values_unsafe(), function(event) {
-                event.dispose();
-            });
-
-            this.$routedEventSubscriptions.clear();
-        }
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.dispose();
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {
