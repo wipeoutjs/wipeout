@@ -87,10 +87,6 @@ Class("wipeout.viewModels.view", function () {
                                                      this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
-        
-        enumerateArr(this.$modelEventRegistrations, function (sub) {
-            sub.resubscribe();
-        });
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {

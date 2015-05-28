@@ -20,6 +20,8 @@ expose("addHtmlAttribute", SimpleHtmlAttr);
 
 expose("findFilters", wipeout.utils.find);
 
+expose("triggerEvent", wipeout.events.event.instance.trigger.bind(wipeout.events.event.instance));
+
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);
 });

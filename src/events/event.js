@@ -42,11 +42,24 @@ Class("wipeout.events.event", function() {
         this.dictionary = new eventDictionary();
     }
     
+    var registerForAll = {};
+    event.prototype.registerForAll = function (event, callback, context, priority) {
+        ///<summary>Register an event triggered on all objects.</summary>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
+        
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(registerForAll, event, callback);
+    };
+    
     event.prototype.register = function (forObject, event, callback, context, priority) {
         ///<summary>Register an event.</summary>
         ///<param name="forObject" type="Object">The object which will fire the event</param>
         ///<param name="event" type="String">The event name</param>
-        ///<param name="callback" type="Function">The callback. The first argument will be the event args</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
         ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
         ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
         
@@ -61,16 +74,16 @@ Class("wipeout.events.event", function() {
         ///<param name="event" type="String">The event name</param>
         ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
         
-        var callbacks = this.dictionary.callbacks(forObject, event);
-        if (callbacks) {
-            callbacks.sort(function (a, b) {
-                return a.priority < b.priority;
-            });
+        var callbacks = this.dictionary.callbacks(forObject, event) || [];
+        callbacks.push.apply(callbacks, this.dictionary.callbacks(registerForAll, event));
         
-            enumerateArr(callbacks, function (callback) {
-                callback(eventArgs);
-            }, this);
-        }
+        callbacks.sort(function (a, b) {
+            return a.priority < b.priority;
+        });
+
+        enumerateArr(callbacks, function (callback) {
+            callback(eventArgs, forObject);
+        }, this);
     };
     
     event.prototype.dispose = function () {

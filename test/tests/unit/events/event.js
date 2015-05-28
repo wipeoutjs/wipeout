@@ -12,11 +12,13 @@ testUtils.testWithUtils("event", "constructor, trigger, register, unregister", f
     var subject = {}, event = "KJBKJBKJBKJ";
     function callback1() {
         strictEqual(arguments[0], eventArgs);
+        strictEqual(arguments[1], subject);
         strictEqual(this, context);
         called1++;
     }
     function callback2() {
         strictEqual(arguments[0], eventArgs);
+        strictEqual(arguments[1], subject);
         strictEqual(this, context);
         called2++;
     }
@@ -53,6 +55,7 @@ testUtils.testWithUtils("event", "dispose is unique", false, function(methods, c
     var subject = {}, event = "KJBKJBKJBKJ";
     function callback1() {
         strictEqual(arguments[0], eventArgs);
+        strictEqual(arguments[1], subject);
         strictEqual(this, context);
         called1++;
     }

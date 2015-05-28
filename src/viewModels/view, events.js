@@ -1,75 +1,39 @@
 (function () {
-    
-    function modelEventSubscription (forViewModel, event, callback, callbackContext, priority) {
-        this.forViewModel = forViewModel;
-        this.event = event;
-        this.callback = callback;
-        this.callbackContext = callbackContext;
-        this.priority = priority;
-    }
-    
-    modelEventSubscription.prototype.resubscribe = function () {
-        if (this.dispose)
-            this.dispose.dispose();
-
-        this.dispose = this.forViewModel.model ? 
-            this.forViewModel.registerEvent(this.forViewModel.model, this.event, this.callback, this.callbackContext, this.priority) : 
-            null;
-    };
  
-	var view = wipeout.viewModels.view, routedEventName = "routed-event";
-    
-    view.prototype.registerEvent = function(owner, event, callback, callbackContext, priority) {
+    function blank(){}
+	var view = wipeout.viewModels.view;
+    view.prototype.registerEvent = function(forPath, event, callback, callbackContext, priority) {
         ///<summary>Register for a event</summary>
-        ///<param name="owner" type="Object" optional="false">The object which is to raise the event</param>
+        ///<param name="forPath" type="String" optional="false">The path to the object to subscribe to</param>
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
         ///<param name="event" type="String" optional="false">The event name</param>
         ///<param name="callbackContext" type="Any" optional="true">The "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty.</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>
         
-        var disp = wipeout.events.event.instance.register(owner, event, callback, callbackContext, priority);
+        if (!forPath)
+            return {dispose:blank};
+        
+        forPath = wipeout.utils.obj.splitPropertyName(forPath);
+        var length = forPath.length;
+        
+        var _this = this;
+        var disp = wipeout.events.event.instance.registerForAll(event, function (args, owner) {
+            if (owner) {
+                var current = _this;
+                for (var i = 0; current && i < length; i++)
+                    current = current[forPath[i]];
+                
+                if (current === owner)
+                    return callback.apply(this, arguments);
+            }
+        }, callbackContext, priority);
+        
         this.registerDisposable(disp);
         return disp;
     };
     
-    view.prototype.registerModelEvent = function(event, callback, callbackContext, priority) {
-        ///<summary>Register for a event</summary>
-        ///<param name="owner" type="Object" optional="false">The object which is to raise the event</param>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="event" type="String" optional="false">The event name</param>
-        ///<param name="callbackContext" type="Any" optional="true">The "this" to use within the callback</param>
-        ///<param name="priority" type="Number" optional="true">The event priorty.</param>
-        ///<returns type="wo.eventRegistration">A dispose function</returns>
-        
-        if (!this.$modelEventRegistrations)
-            this.$modelEventRegistrations = [];
-        
-        var subscription;
-        this.$modelEventRegistrations.push(subscription = new modelEventSubscription(
-            this,
-            event,
-            callback,
-            callbackContext,
-            priority));
-        
-        subscription.resubscribe();
-        
-        var output = new busybody.disposable((function () {
-            if (subscription.dispose)
-                subscription.dispose.dispose();
-            
-            if (this.$modelEventRegistrations && (subscription = this.$modelEventRegistrations.indexOf(subscription)) !== -1) {
-                this.$modelEventRegistrations.splice(subscription, 1);
-                if (!this.$modelEventRegistrations.length)
-                    this.$modelEventRegistrations = null;
-            }
-        }).bind(this));
-        
-        this.registerDisposable(output);
-        return output;
-    };
-    
+    var routedEventName = "routed-event";
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
