@@ -1,0 +1,40 @@
+<h1>Rendering Simple Content</h1>
+<p>There are a few ways to display content contained in a view model</p>
+
+<h3>1. Using {<span>{</span>...}}</h3>
+<p>You can render anything by putting it within {<span>{</span>...}} parenthesis. For example to render the <code>model</code> of the current templated view model.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;h1>The model&lt;/h1>
+    {{$this.model}}
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+<p>You can change the {<span>{</span>...}} parenthesis to anything else using</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wipeout.template.rendering.compiledTemplate.renderParenthesis("[[", "]]");</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>2. Using wo-render</h3>
+<p>The <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-render'" text="'wo-render'"></wipeout-docs.rl> html attribute does almost the same as using {<span>{</span>...}}, the difference being that the content will be surrounded by a html tag.</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;h1>The model&lt;/h1>
+    &lt;span wo-render="$this.model">&lt;/span>
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>3. Using wo-content</h3>
+<p>The <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-content'" text="'wo-content'"></wipeout-docs.rl> html attribute does almost the same as using wo-render, the difference being that:
+<ol>
+    <li>wo-content is meant for rendering simple values such as strings and numbers. It cannot be used to render full view models.</li>
+    <li>wo-content is lightweight.</li>
+</ol>
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;h1>The model&lt;/h1>
+    &lt;span wo-content="$this.model">&lt;/span>
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />

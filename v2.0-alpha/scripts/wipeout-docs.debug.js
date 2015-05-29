@@ -1620,6 +1620,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("Camel casing", "camel-casing"),
                 new articleLink("Where do templates go?", "where-to-put-a-template"),
+                new articleLink("Rendering Simple Content", "rendering-simple-content"),
                 new articleLink("View Models and Html Elements", "view-models-and-html-elements"),
                 new articleLink("Accessing html elements and view models", "template-items"),
                 new articleLink("Binding Setters", "binding-setters"),
