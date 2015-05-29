@@ -43,6 +43,20 @@ Class("wipeout.utils.dictionary", function () {
         return this.__keyArray;
     };
     
+    dictionary.prototype.values = function () {
+        ///<summary>Get all of the values in the dictionary</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.values_unsafe().slice();
+    };
+    
+    dictionary.prototype.values_unsafe = function () {
+        ///<summary>Get all of the values in the dictionary. DO NOT MODIFY THIS ARRAY</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.__valueArray;
+    };
+    
     dictionary.prototype.remove = function (key) {
         ///<summary>Remove a value from the dictionary</summary>
         ///<param name="key" type="Any">The key</param>
@@ -65,6 +79,13 @@ Class("wipeout.utils.dictionary", function () {
         ///<returns type="Any">The value</returns>
 		
         return this.__valueArray[this.__keyArray.indexOf(key)];
+    };
+    
+    dictionary.prototype.clear = function () {
+        ///<summary>Empty the dictionary</summary>
+        
+        this.__valueArray.length = 0;
+        this.__keyArray.length = 0;
     };
     
     return dictionary;

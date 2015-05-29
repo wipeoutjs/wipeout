@@ -313,7 +313,6 @@ test("multi-dimentional binding", function() {
 		model.inner.inner.inner.val = val = "KVKJGVMNGMV";
 		busybody.observable.afterNextObserveCycle(function () {
 		busybody.observable.afterNextObserveCycle(function () {
-		busybody.observable.afterNextObserveCycle(function () {
 			strictEqual($("#" + id2).html(), val);
 			
 			model.inner.inner.inner = {val: val = "asdasdasd" };
@@ -356,7 +355,6 @@ test("multi-dimentional binding", function() {
 			}, true);
 		}, true);
 		}, true);
-		}, true);
 	};
 	
 	stop();
@@ -394,6 +392,57 @@ test("shareParentScope", function() {
 	
 	
 	stop();
+});
+
+testUtils.testWithUtils("registerEvent", null, false, function(methods, classes, subject, invoker) {
+	// arrange
+    var view = new wo.view();
+    view.yyy = {zzz:{}};
+    var args = {}, ctxt = {};
+    view.registerEvent("yyy.zzz", "www", function () { ok(false); });
+    view.registerEvent("yyy", "xxx", function () { ok(false); });
+    view.registerEvent("yyy.zzz", "xxx", function () { 
+        strictEqual(arguments[0], args); 
+        strictEqual(arguments[1], view.yyy.zzz);
+        strictEqual(this, ctxt);
+        start();
+    }, ctxt);
+    
+    stop();
+    
+	// act
+    // assert
+    wo.triggerEvent(view.yyy.zzz, "xxx", args);
+    
+    view.dispose();
+});
+
+testUtils.testWithUtils("registerEvent", "dispose", false, function(methods, classes, subject, invoker) {
+	// arrange
+    var view = new wo.view();
+    view.yyy = {zzz:{}};
+    view.registerEvent("yyy.zzz", "xxx", function () { ok(false); }).dispose();
+    
+	// act
+    // assert
+    wo.triggerEvent(view.yyy.zzz, "xxx");
+    
+    view.dispose();
+    ok(true);
+});
+
+testUtils.testWithUtils("registerEvent", "dispose of view", false, function(methods, classes, subject, invoker) {
+	// arrange
+    var view = new wo.view();
+    view.yyy = {zzz:{}};
+    view.registerEvent("yyy.zzz", "xxx", function () { ok(false); });
+    view.dispose();
+    
+	// act
+    // assert
+    wo.triggerEvent(view.yyy.zzz, "xxx");
+    
+    ok(true);
 });
 
 /*test("move view model", function() {

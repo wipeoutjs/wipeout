@@ -1,108 +1,98 @@
-
-Class("wipeout.events.eventRegistration", function () {
+Class("wipeout.events.event", function() {
     
-    return busybody.disposable.extend(function eventRegistration(callback, context, dispose) {
-        ///<summary>On object containing event registration details</summary>
-        ///<param name="callback" type="Any" optional="false">The event logic</param>
-        ///<param name="context" type="Any" optional="true">The context of the event logic</param>
-        ///<param name="dispose" type="Function" optional="false">A dispose function</param>
-        ///<param name="priority" type="Number">The event priorty. The lower the priority number the sooner the callback will be triggered.</param>
-        this._super();    
-               
-        ///<Summary type="Function">The callback to use when the event is triggered</Summary>
-        this.callback = callback;
-        
-        ///<Summary type="Any">The context to usse with the callback when the event is triggered</Summary>
-        this.context = context;                
-        
-        this.registerDisposeCallback(dispose);
-    });
-});
-
-Class("wipeout.events.event", function () {
-    
-    var event = function event() {
-        ///<summary>Defines a new event with register and trigger functinality</summary>
-        
-        // allow for non use of the new key word
-        if(!(this instanceof event))
-           return new event();
-        
-        ///<Summary type="Array" generic0="wipeout.events.eventRegistration">Array of callbacks to fire when event is triggered</Summary>
-        this._registrations = [];
-    };
-
-    event.prototype.trigger = function(eventArgs) {
-        ///<summary>Trigger the event, passing the eventArgs to each subscriber</summary>
-        ///<param name="eventArgs" type="Any" optional="true">The arguments to pass to event handlers</param>
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(eventArgs instanceof wipeout.events.routedEventArgs && eventArgs.handled) return;
-            
-            this._registrations[i].callback.call(this._registrations[i].context, eventArgs);
-        }
-    };
-    
-    event.prototype.unRegister = function (callback, context /* optional */) {
-        ///<summary>Un subscribe to an event. The callback and context must be the same as those passed in the original registration</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
-        
-        context = context == null ? window : context;
-        for(var i = 0; i < this._registrations.length; i++) {
-            if(this._registrations[i].callback === callback && this._registrations[i].context === context) {
-                this._registrations.splice(i, 1);
-                i--;
-            }
-        }
+    function eventDictionary () {
+        this.objects = new wipeout.utils.dictionary();
     }
     
-    event.prototype.dispose = function() {
-        ///<summary>Dispose of the event</summary>
-        this._registrations.length = 0;
+    eventDictionary.prototype.add = function (forObject, event, callback) {
+        
+        var objectCallbacks;
+        if (!(objectCallbacks = this.objects.value(forObject)))
+            this.objects.add(forObject, objectCallbacks = {});
+        
+        if (!objectCallbacks[event])
+            objectCallbacks[event] = [callback];
+        else
+            objectCallbacks[event].push(callback);
+        
+        return new busybody.disposable((function () {
+            var tmp, objectCallbacks = this.objects.value(forObject);
+
+            if (objectCallbacks && objectCallbacks[event] && (tmp = objectCallbacks[event].indexOf(callback)) !== -1) {
+                objectCallbacks[event].splice(tmp, 1);
+                if (!objectCallbacks[event].length) {
+                    delete objectCallbacks[event];
+                    for (var i in objectCallbacks)
+                        return;
+                    
+                    this.objects.remove(forObject);
+                }
+            }
+        }).bind(this));
+    };
+    
+    eventDictionary.prototype.callbacks = function (forObject, event) {
+        var tmp;
+        return (tmp = this.objects.value(forObject)) && tmp[event];
+    };
+    
+    function event () {
+        ///<summary>Handles events for wipeout objects</summary>
+        
+        this.dictionary = new eventDictionary();
     }
     
-    event.prototype.register = function(callback, context, priority) {
-        ///<summary>Subscribe to an event</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="context" type="Any" optional="true">The context "this" to use within the calback</param>
-        ///<param name="priority" type="Number" optional="true">The event priorty. The lower the priority number the sooner the callback will be triggered. The default is 0</param>
-        ///<returns type="wo.eventRegistration">An object with the details of the registration, including a dispose() function</returns>
+    var registerForAll = {};
+    event.prototype.registerForAll = function (event, callback, context, priority) {
+        ///<summary>Register an event triggered on all objects.</summary>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
         
-        if(!(callback instanceof Function))
-            throw "Invalid event callback";
-        
-        if(priority && !(priority instanceof Number))
-            throw "Invalid event priority";
-        
-        var reg = this._registrations;
-        var evnt = { 
-            priority: priority || 0,
-            callback: callback, 
-            context: context == null ? window : context,
-            dispose: function() {
-                if (!evnt) return;
-                
-                var index = reg.indexOf(evnt);
-                if(index >= 0)
-                    reg.splice(index, 1);
-                
-                evnt = null;
-            }
-        };
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(evnt.priority < this._registrations[i].priority) {
-                this._registrations.splice(i, 0, evnt);
-                break;
-            }
-        }
-        
-        if(i === ii)
-            this._registrations.push(evnt);
-        
-        return new wipeout.events.eventRegistration(evnt.callback, evnt.context, evnt.dispose, evnt.priority);
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(registerForAll, event, callback);
     };
+    
+    event.prototype.register = function (forObject, event, callback, context, priority) {
+        ///<summary>Register an event.</summary>
+        ///<param name="forObject" type="Object">The object which will fire the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
+        
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(forObject, event, callback);
+    };
+    
+    event.prototype.trigger = function (forObject, event, eventArgs) {
+        ///<summary>Trigger an event.</summary>
+        ///<param name="forObject" type="Object">The object triggering the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+        
+        var callbacks = this.dictionary.callbacks(forObject, event) || [];
+        callbacks.push.apply(callbacks, this.dictionary.callbacks(registerForAll, event));
+        
+        callbacks.sort(function (a, b) {
+            return a.priority < b.priority;
+        });
+
+        enumerateArr(callbacks, function (callback) {
+            callback(eventArgs, forObject);
+        }, this);
+    };
+    
+    event.prototype.dispose = function () {
+        ///<summary>Dispose of all event handlers.</summary>
+        
+        this.dictionary.objects.clear();
+    };
+    
+    event.instance = new event();
     
     return event;
 });

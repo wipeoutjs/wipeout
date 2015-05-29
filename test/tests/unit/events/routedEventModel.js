@@ -5,28 +5,15 @@ module("wipeout.events.routedEventModel", {
     }
 });
 
-var routedEventModel = wipeout.events.routedEventModel;
-
-testUtils.testWithUtils("constructor", null, false, function(methods, classes, subject, invoker) {
-    // arrange    
-	subject._super = methods.method();
-	
-    // act
-    invoker();
-    
-    // assert
-    strictEqual(subject.__triggerRoutedEventOnVM.constructor, wipeout.events.event);
-});
-
 testUtils.testWithUtils("triggerRoutedEvent", null, false, function(methods, classes, subject, invoker) {
-    // arrange    
+    // arrange
     var routedEvent = {}, eventArgs = {};
-    subject.__triggerRoutedEventOnVM = {
-        trigger: methods.customMethod(function() {
-            strictEqual(arguments[0].routedEvent, routedEvent);
-            strictEqual(arguments[0].eventArgs, eventArgs);
-        })
-    };
+    classes.mock("wipeout.events.event.instance.trigger", function () {
+        strictEqual(arguments[0], subject);
+        strictEqual(arguments[1], "__triggerRoutedEventOnVM");
+        strictEqual(arguments[2].routedEvent, routedEvent);
+        strictEqual(arguments[2].eventArgs, eventArgs);
+    }, 1);
     
     // act
     invoker(routedEvent, eventArgs);
@@ -34,73 +21,17 @@ testUtils.testWithUtils("triggerRoutedEvent", null, false, function(methods, cla
     // assert
 });
 
-testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
-    // arrange
-    subject.__routedEventSubscriptions = [];
-    
-    // act
-    var actual = invoker();
-    
-    // assert
-    ok(!actual);
-});
-
-testUtils.testWithUtils("unRegisterRoutedEvent", "no event", false, function(methods, classes, subject, invoker) {
-    // arrange
-    var callback = {};
-    var context = {};
-    var routedEvent = {};
-    subject.__routedEventSubscriptions = [{
-        routedEvent: routedEvent,
-        event: {
-            unRegister: methods.method([callback, context])
-        }
-    }];
-    
-    // act
-    var actual = invoker(routedEvent, callback, context);
-    
-    // assert
-    ok(actual);
-});
-
-testUtils.testWithUtils("registerRoutedEvent", "event exists", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("registerRoutedEvent", null, false, function(methods, classes, subject, invoker) {
     // arrange
     var expected = {};
     var callback = {};
     var context = {};
     var routedEvent = {};
-    subject.__routedEventSubscriptions = [{
-        routedEvent: routedEvent,
-        event: {
-            register: methods.method([callback, context], expected)
-        }
-    }];
+    subject.__routedEventSubscriptions = {register: methods.method([routedEvent, "routed-event", callback, context], expected)};
     
     // act
     var actual = invoker(routedEvent, callback, context);
     
     // assert
     strictEqual(actual, expected);
-});
-
-testUtils.testWithUtils("registerRoutedEvent", "new event", false, function(methods, classes, subject, invoker) {
-    // arrange
-    var expected = {};
-    function callback() {};
-    var context = {};
-    var routedEvent = {};
-    subject.__routedEventSubscriptions = [];
-    
-    // act
-    var actual = invoker(routedEvent, callback, context);
-    
-    // assert
-    strictEqual(subject.__routedEventSubscriptions.length, 1);
-    strictEqual(actual.dispose.constructor, Function);
-});
-
-testUtils.testWithUtils("triggerRoutedEvent", "no test here. see integration tests instead", false, function(methods, classes, subject, invoker) {
-    // arrange
-    ok(true);
 });

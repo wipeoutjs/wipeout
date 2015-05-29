@@ -21,13 +21,9 @@ Class("wipeout.viewModels.view", function () {
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
-
-        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.$routedEventSubscriptions = [];
-		
-        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
-		this.$synchronusTemplateChange = new wipeout.events.event();
     });
+    
+    view.$synchronusTemplateChangeEvent = "$synchronusTemplateChange";
 	
     view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
     
@@ -73,7 +69,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
         
-        if(oldValue !== newValue)
+        if (oldValue !== newValue)
 			this.onModelChanged(newValue);
 	};
 	
@@ -84,17 +80,18 @@ Class("wipeout.viewModels.view", function () {
 		this.disposeOf(this.$modelRoutedEventKey);
 		this.$modelRoutedEventKey = null;
 
-		if(newValue instanceof wipeout.events.routedEventModel) {
-			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+		if (newValue instanceof wipeout.events.routedEventModel) {
+            var d1 = wipeout.events.event.instance.register(newValue, 
+                                                     wipeout.events.routedEventModel.triggerRoutedEvent, 
+                                                     this._onModelRoutedEvent, 
+                                                     this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
-        ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
-        
-        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
+        ///<param name="eventArgs" type="ObjectArgs" optional="false">The routed event args</param>
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };
@@ -105,9 +102,8 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
-			event.dispose();
-		});
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.dispose();
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {
@@ -117,7 +113,7 @@ Class("wipeout.viewModels.view", function () {
 		if (arguments.length)
 			this.templateId = templateId;
 		
-		this.$synchronusTemplateChange.trigger();
+        wipeout.events.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
