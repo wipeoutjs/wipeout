@@ -19,7 +19,7 @@
             <to-string>function() { return "a to string value"; }</to-string>
         </js-object>
     </div>
-    <wo.content-control id="listTest">
+    <wo.content id="listTest">
         <set-template>
             <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
@@ -38,19 +38,19 @@
             {{$this.totals}}
         </set-template>
         <totals>
-            <wo.content-control>
+            <wo.content>
                 <set-template>
                     <div wo-content="$this.model.totalOfIds"></div>
                 </set-template>
-            </wo.content-control>
+            </wo.content>
         </totals>
-    </wo.content-control>
+    </wo.content>
     <br/>
-    <wo.content-control model="$this.model.deepItem" id="multiLevelTest">
+    <wo.content model="$this.model.deepItem" id="multiLevelTest">
         <set-template>
-            <wo.content-control model="$this.model.item">
+            <wo.content model="$this.model.item">
                 <set-template>
-                    <wo.content-control model="$this.model.value">
+                    <wo.content model="$this.model.value">
                         <supplimentary-prop>
                             <child-view model--tw="$this.model" value--tw="$this.model">
                                 <set-template>
@@ -62,11 +62,11 @@
                             <div wo-content="$this.model"></div>
                             <div wo-render="$this.supplimentaryProp"></div>
                         </set-template>
-                    </wo.content-control>
+                    </wo.content>
                 </set-template>
-            </wo.content-control>                
+            </wo.content>                
         </set-template>
-    </wo.content-control>        
+    </wo.content>        
     <br/>
     <br/>
 </div>

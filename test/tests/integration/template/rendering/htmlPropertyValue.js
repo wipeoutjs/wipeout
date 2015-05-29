@@ -27,10 +27,10 @@ test("prime and other attribute", function() {
 	// arrange
 	// act
     // assert
-    application.setTemplate = '<wo.content-control>\
+    application.setTemplate = '<wo.content>\
     <set-template>\
         <div wo-visible--s="yes I Am" wo-temp-attr></div>\
     </set-template>\
-</wo.content-control>';
+</wo.content>';
 	stop();
 });

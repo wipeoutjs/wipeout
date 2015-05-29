@@ -11,7 +11,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     subject._super = methods.method([templateId, model]);
     subject.observe =function(){/*tested in next test*/};
     
-    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function () {
+    classes.mock("wipeout.viewModels.content.createTemplatePropertyFor", function () {
         methods.method([subject, "itemTemplateId", "itemTemplate"])(arguments[0], arguments[1], arguments[2]);
     }, 1);
 	
@@ -31,7 +31,7 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
 testUtils.testWithUtils("constructor", "item template change", false, function(methods, classes, subject, invoker) {
     // arrange
 	subject = new wipeout.viewModels.list();
-	var vm1 = {}, vm2 = {__createdBylist: true}, template = wipeout.viewModels.contentControl.createAnonymousTemplate("hello");
+	var vm1 = {}, vm2 = {__createdBylist: true}, template = wipeout.viewModels.content.createAnonymousTemplate("hello");
 	subject.getItemViewModels = function () { return [vm1, vm2]; };
 	
 	// assert

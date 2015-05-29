@@ -6,25 +6,25 @@ module("integration: wipeout.utils.find", {
 test("wipeout.utils.find", function() {
 	
     // arrange
-    application.setTemplate = '<wo.content-control id="me1">\
+    application.setTemplate = '<wo.content id="me1">\
     <set-template>\
-        <wo.content-control id="me2">\
+        <wo.content id="me2">\
             <set-template>\
 				<div id="theDiv"></div>\
-                    <wo.content-control id="me3">\
+                    <wo.content id="me3">\
                         <set-template>\
-                            <wo.content-control id="me4"\
+                            <wo.content id="me4"\
                                 parent="$context.find(\'parent\')" grand-parent="$context.find({$a:\'grandParent\'})" great-grand-parent="$context.find({$a:\'greatGrandParent\'})"\
-                                cc0="$context.find(wo.contentControl)" cc1="$context.find({$t:wo.contentControl, $number: 1})"\
+                                cc0="$context.find(wo.content)" cc1="$context.find({$t:wo.content, $number: 1})"\
                                 v0="$context.find({$i:wo.view})" v1="$context.find({$instanceof:wo.view, $number: 1})"\
                                 f0="$context.find({id: \'me1\'})" f-y="$context.find({id: \'me1\'}, {$n:1})" f-x="$context.find({id: \'me3\'})">\
-                            </wo.content-control>\
+                            </wo.content>\
                     </set-template>\
-                </wo.content-control>\
+                </wo.content>\
             </set-template>\
-        </wo.content-control>\
+        </wo.content>\
     </set-template>\
-</wo.content-control>';
+</wo.content>';
 	
 	application.onRendered = function () {
     

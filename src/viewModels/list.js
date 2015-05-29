@@ -3,7 +3,7 @@ Class("wipeout.viewModels.list", function () {
     
 	var deafaultTemplateId;
 	var defaultItemTemplateId;
-    var list = wipeout.viewModels.contentControl.extend(function list(templateId, itemTemplateId, model) {
+    var list = wipeout.viewModels.content.extend(function list(templateId, itemTemplateId, model) {
         ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
@@ -11,7 +11,7 @@ Class("wipeout.viewModels.list", function () {
         
         this._super(templateId || 
 					deafaultTemplateId ||
-					(deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}')), model);
+					(deafaultTemplateId = wipeout.viewModels.content.createAnonymousTemplate('{{$this.items}}')), model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
         this.itemTemplateId = itemTemplateId;
@@ -19,7 +19,7 @@ Class("wipeout.viewModels.list", function () {
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
         this.itemTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="busybody.array">An array of models to render</Summary>
         this.items = new busybody.array();
@@ -105,7 +105,7 @@ Class("wipeout.viewModels.list", function () {
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
 		
-        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.content.createAnonymousTemplate("{{$this.model}}")), model);
 		vm.__createdBylist = true;
 		return vm;
     };

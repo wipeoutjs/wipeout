@@ -14,7 +14,7 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
 			name: "kjbkjbkjb"
 		};
 	
-	classes.mock("wipeout.viewModels.contentControl.createAnonymousTemplate", function () {
+	classes.mock("wipeout.viewModels.content.createAnonymousTemplate", function () {
 		strictEqual(arguments[0], set._value);
 		return output;
 	}, 1);

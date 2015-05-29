@@ -1,4 +1,4 @@
-module("integration: wipeout.viewModels.contentControl", {
+module("integration: wipeout.viewModels.content", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
@@ -7,8 +7,8 @@ test("setting template inline", function() {
     
     // arrange
     // act
-	var innerTemplate = "<wo.content-control xxx='true' a-property='true' id='item'></wo.content-control>";
-    application.setTemplate = '<wo.content-control id="item" set-template="' + innerTemplate + '" ></wo.content-control>';
+	var innerTemplate = "<wo.content xxx='true' a-property='true' id='item'></wo.content>";
+    application.setTemplate = '<wo.content id="item" set-template="' + innerTemplate + '" ></wo.content>';
     
     // assert
 	application.onRendered = function () {
@@ -21,7 +21,7 @@ test("setting template inline", function() {
 
 test("bug, ensure template rendering is only invoked once ", function() {
     // arrange
-    var open1 = "<wo.content-control id='item", open2 = "'><set-template>", close = "</set-template></wo.content-control>";
+    var open1 = "<wo.content id='item", open2 = "'><set-template>", close = "</set-template></wo.content>";
     application.setTemplate = open1 + "1" + open2 + open1 + "2" + open2 + "<div>hi</div>" + close + close;
 		
 	application.onRendered = function () {

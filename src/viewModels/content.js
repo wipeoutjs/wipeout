@@ -1,7 +1,7 @@
 
-Class("wipeout.viewModels.contentControl", function () {    
+Class("wipeout.viewModels.content", function () {    
 
-    var contentControl = wipeout.viewModels.view.extend(function contentControl(templateId, model) {
+    var content = wipeout.viewModels.view.extend(function content(templateId, model) {
         ///<summary>Expands on view and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
@@ -10,13 +10,13 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<summary type="String">The template which corresponds to the templateId for this item</summary>
         //this.setTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  
     
-    contentControl.addGlobalParser("setTemplate", "template");
-    contentControl.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
+    content.addGlobalParser("setTemplate", "template");
+    content.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
     
-    contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+    content.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
         ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
@@ -25,7 +25,7 @@ Class("wipeout.viewModels.contentControl", function () {
         return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
-    contentControl.createAnonymousTemplate = (function () {
+    content.createAnonymousTemplate = (function () {
         
         var i = Math.floor(Math.random() * 1000000000), 
             anonymousTemplateId = "WipeoutAnonymousTemplate",
@@ -118,8 +118,8 @@ Class("wipeout.viewModels.contentControl", function () {
         }
 
         this.currentTemplate = null;
-        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.content.createAnonymousTemplate(newVal);
     }
     
-    return contentControl;
+    return content;
 });

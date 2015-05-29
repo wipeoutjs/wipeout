@@ -193,7 +193,7 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 test("advanced items control, creating/destroying", function() {
 	
     // arrange
-    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model"></div>');
+    var itemTemplateId = wo.content.createAnonymousTemplate('<div wo-attr-id="$this.model"></div>');
     
     var list1 = new wo.list();
     list1.itemTemplateId = itemTemplateId;
@@ -239,7 +239,7 @@ test("advanced items control, creating/destroying", function() {
 test("items control, $index", function() {
 	
     // arrange
-    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$index.value" />');
+    var itemTemplateId = wo.content.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$index.value" />');
     
     var list = new wo.list();
     list.itemTemplateId = itemTemplateId;
