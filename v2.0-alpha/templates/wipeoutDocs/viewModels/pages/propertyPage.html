@@ -10,7 +10,7 @@
             <if-true>                
                 <wo.items-control template-id--s="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" items="$model.propertyType.genericTypes">
                     <item-template>
-                        <wo.if condition="$index.value !== 0" true-template--s=", "></wo.if>
+                        <wo.if condition="$index.value !== 0" if-true--s=", "></wo.if>
                         <span wo-content="$model"></span>
                     </item-template>
                 </wo.items-control>

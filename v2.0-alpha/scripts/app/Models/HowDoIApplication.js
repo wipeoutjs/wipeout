@@ -175,7 +175,10 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             header: new articleLink("Events", "events"),
             items: [
                 new articleLink("Routed Events", "routed-events")
-		]}/*        
+		]}, {
+            header: new articleLink("Manually create a wipeout application", "manually-create-an-application"),
+            items: []
+        }/*        
             header: new articleLink("Profiling", "profiling"),
             items: []
         }*/];

@@ -724,7 +724,7 @@ compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGener
     };
     
     codeHelperGenerator.prototype.convertClass = function(classDescription) {
-        //TODO
+        
         if(classDescription.className === "if") return;
         
         var parentClass = classDescription.parentClass ? classDescription.parentClass.classFullName : "";
@@ -1104,11 +1104,7 @@ compiler.registerClass("wipeoutDocs.models.descriptions.class", "busybody.observ
         pullSummaryFromOverride.call(this, "events");
         pullSummaryFromOverride.call(this, "properties");
         pullSummaryFromOverride.call(this, "functions");
-		
-		for (var i = 0, ii = this.staticProperties.length; i < ii; i++)
-			if (!this.staticProperties[i].summary && !/^Window\./.test(this.staticProperties[i].fullyQualifiedName))
-				console.log(this.staticProperties[i].fullyQualifiedName);
-        
+		        
         for(var i = 0, ii = this.functions.length; i < ii; i++) {
             if(this.functions[i].functionName === "constructor") {
                 this.classConstructor = this.functions.splice(i, 1)[0];
@@ -1758,7 +1754,10 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             header: new articleLink("Events", "events"),
             items: [
                 new articleLink("Routed Events", "routed-events")
-		]}/*        
+		]}, {
+            header: new articleLink("Manually create a wipeout application", "manually-create-an-application"),
+            items: []
+        }/*        
             header: new articleLink("Profiling", "profiling"),
             items: []
         }*/];

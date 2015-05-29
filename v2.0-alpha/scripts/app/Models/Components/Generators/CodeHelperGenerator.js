@@ -103,7 +103,7 @@ compiler.registerClass("wipeoutDocs.models.components.generators.codeHelperGener
     };
     
     codeHelperGenerator.prototype.convertClass = function(classDescription) {
-        //TODO
+        
         if(classDescription.className === "if") return;
         
         var parentClass = classDescription.parentClass ? classDescription.parentClass.classFullName : "";

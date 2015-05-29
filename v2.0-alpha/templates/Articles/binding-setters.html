@@ -6,8 +6,8 @@
         <li><code>$parent</code> references view model 1 level up</li>
         <li><code>$parents</code> is an array of all view model ancestors where <code>$parents[0] === $parent</code>.</li>
         <li><code>$parentContext</code> is the binding context of the <code>$parent</code>.</li>
-        <li><code>$index.value</code> is available to items in an itemsControl (TODOD link) and represents their index in the array.</li>
-        <li><code>$context.find(...)</code> (TODOD link) is a tool to find ancestors based on search terms.</li>
+        <li><code>$index.value</code> is available to items in an <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=working-with-lists'" text--s="itemsControl"></wipeout-docs.rl> and represents their index in the array.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-to-ancestor'" text--s="$context.find(...)"></wipeout-docs.rl> is a tool to find ancestors based on search terms.</li>
     </ul>
     </p>
 <p>You can put almost any code you want into a binding setter</p>
@@ -28,6 +28,6 @@ Examples:
 &lt;!-- bind to a global value -->
 &lt;wo.view model="document">&lt;/wo.view>
 
-&lt;!-- find a view model and bind to it's model (TODOD link) -->
+&lt;!-- find a view model and bind to it's model -->
 &lt;wo.view model="$context.find(myViewModel).model">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>

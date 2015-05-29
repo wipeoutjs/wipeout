@@ -2,7 +2,7 @@
 <h3><code>wo-render="value"</code></h3>
 <h3><code>data-wo-render="value"</code></h3>
 <p>The render attribute renders a piece of data or a view model. </p>
-<p>The render attribute is similar to the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-content'" text="'content'"></wipeout-docs.rl> attibute but is more powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag (TODOD: this doesn't render) (<code>{{$this.someValue}}</code>).</p>
+<p>The render attribute is similar to the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-content'" text="'content'"></wipeout-docs.rl> attibute but is more powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag <code>&#123;<span></span>&#123;$this.someValue}}</code>.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-1'" highlight--s="wo-render">
     <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
     &lt;set-template>
@@ -16,7 +16,7 @@
 </wipeout-docs.view-models.components.usage-code-block>
 
 <h3>Rendering without a html tag</h3>
-<p>You can also render items without surrounding them by a tag, using the (TODOD: this doesn't render)<code>{{value}}</code> notation.</p>
+<p>You can also render items without surrounding them by a tag, using the <code>&#123;<span></span>&#123;value}}</code> notation.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-2'" highlight--s="wo-render">
     <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
     &lt;set-template>
