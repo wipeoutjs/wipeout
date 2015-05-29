@@ -1,0 +1,19 @@
+<h1>Where do templates go?</h1>
+<p>Templates can go in one of three places</p>
+<h2>1. Embedded within the DOM</h2>
+<p>The first place wipeout will look for a template is in the DOM. It will do a <code>document.getElementById(...)</code> lookup where the template id is the id of the element. To use this method, you should place your template within script tags like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;script type="text/html" id="theTemplateId">
+    ... template code
+&lt;/script></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h2>2. Loaded from the server</h2>
+<p>If wipeout cannot find a template in the DOM it will take the templateId as a URL and try to find it with an ajax call. So for instance using a templateId like <code>http://www.mydomain.com/templates/myTemplate.html</code> will also work.</p>
+<p>You can disable this functionality by setting <code>wipeout.settings.asynchronousTemplates = false;</code></p>
+
+<h2>3. Compile a template from a string</h2>
+<p>Once a wipeout template is found, it is compiled and cached. You can skip the entire lookup process by compiling templates yourself:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wipeout.template.engine.instance.setTemplate(templateId, templateString);</code>
+</wipeout-docs.view-models.components.code-block>

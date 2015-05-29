@@ -1,0 +1,12 @@
+<h1>Add a static value</h1>
+<p>You can add a static value to any viewModel using the <code>staticValue</code> function. Static values are values which are appended to the viewModel class, so for instance if you have a viewModel named <code>myNameSpace.myViewModel</code> and you add a staic value <code>myStaticValue = 4</code>, then <code>myNameSpace.myViewModel.myStaticValue === 4</code>.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myNamespace.myViewModel")
+    .staticValue("myStaticValue", 4)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>Unlike non static values, it does not matter if the value is a primitive or not.</p>
+<br />
+<br />
+<br />

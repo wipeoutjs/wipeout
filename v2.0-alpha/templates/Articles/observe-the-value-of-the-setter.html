@@ -1,0 +1,20 @@
+<h1>Observe the value of the setter</h1>
+<p>If you need to observe the setter for change, you can use the <code>watch</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "$model"
+    property.watch(function (oldVal, newVal) {
+        // code for when the model value of the parent changes here
+    }, true);
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>The second argument to <code>watch</code> tells wipeout to execute the callback immediately, as if the property had just changed.</p>

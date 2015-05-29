@@ -1,0 +1,16 @@
+<h1>Get the name of the property</h1>
+<p>To get the name of the property use the <code>name</code> property.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view a-property="$model.anotherProperty">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // for a regular binding, will return "aProperty"
+    var name = property.name;
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>

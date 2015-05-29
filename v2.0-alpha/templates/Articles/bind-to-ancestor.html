@@ -1,0 +1,90 @@
+<h1>Bind to the property of an ancestor</h1>
+
+    <p>There is a helper function which can find ancestors based on their properties, type, depth or any other custom attribute you need.</p>
+
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// create a custom class to distinguish type (inherit from content)
+wo.viewModel("demoApp.myType", wo.content)
+    .build();</code>
+    </wipeout-docs.view-models.components.j-code-block>
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'" highlight--s="$context.find">
+        <code parser="s">&lt;demo-app.my-type model="{value: 'Hello wipeout!'}" value="123">
+    &lt;set-template>
+        &lt;wo.content>
+            &lt;set-template>
+                Found ancestor by type: 
+                &lt;span wo-content="$context.find(demoApp.myType).model.value">&lt;/span> &lt;br />
+                Found ancestor by hirearchy:
+                &lt;span wo-content="$context.find('parent').model.value">&lt;/span> &lt;br />
+                Found ancestor by type:
+                &lt;span wo-content="$context.find({$instanceof: demoApp.myType}).model.value">&lt;/span> &lt;br />
+                Found ancestor by property value:
+                &lt;span wo-content="$context.find({value: 123}).model.value">&lt;/span> &lt;br />
+                Found ancestor model by property value:
+                &lt;span wo-content="$context.find({value: 'Hello wipeout!', $model: true}).value">&lt;/span> &lt;br />
+            &lt;/set-template>
+        &lt;/wo.content>
+    &lt;/set-template>
+&lt;/demo-app.my-type></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-to-ancestor-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+
+<p>The value passed into <code>$context.find</code> can be
+    <ol>
+        <li>A view model type</li>
+        <li>A string indicating hirearchy (parent, grandparent, greatgrandparent etc...)</li>
+        <li>An object of search parameters.</li>
+</ol>
+If search parameters are used, the available parameters are as follows:
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Search type</th>
+			<th>Alias</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>$instanceof</td>
+			<td>$i</td>
+			<td>Find an object which is an <code>instanceof</code> the given search term. Is the same as passing a viewModel type into $find</td>
+		</tr>
+		<tr>
+			<td>$type</td>
+			<td>$t</td>
+			<td>An exact type match. Is the same as <code>currentViewModel.constructor === searchTerm</code>.</td>
+		</tr>
+		<tr>
+			<td>$ancestory</td>
+			<td>$a</td>
+			<td>Find the parent, grandparent ect... Is the same as passing a string into the $context.find() method.</td>
+		</tr>
+		<tr>
+			<td>$number</td>
+			<td>$n</td>
+			<td>Describes when to stop when a viewModel is found. For example, if <code>$n === 0</code>, return the first match.
+				If <code>$n === 1</code>, return the second match.</td>
+		</tr>
+		<tr>
+			<td>$model</td>
+			<td>$m</td>
+			<td>If set to true, signifies that we are looking for models, not viewModels.</td>
+		</tr>
+		<tr>
+			<td>anything else</td>
+			<td>none</td>
+			<td>Anything on the search object which is not prefixed with a $ will be treated as a property search. For instance
+			using <code>{ myProperty: "hello"}</code> will return the first viewModel where <code>myProperty === hello</code> .</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+
+
+<br/>
+<br/>

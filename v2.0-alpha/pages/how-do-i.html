@@ -1,0 +1,15 @@
+<wipeout-docs.view-models.how-do-i-application model="new wipeoutDocs.models.howDoIApplication()">
+</wipeout-docs.view-models.how-do-i-application>
+
+## insert: templates ##
+	
+<script type="text/javascript">
+    window.bootstrapApplication = function() {
+		setTimeout(function () {
+			crossroads.parse(location.pathname + location.search);
+			window.onpopstate = function() {
+				crossroads.parse(location.pathname + location.search);
+			};
+		}, 500);
+    };
+</script>

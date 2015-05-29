@@ -1,0 +1,36 @@
+<h1>Binding to non observables</h1>
+<p>When something is bound within a template, part of the process is to watch 
+    the variable for change, so that the DOM, or other view models can be updated accordingly. Plain old 
+    javascript objects cannot be watched, they must first be converted to observables with
+    <a href="https://github.com/ShaneGH/busybody#attempting-to-observe-a-value" target="_blank">busybody.makeObservable</a>.
+</p>
+<h2>Strategies</h2>
+<p>There are three binding strategies you can use</p>
+<h3>1. Create Observables (default)</h3>
+<p>This strategy will bind to anything. Given the path:
+<code>$model.item1.item2</code>, where neither <code>$model</code> nor <code>item1</code> are observables, wipeout will convert these values to observables before binding so that any changes to <code>$model.item1</code> or <code>item1.item2</code> can be observed. Once the binding is destroyed or an item is no longer present in the path, the item will then be converted back to a non observable.
+</p>
+<p>There is overhead in creating observables, and if you are building a large SPA with many long binding paths, this strategy might not be optimal.</p>
+
+<h3>2. Bind non Observables</h3>
+<p>This strategy will bind to anything that it can. Given the path:
+<code>$model.item1.item2</code>, where <code>item1</code> is an observable, but <code>$model</code> is not, wipeout will do it's best to bind. This means that if <code>item1.item2</code> changes, wipeout will update the DOM, however, if <code>$model.item1</code> changes, wipeout will not.
+</p>
+
+<h3>3. Only Bind Observables</h3>
+<p>This strategy will only bind until it reaches a break in the observable chain. Given the path:
+<code>$model.item1.item2</code>, where <code>item1</code> is an observable, but <code>$model</code> is not wipeout will not bind, as the first link in the chain (<code>$model</code>) is not observable.<br />
+If <code>$model</code> were to be observable but <code>item1</code> were not, wipeout act the same as if <b>Bind non Observabls</b> were used, altering the DOM if <code>$model.item1</code> changes, but not if <code>item1.item2</code> changes.
+</p>
+
+<h2>Configuration</h2>
+
+<p>In practice, the best strategy will be a mix of all three, setting a default which suits the application and altering specific view models to either increase or decreases the amount of observables created. You can alter the binding strategy:
+    <ul>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=global-binding-strategy'" text="'Globally'"></wipeout-docs.rl></li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=typed-binding-strategy'" text="'By view model type'"></wipeout-docs.rl></li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=instance-binding-strategy'" text="'By view model instance'"></wipeout-docs.rl></li>
+</ul>
+</p>
+<br />
+<br />

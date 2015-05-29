@@ -1,0 +1,8 @@
+<h1>Parsers</h1>
+<p>Within a template, most property setters are not parsed, but rather they are interpreted as javascript code, compiled and bound. This behavior can be altered with property parsers. An example of a property with a default property parser <code>id</code>, where:
+</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view id="myId">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>will set the id of the current model to <code>"myId"</code>, and not to the value of any <code>myId</code> property.</p>

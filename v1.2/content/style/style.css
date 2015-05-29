@@ -4,6 +4,22 @@ p {
     max-width: 800px
 }
 
+.dropdown {
+	position: relative
+}
+
+.dropdown > ul {
+	display: none
+}
+
+.dropdown:hover > ul {
+	display: block;
+	position: absolute;
+	left: -50px;
+	z-index: 100;
+	background-color: white;
+}
+
 .staticHeader-height {
     height: 80px;
 }

@@ -1,0 +1,20 @@
+<h1>Get the raw setter for the property</h1>
+<p>To get the string value defined in the template use the <code>value</code> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model.aProperty">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    // will return "$model.aProperty"
+    var theValue = attribute.value(true);
+        
+    // will return "$this.model.aProperty". This value
+    // should be used if you will compile the value into javascript
+    var theOptomisedValue = attribute.value();
+		
+    // Do any binding stuff here
+});</code>
+</wipeout-docs.view-models.components.code-block>

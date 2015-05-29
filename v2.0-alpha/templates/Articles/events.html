@@ -1,0 +1,37 @@
+<h1>Wipeout events</h1>
+
+<p>Models can communicate with view modes through the use of events.</p>
+
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .initialize(function () {
+        
+        this.registerEvent("model", "eventName1", function (eventArgs, model) {
+            // the model has fired an event
+        });
+        
+        this.registerEvent("model.modelProperty", "eventName2", function (eventArgs, modelProperty) {
+            // the modelProperty has fired an event
+        });
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In the example above the model has subscribed to the <code>eventName1</code> event of it's <code>model</code> and the <code>eventName2</code> event of the <code>modelProperty</code> of it's <code>model</code>. <code>registerEvent</code> is described <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;functionName=registerEvent&amp;isStatic=false'" text="'here'"></wipeout-docs.rl>.</p>
+<p>To trigger an event you use the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.triggerEvent'" text="'wo.triggerEvent'"></wipeout-docs.rl> function.</p>
+
+<wipeout-docs.view-models.components.code-block highlight--s="triggerEvent">
+    <code parser="s">var model = {
+    pokeViewModel: function (eventArgs) {
+        wo.triggerEvent(this, "eventName1", eventArgs);
+    },
+    modelProperty: {
+        pokeViewModel: function (eventArgs) {
+            wo.triggerEvent(this, "eventName2", eventArgs);
+        }
+    }
+}
+
+model.pokeViewModel({});
+model.modelProperty.pokeViewModel({});</code>
+</wipeout-docs.view-models.components.code-block>

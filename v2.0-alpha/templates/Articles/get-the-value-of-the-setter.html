@@ -1,0 +1,33 @@
+<h1>Get the value of the setter</h1>
+<p>To get the setter value use the <code>getter</code> function to create a getter and use the getter to get the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // returns a function which can be used to get the value
+    var getter = property.getter();
+        
+    // returns the value
+    var theValue = getter();
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>getter</code>. The <code>property.getter()</code> function will only work synchronusly, however the result of the <code>getter</code> function can be invoked at any time </p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+		
+    // cache the getter here
+    var getter = property.getter();
+    
+    // create an asynchronus function which will be called when the value changes
+    property.watch(function (oldValue, newValue) {
+        // use the getter here
+        var result = getter();
+    });
+};</code>

@@ -1,0 +1,24 @@
+<h1>Cascading models</h1>
+
+<p>
+If the model property of a viewModel is not explicitly set, it recieves the model of its parent.
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'cascading-models-script-1'">
+        <code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
+        &lt;wo.content>
+            &lt;set-template>
+                Binding to a property on a cascaded model: &lt;span wo-content="$model.value">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content>
+    &lt;/set-template>
+&lt;/wo.content></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'cascading-models-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<br/>

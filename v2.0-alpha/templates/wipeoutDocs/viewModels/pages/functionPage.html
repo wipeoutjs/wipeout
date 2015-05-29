@@ -1,0 +1,48 @@
+
+<h2 wo-content="$this.title || $model.fullyQualifiedName"></h2>
+<div wo-content="$model.summary"></div>
+<wo.if condition="$model.arguments.length">
+    <if-true>
+        <h3>Arguments</h3>
+        <wo.list items="$model.arguments">
+            <set-template>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Argument</th>
+                            <th>Summary</th>
+                            <th>Type</th>
+                            <th>Optional</th>
+                        </tr>
+                    </thead>
+					<tbody wo-render=" $this.items"></tbody>
+                </table>
+            </set-template>
+            <item-template>
+                <div wo-el="tr">
+					<div wo-el="td" wo-content="$model.name"></div>
+                    <div wo-el="td" wo-content="$model.description"></div>
+                    <div wo-el="td" wo-content="$model.type"></div>
+                    <div wo-el="td" wo-content="$model.optional => yesNo"></div>
+                </div>
+            </item-template>
+        </wo.list>
+    </if-true>
+</wo.if>
+<wo.if condition="$this.showReturnValue">
+	<if-true>
+		<h2 wo-visible="$this.showReturnValue">
+			Returns: <span wo-content="$model.returns.type"></span>
+		</h2>
+		<span wo-content="$model.returns.summary"></span>
+	</if-true>
+</wo.if>
+<div>
+    <h3 style="display: inline-block" wo-content="$this.functionDefinitionText || 'Function definition'"></h3>
+    <a href="javascript:void(0)" wo-click="logic: $this.showCode = !$this.showCode;"><small>(show/hide)</small></a>
+    <wo.if condition="$this.showCode">
+        <if-true>
+            <wipeout-docs.view-models.components.code-block code="$this.fixJsFunction($model['function'])"></wipeout-docs.view-models.components.code-block>
+        </if-true>
+    </wo.if>
+</div>

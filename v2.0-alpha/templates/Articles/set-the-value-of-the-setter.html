@@ -1,0 +1,25 @@
+<h1>Set the value of the setter</h1>
+<p>You may wish to set the value within the property setter. If this is the case, ensure you check this is possible with the <code>canSet</code> method and then use the <code>setter</code> method to set the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+Binding:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+	
+    // It IS possible to set the property "$model".
+    // It would NOT be possible to set something like "$model ? $model : null"
+    if (property.canSet()) {
+        // get a function which can be used to set the value
+        var setter = property.setter();
+        
+        // set the model of the parent to "Hello!"
+        setter("Hello!");
+    }
+		
+    // Do any binding stuff here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the binding), it is important to cache the <code>setter</code>. The <code>property.setter()</code> function will only work synchronusly, however the result of the <code>setter</code> function can be invoked at any time. See the example for a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=get-the-value-of-the-setter'" text="'getter'"></wipeout-docs.rl> for details.</p>

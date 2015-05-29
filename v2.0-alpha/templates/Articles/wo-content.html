@@ -1,0 +1,16 @@
+<h1>The Content attribute</h1>
+<h3><code>wo-content="value"</code></h3>
+<h3><code>data-wo-content="value"</code></h3>
+<p>The content attribute defines the html content of an element.</p>
+<p>The content attribute is similar to the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-render'" text="'render'"></wipeout-docs.rl> attibute but is less powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag <code>&#123;<span></span>&#123;$this.someValue}}</code>.</p>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-content-attr'" highlight--s="wo-content">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
+    &lt;set-template>
+        &lt;span wo-content="$model">&lt;/span> 
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-content-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 

@@ -1,0 +1,42 @@
+<h1>Manually create a wipeout application</h1>
+
+<p>If you include the wipeout script in your page, wipeout will automatically scan the DOM and attempt to create view models wherever it can. Sometimes however, the viewModels are not available at the beginning of the page lifecycle, and you will need to set off the process yourself. You can do this with the <code>wo()</code> function.</p>
+
+<h3>Arguments</h3>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Default</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>model</td>
+			<td>The root model for the application</td>
+			<td>null</td>
+		</tr>
+		<tr>
+			<td>element</td>
+			<td>The root element to begin searching for view models. You can also enter a string, in which case it will be the id of the root element</td>
+			<td>body</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Examples</h3>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">// find and create all view models
+wo();
+    
+// find the element #myViewModel and convert it to a view model
+wo(null, "myViewModel");
+    
+// find the element #myViewModel and convert it to a view model
+// with a given model
+wo(model, "myViewModel");
+    
+// convert all elements to view models within the body
+wo(model, document.body);</code>
+</wipeout-docs.view-models.components.code-block>

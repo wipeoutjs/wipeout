@@ -1,0 +1,17 @@
+<h1>The Class attribute</h1>
+<h3><code>wo-class-className="value"</code></h3>
+<h3><code>data-wo-class-className="value"</code></h3>
+<p>The class attribute defines an switches a html class on or off for a given element. The class name will be the end of the <code>wo-class-</code> definition.</p>
+<style>.green {background-color: #98FB98}</style>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-class-attr'" highlight--s="wo-class">
+    <code parser="s">&lt;wo.content model="true">
+    &lt;set-template>
+        &lt;span wo-class-green="$model">This class is applied&lt;/span> <br />
+        &lt;span wo-class-green="!$model">This class is not applied&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-class-attr'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 

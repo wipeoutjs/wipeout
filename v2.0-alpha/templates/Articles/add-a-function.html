@@ -1,0 +1,30 @@
+<h1>Add a function</h1>
+<p>You can add custom functions to your viewModel by simply adding them to the result of the <code>build()</code> call.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var myViewModel = wo.viewModel("myNamespace.myViewModel")
+    // add a default property
+    .value("name", "myViewModel")
+    .build();
+   
+// will log:
+//  Function 1 was called for myViewModel     
+myViewModel.function1 = function () {
+    // you can access properties of the viewModel using the
+    // "this" keyword
+    console.log("Function 1 was called for " + this.name);
+};
+
+// will log:
+//  Function 1 was called for myViewModel
+//  Function 2 was called for myViewModel
+myViewModel.function2 = function () {
+    // you can call other methods on the viewModel using
+    // the "this" keyword
+    this.function1();
+    console.log("Function 2 was called for " + this.name);
+};</code>
+</wipeout-docs.view-models.components.code-block>
+<br />
+<br />
+<br />

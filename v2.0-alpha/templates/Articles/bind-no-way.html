@@ -1,0 +1,21 @@
+<h1>Setting an object from viewModel</h1>
+
+<img src="/wipeout/## insert: site-directory ##/content/images/noWayBinding.png" />
+<p>	You may wish to set the property of a viewModel, but not bind it. In this case you can use the "no binding" binding. To us no binding you must use the <code>--nb</code> <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=property-flags" text="'flag'"></wipeout-docs.rl>.
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'" highlight--s="--nb">
+        <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    &lt;set-template>
+        &lt;wo.content model--nb="$model.value">
+            &lt;set-template>
+                Setter bindings: &lt;span wo-content="$model">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content>
+    &lt;/set-template>
+&lt;/wo.content></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-no-way-script-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block> 

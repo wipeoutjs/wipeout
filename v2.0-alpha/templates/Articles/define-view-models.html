@@ -1,0 +1,16 @@
+<h1>Define a viewModel</h1>
+<p>viewModel definitions create viewModel classes and determine how a viewModel will act once it is created by wipeout.</p>
+<p>The most basic viewModel definition looks like this:</p>
+<wipeout-docs.view-models.components.code-block>
+<code parser="s">wo.viewModel("myNamespace.myViewModel").build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>
+    What this definition will do is:
+    <ol>
+        <li>Create a <code>window.myNamespace</code> object. If one exists already, do not overwrite it.</li>
+        <li>Create a <code>myViewModel</code> function. <code>myViewModel</code> will be the viewModel <a href="http://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank">class</a>. In order to implement the most basic viewModel functionality (templates, lifecycle management etc...) the viewModel will inherit from <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'"></wipeout-docs.rl> by default.</li>
+        <li>Append the <code>myViewModel</code>  to <code>window.myNamespace</code>, (as <code>window.myNamespace.myViewModel</code>).</li>
+</ol>
+Always remember to <code>build(...)</code> viewModels after all definitions.
+</p>

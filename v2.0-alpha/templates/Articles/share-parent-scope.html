@@ -1,0 +1,46 @@
+<h1>Share parent scope</h1>
+
+<p>It is not always necessary to create a scope for each viewModel. A good example of this is in using the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=if-control'" text="'wo.if'"></wipeout-docs.rl>
+ control, where the scope of the if istself is never needed. You might also notice yourself writing bindings like <code>wo-value="$parents[4].value"</code> which is an indicator
+of un-needed scope.</p>
+    <p>You can share the parents binding scope by setting <code>share-parent-scope="true"</code> in a template definition or as a value in the view model definition.</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;wo.view share-parent-scope="true">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+- or -
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .value("shareParentScope", true)
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>An example of scope</h3>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'share-parent-scope-script-1'" highlight="['the-scope', 'share-parent-scope']">
+    <code parser="s">&lt;wo.content the-scope="'Parent scope'">
+    &lt;set-template>
+        &lt;div>    
+            &lt;wo.content share-parent-scope="true" the-scope="'Child scope 1'">
+                &lt;set-template>
+                    Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
+                &lt;/set-template>
+            &lt;/wo.content>
+        &lt;/div>
+        &lt;div>    
+            &lt;wo.content the-scope="'Child scope 2'">
+                &lt;set-template>
+                    Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
+                &lt;/set-template>
+            &lt;/wo.content>
+        &lt;/div>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'share-parent-scope-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+
+<p>By default, the shareParentScope property of a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if'" text="'wo.if'"></wipeout-docs.rl> control is true.</p>

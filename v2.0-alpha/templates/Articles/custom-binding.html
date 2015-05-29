@@ -1,0 +1,42 @@
+<h1>Writing a custom binding</h1>
+
+You can write a custom binding which determines how properties are set. Simply add it to <code>wo.bindings</code>
+
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.bindings.mybinding = function mybinding (viewModel, property, renderContext) {
+    // Use this function to set up the binding
+};</code>
+</wipeout-docs.view-models.components.code-block> 
+
+The <code>mybinding</code> function will be called when setting up a binding on a viewModel, for instance:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view model--mybinding="$model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+
+<h3>Arguments</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>viewModel</td>
+			<td>The viewModel is the current viewModel, which owns the property to be set</td>
+		</tr>
+		<tr>
+			<td>property</td>
+			<td>The property is a wipeout viewModelPropertyValue. It contains functionality for getting, setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wipeout.template.initialization.viewModelPropertyValue'" text--s="wipeout.template.initialization.viewModelPropertyValue"></wipeout-docs.rl></td>
+		</tr>
+		<tr>
+			<td>renderContext</td>
+			<td>renderContext is the current render context with $this, $parent etc...</td>
+		</tr>
+		<tr>
+			<td>Returns</td>
+			<td>The return value is either a function or an object with a dispose function which will undo anything done in the binding. This is important to prevent memory leaks. Any actions using the <code>property</code> argument do not need to be disposed of.</td>
+		</tr>
+	</tbody>
+</table>

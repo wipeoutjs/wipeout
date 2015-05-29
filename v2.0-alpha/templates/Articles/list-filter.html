@@ -1,0 +1,63 @@
+<h1>A list filter</h1>
+
+<p>The following example is of a list of people filtered by age</p>
+
+<wipeout-docs.view-models.components.j-code-block highlight--s="downward">
+    <code parser="s">// add filters to wo.filters
+wo.filters.ageFilter = {
+    // This filter only returns those properties whose
+    // age is greater than the min age
+    downward: function (rockstars, age) {
+        if (!rockstars)
+            return [];
+        
+        age = age || 0;
+        var output = [];
+        for (var i = 0; i &lt; rockstars.length; i++) {
+            if (rockstars[i].age >= age)
+                output.push(rockstars[i]);
+        }
+        
+        // sort by age
+        output.sort(function (a, b) {
+            return a.age > b.age;
+        });
+        
+        return output;
+    }
+};</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
+    <code parser="s">&lt;wo.content min-age="40">
+    &lt;model>[
+        {name: "John", age: 25},
+        {name: "Paul", age: 2},
+        {name: "George", age: 81},
+        {name: "Ringo", age: 44},
+        {name: "Mick", age: 65},
+        {name: "Keith", age: 13},
+        {name: "Ronnie", age: 52},
+        {name: "Charlie", age: 30}
+    ]&lt;/model>
+    &lt;set-template>
+        &lt;div style="min-height: 200px;">
+            Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
+            &lt;wo.list items="$model, $this.minAge => ageFilter">
+                &lt;item-template>
+                    &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
+                &lt;/item-template>
+            &lt;/wo.content>
+        &lt;/div>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+<p>In the above example, the filter is defined as follows:
+    <ol>
+        <li>The left hand side are arguments. All arguments will be passed into the filter.</li>
+        <li>The argument after the <code>=></code> is the filter name.</li>
+        </ol></p>
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'filter-list-values'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />

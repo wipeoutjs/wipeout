@@ -1,0 +1,22 @@
+<h1>Binding to the current model</h1>
+
+<p>
+Unless you are building generic components, most bindings will point to the model. Binding to the model can be done with the <code>$model</code> keyword.
+</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-model-script-1'">
+	<code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
+    &lt;set-template>
+      Binding to current scope: &lt;span wo-content="$model.value">&lt;/span>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+Renders:
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+	<code parser="s">&lt;wo.view template-id="'bind-to-model-script-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<code>$model</code> is shorthand for <code>$this.model</code>
+<br/>
+<br/>

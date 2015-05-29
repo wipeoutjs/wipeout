@@ -1,0 +1,227 @@
+<div class="index-page">
+    <div class="jumbotron">
+        <h1>Wipeout</h1>
+        <p>Pure and powerful MVVM.</p>
+        <br/>
+        <br/>
+        <div class="center">
+            <h3>Define plugable components</h3>
+            <img style="height: 300px; width: auto" src="content/images/title-page-define-widget.png"></img>
+        </div>
+        <div class="center">
+            <h3>Use them</h3>
+            <img style="height: 125px; width: auto" src="content/images/title-page-html.png"></img>
+        </div>
+    </div>
+<br/>
+    <div class="main-page-section">
+        <h1>What is Wipeout?</h1>
+        <p>Wipeout is an MVVM framework for html and javascript. It pushes the idea of large, scalable web applications built from pluggable components with a strict separation between business logic and presentation logic.</p>
+    </div>
+    <div class="main-page-section">
+        <h1>What does it look like?</h1>
+        <p>Within wipeout you:
+            <ul>
+                <li>Define view models</li>
+                <li>Build templates</li>
+                <li>Create or bind models</li>
+        </ul>
+        </p>
+        <div id="example">
+            <h4>A collapsible component</h4>
+            <div class="columns">
+                <div class="column-2 main-example-code">
+                    View model class
+                    <pre class="prettyprint" data-script-type="text/javascript">// Create a view model
+var collapsible = wo.viewModel("app.collapsible")
+
+  .templateId("/app-collapsible.html")
+  
+  .initialize(function () {
+    // defines whether the content is visible or not
+    this.show = true;
+  })
+  
+  .build();
+	
+// a function which will show or hide the collapsible content
+collapsible.toggleContent = function() {
+  this.show = !this.show;
+};</pre>
+                </div>
+                <div class="column-2 main-example-code">
+                    View model Template (/app-collapsible.html)<br/>
+                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-collapsible.html">&lt;div wo-click="$this.toggleContent"
+        class="panel-heading"
+        style="cursor: pointer">
+    &lt;h3 class="panel-title"
+        wo-content="$model.header">&lt;/h3>
+&lt;/div>
+&lt;div class="panel-body">
+    &lt;div wo-content="$model.content" wo-visible="$this.show">
+    &lt;/div>
+&lt;/div></pre>
+                </div>
+            </div>
+            
+            
+            <h4>Root application component</h4>
+            <div class="columns">
+                <div class="column-2 main-example-code">
+                    View model class
+                    <pre class="prettyprint" data-script-type="text/javascript">// root application component
+wo.viewModel("app.rootApplication")
+
+  .templateId("/app-rootApplication.html")
+  
+  .initialize(function () {
+    // add a model for our application
+    this.model = {
+      applicationName: "Wipeout demo",
+      collapsibleContent: {
+        header: "Open/close",
+        content: "This is content for the component"
+      }
+    }
+  })
+  
+  .build();</pre>
+                </div>
+                <div class="column-2 main-example-code">
+                    View model Template (/app-rootApplication.html)<br />
+                    <pre class="prettyprint" data-script-type="text/xml" data-script-id="/app-rootApplication.html">&lt;div style="width: 300px; margin: 50px"
+     class="panel panel-primary">
+    &lt;h4 wo-content="$model.applicationName">&lt;/h4>
+    &lt;app.collapsible model="$model.collapsibleContent">
+    &lt;/app.collapsible>
+&lt;/div></pre>
+                </div>
+            </div>
+            <h4>Application definition</h4>
+            <div class="columns">
+                <div class="column-2 main-example-code">
+                    Html definiton
+                    <pre class="prettyprint" data-html="true">&lt;!-- html definition -->
+                    
+&lt;app.root-application>
+&lt;/app.root-application></pre>
+                </div>
+                <div class="column-2 main-example-code">
+                </div>
+            </div>
+            
+            
+                    <div>
+                        View this wipeout application definition in action:
+                    </div>
+                        <button id="execute">Execute</button>
+        </div>
+    </div>
+    <div class="main-page-section">
+        <h1>So Why?</h1>
+        <ul>
+            <li>
+                <h3>Custom Html elements</h3>
+                <p>Wipeout view models are used in the same way as standard html. So you can have standard <code>&lt;div>&lt;/div></code> and custom <code>&lt;shopping-cart>&lt;/shopping-cart></code> tags side by side.</p>
+            </li>
+            <li>
+                <h3>Powerful Data Binding</h3>
+                <p>Models and View Models are bound to elements in the DOM and changing the values of one will reflect in the other.</p>
+            </li>
+            <li>
+                <h3>More componentization than you can handle!</h3>
+                <p>In wipeout, everything is a component. From your root application to a visual component (like a collapsible) 
+                    to a business component (like a shopping cart). This makes large complicated pieces of code quite pluggable.</p>
+            </li>
+            <li>
+                <h3>Strict seperation of concerns</h3>
+                <p>Wipeout is rigidly seperated into 3 areas:
+                    <ol>
+                        <li><b>View models</b>. View models are javascript objects which contain view logic and view data. View models inherit from "wo.view" and are mostly declared and created inline in html.</li>
+                        <li><b>Models</b>. Models are javascript objects which contain business logic and business data. Each view model has a model property.</li>
+                        <li><b>Templates</b>. Templates are html. Each view model has a "templateId" property to give it appearence. Templates can bind to model and view model properties.</li>
+                    </ol>
+                    <br/>
+                    Do you want to hack some code to gether to something quick and dirty? First you have to decide where to put the hack, 
+                        then you need to decide which event it should fire off, and before you know it your hack isn't a hack anymore!
+                </p>
+            </li>
+            <li>
+                <h3>The framework that does not control</h3>
+                <p>Wipeout applications are self contained within a single html element. This is great for those who do not want to relinquish all control to a framework or those with a fear of the SPA.</p>
+            </li>
+            <li>
+                <h3>Your old friend jQuery is welcome</h3>
+                <p>Although, you will find that jQuery is not as relevant in the MVVM universe as it used to be.</p>
+            </li>
+            <li>
+                <h3>Leverages the latest and greatest</h3>
+                <p>Wipeout is built with progression in mind and will gently slip into new javascript functionality as it gains browser support.</p>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    window.bootstrapApplication = function() {
+        var scriptsAndCss = [{
+            tag: "link",
+            type: "text/css", 
+            rel: "stylesheet", 
+            href: document.location.protocol + "//" + document.location.host + "/wipeout/## insert: site-directory ##/content/style/bootstrap/css/bootstrap-lumen.css"
+        }, {
+            tag: "script",
+            type: "text/javascript", 
+            src: document.location.protocol + "//" + document.location.host + "/wipeout/## insert: site-directory ##/scripts/lib/jquery-1.10.2.min.js"
+        }, { 
+            tag: "script",
+            type: "text/javascript", 
+            src: document.location.protocol + "//" + document.location.host + "/wipeout/## insert: site-directory ##/scripts/lib/wipeout-2.0.0.debug.js"
+        }];       
+        
+        $("[data-script-type]").each(function() {
+            scriptsAndCss.push({
+                tag: "script",
+                type: $(this).attr("data-script-type"),
+                id: $(this).attr("data-script-id"),
+                content: $(this).html().replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+            });
+        });
+        
+        var html = $("[data-html]").html().replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+                
+        $("#example .prettyprint").each(function() { $(this).html(prettyPrintOne($(this).html())); });
+        $("[data-script-type='text/xml'] span[class=tag]:contains('app.collapsible')")
+			.add($("span[class=tag]:contains('app.root-application')"))
+            .css("font-weight", "bold").css("background", "yellow");
+        
+        $("#execute").on("click", function() {
+            var external = window.open();
+            
+            var content = "";
+			
+            for(var i = 0, ii = scriptsAndCss.length; i < ii; i++) {
+                content += '<' + scriptsAndCss[i].tag + 
+                    (scriptsAndCss[i].type ? ' type="' + scriptsAndCss[i].type + '"' : '') +
+                    (scriptsAndCss[i].id ? ' id="' + scriptsAndCss[i].id + '"' : '') +
+                    (scriptsAndCss[i].src ? ' src="' + scriptsAndCss[i].src + '"' : '') +
+                    (scriptsAndCss[i].href ? ' href="' + scriptsAndCss[i].href + '"' : '') +
+                    (scriptsAndCss[i].rel ? ' rel="' + scriptsAndCss[i].rel + '"' : '') +
+                    '>'
+                + (scriptsAndCss[i].content ? scriptsAndCss[i].content : '') +
+                '<' + '/' + scriptsAndCss[i].tag + '>';
+            }
+			
+			content += '<script type="text/javascript">wo();<' + "/script>";
+            
+            external.window.document.write("<html>\
+    <head>\
+        <title>Wipeout</title>\
+        </head>\
+    <body>" +
+        html + 
+        content +
+    "</body>\
+</html>")
+        });
+    };
+</script>

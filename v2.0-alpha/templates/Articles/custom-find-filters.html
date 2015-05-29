@@ -1,0 +1,35 @@
+<h1>Custom $context.find filters</h1>
+
+    <p>Find filters (such as $instanceof, $ancestry and $type) are static functions defined on the <code>wo.findFilters</code> object.
+    	You can add your own filter by adding a custom method. Custom filters must begin with <code>$</code> to differenciate them from property filters.</p>
+    <wipeout-docs.view-models.components.j-code-block>
+        <code parser="s">// find a viewmodel based on it's model
+wo.findFilters.$hasModel = function(currentItem, searchTerm, index) {
+    // searchTerm will be the namespace passed in
+    if (searchTerm)
+        return currentItem.model != null;
+    else 
+        return currentItem.model == null;
+};</code>
+    </wipeout-docs.view-models.components.j-code-block>
+
+<p>And then using the filter</p>
+    
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="custom-find-filters-1">
+    <code parser="s">&lt;wo.content model--s="Hello wipeout!">
+    &lt;set-template>
+        &lt;wo.content>
+            &lt;set-template>
+                &lt;span wo-content="$context.find({$hasModel: true}).model">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'custom-find-filters-1'">&lt;/wo.view></code>
+    </wipeout-docs.view-models.components.usage-code-block>
+
+
+<br />
+<br />

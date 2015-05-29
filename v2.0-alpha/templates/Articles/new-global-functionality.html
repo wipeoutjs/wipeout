@@ -1,0 +1,26 @@
+<h1>New global functionality</h1>
+
+ <p>Global functionality can easily be added to wipeout native classes because of their prototypical inheritance structure.</p>
+<p>Say you every view, contentContral, if and list to have a unique id. This would involve adding functionality to the
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> class as 
+    all other classes inherit from it:</p>
+
+<wipeout-docs.view-models.components.code-block>
+    <code>// Use a closure so that id can not be corrupted
+(function () {
+    var id = 0;
+        
+    // add functionality to the view prototype
+    wo.view.prototype.uniqueId = function () {
+        // lazily generate an id
+        if(this._uniqueId === undefined) {
+            id++;
+            this._uniqueId = id;
+        }
+        
+        return this._uniqueId;
+    };
+}());</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>Now every class which inherits from wo.view has a uniqueId function</p>

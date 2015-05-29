@@ -1,0 +1,26 @@
+<h1>One way bindings</h1>
+
+<img src="/wipeout/## insert: site-directory ##/content/images/oneWayBinding.png" />
+<p>
+The default binding is one way. This means that the object where the propery 
+    is set will recieve updates when the property changes, however, if the object where the property is set changes the value itself, the original owner of the property will not be notified. In most cases properties will bound one way by default, but occasionally (for instance if a <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=change-default-binding" text="'default binding'"></wipeout-docs.rl> is set for a property) you may need to explicitly set the binding to one way using the <code>--ow</code> <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=property-flags" text="'flag'"></wipeout-docs.rl>.
+</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-one-way-script-1'" highlight--s="--ow">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    &lt;set-template>
+        &lt;wo.content model--ow="$model.value">
+            &lt;set-template>
+                One way bindings: &lt;span wo-content="$model">&lt;/span>
+            &lt;/set-template>
+        &lt;/wo.content>
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-one-way-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+<br/>
+<br/>

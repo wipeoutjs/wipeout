@@ -1,0 +1,31 @@
+<h1>Get the value of the setter</h1>
+<p>To get the setter value use the <code>getter</code> function to create a getter and use the getter to get the value.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;div wo-my-attr="$model">&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+		
+    // returns a function which can be used to get the value
+    var getter = attribute.getter();
+        
+    // returns the value
+    var theValue = getter();
+});</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>If you are using some asynchronus code (i.e. defining any functions within the attribute), it is important to cache the <code>getter</code>. The <code>attribute.getter()</code> function will only work synchronusly, however the result of the <code>getter</code> function can be invoked at any time </p>
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr  (element, attribute, renderContext) {
+		
+    // cache the getter here
+    var getter = attribute.getter();
+    
+    // create an asynchronus function which will be called when the value changes
+    attribute.watch(function (oldValue, newValue) {
+        // use the getter here
+        var result = getter();
+    });
+};</code>

@@ -1,0 +1,50 @@
+<h1>Custom html attributes</h1>
+<p>You can also add custom html attributes to your application by using the <code>wo.addHtmlAttribute</code> method.</p>
+<wipeout-docs.view-models.components.j-code-block>
+	<code parser="s">// a custom html attribute which clears the value of an input when it is clicked
+wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderContext) {
+            
+    attribute.onElementEvent("click", renderContext, function () {
+        element.value = "";
+    });
+});</code>
+</wipeout-docs.view-models.components.j-code-block>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-custom-html-attribute-1'" highlight--s="wo-render">
+    <code parser="s">&lt;wo.content>
+    &lt;set-template>
+        &lt;input value="click me" wo-clear-when-clicked /> 
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-custom-html-attribute-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block>
+
+<h3>Attribute arguments</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>element</td>
+			<td>The html element which the attributes is set on.</td>
+		</tr>
+		<tr>
+			<td>attribute</td>
+			<td>The attribute is a wipeout htmlPropertyValue. It contains functionality for getting setting and watching properties. Full documentation is in the API under <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue'" text--s="wipeout.template.initialization.rendering.htmlPropertyValue"></wipeout-docs.rl></td>
+		</tr>
+		<tr>
+			<td>renderContext</td>
+			<td>renderContext is the current render context with $this, $parent etc...</td>
+		</tr>
+		<tr>
+			<td>Returns</td>
+			<td>The return value is either a function or an object with a dispose function which will undo anything done in the html attribute. This is important to prevent memory leaks. Any actions using the <code>attribute</code> argument do not need to be disposed of.</td>
+		</tr>
+	</tbody>
+</table>

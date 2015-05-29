@@ -1,0 +1,35 @@
+<h1>Binding filters</h1>
+
+<p>
+Binding filters are an extremely powerful way of altering a property value before the parent binding updates are executed. Filters can be used for both viewModel and html element properties. Binding filters are used like this:
+</p>
+<wipeout-docs.view-models.components.code-block highlight--s="=>">
+    <code parser="string">&lt;wo.view filtered-value="$this.value => myFilter">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>
+<p>
+Filters are added to <code>wo.filters</code> and have 2 functions. 
+    <ol>
+        <li>The <code>downward</code> function describes how to alter a value when setting the child property.</li>
+        <li>The <code>upward</code> function describes how to alter a value when setting the parent property.</li>
+    </ol>
+
+Both functions are optional.
+</p>
+<wipeout-docs.view-models.components.code-block highlight="['downward', 'upward']">
+    <code parser="string">wo.filters.exampleFilter = {
+    downward: function (input1, input2, etc...) {
+        // use this filter to alter values from a view model
+        // before they are applied to a html element or child view model
+        
+        return alteredValues;
+    },
+    upward: function (input1, input2, etc...) {
+        // use this filter to alter values from a html element or
+        // child view model before they are applied to the parent.
+        
+        return alteredValues;
+    }
+}</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>See the <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=list-filter" text="'list filter'"></wipeout-docs.rl> and <wipeout-docs.rl href--s="/wipeout/## insert: site-directory ##/how-do-i.html?article=date-parser-filter" text="'date formatter'"></wipeout-docs.rl> for usage examples.</p>

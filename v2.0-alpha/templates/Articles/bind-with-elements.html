@@ -1,0 +1,40 @@
+<h1>Set proerties using HTML elements</h1>
+
+<p>
+    To set more complex properties or long strings (such as templates) you can set properties as HTML elements rather than HTML attributes
+</p>
+
+    <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-with-elements-script-1'">
+        <code parser="s">&lt;wo.content>
+    &lt;!-- Setting the value within a html element -->
+    &lt;my-object-1>{val: "Hello Wipeout!"}&lt;/my-object-1>
+            
+    &lt;!-- Setting the value within a html element attribute -->
+    &lt;my-object-2 value--string="Hello Wipeout!">&lt;/my-object-2>
+
+    &lt;!-- Setting a complex value within a html element -->
+    &lt;my-object-3>
+        &lt;!-- Create an Object. The "js-" part lets wipeout 
+            know that the "o" in "object" should be upper case-->
+        &lt;js-object>
+            &lt;!-- Setting the value within a html element with a parser -->
+            &lt;val parser="string">
+                Hello Wipeout!
+            &lt;/val>
+        &lt;/js-object>
+    &lt;/my-object-3>
+            
+    &lt;set-template>
+        Binding to element value 1: &lt;span wo-content="$this.myObject1.val">&lt;/span> &lt;br />
+        Binding to element value 2: &lt;span wo-content="$this.myObject2">&lt;/span> &lt;br />
+        Binding to element value 3: &lt;span wo-content="$this.myObject3.val">&lt;/span> &lt;br />
+    &lt;/set-template>
+&lt;/wo.content></code>
+    </wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'bind-with-elements-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />

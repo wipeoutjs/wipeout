@@ -1,0 +1,22 @@
+<h1>Access another wipeout attribute</h1>
+<p>Some wipeout attributes depend on one another, and you may wish to access one attribute within another. You can do this with the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wipeout.template.rendering.htmlPropertyValue&functionName=otherAttribute&isStatic=false'" text="'otherAttribute'"></wipeout-docs.rl> function.</p>
+Declaration:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">&lt;input type="text" wo-my-attr="$model" wo-value="$model.property1" /></code>
+</wipeout-docs.view-models.components.code-block>
+Attribute:
+<wipeout-docs.view-models.components.code-block show-definition-code="false">
+	<code parser="s">wo.addHtmlAttribute("my-attr", function myattr (element, attribute, renderContext) {
+	
+    var getter;
+    var success = attribute.otherAttribute("value", function (value) {
+        // value is the "wo-value" attribute for this element
+        getter = value.getter();
+    });
+        
+    if (success) {
+        var val = getter();
+    }
+});</code>
+</wipeout-docs.view-models.components.code-block>
+<p>The <code>attribute.otherAttribute</code> attempts to find the other attribute and returns <code>true/false</code> depending on it's success. If the attribute is found, the callback will be run and you can access the other attribute.</p>

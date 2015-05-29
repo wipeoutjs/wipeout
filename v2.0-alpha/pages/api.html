@@ -1,0 +1,16 @@
+
+<wipeout-docs.view-models.api-application model="new wipeoutDocs.models.apiApplication()">
+</wipeout-docs.view-models.api-application>
+
+## insert: templates ##
+
+<script type="text/javascript">
+    window.bootstrapApplication = function() {
+        setTimeout(function() {            
+            crossroads.parse(location.pathname + location.search);
+            window.onpopstate = function() {
+                crossroads.parse(location.pathname + location.search);
+            };
+        }, 500);
+    };
+</script>

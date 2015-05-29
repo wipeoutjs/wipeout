@@ -1,0 +1,35 @@
+<h1>View Models and Html Elements</h1>
+<p>Within wipeout templates, view models should be treated almost like html elements. They are defined in the same way and can sit side by side with elements</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;my-view-model>&lt;/my-view-model>
+    &lt;input type="text" />
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<br/><p>There are some differences in setting the properties of view models and html elements</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;div>
+    &lt;my-view-model model="$model.value">&lt;/my-view-model>
+    &lt;input type="text" data-model="$model.value" wo-value="$model.value" />
+&lt;/div></code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>In this example we have bound:
+    <ol>
+        <li>The model of <code>my-view-model</code> to the <code>value</code> property of the model of the view model which the template was applied to.</li>
+        <li>The <code>data-model</code> property of the <code>input</code> to the string <code>"$model.value"</code> </li>
+        <li>The <code>value</code> of the <code>input</code> to the property of the model of the view model which the template was applied to. The difference between this case and the previous case is that <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-value'" text--s="wo-value"></wipeout-docs.rl> is a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=html-attributes'" text--s="wipeout html attribute"></wipeout-docs.rl>.</li>
+</ol>
+</p>
+<p>You can modify the way view model properties are bound using:
+<ul>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=parsers'" text--s="Parsers"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=binding-types'" text--s="Bindings"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=filters'" text--s="Filters"></wipeout-docs.rl></li>
+</ul></p>
+<p>You can modify the way wipeout html properties are bound using:
+<ul>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=parsers'" text--s="Parsers"></wipeout-docs.rl></li>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=filters'" text--s="Filters"></wipeout-docs.rl></li>
+</ul></p>

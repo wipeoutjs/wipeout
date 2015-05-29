@@ -1,0 +1,53 @@
+<h1>The Checked Value attribute</h1>
+<h3><code>wo-checked-value="value"</code></h3>
+<h3><code>data-wo-checked-value="value"</code></h3>
+<p>The value attribute defines what value to set if a checkbox or radio button is checked. It can be used in conjunction with the <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-value'" text="'wo-value'"></wipeout-docs.rl> or <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes" target="_blank">value</a> attributes. If no value is provided a default value of <code>true</code> is used.</p>
+<p>For checkboxes and radio buttons see: <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=wo-checked-value'" text="'wo-checked-value'"></wipeout-docs.rl></p>
+
+<h3>Radio button</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-radio'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content model="1">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;label>Value 1:&lt;/label> &lt;input type="radio" wo-checked-value="$model" wo-value="1" name="radio" /> &lt;br />
+        &lt;label>Value 2:&lt;/label> &lt;input type="radio" wo-checked-value="$model" value="2" name="radio" />
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-radio'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3>Checkbox with value</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-1'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model == null ? 'null' : $model">&lt;/span> &lt;br />
+        &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" value="Hello Wipeout!" />
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-checkbox-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<h3>Checkbox without value</code></h3>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-2'" highlight="['wo-checked-value', 'wo-value', 'value']">
+    <code parser="s">&lt;wo.content model="true">
+    &lt;set-template>
+        Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
+        &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" />
+    &lt;/set-template>
+&lt;/wo.content></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'wo-checked-value-attr-checkbox-2'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+<br />
+<br />
+<br />
+<br />
+<br />

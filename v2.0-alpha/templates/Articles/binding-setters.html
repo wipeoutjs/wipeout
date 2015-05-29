@@ -1,0 +1,33 @@
+<h1>Binding Setters</h1>
+<p>There are many values available to you when setting view model properties or using <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=html-attributes'" text--s="wipeout html attributes">.
+    <ul>
+        <li><code>$this</code> references the view model which is being templated</li>
+        <li><code>$model</code> references the model of the view model being templated</li>
+        <li><code>$parent</code> references view model 1 level up</li>
+        <li><code>$parents</code> is an array of all view model ancestors where <code>$parents[0] === $parent</code>.</li>
+        <li><code>$parentContext</code> is the binding context of the <code>$parent</code>.</li>
+        <li><code>$index.value</code> is available to items in an <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=working-with-lists'" text--s="list"></wipeout-docs.rl> and represents their index in the array.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=bind-to-ancestor'" text--s="$context.find(...)"></wipeout-docs.rl> is a tool to find ancestors based on search terms.</li>
+    </ul>
+    </p>
+<p>You can put almost any code you want into a binding setter</p>
+Examples:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;!-- bind to the model -->
+&lt;wo.view model="$model">&lt;/wo.view>
+
+&lt;!-- bind to the value property of the view model -->
+&lt;wo.view model="$this.value">&lt;/wo.view>
+
+&lt;!-- bind to the value property of the parent view model -->
+&lt;wo.view model="$parent.value">&lt;/wo.view>
+
+&lt;!-- bind to a dynamic value -->
+&lt;wo.view model="$model != null ? true : false">&lt;/wo.view>
+
+&lt;!-- bind to a global value -->
+&lt;wo.view model="document">&lt;/wo.view>
+
+&lt;!-- find a view model and bind to it's model -->
+&lt;wo.view model="$context.find(myViewModel).model">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.code-block>

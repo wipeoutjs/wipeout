@@ -1,0 +1,22 @@
+<h1>Changing the default binding for a property</h1>
+<p>The default binding for a property can be changed when defining a viewModel.</p>
+<p>Say for instance, you wish the model of your viewModel to always bind two ways, you can use the following code:</p>
+
+<wipeout-docs.view-models.components.code-block>
+	<code parser="s">wo.viewModel("myViewModel")
+    .binding("model", "tw")
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+
+<p>Now setting the model of <code>my-view-model</code> inside a template will always bind two ways.</p>
+
+
+<p>There are properties within wipeout which have default binding types as standard:</p>
+<ul>
+	<li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.content&amp;propertyName=setTemplate&amp;isStatic=false'" text--s="wo.content.setTemplate"></wipeout-docs.rl> expects a html template definition.</li>
+	<li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if&amp;propertyName=ifTrue&amp;isStatic=false'" text--s="wo.if.ifTrue"></wipeout-docs.rl> expects a html template definition.</li>
+	<li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.if&amp;propertyName=ifFalse&amp;isStatic=false'" text--s="wo.if.ifFalse"></wipeout-docs.rl> expects a html template definition.</li>
+	<li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list&amp;propertyName=itemTemplate&amp;isStatic=false'" text--s="wo.list.itemTemplate"></wipeout-docs.rl> expects a html template definition.</li>
+    <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view&amp;propertyName=shareParentScope&amp;isStatic=false'" text--s="wo.view.shareParentScope"></wipeout-docs.rl> expects either the string <code>true</code> or <code>false</code>.</li>
+	<li>wo.view.id expects a string.</li>
+</ul>
