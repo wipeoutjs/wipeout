@@ -123,8 +123,8 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
 				}
 			},
 			viewModels: {
-				itemsControl: {
-					removeItem: "<summary type=\"wo.routedEvent\">If caught by an itemsControl, remove the item in the args from the itemsControl items</summary>"
+				list: {
+					removeItem: "<summary type=\"wo.routedEvent\">If caught by an list, remove the item in the args from the list items</summary>"
 				}
 			}
 		},
@@ -137,9 +137,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         wo: {},
         wipeout: {
             base: {
-                itemsControl: {
+                list: {
                     removeItem: {
-                        description: "<summary type=\"wo.routedEvent\">Routed event. Signals that the model in the routed event args is to be removed from the catching itemsControl</summary>"
+                        description: "<summary type=\"wo.routedEvent\">Routed event. Signals that the model in the routed event args is to be removed from the catching list</summary>"
                     }
                 },
                 "if": {
@@ -175,9 +175,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
                         description: "<summary type=\"Object\">A cache of all bindings created</summary>"
                     }
                 },
-                itemsControl: {
+                list: {
                     utils: {
-                        description: "<summary type=\"Object\">Utils used by the itemsControl binding</summary>"                            
+                        description: "<summary type=\"Object\">Utils used by the list binding</summary>"                            
                     }
                 },
                 wipeout: {

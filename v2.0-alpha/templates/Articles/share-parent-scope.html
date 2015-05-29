@@ -18,24 +18,24 @@ of un-needed scope.</p>
 <h3>An example of scope</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'share-parent-scope-script-1'" highlight="['the-scope', 'share-parent-scope']">
-    <code parser="s">&lt;wo.content-control the-scope="'Parent scope'">
+    <code parser="s">&lt;wo.content the-scope="'Parent scope'">
     &lt;set-template>
         &lt;div>    
-            &lt;wo.content-control share-parent-scope="true" the-scope="'Child scope 1'">
+            &lt;wo.content share-parent-scope="true" the-scope="'Child scope 1'">
                 &lt;set-template>
                     Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
                 &lt;/set-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
         &lt;div>    
-            &lt;wo.content-control the-scope="'Child scope 2'">
+            &lt;wo.content the-scope="'Child scope 2'">
                 &lt;set-template>
                     Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
                 &lt;/set-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
     

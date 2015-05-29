@@ -8,15 +8,15 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'" highlight--s="--tw">
-        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+        <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--tw="$model.value">
+        &lt;wo.content model--tw="$model.value">
             &lt;set-template>
                 Two way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">

@@ -13,7 +13,7 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
                     return name;
             }
 
-            return wo.contentControl.createAnonymousTemplate("");
+            return wo.content.createAnonymousTemplate("");
         });
     };
     

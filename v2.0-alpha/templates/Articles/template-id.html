@@ -9,11 +9,11 @@
 
 
 <wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
+    <code parser="s">&lt;wo.content model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;set-template>
         &lt;wo.viewModel="$model.subModel" template-id="'myTemplateId'" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.code-block>
 
 <p>Notice the single quotes surrounding the template id property. Anything defined in a property on a viewModel or a "data-bind" property on a html element is compiled into javascript, so the single quotes denote a string.</p>

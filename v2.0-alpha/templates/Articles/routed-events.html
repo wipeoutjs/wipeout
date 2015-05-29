@@ -11,7 +11,7 @@ the ancestor viewModel will recieve any events triggered by it's decendants</p>
 var myRoutedEvent = "increment";
 
 // this class triggers a custom routed event
-var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.contentControl)
+var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.content)
     .build();
 
 triggerEvent.trigger = function() {
@@ -19,7 +19,7 @@ triggerEvent.trigger = function() {
 };
             
 // this class subscribes to a custom routed event
-var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.contentControl)
+var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.content)
     .initialize(function () {
         this.routedEventTriggered = 0;
         this.registerRoutedEvent(myRoutedEvent, this.onRoutedEvent, this);

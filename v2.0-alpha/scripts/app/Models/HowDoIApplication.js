@@ -11,7 +11,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     });
     
     var buildHref = function(parameters) {
-        if(parameters.article && !wo.contentControl.templateExists("Articles." + parameters.article))
+        if(parameters.article && !wo.content.templateExists("Articles." + parameters.article))
             throw "No template for " + parameters.article;
         
         var output = []
@@ -29,7 +29,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("With orienteer", "get-started-with-orienteer"),
                 new articleLink("With busybody", "get-started-with-busybody"),
-                new articleLink("With Hello World", "get-started-with-hello-world"),  
+                new articleLink("With Hello World", "get-started-with-hello-world"),
                 new articleLink("With MVVM basics", "get-started-with-mvvm-basics"),   
                 new articleLink("With MVVM interactions", "get-started-with-mvvm-interactions"),
                 new articleLink("With Pluggable MVVM components", "get-started-with-pluggable-mvvm-components"),
@@ -44,7 +44,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("View Models and Html Elements", "view-models-and-html-elements"),
                 new articleLink("Accessing html elements and view models", "template-items"),
                 new articleLink("Binding Setters", "binding-setters"),
-                new articleLink("Setting the template within a template", "content-control"),
+                new articleLink("Setting the template within a template", "content"),
                 new articleLink("Complex template properties", "complex-template-properties"),
                 new articleLink("Illegal html tags", "illegal-html-tags"),
                 new articleLink("Html element/ViewModel name clashes", "definitely-not-a-view-model"),
@@ -87,10 +87,10 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         ]}, {        
             header: new articleLink("Work with lists", "working-with-lists"),
             items: [
-                new articleLink("Setting the list template", "items-control-list-template"),
-                new articleLink("List item lifecycle", "items-control-item-lifecycle"),
-                new articleLink("Creating custom list items", "items-control-custom-items"),
-                new articleLink("Self removing items", "items-control-self-removing-items")
+                new articleLink("Setting the list template", "list-template"),
+                new articleLink("List item lifecycle", "list-item-lifecycle"),
+                new articleLink("Creating custom list items", "list-custom-items"),
+                new articleLink("Self removing items", "list-self-removing-items")
         ]}, {
             header: new articleLink("The if component", "if-control"),
             items: []

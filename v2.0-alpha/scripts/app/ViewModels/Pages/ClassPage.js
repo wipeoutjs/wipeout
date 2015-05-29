@@ -10,7 +10,7 @@
                         return className;
                 }
 
-                return wo.contentControl.createAnonymousTemplate("");
+                return wo.content.createAnonymousTemplate("");
             });
         };
 

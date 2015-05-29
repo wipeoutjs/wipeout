@@ -5114,7 +5114,7 @@ Class("wipeout.htmlBindingTypes.setTemplateToTemplateId", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		viewModel.templateId = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
+		viewModel.templateId = wipeout.viewModels.content.createAnonymousTemplate(setter._value);
     }
 });
 
@@ -5149,7 +5149,7 @@ Class("wipeout.htmlBindingTypes.templateProperty", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		viewModel[setter.name + "Id"] = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
+		viewModel[setter.name + "Id"] = wipeout.viewModels.content.createAnonymousTemplate(setter._value);
     }
 });
 
@@ -5713,7 +5713,7 @@ Class("wipeout.template.engine", function () {
 		return function (templateId) {
 			return templateId ||
 				blankTemplateId || 
-				(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
+				(blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate(""));
 		};
 	}());
 	
@@ -6849,17 +6849,17 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		
 		///<summary type="Array">The array</summary>
 		this.array = array;
-		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
-			///<summary type="wo.itemsControl">The items control if the array belongs to one</summary>
-			this.itemsControl = this.parent.parentRenderContext.$this;
+		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.list && array === this.parent.parentRenderContext.$this.items)
+			///<summary type="wo.list">The items control if the array belongs to one</summary>
+			this.list = this.parent.parentRenderContext.$this;
 		
 		///<summary type="Array">Cache the child renderedContents </summary>
 		this.children = [];
         
-        if (this.itemsControl) {
-			if (this.itemsControl.$getChild) throw "These items are being rendered already.";
+        if (this.list) {
+			if (this.list.$getChild) throw "These items are being rendered already.";
 			
-            this.itemsControl.$getChild = (function (i) {
+            this.list.$getChild = (function (i) {
 				if (arguments.length === 0) {
 					var op = this.children.slice();
 					for (var i = 0, ii = op.length; i < ii; i++)
@@ -6877,8 +6877,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		///<summary>Clean up item before removal</summary>
         ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
 		
-		if (this.itemsControl)
-			this.itemsControl.onItemRemoved(item.renderedChild);
+		if (this.list)
+			this.list.onItemRemoved(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;
@@ -6945,12 +6945,12 @@ Class("wipeout.template.rendering.renderedArray", function () {
 				this.children[i - 1].insertAfter(placeholder);
 
 			this.children[i] = new wipeout.template.rendering.renderedContent(placeholder, "item: " + i, this.parent.parentRenderContext);
-			var vm = this.itemsControl ? this.itemsControl._createItem(this.array[i]) : this.array[i];
+			var vm = this.list ? this.list._createItem(this.array[i]) : this.array[i];
 			this.children[i].render(vm, i);
 			this.children[i].forItem = this.array[i];
-			if (this.itemsControl) {
+			if (this.list) {
 				this.children[i].renderedChild = vm;
-				this.itemsControl.onItemRendered(vm);
+				this.list.onItemRendered(vm);
 			}
 		};
 
@@ -6965,9 +6965,9 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		enumerateArr(this.children, this.remove, this);
 		this.children.length = 0;
 
-		if (this.itemsControl) {
-			delete this.itemsControl.$getChild;
-			delete this.itemsControl;
+		if (this.list) {
+			delete this.list.$getChild;
+			delete this.list;
 		}
 		
 		delete this.array;
@@ -8009,7 +8009,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.content, wo.list etc...";
 
 			parsers[propertyName] = parser;
 			return output;
@@ -8027,7 +8027,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.content, wo.list etc...";
 
 			bindingTypes[propertyName] = bindingType;
 			return output;
@@ -8122,9 +8122,9 @@ function viewModel (name, extend, doNotWarn) {
 }
 
 
-Class("wipeout.viewModels.contentControl", function () {    
+Class("wipeout.viewModels.content", function () {    
 
-    var contentControl = wipeout.viewModels.view.extend(function contentControl(templateId, model) {
+    var content = wipeout.viewModels.view.extend(function content(templateId, model) {
         ///<summary>Expands on view and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
@@ -8133,13 +8133,13 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<summary type="String">The template which corresponds to the templateId for this item</summary>
         //this.setTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  
     
-    contentControl.addGlobalParser("setTemplate", "template");
-    contentControl.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
+    content.addGlobalParser("setTemplate", "template");
+    content.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
     
-    contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+    content.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
         ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
@@ -8148,7 +8148,7 @@ Class("wipeout.viewModels.contentControl", function () {
         return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
-    contentControl.createAnonymousTemplate = (function () {
+    content.createAnonymousTemplate = (function () {
         
         var i = Math.floor(Math.random() * 1000000000), 
             anonymousTemplateId = "WipeoutAnonymousTemplate",
@@ -8241,10 +8241,10 @@ Class("wipeout.viewModels.contentControl", function () {
         }
 
         this.currentTemplate = null;
-        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.content.createAnonymousTemplate(newVal);
     }
     
-    return contentControl;
+    return content;
 });
 
 
@@ -8255,7 +8255,7 @@ Class("wipeout.viewModels.if", function () {
         if (!sc) return;
         sc = false;
         
-        _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
+        _if.blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate("", true);
     };
     
     var _if = wipeout.viewModels.view.extend(function _if(ifTrueId, model) {
@@ -8285,11 +8285,11 @@ Class("wipeout.viewModels.if", function () {
         
         ///<Summary type="String">Anonymous version of ifTrueId</Summary>
         this.ifTrue = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
         
         ///<Summary type="String">Anonymous version of ifFalseId</Summary>
         this.ifFalse = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
     });
 	
     _if.addGlobalParser("ifFalse", "template");
@@ -8310,19 +8310,19 @@ Class("wipeout.viewModels.if", function () {
 });
 
  
-Class("wipeout.viewModels.itemsControl", function () {
+Class("wipeout.viewModels.list", function () {
     
 	var deafaultTemplateId;
 	var defaultItemTemplateId;
-    var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
-        ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
+    var list = wipeout.viewModels.content.extend(function list(templateId, itemTemplateId, model) {
+        ///<summary>Bind a list of models (items) to a list of view models and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
         this._super(templateId || 
 					deafaultTemplateId ||
-					(deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}')), model);
+					(deafaultTemplateId = wipeout.viewModels.content.createAnonymousTemplate('{{$this.items}}')), model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
         this.itemTemplateId = itemTemplateId;
@@ -8330,28 +8330,28 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
         this.itemTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="busybody.array">An array of models to render</Summary>
         this.items = new busybody.array();
         this.registerDisposable(this.items);
         
-        this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
+        this.registerRoutedEvent(list.removeItem, this._removeItem, this);
         
         this.observe("itemTemplateId", function (oldVal, newVal) {
 			enumerateArr(this.getItemViewModels(), function (vm) {
-				if (vm.__createdByItemsControl)
+				if (vm.__createdBylist)
 					vm.templateId = newVal;
 			});
         }, {context: this});
     });
     
-    itemsControl.addGlobalParser("itemTemplate", "template");
-    itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
+    list.addGlobalParser("itemTemplate", "template");
+    list.addGlobalBindingType("itemTemplate", "templateProperty");
         
-    itemsControl.removeItem = {};
+    list.removeItem = {};
 	
-    itemsControl.prototype._removeItem = function(e) {
+    list.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="e" type="ObjectArgs" optional="false">The item to remove</param>
     
@@ -8361,7 +8361,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
     };
     
-    itemsControl.prototype.getItemViewModels = function() {
+    list.prototype.getItemViewModels = function() {
         ///<summary>Get the child view models if any</summary>
         ///<returns type="Array">The items</returns>
     
@@ -8370,7 +8370,7 @@ Class("wipeout.viewModels.itemsControl", function () {
 			[];
 	};
     
-    itemsControl.prototype.getItemViewModel = function(index) {
+    list.prototype.getItemViewModel = function(index) {
         ///<summary>Get the child view model at a given index</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
         ///<returns type="Any">The view model</returns>
@@ -8380,7 +8380,7 @@ Class("wipeout.viewModels.itemsControl", function () {
             undefined;
     };
     
-    itemsControl.prototype.removeItem = function(item) {
+    list.prototype.removeItem = function(item) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="item" type="Any" optional="false">The item to remove</param>
     
@@ -8388,20 +8388,20 @@ Class("wipeout.viewModels.itemsControl", function () {
     };
     
     //virtual
-    itemsControl.prototype.onItemRendered = function (item) {
+    list.prototype.onItemRendered = function (item) {
         ///<summary>Called after a new item items control is rendered</summary>
         ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
     
     //virtual
-    itemsControl.prototype.onItemRemoved = function (item) {
+    list.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="Any" optional="false">The item deleted</param>  
         
         item.dispose();
     };
 
-    itemsControl.prototype._createItem = function (model) {
+    list.prototype._createItem = function (model) {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
@@ -8411,17 +8411,17 @@ Class("wipeout.viewModels.itemsControl", function () {
     };
 
     // virtual
-    itemsControl.prototype.createItem = function (model) {
+    list.prototype.createItem = function (model) {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
 		
-        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
-		vm.__createdByItemsControl = true;
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.content.createAnonymousTemplate("{{$this.model}}")), model);
+		vm.__createdBylist = true;
 		return vm;
     };
 
-    return itemsControl;
+    return list;
 });
 
 (function () {

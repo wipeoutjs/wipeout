@@ -9,16 +9,16 @@
 <h3>One way binding (default)</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-ow'" highlight--s="model--ow">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--ow="$model.innerValue">
+        &lt;wo.content model--ow="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the parent affect the child, but changes to the child do not affect the parent</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -29,16 +29,16 @@
 <h3>Two way binding</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-tw'" highlight--s="model--tw">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--tw="$model.innerValue">
+        &lt;wo.content model--tw="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the parent and child affect eachother.</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -48,16 +48,16 @@
 <h3>One way to source binding</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-owts'" highlight--s="model--owts">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--owts="$model.innerValue">
+        &lt;wo.content model--owts="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the child affect the parent, but changes to the parent do not affect the child</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -67,16 +67,16 @@
 <h3>No binding, only set</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-nb'" highlight--s="model--nb">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--nb="$model.innerValue">
+        &lt;wo.content model--nb="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to parent and child do not affect eachother</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">

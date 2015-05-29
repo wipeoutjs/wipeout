@@ -9,7 +9,7 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", f
                     return name;
             }
 
-            return wo.contentControl.createAnonymousTemplate("");
+            return wo.content.createAnonymousTemplate("");
         });
     };
     

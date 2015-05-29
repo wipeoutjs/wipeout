@@ -2,15 +2,15 @@
 <p>At it's core, wipeout uses an <a href="http://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank">Object Oriented Programming (OOP)</a> model to build types of viewModels. This means that your viewModels must inherit from another viewModel type in order to use wipeout functionality. The default and most basic viewModel to inherit from is <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.view'" text="'wo.view'"></wipeout-docs.rl> however you can change this with the second argument of <code>wo.viewModel</code> </p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code parser="s">// inherit from contentControl
-wo.viewModel("myNamespace.myViewModel", wo.contentControl)
+    <code parser="s">// inherit from content
+wo.viewModel("myNamespace.myViewModel", wo.content)
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
 <p>There are several viewModel types within wipeout which you may wish to inherit from:
     <ul>
         <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl> will give you basic viewModel functionality such as <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.view&propertyName=templateId&isStatic=false'" text="'template id'"></wipeout-docs.rl>, <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.view&propertyName=templateItems&isStatic=false'" text="'template items'"></wipeout-docs.rl>, <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=view-model-lifecycle'" text="'initialize, rendered'"></wipeout-docs.rl> etc...</li>
-        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.contentControl'" text="'wo.contentControl'"></wipeout-docs.rl> will give you all of the functionality of <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl>, and adds a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.contentControl&propertyName=setTemplate&isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property which allows you to set the template within another template.</li>
-        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.itemsControl'" text="'wo.itemsControl'"></wipeout-docs.rl> handles the rendering of lists of items and translating models into viewModels.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.content'" text="'wo.content'"></wipeout-docs.rl> will give you all of the functionality of <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl>, and adds a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.content&propertyName=setTemplate&isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property which allows you to set the template within another template.</li>
+        <li><wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&className=wo.list'" text="'wo.list'"></wipeout-docs.rl> handles the rendering of lists of items and translating models into viewModels.</li>
     </ul>
 </p>
 <h3>Inherit from a custom viewModel class</h3>

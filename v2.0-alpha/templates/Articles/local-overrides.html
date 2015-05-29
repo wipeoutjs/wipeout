@@ -2,14 +2,14 @@
 
 <p>Local overriding is overriding a specific instance of a class, while leaving other instances untouched.</p>
 
-<p>Say you have a viewModel which has a child viewModel, which is a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
+<p>Say you have a viewModel which has a child viewModel, which is a <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list'" text="'wo.list'" />.
 You want each item in the items control to have a method which removes itself.
 There are two options on how to implement this functionality:
     <ol>
-        <li>Create a new class which inherits from itemsControl and override the 
-            <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
+        <li>Create a new class which inherits from list and override the 
+            <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
              function</li>
-        <li>Get the instance of the itemsControl and locally override the create item function.</li>
+        <li>Get the instance of the list and locally override the create item function.</li>
 </ol>
 Using local overrides looks like this:
 </p>
@@ -18,7 +18,7 @@ Using local overrides looks like this:
         <div class="column-2 main-example-code">
 <wipeout-docs.view-models.components.code-block>
     <code>window.myViewModel = 
-    wo.contentControl.extend(function myViewModel() {
+    wo.content.extend(function myViewModel() {
         this._super();
     });
     
@@ -60,7 +60,7 @@ myViewModel.prototype.onRendered =
     &lt;set-template>
         &lt;!-- provide an id to 
                 be referenced in code -->
-        &lt;wo.items-control id="list">
+        &lt;wo.list id="list">
             &lt;itemsTemplate>
         &lt;!-- bind to the remove function 
             added in code -->
@@ -70,7 +70,7 @@ myViewModel.prototype.onRendered =
                 &lt;!-- add item template here -->
 
             &lt;/itemsTemplate>
-        &lt;/wo.items-control>
+        &lt;/wo.list>
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>

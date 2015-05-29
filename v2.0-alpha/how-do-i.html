@@ -216,7 +216,7 @@ myViewModel.function2 = function () {
     </wipeout-docs.view-models.components.js-js-code-block>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'add-a-property-parser-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="name">
         William Wallace
     &lt;/my-val>
@@ -224,7 +224,7 @@ myViewModel.function2 = function () {
         First name: &lt;span data-bind="text: myVal.firstName">&lt;/span>, 
         Last name: &lt;span data-bind="text: myVal.lastName">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -304,15 +304,15 @@ They will be appended to the prototype, effectively making them static. Put inst
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-no-way-script-1'" highlight--s="--nb">
-        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+        <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--nb="$model.value">
+        &lt;wo.content model--nb="$model.value">
             &lt;set-template>
                 Setter bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -331,17 +331,17 @@ By default, all bindings are one way from the parent (source) to the child (dest
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-owts-script-1'" highlight--s="--owts">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;set-template>
         One way to source bindings: &lt;span wo-content="$model">&lt;/span>
         &lt;br />
-        &lt;wo.content-control input-value--owts="$model">
+        &lt;wo.content input-value--owts="$model">
             &lt;set-template>
                 &lt;input type="text" wo-value="$this.inputValue" wo-on-event="keyup"/>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -365,15 +365,15 @@ The default binding is one way. This means that the object where the propery
 </p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-one-way-script-1'" highlight--s="--ow">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--ow="$model.value">
+        &lt;wo.content model--ow="$model.value">
             &lt;set-template>
                 One way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -397,14 +397,14 @@ The default binding is one way. This means that the object where the propery
     <p>There is a helper function which can find ancestors based on their properties, type, depth or any other custom attribute you need.</p>
 
     <wipeout-docs.view-models.components.j-code-block>
-        <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
-wo.viewModel("demoApp.myType", wo.contentControl)
+        <code parser="s">// create a custom class to distinguish type (inherit from content)
+wo.viewModel("demoApp.myType", wo.content)
     .build();</code>
     </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'" highlight--s="$context.find">
         <code parser="s">&lt;demo-app.my-type model="{value: 'Hello wipeout!'}" value="123">
     &lt;set-template>
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 Found ancestor by type: 
                 &lt;span wo-content="$context.find(demoApp.myType).model.value">&lt;/span> &lt;br />
@@ -417,7 +417,7 @@ wo.viewModel("demoApp.myType", wo.contentControl)
                 Found ancestor model by property value:
                 &lt;span wo-content="$context.find({value: 'Hello wipeout!', $model: true}).value">&lt;/span> &lt;br />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/demo-app.my-type></code>
     </wipeout-docs.view-models.components.new-template-code-block>
@@ -495,11 +495,11 @@ If search parameters are used, the available parameters are as follows:
 };</code>
     </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-global-script-1'">
-        <code parser="s">&lt;wo.content-control model="exampleValue.innerValue">
+        <code parser="s">&lt;wo.content model="exampleValue.innerValue">
     &lt;set-template>
         Binding to global: &lt;span wo-content="$model">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -518,11 +518,11 @@ Unless you are building generic components, most bindings will point to the mode
 </p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-model-script-1'">
-	<code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+	<code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
       Binding to current scope: &lt;span wo-content="$model.value">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 Renders:
@@ -543,15 +543,15 @@ In order to keep clean contextual boundaries, the model property of a child view
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control model="$model.value">
+        &lt;wo.content model="$model.value">
             &lt;set-template>
                 Binding to a property on parent's model: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -575,15 +575,15 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
-        <code parser="s">&lt;wo.content-control value="{ innerValue: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content value="{ innerValue: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control value="$this.value.innerValue">
+        &lt;wo.content value="$this.value.innerValue">
             &lt;set-template>
                 Binding to a property on parent's viewModel: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -602,7 +602,7 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 <script id="Articles.bind-to-specific-view-model" type="text/template">
 <h1>Bind to a specific viewModel</h1>
 
-    <p>When binding or setting prperties it is often useful to bind to ancestors, especially when using nested anonymous templates (contentControls), and there are four mechanisms for doing this:
+    <p>When binding or setting prperties it is often useful to bind to ancestors, especially when using nested anonymous templates (contents), and there are four mechanisms for doing this:
 <ol>
     <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=knockout-binding-context'" text="'Knockout binding context'" /></li>
     <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=find-a-view-model'" text="'$context.find(...)'" /></li>
@@ -620,11 +620,11 @@ The item you want the template to bind to can be set in the template.
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-static-value-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
         Binding to static value: &lt;span wo-content="$model.value">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -646,15 +646,15 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-two-way-script-1'" highlight--s="--tw">
-        <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+        <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--tw="$model.value">
+        &lt;wo.content model--tw="$model.value">
             &lt;set-template>
                 Two way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -677,7 +677,7 @@ By default, all bindings are one way. This means that the object where the prope
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-with-elements-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;!-- Setting the value within a html element -->
     &lt;my-object-1>{val: "Hello Wipeout!"}&lt;/my-object-1>
             
@@ -701,7 +701,7 @@ By default, all bindings are one way. This means that the object where the prope
         Binding to element value 2: &lt;span wo-content="$this.myObject2">&lt;/span> &lt;br />
         Binding to element value 3: &lt;span wo-content="$this.myObject3.val">&lt;/span> &lt;br />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -721,7 +721,7 @@ By default, all bindings are one way. This means that the object where the prope
         <li><code>$parent</code> references view model 1 level up</li>
         <li><code>$parents</code> is an array of all view model ancestors where <code>$parents[0] === $parent</code>.</li>
         <li><code>$parentContext</code> is the binding context of the <code>$parent</code>.</li>
-        <li><code>$index.value</code> is available to items in an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text--s="itemsControl"></wipeout-docs.rl> and represents their index in the array.</li>
+        <li><code>$index.value</code> is available to items in an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text--s="list"></wipeout-docs.rl> and represents their index in the array.</li>
         <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-to-ancestor'" text--s="$context.find(...)"></wipeout-docs.rl> is a tool to find ancestors based on search terms.</li>
     </ul>
     </p>
@@ -799,16 +799,16 @@ If <code>$model</code> were to be observable but <code>item1</code> were not, wi
 <h3>One way binding (default)</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-ow'" highlight--s="model--ow">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--ow="$model.innerValue">
+        &lt;wo.content model--ow="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the parent affect the child, but changes to the child do not affect the parent</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -819,16 +819,16 @@ If <code>$model</code> were to be observable but <code>item1</code> were not, wi
 <h3>Two way binding</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-tw'" highlight--s="model--tw">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--tw="$model.innerValue">
+        &lt;wo.content model--tw="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the parent and child affect eachother.</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -838,16 +838,16 @@ If <code>$model</code> were to be observable but <code>item1</code> were not, wi
 <h3>One way to source binding</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-owts'" highlight--s="model--owts">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--owts="$model.innerValue">
+        &lt;wo.content model--owts="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to the child affect the parent, but changes to the parent do not affect the child</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -857,16 +857,16 @@ If <code>$model</code> were to be observable but <code>item1</code> were not, wi
 <h3>No binding, only set</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'binding-types-nb'" highlight--s="model--nb">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ innerValue: 'Hello wipeout!' })">
     &lt;set-template>
         Parent: &lt;input wo-on-event="keyup" wo-value="$model.innerValue" />&lt;br />
-        &lt;wo.content-control model--nb="$model.innerValue">
+        &lt;wo.content model--nb="$model.innerValue">
             &lt;set-template>
                 Child: &lt;input wo-on-event="keyup" wo-value="$model" />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>Notice how changes to parent and child do not affect eachother</p>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -902,11 +902,11 @@ the expected args (such as the event args) passed in by knockout.
 </p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;wo.content-control>
+    <code parser="s">&lt;wo.content>
     &lt;set-template>
         &lt;button data-bind="click: $call($parent).dot('model').dot('submit').args(true)">Submit&lt;/button>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.code-block>
 </script>
 
@@ -930,15 +930,15 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'cascading-models-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 Binding to a property on a cascaded model: &lt;span wo-content="$model.value">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -965,10 +965,10 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 
 <p>There are properties within wipeout which have default binding types as standard:</p>
 <ul>
-	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=setTemplate&amp;isStatic=false'" text--s="wo.contentControl.setTemplate"></wipeout-docs.rl> expects a html template definition.</li>
+	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.content&amp;propertyName=setTemplate&amp;isStatic=false'" text--s="wo.content.setTemplate"></wipeout-docs.rl> expects a html template definition.</li>
 	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if&amp;propertyName=ifTrue&amp;isStatic=false'" text--s="wo.if.ifTrue"></wipeout-docs.rl> expects a html template definition.</li>
 	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.if&amp;propertyName=ifFalse&amp;isStatic=false'" text--s="wo.if.ifFalse"></wipeout-docs.rl> expects a html template definition.</li>
-	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=itemTemplate&amp;isStatic=false'" text--s="wo.itemsControl.itemTemplate"></wipeout-docs.rl> expects a html template definition.</li>
+	<li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;propertyName=itemTemplate&amp;isStatic=false'" text--s="wo.list.itemTemplate"></wipeout-docs.rl> expects a html template definition.</li>
     <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view&amp;propertyName=shareParentScope&amp;isStatic=false'" text--s="wo.view.shareParentScope"></wipeout-docs.rl> expects either the string <code>true</code> or <code>false</code>.</li>
 	<li>wo.view.id expects a string.</li>
 </ul>
@@ -1002,35 +1002,35 @@ If the model property of a viewModel is not explicitly set, it recieves the mode
 
 </script>
 
-<script id="Articles.content-control" type="text/template">
+<script id="Articles.content" type="text/template">
 <h1>Setting the template within a template</h1>
-<p>Within wipeout it is often useful to set the template within another template, rather than by id. To do this you can use the <code>contentControl</code> (TOTOD link) view model.</p>
+<p>Within wipeout it is often useful to set the template within another template, rather than by id. To do this you can use the <code>content</code> (TOTOD link) view model.</p>
 Nested content controls:
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="content-control-article-1" highlight--s="set-template">
-    <code parser="s">&lt;wo.content-control>
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="content-article-1" highlight--s="set-template">
+    <code parser="s">&lt;wo.content>
     &lt;set-template>
         Content control 1
         &lt;div style="padding-left: 20px;">
-            &lt;wo.content-control>
+            &lt;wo.content>
                 &lt;set-template>
                     Content control 2
                     &lt;div style="padding-left: 20px;">
-                        &lt;wo.content-control>
+                        &lt;wo.content>
                             &lt;set-template>
                                 Content control 3
                             &lt;/set-template>
-                        &lt;/wo.content-control>
+                        &lt;/wo.content>
                     &lt;/div>
                 &lt;/set-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 Renders:
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'content-control-article-1'">&lt;/wo.view></code>
+    <code parser="s">&lt;wo.view template-id="'content-article-1'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
@@ -1169,15 +1169,15 @@ wo.findFilters.$hasModel = function(currentItem, searchTerm, index) {
 <p>And then using the filter</p>
     
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="custom-find-filters-1">
-    <code parser="s">&lt;wo.content-control model--s="Hello wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello wipeout!">
     &lt;set-template>
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 &lt;span wo-content="$context.find({$hasModel: true}).model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
         <code parser="s">&lt;wo.view template-id="'custom-find-filters-1'">&lt;/wo.view></code>
@@ -1201,11 +1201,11 @@ wo.addHtmlAttribute("clear-when-clicked", function (element, attribute, renderCo
 });</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-custom-html-attribute-1'" highlight--s="wo-render">
-    <code parser="s">&lt;wo.content-control>
+    <code parser="s">&lt;wo.content>
     &lt;set-template>
         &lt;input value="click me" wo-clear-when-clicked /> 
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -1322,7 +1322,7 @@ wo.filters.dateParser = {
 };</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-parse-date'" highlight="['=>', 'format--s', 'dateParser']">
-    <code parser="s">&lt;wo.content-control model="new Date()" format--s="mm/dd/yyyy">
+    <code parser="s">&lt;wo.content model="new Date()" format--s="mm/dd/yyyy">
     &lt;set-template>
         Date format: &lt;input type="radio" value="dd/mm/yyyy" wo-checked-value="$this.format" name="format" /> dd/mm/yyyy 
         &lt;input type="radio" value="mm/dd/yyyy" wo-checked-value="$this.format" name="format" /> mm/dd/yyyy &lt;br />
@@ -1330,7 +1330,7 @@ wo.filters.dateParser = {
         Enter date in correct format: &lt;input type="text" wo-on-event="blur" wo-value="$model, $this.format => dateParser" /> &lt;br />
         Actual value: &lt;b wo-content="$model">&lt;/b>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>In the above example, the filter is defined as follows:
     <ol>
@@ -1604,11 +1604,11 @@ Both functions are optional.
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find(myViewModel)">
+        &lt;wo.content my-view-model-ancestor="$context.find(myViewModel)">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
@@ -1621,11 +1621,11 @@ Both functions are optional.
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find('parent')">
+        &lt;wo.content my-view-model-ancestor="$context.find('parent')">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
@@ -1637,11 +1637,11 @@ Both functions are optional.
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
+        &lt;wo.content my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
@@ -1701,13 +1701,13 @@ Both functions are optional.
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 &lt;button 
                     data-bind="$findAndCall({$i: myViewModel}).dot('model').dot('submit').args(true)">
                     Submit&lt;/button>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
@@ -1943,7 +1943,7 @@ Both functions are optional.
 
         
         <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-            <code parser="s">&lt;wo.content-control template-id="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content-control></code>
+            <code parser="s">&lt;wo.content template-id="'helloWipeout.rootApplication'" model='{ name: "Wipeout", collapsibleContent: { header: "Show/Hide", content: "This is the text to show/hide" } }'>&lt;/wo.content></code>
         </wipeout-docs.view-models.components.usage-code-block> 
 <br/>
 <br/>
@@ -2206,18 +2206,18 @@ If you like OOP, check out the docs <a href="https://github.com/ShaneGH/orientee
 <h1>Pluggable MVVM components</h1>
 
 <p>Expanding on the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=get-started-with-mvvm-interactions'" text="'previous article'"></wipeout-docs.rl>, MVVM screams componentization. Wipeout has a few view model types for basic scenarios, and you can also create your own.</p>
-<p>In this example we will use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text="'itemsControl'"></wipeout-docs.rl> component to render the person names in a <code>&amp;lt;ul></code>. You can set properties of a nested component within the template.</p>
-<wipeout-docs.view-models.components.code-block highlight="['$model.people', 'items-control']">
+<p>In this example we will use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text="'list'"></wipeout-docs.rl> component to render the person names in a <code>&amp;lt;ul></code>. You can set properties of a nested component within the template.</p>
+<wipeout-docs.view-models.components.code-block highlight="['$model.people', 'list']">
     <code parser="s">&lt;div>
     &lt;button wo-click="$this.toggleVisibility">Toggle&lt;/button>
     &lt;ul wo-visible="$this.visible">
-        &lt;wo.items-control items="$model.people">
+        &lt;wo.list items="$model.people">
             &lt;item-template>
                 &lt;li>
                     {{$model}}
                 &lt;/li>
             &lt;/item-template>
-        &lt;/wo.items-control>
+        &lt;/wo.list>
     &lt;/ul>
     &lt;input type="text" id="newName" />
     &lt;button wo-click="$this.addNewName">Add&lt;/button>
@@ -2655,22 +2655,22 @@ Attribute:
 <p>In some areas, html has a strict schema which disallows you placing certain tags within other tags. One such example is that a <code>tbody</code> tag can only be placed within a <code>table</code> tag. To get around this you can use the <code>wo-el</code> or <code>data-wo-el</code> attributes.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;!-- this will not work -->
-&lt;wo.content-control>
+&lt;wo.content>
     &lt;set-template>
         &lt;tbody>
             ...
         &lt;/tbody>
     &lt;/set-template>
-&lt;/wo.content-control>
+&lt;/wo.content>
         
 &lt;!-- this will work -->
-&lt;wo.content-control>
+&lt;wo.content>
     &lt;table wo-el="setTemplate">
         &lt;tbody>
             ...
         &lt;/tbody>
     &lt;/table>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.code-block>
 
 <p>The <code>wo-el</code> attribute changes the meaning of the element to wipeout, while still following html rules</p>
@@ -2681,15 +2681,15 @@ Attribute:
 <p>At it's core, wipeout uses an <a href="http://en.wikipedia.org/wiki/Object-oriented_programming" target="_blank">Object Oriented Programming (OOP)</a> model to build types of viewModels. This means that your viewModels must inherit from another viewModel type in order to use wipeout functionality. The default and most basic viewModel to inherit from is <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'"></wipeout-docs.rl> however you can change this with the second argument of <code>wo.viewModel</code> </p>
 
 <wipeout-docs.view-models.components.code-block>
-    <code parser="s">// inherit from contentControl
-wo.viewModel("myNamespace.myViewModel", wo.contentControl)
+    <code parser="s">// inherit from content
+wo.viewModel("myNamespace.myViewModel", wo.content)
     .build();</code>
 </wipeout-docs.view-models.components.code-block>
 <p>There are several viewModel types within wipeout which you may wish to inherit from:
     <ul>
         <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl> will give you basic viewModel functionality such as <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view&propertyName=templateId&isStatic=false'" text="'template id'"></wipeout-docs.rl>, <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view&propertyName=templateItems&isStatic=false'" text="'template items'"></wipeout-docs.rl>, <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=view-model-lifecycle'" text="'initialize, rendered'"></wipeout-docs.rl> etc...</li>
-        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.contentControl'" text="'wo.contentControl'"></wipeout-docs.rl> will give you all of the functionality of <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl>, and adds a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.contentControl&propertyName=setTemplate&isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property which allows you to set the template within another template.</li>
-        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.itemsControl'" text="'wo.itemsControl'"></wipeout-docs.rl> handles the rendering of lists of items and translating models into viewModels.</li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.content'" text="'wo.content'"></wipeout-docs.rl> will give you all of the functionality of <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.view'" text="'wo.view'"></wipeout-docs.rl>, and adds a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.content&propertyName=setTemplate&isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property which allows you to set the template within another template.</li>
+        <li><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&className=wo.list'" text="'wo.list'"></wipeout-docs.rl> handles the rendering of lists of items and translating models into viewModels.</li>
     </ul>
 </p>
 <h3>Inherit from a custom viewModel class</h3>
@@ -2772,142 +2772,6 @@ console.log(account.balance);</code>
 <p>will set the <code>value</code> property to <code>2</code>.</p>
 </script>
 
-<script id="Articles.items-control-binding" type="text/template">
-<h1>The itemsControl binding</h1>
-
-<p>
-    The items control binding tells an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'" /> viewModel where to render its items. 
-    It doesn't need an argument and will throw an exception if not used by an itemsControl. 
-</p>
-    
-<wipeout-docs.view-models.components.new-template-code-block new-script-id="'items-control-binding-script-1'">
-    <code parser="s">&lt;wo.items-control item-source="['Hello wipeout 1', 'Hello wipeout 2']">
-    &lt;set-template>
-        &lt;ul data-bind="itemsControl: null">&lt;/ul>
-    &lt;/set-template>
-    &lt;item-template>
-        &lt;li>
-            &lt;span data-bind="text: model">&lt;/span>
-            Index: &lt;span data-bind="text: $index">&lt;/span>
-        &lt;/li>
-    &lt;/item-template>
-&lt;/wo.items-control></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-    
-    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-        <code parser="s">&lt;wo.view template-id="'items-control-binding-script-1'" /></code>
-    </wipeout-docs.view-models.components.usage-code-block>   
-</script>
-
-<script id="Articles.items-control-custom-items" type="text/template">
-<h1>Using custom items control items</h1>
-
-<p>
-With a custom itemsControl you can control the types of items which are created by overriding the 
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'createItem'"></wipeout-docs.rl> function.
-</p>
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">var myItemsControl = wo.viewModel("myItemsControl", wo.itemsControl)
-    .build();
-        
-myItemsControl.createItem = function(model) {
-    var item = new myViewModelType();
-
-    item.model(model);        
-    item.templateId(this.itemTemplateId());
-
-    return item;
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-Usage:
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;my-items-control items="...">...&lt;/my-items-control></code>
-</wipeout-docs.view-models.components.code-block>
-</script>
-
-<script id="Articles.items-control-item-lifecycle" type="text/template">
-<h1>List item lifecycle</h1>
-
-<p>You can inherit from the <code>itemsControl</code> to create lists with tighter control on the view models they render.</p>
-
-<p>
-With a custom itemsControl you can control
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemRendered&amp;isStatic=false'" text="'what happens when list items are added'"></wipeout-docs.rl>
-    and 
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=onItemRemoved&amp;isStatic=false'" text="'what happens when list items are removed'"></wipeout-docs.rl>.
-</p>
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">var myItemsControl = wo.viewModel("myItemsControl", wo.itemsControl)
-    .build();
-        
-myItemsControl.onItemRendered = function(item) {
-    this._super(item);
-
-    // do initialization logic here
-};
-
-myItemsControl.onItemRemoved = function(item) {
-    this._super(item);
-
-    // do cleanup logic here
-};</code>
-</wipeout-docs.view-models.components.code-block>
-
-Usage:
-<wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;my-items-control items="...">...&lt;/my-items-control></code>
-</wipeout-docs.view-models.components.code-block>
-
-
-<p>Remember that <code>onItemRendered</code> and <code>onItemRemoved</code> are methods which already exist on the <code>wo.itemsControl</code> class. When you override a method of a parent class it is generally necessary to call the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=orienteer&amp;functionName=_super&amp;isStatic=false'" text="'_super'"></wipeout-docs.rl> method so that the method of the parent class is still invoked.</p>
-</script>
-
-<script id="Articles.items-control-list-template" type="text/template">
-<h1>Setting the list template</h1>
-
-<p>
-    List items are rendered unbounded by default. You can change this using the 
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=setTemplate&amp;isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property of the itemSource, and rendering the <code>$this.items</code> property.
-</p>
-
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="items-control-list-template-script-1">
-    <code parser="s">&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
-    &lt;set-template>
-        &lt;ul>
-            {{$this.items}}
-        &lt;/ul>
-    &lt;/set-template>
-    &lt;item-template>
-        &lt;li>
-            &lt;span wo-content="$model">&lt;/span>, 
-            Index: &lt;span wo-content="$index.value">&lt;/span>
-        &lt;/li>
-    &lt;/item-template>
-&lt;/wo.items-control></code>
-</wipeout-docs.view-models.components.new-template-code-block>
-
-<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'items-control-list-template-script-1'">&lt;/wo.view></code>
-</wipeout-docs.view-models.components.usage-code-block> 
-
-<br />
-<br />
-</script>
-
-<script id="Articles.items-control-self-removing-items" type="text/template">
-<h1>Self removing items</h1>
-
-<p>All items controls subscribe to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=removeItem&amp;isStatic=true'" text="'removeItem'"></wipeout-docs.rl>
- <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=routed-events'" text="'routed event'"></wipeout-docs.rl>. This means that if a viewModel which is a decendent of the itemsControl fires a removeItem routed event with a specic model as the event args, then
-    the model will be removed from the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=items&amp;isStatic=false'" text="'items'"></wipeout-docs.rl>  of the itemsControl.
-</p>
-<p>
-    If this is likely to happen it is important to bind the itemSource of the itemsControl <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'" text="'two ways'"></wipeout-docs.rl> so that changes will propogate back up the model chain.
-</p>
-</script>
-
 <script id="Articles.json-parser" type="text/template">
 <h1>Json parser (j)</h1>
 
@@ -2930,8 +2794,63 @@ Usage:
 		will always want to set it to a property on <code>$parent.model</code>.</li>
 	<li><code>$parents[]</code>: refers to all ancestor viewModels. So <code>$parents[0] === $parent</code>, <code>$parents[1] === $parent.getParent(true)</code>
 and so on. It is best practice only to refer to parents in the current template script block in this way so keep components from depending on eachother</li>
-	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl">itemsControl</a>.</li>
+	<li><code>$index</code>: refers to the index of an item within an <a href="/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list">list</a>.</li>
 </ol>
+</script>
+
+<script id="Articles.list-binding" type="text/template">
+<h1>The list binding</h1>
+
+<p>
+    The items control binding tells an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list'" text="'list'" /> viewModel where to render its items. 
+    It doesn't need an argument and will throw an exception if not used by an list. 
+</p>
+    
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'list-binding-script-1'">
+    <code parser="s">&lt;wo.list item-source="['Hello wipeout 1', 'Hello wipeout 2']">
+    &lt;set-template>
+        &lt;ul data-bind="list: null">&lt;/ul>
+    &lt;/set-template>
+    &lt;item-template>
+        &lt;li>
+            &lt;span data-bind="text: model">&lt;/span>
+            Index: &lt;span data-bind="text: $index">&lt;/span>
+        &lt;/li>
+    &lt;/item-template>
+&lt;/wo.list></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'list-binding-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block>   
+</script>
+
+<script id="Articles.list-custom-items" type="text/template">
+<h1>Using custom items control items</h1>
+
+<p>
+With a custom list you can control the types of items which are created by overriding the 
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;functionName=createItem&amp;isStatic=false'" text="'createItem'"></wipeout-docs.rl> function.
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var mylist = wo.viewModel("mylist", wo.list)
+    .build();
+        
+mylist.createItem = function(model) {
+    var item = new myViewModelType();
+
+    item.model(model);        
+    item.templateId(this.itemTemplateId());
+
+    return item;
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+Usage:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;my-list items="...">...&lt;/my-list></code>
+</wipeout-docs.view-models.components.code-block>
 </script>
 
 <script id="Articles.list-filter" type="text/template">
@@ -2965,7 +2884,7 @@ wo.filters.ageFilter = {
 };</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
-    <code parser="s">&lt;wo.content-control min-age="40">
+    <code parser="s">&lt;wo.content min-age="40">
     &lt;model>[
         {name: "John", age: 25},
         {name: "Paul", age: 2},
@@ -2979,14 +2898,14 @@ wo.filters.ageFilter = {
     &lt;set-template>
         &lt;div style="min-height: 200px;">
             Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-            &lt;wo.items-control items="$model, $this.minAge => ageFilter">
+            &lt;wo.list items="$model, $this.minAge => ageFilter">
                 &lt;item-template>
                     &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
                 &lt;/item-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>In the above example, the filter is defined as follows:
     <ol>
@@ -3000,19 +2919,100 @@ wo.filters.ageFilter = {
 <br />
 </script>
 
+<script id="Articles.list-item-lifecycle" type="text/template">
+<h1>List item lifecycle</h1>
+
+<p>You can inherit from the <code>list</code> to create lists with tighter control on the view models they render.</p>
+
+<p>
+With a custom list you can control
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;functionName=onItemRendered&amp;isStatic=false'" text="'what happens when list items are added'"></wipeout-docs.rl>
+    and 
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;functionName=onItemRemoved&amp;isStatic=false'" text="'what happens when list items are removed'"></wipeout-docs.rl>.
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var mylist = wo.viewModel("mylist", wo.list)
+    .build();
+        
+mylist.onItemRendered = function(item) {
+    this._super(item);
+
+    // do initialization logic here
+};
+
+mylist.onItemRemoved = function(item) {
+    this._super(item);
+
+    // do cleanup logic here
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+Usage:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;my-list items="...">...&lt;/my-list></code>
+</wipeout-docs.view-models.components.code-block>
+
+
+<p>Remember that <code>onItemRendered</code> and <code>onItemRemoved</code> are methods which already exist on the <code>wo.list</code> class. When you override a method of a parent class it is generally necessary to call the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=orienteer&amp;functionName=_super&amp;isStatic=false'" text="'_super'"></wipeout-docs.rl> method so that the method of the parent class is still invoked.</p>
+</script>
+
+<script id="Articles.list-self-removing-items" type="text/template">
+<h1>Self removing items</h1>
+
+<p>All items controls subscribe to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;propertyName=removeItem&amp;isStatic=true'" text="'removeItem'"></wipeout-docs.rl>
+ <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=routed-events'" text="'routed event'"></wipeout-docs.rl>. This means that if a viewModel which is a decendent of the list fires a removeItem routed event with a specic model as the event args, then
+    the model will be removed from the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;propertyName=items&amp;isStatic=false'" text="'items'"></wipeout-docs.rl>  of the list.
+</p>
+<p>
+    If this is likely to happen it is important to bind the itemSource of the list <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=bind-two-way'" text="'two ways'"></wipeout-docs.rl> so that changes will propogate back up the model chain.
+</p>
+</script>
+
+<script id="Articles.list-template" type="text/template">
+<h1>Setting the list template</h1>
+
+<p>
+    List items are rendered unbounded by default. You can change this using the 
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;propertyName=setTemplate&amp;isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property of the itemSource, and rendering the <code>$this.items</code> property.
+</p>
+
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="list-template-script-1">
+    <code parser="s">&lt;wo.list items="['Hello wipeout 1', 'Hello wipeout 2']">
+    &lt;set-template>
+        &lt;ul>
+            {{$this.items}}
+        &lt;/ul>
+    &lt;/set-template>
+    &lt;item-template>
+        &lt;li>
+            &lt;span wo-content="$model">&lt;/span>, 
+            Index: &lt;span wo-content="$index.value">&lt;/span>
+        &lt;/li>
+    &lt;/item-template>
+&lt;/wo.list></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+<wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+    <code parser="s">&lt;wo.view template-id="'list-template-script-1'">&lt;/wo.view></code>
+</wipeout-docs.view-models.components.usage-code-block> 
+
+<br />
+<br />
+</script>
+
 <script id="Articles.local-overrides" type="text/template">
 <h1>Local overriding</h1>
 
 <p>Local overriding is overriding a specific instance of a class, while leaving other instances untouched.</p>
 
-<p>Say you have a viewModel which has a child viewModel, which is a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'wo.itemsControl'" />.
+<p>Say you have a viewModel which has a child viewModel, which is a <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list'" text="'wo.list'" />.
 You want each item in the items control to have a method which removes itself.
 There are two options on how to implement this functionality:
     <ol>
-        <li>Create a new class which inherits from itemsControl and override the 
-            <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
+        <li>Create a new class which inherits from list and override the 
+            <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list&amp;functionName=createItem&amp;isStatic=false'" text="'create item'" />
              function</li>
-        <li>Get the instance of the itemsControl and locally override the create item function.</li>
+        <li>Get the instance of the list and locally override the create item function.</li>
 </ol>
 Using local overrides looks like this:
 </p>
@@ -3021,7 +3021,7 @@ Using local overrides looks like this:
         <div class="column-2 main-example-code">
 <wipeout-docs.view-models.components.code-block>
     <code>window.myViewModel = 
-    wo.contentControl.extend(function myViewModel() {
+    wo.content.extend(function myViewModel() {
         this._super();
     });
     
@@ -3063,7 +3063,7 @@ myViewModel.prototype.onRendered =
     &lt;set-template>
         &lt;!-- provide an id to 
                 be referenced in code -->
-        &lt;wo.items-control id="list">
+        &lt;wo.list id="list">
             &lt;itemsTemplate>
         &lt;!-- bind to the remove function 
             added in code -->
@@ -3073,7 +3073,7 @@ myViewModel.prototype.onRendered =
                 &lt;!-- add item template here -->
 
             &lt;/itemsTemplate>
-        &lt;/wo.items-control>
+        &lt;/wo.list>
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
@@ -3136,10 +3136,10 @@ wo(model, document.body);</code>
     <li>Models cascade. If you do not explicitly set the model of a view model within the template or <code><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=view-model-lifecycle'" text="'initialize(...)'"></wipeout-docs.rl></code> function of the <code>wo.viewModel(...)</code> tool then it will receive the model of it's parent.</li>
 </ol>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="models-example" highlight--s="notice how the">
-    <code parser="s">&lt;wo.content-control model--string="Hello wipeout!">
+    <code parser="s">&lt;wo.content model--string="Hello wipeout!">
     &lt;set-template>
         &lt;!-- notice how the model property is not set -->
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 $model:
                 &lt;span wo-content="$model">&lt;/span> &lt;br />
@@ -3150,9 +3150,9 @@ wo(model, document.body);</code>
                 $model === $parent.model:
                 &lt;span wo-content="$model === $parent.model">&lt;/span>  &lt;br />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
     <code parser="s">&lt;wo.view template-id="'models-example'">&lt;/wo.view></code>
@@ -3165,7 +3165,7 @@ wo(model, document.body);</code>
 <h1>New global functionality</h1>
 
  <p>Global functionality can easily be added to wipeout native classes because of their prototypical inheritance structure.</p>
-<p>Say you every view, contentContral, if and itemsControl to have a unique id. This would involve adding functionality to the
+<p>Say you every view, contentContral, if and list to have a unique id. This would involve adding functionality to the
     <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /> class as 
     all other classes inherit from it:</p>
 
@@ -3311,6 +3311,7 @@ console.log(currentAccount.canWithdrawMoney());</code>
     <code parser="s">&lt;wo.view id="myId">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.code-block>
 <p>will set the id of the current model to <code>"myId"</code>, and not to the value of any <code>myId</code> property.</p>
+
 </script>
 
 <script id="Articles.parsing-values-from-html" type="text/template">
@@ -3418,10 +3419,10 @@ manipulation within a viewModel, as it is called after the viewModel has been fu
 <p>The render binding is used internally in wipeout to render viewModels, and can also be used in application development</p>
 
 <wipeout-docs.view-models.components.js-js-code-block>
-    <code>window.renderVm = wo.contentControl.extend(function renderVm() {
+    <code>window.renderVm = wo.content.extend(function renderVm() {
     this._super();
         
-    this.innerItem = new wo.contentControl();
+    this.innerItem = new wo.content();
     this.innerItem.template("Hello wipeout!");
 });</code>
 </wipeout-docs.view-models.components.js-js-code-block>
@@ -3478,7 +3479,7 @@ the ancestor viewModel will recieve any events triggered by it's decendants</p>
 var myRoutedEvent = "increment";
 
 // this class triggers a custom routed event
-var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.contentControl)
+var triggerEvent = wo.viewModel("demoApp.triggerEvent", wo.content)
     .build();
 
 triggerEvent.trigger = function() {
@@ -3486,7 +3487,7 @@ triggerEvent.trigger = function() {
 };
             
 // this class subscribes to a custom routed event
-var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.contentControl)
+var triggerEvent = wo.viewModel("demoApp.subscribeToEvent", wo.content)
     .initialize(function () {
         this.routedEventTriggered = 0;
         this.registerRoutedEvent(myRoutedEvent, this.onRoutedEvent, this);
@@ -3528,14 +3529,14 @@ triggerEvent.onRoutedEvent = function(args) {
 <p>The boolean parser is case insensitive</p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-boolean-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="bool">
         True
     &lt;/my-val>
     &lt;set-template>
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3551,8 +3552,8 @@ triggerEvent.onRoutedEvent = function(args) {
 the constructor is used as an actual constructor with the <code>new</code> keyword</p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-complex-properties-script-1'">
-        <code parser="s">&lt;wo.content-control> &lt;!-- outer contentControl -->
-    &lt;my-val constructor="wo.contentControl" inner-value="'Hello wipeout'"> &lt;!-- inner contentControl -->
+        <code parser="s">&lt;wo.content> &lt;!-- outer content -->
+    &lt;my-val constructor="wo.content" inner-value="'Hello wipeout'"> &lt;!-- inner content -->
         &lt;set-template>
             Binding to element value: &lt;span data-bind="text: innerValue">&lt;/span>
         &lt;/set-template>
@@ -3560,7 +3561,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
     &lt;set-template>
         Rendering viewModel: &lt;div data-bind="render: myVal">&lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3571,10 +3572,10 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
     <ol>
         <li>We constructed an outer wo.contenentControl</li>
         <li>We constructed an inner wo.contenentControl</li>
-        <li>We set the innerValue property of the inner contentControl to "Hello Wipeout"</li>
-        <li>We set the template property of the inner contentControl.</li>
-        <li>We set the myVal property of the outer contentControl to the innerContentControl</li>
-        <li>We set the template property of the outer contentControl.</li>
+        <li>We set the innerValue property of the inner content to "Hello Wipeout"</li>
+        <li>We set the template property of the inner content.</li>
+        <li>We set the myVal property of the outer content to the innercontent</li>
+        <li>We set the template property of the outer content.</li>
         <li>Within the template of the outer content conrol, we use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=render-binding'" text="'render'" /> binding to render its myVal property.</li>
 </ol>
     
@@ -3587,14 +3588,14 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <p>The date parser uses <code>new Date(value)</code> to parse dates. You can override this by <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=add-property-parser'" text="'overriding the date parser itself'" />.</p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-date-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="date">
         2001/01/01
     &lt;/my-val>
     &lt;set-template>
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3607,7 +3608,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <h1>Set a float property</h1>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-float-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="float">
         66.66
     &lt;/my-val>
@@ -3615,7 +3616,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>&lt;br />
         Binding to element value + 1: &lt;span data-bind="text: myVal + 1">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3628,7 +3629,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <h1>Set an int property</h1>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-int-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="int">
         66
     &lt;/my-val>
@@ -3636,7 +3637,7 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span> &lt;br />
         Binding to element value + 1: &lt;span data-bind="text: myVal + 1">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3651,14 +3652,14 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <p>The json parser uses <code>JSON.parse(value)</code> sp may need to be <a href="http://en.wikipedia.org/wiki/Polyfill" target="_blank">polyfilled</a> for older browsers.</p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-json-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="json">
         {"innerVal": "Hello wipeout!"}
     &lt;/my-val>
     &lt;set-template>
         Binding to element value: &lt;span data-bind="text: myVal.innerVal">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3671,15 +3672,15 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 <h1>Set proerties using XML elements</h1>
 
 <p>As well as setting properties using vm attributes, you can also set them using xml elements. A great example of this is using the <code>template</code> property of a 
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.contentControl'" text="'contentControl'" /> which has been set in most previous examples
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.content'" text="'content'" /> which has been set in most previous examples
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-properties-using-xml-elements-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;set-template>
         Hello wipeout!
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3696,14 +3697,14 @@ the constructor is used as an actual constructor with the <code>new</code> keywo
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'set-string-property-script-1'">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;my-val constructor="string">
         Hello wipeout!
     &lt;/my-val>
     &lt;set-template>
         Binding to element value: &lt;span data-bind="text: myVal">&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3780,24 +3781,24 @@ of un-needed scope.</p>
 <h3>An example of scope</h3>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'share-parent-scope-script-1'" highlight="['the-scope', 'share-parent-scope']">
-    <code parser="s">&lt;wo.content-control the-scope="'Parent scope'">
+    <code parser="s">&lt;wo.content the-scope="'Parent scope'">
     &lt;set-template>
         &lt;div>    
-            &lt;wo.content-control share-parent-scope="true" the-scope="'Child scope 1'">
+            &lt;wo.content share-parent-scope="true" the-scope="'Child scope 1'">
                 &lt;set-template>
                     Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
                 &lt;/set-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
         &lt;div>    
-            &lt;wo.content-control the-scope="'Child scope 2'">
+            &lt;wo.content the-scope="'Child scope 2'">
                 &lt;set-template>
                     Scope is: &lt;span wo-content="$this.theScope">&lt;/span>
                 &lt;/set-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
     
@@ -3847,11 +3848,11 @@ of un-needed scope.</p>
 
 
 <wipeout-docs.view-models.components.code-block>
-    <code parser="s">&lt;wo.content-control model="{title: 'Hello wipeout', subModel: { ... }}">
+    <code parser="s">&lt;wo.content model="{title: 'Hello wipeout', subModel: { ... }}">
     &lt;set-template>
         &lt;wo.viewModel="$model.subModel" template-id="'myTemplateId'" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.code-block>
 
 <p>Notice the single quotes surrounding the template id property. Anything defined in a property on a viewModel or a "data-bind" property on a html element is compiled into javascript, so the single quotes denote a string.</p>
@@ -3884,17 +3885,17 @@ View model:
 
 <p>The content control is a wipeout base class which allows you to set the template explicicitly, rather than having to set a template id.   
     <wipeout-docs.view-models.components.code-block>
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;set-template>
         Hello wipeout!
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.code-block>
 </p>
 <p>
     The content control has a
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> and
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.contentControl&amp;propertyName=template&amp;isStatic=false'" text="'template'" />
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.content&amp;propertyName=templateId&amp;isStatic=false'" text="'templateId'" /> and
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.content&amp;propertyName=template&amp;isStatic=false'" text="'template'" />
     propery which are bound together. 
     
     <ul>
@@ -3905,12 +3906,12 @@ View model:
 </p>
 <p>
     You can mimic template/templateId functionality on a custom vie model by using the 
-    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.contentControl&amp;functionName=createTemplatePropertyFor&amp;isStatic=true'" text="'createTemplatePropertyFor'" /> function.
+    <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.content&amp;functionName=createTemplatePropertyFor&amp;isStatic=true'" text="'createTemplatePropertyFor'" /> function.
     <wipeout-docs.view-models.components.code-block>
         <code>var myViewModel = wo.view.extend(function myViewModel() {
     this._super();
             
-    this.myTemplate = wo.contentControl.createTemplatePropertyFor(this.templateId, this);
+    this.myTemplate = wo.content.createTemplatePropertyFor(this.templateId, this);
 });</code>
     </wipeout-docs.view-models.components.code-block>
 </p>
@@ -4046,11 +4047,11 @@ Result:
 <p>Value attributes are attributes which modify an element or view model property. One example which modifies both an element and view model property is <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-value'" text="'value'"></wipeout-docs.rl>.</p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'value-attributes-example'" highlight--s="wo-content">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-value="$model" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4184,7 +4185,7 @@ are cached in the virtual cache.</p>
 Create a viewModel type
 <wipeout-docs.view-models.components.code-block>
             <code>
-window.rootApplication = wo.contentControl.extend(function rootApplication() {
+window.rootApplication = wo.content.extend(function rootApplication() {
     this._super();
                 
     this.template("Hello Wipeout!");
@@ -4214,7 +4215,7 @@ ko.applyBindings({}, root);</code>
         <li>
         The <wipeout-docs.rl text="'wipeout'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=wipeout-binding'" /> binding.</li>    
         <li>
-        The <wipeout-docs.rl text="'itemsControl'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=items-control-binding'" /> binding.</li>    
+        The <wipeout-docs.rl text="'list'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=list-binding'" /> binding.</li>    
         <li>
         The <wipeout-docs.rl text="'render'" href="'/wipeout/v2.0-alpha/how-do-i.html?article=render-binding'" /> binding.</li>    
 </ul>
@@ -4238,8 +4239,8 @@ private functionality of the library.</p>
     When building viewModels, you will be inheriting from:
 <ul>
     <li>wo.view, for the most basic of viewModels</li>
-    <li>wo.contentControl, for viewModels with a template property</li>
-    <li>wo.itemsControl, for viewModels which deal with lists</li>
+    <li>wo.content, for viewModels with a template property</li>
+    <li>wo.list, for viewModels which deal with lists</li>
 </ul>
     You may also wish to have an object oriented model layer, although this is not necessary
 <ul>
@@ -4258,14 +4259,14 @@ private functionality of the library.</p>
 <h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.view'" text="'wo.view'" /></h2>
 <p>This class derives from wo.visual and is the base class for viewModels. It has a model property and provides binding functionality.</p>
 
-<h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=templates-content-control'" text="'wo.contentControl'" /></h2>
+<h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=templates-content'" text="'wo.content'" /></h2>
 <p>This class derives from wo.view and provides functionality to specify the template as a template string rather than as an Id.</p>
 
-<h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text="'wo.itemsControl'" /></h2>
-<p>This class derives from wo.contentControl and provides list building functionality. This is the wipeout equivelant of the "foreach" knockout binding</p>
+<h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=working-with-lists'" text="'wo.list'" /></h2>
+<p>This class derives from wo.content and provides list building functionality. This is the wipeout equivelant of the "foreach" knockout binding</p>
 
 <h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=if-control'" text="'wo.if'" /></h2>
-<p>This class derives from wo.contentControl and provides functionality similar to the "if" knockout binding. By default, wo.if has <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> </p>
+<p>This class derives from wo.content and provides functionality similar to the "if" knockout binding. By default, wo.if has <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'" /> </p>
 
 <h2><wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=routed-event-models'" text="'wo.routedEventModel'" /></h2>
 <p>This class derives from wo.object and is the base class for model objects with will raise and catch routed events.</p>
@@ -4306,11 +4307,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-attr-attrName="value"</code></h3>
 <p>The attr attribute defines an attribute on a html element. The attribute name will be the end of the <code>wo-attr-</code> definition.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-attr-attr'" highlight--s="wo-attr">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-attr-value="$model" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4324,11 +4325,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-blur="eventHandler"</code></h3>
 <p>The blur attribute defines an event handler to be fired when the element blurs.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-blur-attr'" highlight--s="wo-blur">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-blur="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4342,11 +4343,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-change="eventHandler"</code></h3>
 <p>The change attribute defines an event handler to be fired when the element value changes.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-change-attr'" highlight--s="wo-change">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-change="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4363,13 +4364,13 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3>Radio button</code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-radio'" highlight="['wo-checked-value', 'wo-value', 'value']">
-    <code parser="s">&lt;wo.content-control model="1">
+    <code parser="s">&lt;wo.content model="1">
     &lt;set-template>
         Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
         &lt;label>Value 1:&lt;/label> &lt;input type="radio" wo-checked-value="$model" wo-value="1" name="radio" /> &lt;br />
         &lt;label>Value 2:&lt;/label> &lt;input type="radio" wo-checked-value="$model" value="2" name="radio" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4378,12 +4379,12 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3>Checkbox with value</code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-1'" highlight="['wo-checked-value', 'wo-value', 'value']">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         Model: &lt;span wo-content="$model == null ? 'null' : $model">&lt;/span> &lt;br />
         &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" value="Hello Wipeout!" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4392,12 +4393,12 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3>Checkbox without value</code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-checked-value-attr-checkbox-2'" highlight="['wo-checked-value', 'wo-value', 'value']">
-    <code parser="s">&lt;wo.content-control model="true">
+    <code parser="s">&lt;wo.content model="true">
     &lt;set-template>
         Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
         &lt;label>Value:&lt;/label> &lt;input type="checkbox" wo-checked-value="$model" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4417,12 +4418,12 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <p>The class attribute defines an switches a html class on or off for a given element. The class name will be the end of the <code>wo-class-</code> definition.</p>
 <style>.green {background-color: #98FB98}</style>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-class-attr'" highlight--s="wo-class">
-    <code parser="s">&lt;wo.content-control model="true">
+    <code parser="s">&lt;wo.content model="true">
     &lt;set-template>
         &lt;span wo-class-green="$model">This class is applied&lt;/span> <br />
         &lt;span wo-class-green="!$model">This class is not applied&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4436,11 +4437,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-click="eventHandler"</code></h3>
 <p>The click attribute defines an event handler to be fired when the element is clicked.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-click-attr'" highlight--s="wo-click">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;button wo-click="logic: alert($model)">Click me&lt;/button>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4455,11 +4456,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <p>The content attribute defines the html content of an element.</p>
 <p>The content attribute is similar to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-render'" text="'render'"></wipeout-docs.rl> attibute but is less powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag <code>&#123;<span></span>&#123;$this.someValue}}</code>.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-content-attr'" highlight--s="wo-content">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;span wo-content="$model">&lt;/span> 
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4475,11 +4476,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <p>Many common events such as <code>click</code> and <code>blur</code> have their own html attributes. Either approach is equally valid.</p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-event-attr'" highlight--s="wo-event">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;button wo-event-click="logic: alert($model)">Click me&lt;/button>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4493,11 +4494,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-focus="eventHandler"</code></h3>
 <p>The focus attribute defines an event handler to be fired when the element receives focus.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-focus-attr'" highlight--s="wo-focus">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-focus="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4511,11 +4512,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-keydown="eventHandler"</code></h3>
 <p>The keydown attribute defines an event handler to be fired when a key is pressed.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keydown-attr'" highlight--s="wo-keydown">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-keydown="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4529,11 +4530,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-keypress="eventHandler"</code></h3>
 <p>The keypress attribute defines an event handler to be fired when a key is pressed and released.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keypress-attr'" highlight--s="wo-keypress">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-keypress="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4547,11 +4548,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-keyup="eventHandler"</code></h3>
 <p>The keyup attribute defines an event handler to be fired when a key is released.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-keyup-attr'" highlight--s="wo-keyup">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-keyup="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4565,11 +4566,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-mousedown="eventHandler"</code></h3>
 <p>The mousedown attribute defines an event handler to be fired when a mouse button is pressed.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mousedown-attr'" highlight--s="wo-mousedown">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-mousedown="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4583,11 +4584,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-mouseout="eventHandler"</code></h3>
 <p>The mouseout attribute defines an event handler to be fired when a mouse leaves the element.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseout-attr'" highlight--s="wo-mouseout">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-mouseout="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4601,11 +4602,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-mouseover="eventHandler"</code></h3>
 <p>The mouseover attribute defines an event handler to be fired when a mouse is moved within the element.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseover-attr'" highlight--s="wo-mouseover">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-mouseover="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4619,11 +4620,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-mouseup="eventHandler"</code></h3>
 <p>The mouseup attribute defines an event handler to be fired when a mouse button is released.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseup-attr'" highlight--s="wo-mouseup">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-mouseup="logic: alert($model)" />
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4637,13 +4638,13 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-on-event="event name"</code></h3>
 <p>When combined with another html attribute, determines when that attribute will be fired.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-mouseup-attr'" highlight--s="wo-on-event">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;span wo-content="$model">&lt;/span> &lt;br />
         &lt;input wo-on-event="blur" wo-value="$model" type="text" /> Model will change when you leave the textbox &lt;br />
         &lt;input wo-on-event="keyup" wo-value="$model" type="text" /> Model will change when you release a key
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4658,11 +4659,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <p>The render attribute renders a piece of data or a view model. </p>
 <p>The render attribute is similar to the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-content'" text="'content'"></wipeout-docs.rl> attibute but is more powerful. As a rule of thumb, you should use <code>content</code> to display simple things such as strings, numbers and simple objects and <code>render</code> to display view models or items which are not surrounded by a html tag <code>&#123;<span></span>&#123;$this.someValue}}</code>.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-1'" highlight--s="wo-render">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;span wo-render="$model">&lt;/span> 
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4672,11 +4673,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3>Rendering without a html tag</h3>
 <p>You can also render items without surrounding them by a tag, using the <code>&#123;<span></span>&#123;value}}</code> notation.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-render-attr-2'" highlight--s="wo-render">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         {{$model}}
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4690,11 +4691,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-style-styleName="value"</code></h3>
 <p>The style attribute defines an style on a html element. The style name will be the end of the <code>wo-style-</code> definition.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-attr-style'" highlight--s="wo-style">
-    <code parser="s">&lt;wo.content-control model--s="#98FB98">
+    <code parser="s">&lt;wo.content model--s="#98FB98">
     &lt;set-template>
         &lt;span wo-style-background-color="$model">Hello wipeout!&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4708,13 +4709,13 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-submit="eventHandler"</code></h3>
 <p>The submit attribute defines an event handler to be fired when a form is submitted.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-submit-attr'" highlight--s="wo-submit">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;form wo-submit="logic: alert($model)">
             &lt;input type="submit" value="Click me" />
         &lt;/form>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4731,11 +4732,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3><code>&amp;lt;input></code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-input'" highlight--s="wo-content">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;input wo-value="$model" /> 
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4744,11 +4745,11 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3><code>&amp;lt;textarea></code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-textarea'" highlight--s="wo-content">
-    <code parser="s">&lt;wo.content-control model--s="Hello Wipeout!">
+    <code parser="s">&lt;wo.content model--s="Hello Wipeout!">
     &lt;set-template>
         &lt;textarea wo-value="$model">&lt;/textarea>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4757,7 +4758,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 
 <h3><code>&amp;lt;select>, &amp;lt;option></code></h3>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-value-attr-select'" highlight--s="wo-content">
-    <code parser="s">&lt;wo.content-control model="1">
+    <code parser="s">&lt;wo.content model="1">
     &lt;set-template>
         Model: &lt;span wo-content="$model">&lt;/span> &lt;br />
         &lt;select wo-value="$model">
@@ -4767,7 +4768,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
             &lt;option wo-value="4">Option 4&lt;/option>
         &lt;/select>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4787,12 +4788,12 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <h3><code>data-wo-visible="value"</code></h3>
 <p>The visible attribute defines whether an element is visible or not.</p>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-visible-attr'" highlight--s="wo-visible">
-    <code parser="s">&lt;wo.content-control model="true">
+    <code parser="s">&lt;wo.content model="true">
     &lt;set-template>
         &lt;span wo-visible="$model">This is visible&lt;/span> <br />
         &lt;span wo-visible="!$model">This is not visible&lt;/span>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
@@ -4803,18 +4804,18 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <script id="Articles.working-with-lists" type="text/template">
 <h1>Working with lists</h1>
 
-<p>Within wipeout, lists are handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.itemsControl'" text="'itemsControl'"></wipeout-docs.rl> viewModel. The items control allows you to specify a template for each item in the list and render accordingly.
+<p>Within wipeout, lists are handled by the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/api.html?type=api&amp;className=wo.list'" text="'list'"></wipeout-docs.rl> viewModel. The items control allows you to specify a template for each item in the list and render accordingly.
 </p>
     
 <wipeout-docs.view-models.components.new-template-code-block new-script-id--s="working-with-lists-1">
-    <code parser="s">&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
+    <code parser="s">&lt;wo.list items="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;item-template>
         &lt;div>
             &lt;span wo-content="$model">&lt;/span>, 
             Index: &lt;span wo-content="$index.value">&lt;/span>
         &lt;/div>
     &lt;/item-template>
-&lt;/wo.items-control></code>
+&lt;/wo.list></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
     <code parser="s">&lt;wo.view template-id--s="working-with-lists-1">&lt;/wo.view></code>
@@ -4843,7 +4844,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
     <div class="staticHeader-height"></div>
     <h2>How do I?</h2>
     
-    <wo.items-control items="$model.leftHandNav" id="articles">
+    <wo.list items="$model.leftHandNav" id="articles">
         <item-template>
             <div class="list-group">
                 <wo.if condition="$model.header.visible">
@@ -4851,7 +4852,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                         <wipeout-docs.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header"></wipeout-docs.rl>
                     </if-true>
                 </wo.if>
-                <wo.items-control items="$model.items" id="items">
+                <wo.list items="$model.items" id="items">
 					<set-template>
 						<div wo-render="$this.items"></div>
 					</set-template>
@@ -4862,10 +4863,10 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                             </if-true>
                         </wo.if>
                     </item-template>
-                </wo.items-control>
+                </wo.list>
             </div> 
         </item-template>
-    </wo.items-control>
+    </wo.list>
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">
@@ -4886,7 +4887,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </script>
 
 <script id="wipeoutDocs.viewModels.components.treeViewBranch_branch" type="text/template">
-<wo.items-control items="$model.branches" id="content">
+<wo.list items="$model.branches" id="content">
     <set-template>
         <div>
             <a wo-click="$context.find(wipeoutDocs.viewModels.components.treeViewBranch).select()"
@@ -4907,7 +4908,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
             <wipeout-docs.view-models.components.tree-view-branch></wipeout-docs.view-models.components.tree-view-branch>
         </li>
     </item-template>
-</wo.items-control>        
+</wo.list>        
 </script>
 
 <script id="wipeoutDocs.viewModels.components.treeViewBranch_leaf" type="text/template">
@@ -4921,7 +4922,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </div>
 <p wo-visible="$this.showDefinitionCode">Renders:</p>
 <div style="border: 1px solid #888; padding: 5px;">
-	<wo.content-control template-id="$this.usage"></wo.content-control>
+	<wo.content template-id="$this.usage"></wo.content>
 </div>
 </script>
 
@@ -4989,7 +4990,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 <wo.if condition="$model.arguments.length">
     <if-true>
         <h3>Arguments</h3>
-        <wo.items-control items="$model.arguments">
+        <wo.list items="$model.arguments">
             <set-template>
                 <table class="table table-striped">
                     <thead>
@@ -5011,7 +5012,7 @@ without breaking anything you wouldn't expect to break in javascript.</p>
                     <div wo-el="td" wo-content="$model.optional => yesNo"></div>
                 </div>
             </item-template>
-        </wo.items-control>
+        </wo.list>
     </if-true>
 </wo.if>
 <wo.if condition="$this.showReturnValue">
@@ -5048,17 +5049,17 @@ Welcome to wipeout. Browse the API on the left hand side
         <span wo-content="$model.propertyType.type"></span>
         <wo.if condition="$model.propertyType.genericTypes && $model.propertyType.genericTypes.length">
             <if-true>                
-                <wo.items-control template-id--s="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" items="$model.propertyType.genericTypes">
+                <wo.list template-id--s="wipeoutDocs.viewModels.pages.propertyPage_GenericTypes" items="$model.propertyType.genericTypes">
                     <item-template>
                         <wo.if condition="$index.value !== 0" if-true--s=", "></wo.if>
                         <span wo-content="$model"></span>
                     </item-template>
-                </wo.items-control>
+                </wo.list>
             </if-true>
         </wo.if>
     </if-true>
 </wo.if>
-<div wo-visible="$this.usagesTemplateId !== wo.contentControl.createAnonymousTemplate('')">
+<div wo-visible="$this.usagesTemplateId !== wo.content.createAnonymousTemplate('')">
     <h2>
         <span>Using</span>
         <span wo-content="$model.propertyName"></span>
@@ -5091,7 +5092,7 @@ Welcome to wipeout. Browse the API on the left hand side
 		<script type="text/javascript" src="http://localhost:3000/wipeoutDev/build/wipeout.raw.debug.js"></script>-->
 		<script>
 			//TODO: add issue to wipeout and add this functionality fo realz
-			wo.contentControl.templateExists = function (templateId) {
+			wo.content.templateExists = function (templateId) {
 				return !wipeout.template.engine.instance.compileTemplate(templateId, function (){});
 			};
 			

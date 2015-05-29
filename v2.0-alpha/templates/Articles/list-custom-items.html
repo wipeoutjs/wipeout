@@ -1,0 +1,24 @@
+<h1>Using custom items control items</h1>
+
+<p>
+With a custom list you can control the types of items which are created by overriding the 
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list&amp;functionName=createItem&amp;isStatic=false'" text="'createItem'"></wipeout-docs.rl> function.
+</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">var mylist = wo.viewModel("mylist", wo.list)
+    .build();
+        
+mylist.createItem = function(model) {
+    var item = new myViewModelType();
+
+    item.model(model);        
+    item.templateId(this.itemTemplateId());
+
+    return item;
+};</code>
+</wipeout-docs.view-models.components.code-block>
+
+Usage:
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">&lt;my-list items="...">...&lt;/my-list></code>
+</wipeout-docs.view-models.components.code-block>

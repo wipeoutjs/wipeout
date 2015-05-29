@@ -161,7 +161,7 @@ wipeoutDocs.compiler = (function () {
 })();
 
 var compiler = new wipeoutDocs.compiler("wipeoutDocs", "orienteer", [
-    "busybody.disposable", "busybody.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+    "busybody.disposable", "busybody.observable", "wipeout.base.bindable", "wo.view", "wo.content", "wo.list", "wo.if"
 ]);
 
 
@@ -428,9 +428,9 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.viewModels")
 			]),
             new wipeoutDocs.models.components.treeViewBranch("viewModels", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.contentControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.content"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.if"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.itemsControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.list"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.view")
 			]),
             new wipeoutDocs.models.components.treeViewBranch("wml", null, [
@@ -446,12 +446,12 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
 		
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
             ApiApplication.treeViewBranchFor(woApi, "wo.addHtmlAttribute"),
-			ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
+			ApiApplication.treeViewBranchFor(woApi, "wo.content"),
             ApiApplication.treeViewBranchFor(woApi, "wo.filters"),
             ApiApplication.treeViewBranchFor(woApi, "wo.findFilters"),
             ApiApplication.treeViewBranchFor(woApi, "wo.if"),
             ApiApplication.treeViewBranchFor(woApi, "wo.bindings"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.itemsControl"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.list"),
             ApiApplication.treeViewBranchFor(woApi, "wo.parsers"),
             ApiApplication.treeViewBranchFor(woApi, "wo.triggerEvent"),
             ApiApplication.treeViewBranchFor(woApi, "wo.view")
@@ -1439,8 +1439,8 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
 				}
 			},
 			viewModels: {
-				itemsControl: {
-					removeItem: "<summary type=\"wo.routedEvent\">If caught by an itemsControl, remove the item in the args from the itemsControl items</summary>"
+				list: {
+					removeItem: "<summary type=\"wo.routedEvent\">If caught by an list, remove the item in the args from the list items</summary>"
 				}
 			}
 		},
@@ -1453,9 +1453,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
         wo: {},
         wipeout: {
             base: {
-                itemsControl: {
+                list: {
                     removeItem: {
-                        description: "<summary type=\"wo.routedEvent\">Routed event. Signals that the model in the routed event args is to be removed from the catching itemsControl</summary>"
+                        description: "<summary type=\"wo.routedEvent\">Routed event. Signals that the model in the routed event args is to be removed from the catching list</summary>"
                     }
                 },
                 "if": {
@@ -1491,9 +1491,9 @@ compiler.registerClass("wipeoutDocs.models.descriptions.property", "wipeoutDocs.
                         description: "<summary type=\"Object\">A cache of all bindings created</summary>"
                     }
                 },
-                itemsControl: {
+                list: {
                     utils: {
-                        description: "<summary type=\"Object\">Utils used by the itemsControl binding</summary>"                            
+                        description: "<summary type=\"Object\">Utils used by the list binding</summary>"                            
                     }
                 },
                 wipeout: {
@@ -1590,7 +1590,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
     });
     
     var buildHref = function(parameters) {
-        if(parameters.article && !wo.contentControl.templateExists("Articles." + parameters.article))
+        if(parameters.article && !wo.content.templateExists("Articles." + parameters.article))
             throw "No template for " + parameters.article;
         
         var output = []
@@ -1608,7 +1608,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
             items: [
                 new articleLink("With orienteer", "get-started-with-orienteer"),
                 new articleLink("With busybody", "get-started-with-busybody"),
-                new articleLink("With Hello World", "get-started-with-hello-world"),  
+                new articleLink("With Hello World", "get-started-with-hello-world"),
                 new articleLink("With MVVM basics", "get-started-with-mvvm-basics"),   
                 new articleLink("With MVVM interactions", "get-started-with-mvvm-interactions"),
                 new articleLink("With Pluggable MVVM components", "get-started-with-pluggable-mvvm-components"),
@@ -1623,7 +1623,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("View Models and Html Elements", "view-models-and-html-elements"),
                 new articleLink("Accessing html elements and view models", "template-items"),
                 new articleLink("Binding Setters", "binding-setters"),
-                new articleLink("Setting the template within a template", "content-control"),
+                new articleLink("Setting the template within a template", "content"),
                 new articleLink("Complex template properties", "complex-template-properties"),
                 new articleLink("Illegal html tags", "illegal-html-tags"),
                 new articleLink("Html element/ViewModel name clashes", "definitely-not-a-view-model"),
@@ -1666,10 +1666,10 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
         ]}, {        
             header: new articleLink("Work with lists", "working-with-lists"),
             items: [
-                new articleLink("Setting the list template", "items-control-list-template"),
-                new articleLink("List item lifecycle", "items-control-item-lifecycle"),
-                new articleLink("Creating custom list items", "items-control-custom-items"),
-                new articleLink("Self removing items", "items-control-self-removing-items")
+                new articleLink("Setting the list template", "list-template"),
+                new articleLink("List item lifecycle", "list-item-lifecycle"),
+                new articleLink("Creating custom list items", "list-custom-items"),
+                new articleLink("Self removing items", "list-self-removing-items")
         ]}, {
             header: new articleLink("The if component", "if-control"),
             items: []
@@ -1937,13 +1937,13 @@ compiler.registerClass("wipeoutDocs.viewModels.components.codeBlock", "wo.view",
     return codeBlock;
 });
 
-compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.contentControl", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.content", function() {
     var dynamicRender = function() {
         this._super();
         
         this.content = null;
         
-        this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
+        this.templateId = wo.content.createAnonymousTemplate("{{$this.content}}");
     };
     
     dynamicRender.prototype.onModelChanged = function(newVal) {
@@ -2108,7 +2108,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
-    treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
+    treeViewBranch.nullTemplate = wipeout.viewModels.content.createAnonymousTemplate("");
 	
     treeViewBranch.prototype.select = function() {
         this.isOpen = !this.isOpen;
@@ -2135,7 +2135,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipe
     };
     
     usageCodeBlock.prototype.onCodeChanged = function(newVal) {  
-        this.usage = wo.contentControl.createAnonymousTemplate(newVal
+        this.usage = wo.content.createAnonymousTemplate(newVal
             .replace(/\&lt;/g, "<")
             .replace(/\&amp;/g, "&")
             .replace(/\&gt;/g, ">"));
@@ -2152,7 +2152,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(apiTemplateId)
             return;
         
-        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
+        apiTemplateId = wo.content.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
 <wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder"></wipeout-docs.view-models.components.dynamic-render>');
     };
     
@@ -2161,7 +2161,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         this._super("wipeoutDocs.viewModels.howDoIApplication");
         
-        this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
+        this.contentTemplate = wo.content.createAnonymousTemplate("");
         
         this.apiPlaceholder = null;
         this.apiPlaceholderName = null;
@@ -2190,7 +2190,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
                 this.contentTemplate = apiTemplateId;
             }
         } else {
-            this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
+            this.contentTemplate = wo.content.createAnonymousTemplate("");
         }
     };
     
@@ -2240,7 +2240,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
     return HowDoIApplication;
 });
 
-compiler.registerClass("wipeoutDocs.viewModels.pages.classItemTable", "wo.itemsControl", function() {
+compiler.registerClass("wipeoutDocs.viewModels.pages.classItemTable", "wo.list", function() {
     return function() {
         this._super("wipeoutDocs.viewModels.pages.classItemTable", "wipeoutDocs.viewModels.pages.classItemRow");
         
@@ -2260,7 +2260,7 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.classItemTable", "wo.itemsC
                         return className;
                 }
 
-                return wo.contentControl.createAnonymousTemplate("");
+                return wo.content.createAnonymousTemplate("");
             });
         };
 
@@ -2290,7 +2290,7 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.functionPage", "wo.view", f
                     return name;
             }
 
-            return wo.contentControl.createAnonymousTemplate("");
+            return wo.content.createAnonymousTemplate("");
         });
     };
     
@@ -2342,7 +2342,7 @@ compiler.registerClass("wipeoutDocs.viewModels.pages.propertyPage", "wo.view", f
                     return name;
             }
 
-            return wo.contentControl.createAnonymousTemplate("");
+            return wo.content.createAnonymousTemplate("");
         });
     };
     

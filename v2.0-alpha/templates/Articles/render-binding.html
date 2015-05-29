@@ -3,10 +3,10 @@
 <p>The render binding is used internally in wipeout to render viewModels, and can also be used in application development</p>
 
 <wipeout-docs.view-models.components.js-js-code-block>
-    <code>window.renderVm = wo.contentControl.extend(function renderVm() {
+    <code>window.renderVm = wo.content.extend(function renderVm() {
     this._super();
         
-    this.innerItem = new wo.contentControl();
+    this.innerItem = new wo.content();
     this.innerItem.template("Hello wipeout!");
 });</code>
 </wipeout-docs.view-models.components.js-js-code-block>

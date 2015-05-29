@@ -31,7 +31,7 @@ compiler.registerClass("wipeoutDocs.viewModels.components.treeViewBranch", "wo.v
     
     treeViewBranch.branchTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_branch";
     treeViewBranch.leafTemplate = "wipeoutDocs.viewModels.components.treeViewBranch_leaf";
-    treeViewBranch.nullTemplate = wipeout.viewModels.contentControl.createAnonymousTemplate("");
+    treeViewBranch.nullTemplate = wipeout.viewModels.content.createAnonymousTemplate("");
 	
     treeViewBranch.prototype.select = function() {
         this.isOpen = !this.isOpen;

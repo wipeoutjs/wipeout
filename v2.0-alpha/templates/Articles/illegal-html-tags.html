@@ -2,22 +2,22 @@
 <p>In some areas, html has a strict schema which disallows you placing certain tags within other tags. One such example is that a <code>tbody</code> tag can only be placed within a <code>table</code> tag. To get around this you can use the <code>wo-el</code> or <code>data-wo-el</code> attributes.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;!-- this will not work -->
-&lt;wo.content-control>
+&lt;wo.content>
     &lt;set-template>
         &lt;tbody>
             ...
         &lt;/tbody>
     &lt;/set-template>
-&lt;/wo.content-control>
+&lt;/wo.content>
         
 &lt;!-- this will work -->
-&lt;wo.content-control>
+&lt;wo.content>
     &lt;table wo-el="setTemplate">
         &lt;tbody>
             ...
         &lt;/tbody>
     &lt;/table>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.code-block>
 
 <p>The <code>wo-el</code> attribute changes the meaning of the element to wipeout, while still following html rules</p>

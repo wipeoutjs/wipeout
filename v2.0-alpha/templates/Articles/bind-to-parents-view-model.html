@@ -5,15 +5,15 @@ You may wish to bind to someting 1 level up in the viewModel hierarchy. You can 
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-view-model-script-1'">
-        <code parser="s">&lt;wo.content-control value="{ innerValue: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content value="{ innerValue: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control value="$this.value.innerValue">
+        &lt;wo.content value="$this.value.innerValue">
             &lt;set-template>
                 Binding to a property on parent's viewModel: &lt;span wo-content="$this.value">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     

@@ -28,7 +28,7 @@ wo.filters.ageFilter = {
 };</code>
 </wipeout-docs.view-models.components.j-code-block>
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'filter-list-values'" highlight="['=>', 'min-age', 'ageFilter']">
-    <code parser="s">&lt;wo.content-control min-age="40">
+    <code parser="s">&lt;wo.content min-age="40">
     &lt;model>[
         {name: "John", age: 25},
         {name: "Paul", age: 2},
@@ -42,14 +42,14 @@ wo.filters.ageFilter = {
     &lt;set-template>
         &lt;div style="min-height: 200px;">
             Filter by age: &lt;input type="text" wo-value="$this.minAge" wo-on-event="keyup" />
-            &lt;wo.items-control items="$model, $this.minAge => ageFilter">
+            &lt;wo.list items="$model, $this.minAge => ageFilter">
                 &lt;item-template>
                     &lt;div wo-content="$model.name + ', ' + $model.age">&lt;/div>
                 &lt;/item-template>
-            &lt;/wo.content-control>
+            &lt;/wo.content>
         &lt;/div>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 <p>In the above example, the filter is defined as follows:
     <ol>

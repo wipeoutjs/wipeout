@@ -3,14 +3,14 @@
     <p>There is a helper function which can find ancestors based on their properties, type, depth or any other custom attribute you need.</p>
 
     <wipeout-docs.view-models.components.j-code-block>
-        <code parser="s">// create a custom class to distinguish type (inherit from contentControl)
-wo.viewModel("demoApp.myType", wo.contentControl)
+        <code parser="s">// create a custom class to distinguish type (inherit from content)
+wo.viewModel("demoApp.myType", wo.content)
     .build();</code>
     </wipeout-docs.view-models.components.j-code-block>
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-ancestor-script-1'" highlight--s="$context.find">
         <code parser="s">&lt;demo-app.my-type model="{value: 'Hello wipeout!'}" value="123">
     &lt;set-template>
-        &lt;wo.content-control>
+        &lt;wo.content>
             &lt;set-template>
                 Found ancestor by type: 
                 &lt;span wo-content="$context.find(demoApp.myType).model.value">&lt;/span> &lt;br />
@@ -23,7 +23,7 @@ wo.viewModel("demoApp.myType", wo.contentControl)
                 Found ancestor model by property value:
                 &lt;span wo-content="$context.find({value: 'Hello wipeout!', $model: true}).value">&lt;/span> &lt;br />
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/demo-app.my-type></code>
     </wipeout-docs.view-models.components.new-template-code-block>

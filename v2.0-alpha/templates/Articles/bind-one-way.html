@@ -7,15 +7,15 @@ The default binding is one way. This means that the object where the propery
 </p>
 
 <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-one-way-script-1'" highlight--s="--ow">
-    <code parser="s">&lt;wo.content-control model="busybody.makeObservable({ value: 'Hello wipeout!' })">
+    <code parser="s">&lt;wo.content model="busybody.makeObservable({ value: 'Hello wipeout!' })">
     &lt;set-template>
-        &lt;wo.content-control model--ow="$model.value">
+        &lt;wo.content model--ow="$model.value">
             &lt;set-template>
                 One way bindings: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
     

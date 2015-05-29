@@ -2,11 +2,11 @@
 
 <p>
     List items are rendered unbounded by default. You can change this using the 
-    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.itemsControl&amp;propertyName=setTemplate&amp;isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property of the itemSource, and rendering the <code>$this.items</code> property.
+    <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list&amp;propertyName=setTemplate&amp;isStatic=false'" text="'setTemplate'"></wipeout-docs.rl> property of the itemSource, and rendering the <code>$this.items</code> property.
 </p>
 
-<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="items-control-list-template-script-1">
-    <code parser="s">&lt;wo.items-control items="['Hello wipeout 1', 'Hello wipeout 2']">
+<wipeout-docs.view-models.components.new-template-code-block new-script-id--s="list-template-script-1">
+    <code parser="s">&lt;wo.list items="['Hello wipeout 1', 'Hello wipeout 2']">
     &lt;set-template>
         &lt;ul>
             {{$this.items}}
@@ -18,11 +18,11 @@
             Index: &lt;span wo-content="$index.value">&lt;/span>
         &lt;/li>
     &lt;/item-template>
-&lt;/wo.items-control></code>
+&lt;/wo.list></code>
 </wipeout-docs.view-models.components.new-template-code-block>
 
 <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
-    <code parser="s">&lt;wo.view template-id="'items-control-list-template-script-1'">&lt;/wo.view></code>
+    <code parser="s">&lt;wo.view template-id="'list-template-script-1'">&lt;/wo.view></code>
 </wipeout-docs.view-models.components.usage-code-block> 
 
 <br />

@@ -6,7 +6,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         if(apiTemplateId)
             return;
         
-        apiTemplateId = wo.contentControl.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
+        apiTemplateId = wo.content.createAnonymousTemplate('<h1 data-bind="text: $context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholderName"></h1>\
 <wipeout-docs.view-models.components.dynamic-render model="$context.find(wipeoutDocs.viewModels.howDoIApplication).apiPlaceholder"></wipeout-docs.view-models.components.dynamic-render>');
     };
     
@@ -15,7 +15,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         this._super("wipeoutDocs.viewModels.howDoIApplication");
         
-        this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
+        this.contentTemplate = wo.content.createAnonymousTemplate("");
         
         this.apiPlaceholder = null;
         this.apiPlaceholderName = null;
@@ -44,7 +44,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
                 this.contentTemplate = apiTemplateId;
             }
         } else {
-            this.contentTemplate = wo.contentControl.createAnonymousTemplate("");
+            this.contentTemplate = wo.content.createAnonymousTemplate("");
         }
     };
     

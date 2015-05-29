@@ -1,0 +1,25 @@
+<h1>The list binding</h1>
+
+<p>
+    The items control binding tells an <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/api.html?type=api&amp;className=wo.list'" text="'list'" /> viewModel where to render its items. 
+    It doesn't need an argument and will throw an exception if not used by an list. 
+</p>
+    
+<wipeout-docs.view-models.components.new-template-code-block new-script-id="'list-binding-script-1'">
+    <code parser="s">&lt;wo.list item-source="['Hello wipeout 1', 'Hello wipeout 2']">
+    &lt;set-template>
+        &lt;ul data-bind="list: null">&lt;/ul>
+    &lt;/set-template>
+    &lt;item-template>
+        &lt;li>
+            &lt;span data-bind="text: model">&lt;/span>
+            Index: &lt;span data-bind="text: $index">&lt;/span>
+        &lt;/li>
+    &lt;/item-template>
+&lt;/wo.list></code>
+</wipeout-docs.view-models.components.new-template-code-block>
+
+    
+    <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+        <code parser="s">&lt;wo.view template-id="'list-binding-script-1'" /></code>
+    </wipeout-docs.view-models.components.usage-code-block>   

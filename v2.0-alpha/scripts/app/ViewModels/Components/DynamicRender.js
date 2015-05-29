@@ -1,10 +1,10 @@
-compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.contentControl", function() {
+compiler.registerClass("wipeoutDocs.viewModels.components.dynamicRender", "wo.content", function() {
     var dynamicRender = function() {
         this._super();
         
         this.content = null;
         
-        this.templateId = wo.contentControl.createAnonymousTemplate("{{$this.content}}");
+        this.templateId = wo.content.createAnonymousTemplate("{{$this.content}}");
     };
     
     dynamicRender.prototype.onModelChanged = function(newVal) {

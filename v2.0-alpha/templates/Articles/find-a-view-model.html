@@ -11,11 +11,11 @@
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;myViewModel model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find(myViewModel)">
+        &lt;wo.content my-view-model-ancestor="$context.find(myViewModel)">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/myViewModel></code>
 </wipeout-docs.view-models.components.code-block>
@@ -28,11 +28,11 @@
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find('parent')">
+        &lt;wo.content my-view-model-ancestor="$context.find('parent')">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>
@@ -44,11 +44,11 @@
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">&lt;my-view-model model="'Hello wipeout!'">
     &lt;set-template>
-        &lt;wo.content-control my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
+        &lt;wo.content my-view-model-ancestor="$context.find({$instanceof: myViewModel})">
             &lt;set-template>
                 &lt;span data-bind="text: myViewModelAncestor.model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
 &lt;/my-view-model></code>
 </wipeout-docs.view-models.components.code-block>

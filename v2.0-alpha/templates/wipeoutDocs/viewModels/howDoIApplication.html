@@ -3,7 +3,7 @@
     <div class="staticHeader-height"></div>
     <h2>How do I?</h2>
     
-    <wo.items-control items="$model.leftHandNav" id="articles">
+    <wo.list items="$model.leftHandNav" id="articles">
         <item-template>
             <div class="list-group">
                 <wo.if condition="$model.header.visible">
@@ -11,7 +11,7 @@
                         <wipeout-docs.rl text="$model.header.text" href="$model.header.href" class="'list-group-item active'" id="header"></wipeout-docs.rl>
                     </if-true>
                 </wo.if>
-                <wo.items-control items="$model.items" id="items">
+                <wo.list items="$model.items" id="items">
 					<set-template>
 						<div wo-render="$this.items"></div>
 					</set-template>
@@ -22,10 +22,10 @@
                             </if-true>
                         </wo.if>
                     </item-template>
-                </wo.items-control>
+                </wo.list>
             </div> 
         </item-template>
-    </wo.items-control>
+    </wo.list>
 </div>
 <div>
     <div style="float: left; margin-left: 320px;">

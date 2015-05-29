@@ -243,9 +243,9 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.utils.viewModels")
 			]),
             new wipeoutDocs.models.components.treeViewBranch("viewModels", null, [
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.contentControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.content"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.if"),
-                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.itemsControl"),
+                ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.list"),
                 ApiApplication.treeViewBranchFor(wipeoutApi, "wipeout.viewModels.view")
 			]),
             new wipeoutDocs.models.components.treeViewBranch("wml", null, [
@@ -261,12 +261,12 @@ compiler.registerClass("wipeoutDocs.models.apiApplication", "busybody.observable
 		
         var _wo = new wipeoutDocs.models.components.treeViewBranch("wo", null, [
             ApiApplication.treeViewBranchFor(woApi, "wo.addHtmlAttribute"),
-			ApiApplication.treeViewBranchFor(woApi, "wo.contentControl"),
+			ApiApplication.treeViewBranchFor(woApi, "wo.content"),
             ApiApplication.treeViewBranchFor(woApi, "wo.filters"),
             ApiApplication.treeViewBranchFor(woApi, "wo.findFilters"),
             ApiApplication.treeViewBranchFor(woApi, "wo.if"),
             ApiApplication.treeViewBranchFor(woApi, "wo.bindings"),
-            ApiApplication.treeViewBranchFor(woApi, "wo.itemsControl"),
+            ApiApplication.treeViewBranchFor(woApi, "wo.list"),
             ApiApplication.treeViewBranchFor(woApi, "wo.parsers"),
             ApiApplication.treeViewBranchFor(woApi, "wo.triggerEvent"),
             ApiApplication.treeViewBranchFor(woApi, "wo.view")

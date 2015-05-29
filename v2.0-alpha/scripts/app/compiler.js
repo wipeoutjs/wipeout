@@ -159,5 +159,5 @@ wipeoutDocs.compiler = (function () {
 })();
 
 var compiler = new wipeoutDocs.compiler("wipeoutDocs", "orienteer", [
-    "busybody.disposable", "busybody.observable", "wipeout.base.bindable", "wo.view", "wo.contentControl", "wo.itemsControl", "wo.if"
+    "busybody.disposable", "busybody.observable", "wipeout.base.bindable", "wo.view", "wo.content", "wo.list", "wo.if"
 ]);

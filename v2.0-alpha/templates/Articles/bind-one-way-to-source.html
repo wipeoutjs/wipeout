@@ -8,17 +8,17 @@ By default, all bindings are one way from the parent (source) to the child (dest
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-owts-script-1'" highlight--s="--owts">
-        <code parser="s">&lt;wo.content-control>
+        <code parser="s">&lt;wo.content>
     &lt;set-template>
         One way to source bindings: &lt;span wo-content="$model">&lt;/span>
         &lt;br />
-        &lt;wo.content-control input-value--owts="$model">
+        &lt;wo.content input-value--owts="$model">
             &lt;set-template>
                 &lt;input type="text" wo-value="$this.inputValue" wo-on-event="keyup"/>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
     
     <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">

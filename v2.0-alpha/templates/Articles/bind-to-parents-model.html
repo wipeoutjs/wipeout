@@ -5,15 +5,15 @@ In order to keep clean contextual boundaries, the model property of a child view
 </p>
 
     <wipeout-docs.view-models.components.new-template-code-block new-script-id="'bind-to-parents-model-script-1'">
-        <code parser="s">&lt;wo.content-control model="{ value: 'Hello wipeout!' }">
+        <code parser="s">&lt;wo.content model="{ value: 'Hello wipeout!' }">
     &lt;set-template>
-        &lt;wo.content-control model="$model.value">
+        &lt;wo.content model="$model.value">
             &lt;set-template>
                 Binding to a property on parent's model: &lt;span wo-content="$model">&lt;/span>
             &lt;/set-template>
-        &lt;/wo.content-control>
+        &lt;/wo.content>
     &lt;/set-template>
-&lt;/wo.content-control></code>
+&lt;/wo.content></code>
     </wipeout-docs.view-models.components.new-template-code-block>
 
     

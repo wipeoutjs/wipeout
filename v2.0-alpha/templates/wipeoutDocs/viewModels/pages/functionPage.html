@@ -4,7 +4,7 @@
 <wo.if condition="$model.arguments.length">
     <if-true>
         <h3>Arguments</h3>
-        <wo.items-control items="$model.arguments">
+        <wo.list items="$model.arguments">
             <set-template>
                 <table class="table table-striped">
                     <thead>
@@ -26,7 +26,7 @@
                     <div wo-el="td" wo-content="$model.optional => yesNo"></div>
                 </div>
             </item-template>
-        </wo.items-control>
+        </wo.list>
     </if-true>
 </wo.if>
 <wo.if condition="$this.showReturnValue">
