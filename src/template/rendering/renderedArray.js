@@ -42,7 +42,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
         ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
 		
 		if (this.list)
-			this.list.onItemRemoved(item.renderedChild);
+			this.list.removedItem(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;

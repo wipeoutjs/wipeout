@@ -76,18 +76,26 @@ Class("wipeout.viewModels.list", function () {
         this.items.remove(item);
     };
     
-    //virtual
-    list.prototype.onItemRendered = function (item) {
-        ///<summary>Called after a new item items control is rendered</summary>
-        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
+    list.prototype.removedItem = function (item) {
+        ///<summary>Disposes of deleted items</summary> 
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
+        
+        this.onItemRemoved(item);
+        
+        if (item instanceof busybody.disposable)
+            item.dispose();
     };
     
     //virtual
     list.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="Any" optional="false">The item deleted</param>  
-        
-        item.dispose();
+    };
+    
+    //virtual
+    list.prototype.onItemRendered = function (item) {
+        ///<summary>Called after a new item items control is rendered</summary>
+        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
 
     list.prototype._createItem = function (model) {

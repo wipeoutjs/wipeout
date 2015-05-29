@@ -74,11 +74,11 @@ testUtils.testWithUtils("removeItem", "", false, function(methods, classes, subj
     strictEqual(subject.items.length, 0)
 });
 
-testUtils.testWithUtils("onItemRemoved", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("removedItem", "", false, function(methods, classes, subject, invoker) {
     // arrange
-    var item = {
-        dispose: methods.method()
-    };
+    var item = new busybody.disposable();
+    item.dispose = methods.method();
+    subject.onItemRemoved = methods.method([item]);
     
     // act
     invoker(item);
