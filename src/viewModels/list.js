@@ -4,7 +4,7 @@ Class("wipeout.viewModels.list", function () {
 	var deafaultTemplateId;
 	var defaultItemTemplateId;
     var list = wipeout.viewModels.content.extend(function list(templateId, itemTemplateId, model) {
-        ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
+        ///<summary>Bind a list of models (items) to a list of view models and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
