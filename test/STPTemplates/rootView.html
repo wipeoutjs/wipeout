@@ -23,16 +23,16 @@
         <set-template>
             <div wo-content="$this.model.rootTitle"></div>
             <div style="float: left">
-                <wo.items-control 
-								  id="theInnerItemsControl1" 
+                <wo.list 
+								  id="theInnerlist1" 
 								  items--tw="$this.model.items" 
-								  item-template-id--s="STPTemplates/itemsControlTemplate.html" />
+								  item-template-id--s="STPTemplates/listTemplate.html" />
             </div>
             <div style="float: left; margin-left: 20px;">
-                <wo.items-control 
-								  id="theInnerItemsControl2" 
+                <wo.list 
+								  id="theInnerlist2" 
 								  items--tw="$this.model.items" 
-								  item-template-id--s="STPTemplates/itemsControlTemplate.html" />
+								  item-template-id--s="STPTemplates/listTemplate.html" />
             </div>
             <div style="clear: both"></div>
             {{$this.totals}}

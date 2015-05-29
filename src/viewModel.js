@@ -214,7 +214,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.list etc...";
 
 			parsers[propertyName] = parser;
 			return output;
@@ -232,7 +232,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.list etc...";
 
 			bindingTypes[propertyName] = bindingType;
 			return output;

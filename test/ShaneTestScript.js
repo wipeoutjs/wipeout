@@ -69,7 +69,7 @@
 
 var actions = [
     /**/function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
+        view.templateItems.listTest.templateItems.theInnerlist1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
         view.templateItems.NestedDiv.innerHTML = "this is the nested div";
@@ -81,11 +81,11 @@ var actions = [
         theModel.items.push(busybody.makeObservable({itemId: 66, itemName: "Mycroft"}));
         return "Added person (Mycroft)";
     }, function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
+        view.templateItems.listTest.templateItems.theInnerlist1.items.splice(0, 1);
         return "Removed from one item source \"items\" (John). Expect the other to follow suit.";
     }, function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
-        view.templateItems.listTest.templateItems.theInnerItemsControl2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerlist1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerlist2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         return "Stamp a person view template.";
     },/**/ function(view) {
         view.model.items.reverse()

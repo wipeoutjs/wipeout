@@ -90,14 +90,14 @@ test("renderArray", function() {
 	stop();
 });
 	
-test("renderArray, itemsControl", function() {
+test("renderArray, list", function() {
 	
 	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var rendered = [], removed = [];
-	var ic = new wo.itemsControl();
+	var ic = new wo.list();
 	ic.items.push(1);
 	ic.items.push(2);
 	ic.items.push(3);
@@ -268,13 +268,13 @@ function disposeTest (act) {
     </wo.content-control>\
     <div id="d">\
         <div id="e">\
-            <wo.items-control id="i3" items="[{},{}]">\
+            <wo.list id="i3" items="[{},{}]">\
                 <set-template>\
                     <div id="f">\
 						{{$this.items}}\
                     </div>\
                 </set-template>\
-            </wo.items-control>\
+            </wo.list>\
         </div\>\
     </div\>\
 </div>';

@@ -166,8 +166,8 @@ test("parent child views", function() {
             <wo.view id="' + child4 + '"></wo.view>\
         </set-template>\
     </wo.content-control>\
-    <wo.items-control items="[{},{}]" id="' + parent3 + '">\
-    </wo.items-control>';
+    <wo.list items="[{},{}]" id="' + parent3 + '">\
+    </wo.list>';
 	
 	application.onRendered = function () {
     
