@@ -1,4 +1,4 @@
-module("wipeout.viewModels.itemsControl", {
+module("wipeout.viewModels.list", {
     setup: function() {
     },
     teardown: function() {
@@ -11,14 +11,14 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
     subject._super = methods.method([templateId, model]);
     subject.observe =function(){/*tested in next test*/};
     
-    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function () {
+    classes.mock("wipeout.viewModels.content.createTemplatePropertyFor", function () {
         methods.method([subject, "itemTemplateId", "itemTemplate"])(arguments[0], arguments[1], arguments[2]);
     }, 1);
 	
     subject.registerDisposable = methods.method();
     
     subject._removeItem = {};
-    subject.registerRoutedEvent = methods.method([wipeout.viewModels.itemsControl.removeItem, subject._removeItem, subject]);
+    subject.registerRoutedEvent = methods.method([wipeout.viewModels.list.removeItem, subject._removeItem, subject]);
     
     // act
     invoker(templateId, itemTemplateId, model);
@@ -30,8 +30,8 @@ testUtils.testWithUtils("constructor", "", false, function(methods, classes, sub
 
 testUtils.testWithUtils("constructor", "item template change", false, function(methods, classes, subject, invoker) {
     // arrange
-	subject = new wipeout.viewModels.itemsControl();
-	var vm1 = {}, vm2 = {__createdByItemsControl: true}, template = wipeout.viewModels.contentControl.createAnonymousTemplate("hello");
+	subject = new wipeout.viewModels.list();
+	var vm1 = {}, vm2 = {__createdBylist: true}, template = wipeout.viewModels.content.createAnonymousTemplate("hello");
 	subject.getItemViewModels = function () { return [vm1, vm2]; };
 	
 	// assert
@@ -74,11 +74,11 @@ testUtils.testWithUtils("removeItem", "", false, function(methods, classes, subj
     strictEqual(subject.items.length, 0)
 });
 
-testUtils.testWithUtils("onItemRemoved", "", false, function(methods, classes, subject, invoker) {
+testUtils.testWithUtils("removedItem", "", false, function(methods, classes, subject, invoker) {
     // arrange
-    var item = {
-        dispose: methods.method()
-    };
+    var item = new busybody.disposable();
+    item.dispose = methods.method();
+    subject.onItemRemoved = methods.method([item]);
     
     // act
     invoker(item);

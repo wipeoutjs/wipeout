@@ -7,7 +7,7 @@ module("integration: wipeout.utils.viewModels", {
 
 test("wo-el", function() {
     
-    wo.viewModel("aNameSpace.aViewModel", wo.contentControl).build();
+    wo.viewModel("aNameSpace.aViewModel", wo.content).build();
 
     // arrange
     var viewModel1 = '<div wo-el="aNameSpace.aViewModel" model="{xxx: 567}" id="thediv">\

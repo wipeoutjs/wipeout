@@ -6,7 +6,7 @@ Class("wipeout.viewModels.if", function () {
         if (!sc) return;
         sc = false;
         
-        _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
+        _if.blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate("", true);
     };
     
     var _if = wipeout.viewModels.view.extend(function _if(ifTrueId, model) {
@@ -36,11 +36,11 @@ Class("wipeout.viewModels.if", function () {
         
         ///<Summary type="String">Anonymous version of ifTrueId</Summary>
         this.ifTrue = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
         
         ///<Summary type="String">Anonymous version of ifFalseId</Summary>
         this.ifFalse = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
     });
 	
     _if.addGlobalParser("ifFalse", "template");

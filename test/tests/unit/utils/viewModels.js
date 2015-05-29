@@ -52,12 +52,12 @@ test("getViewModel, no vm", function() {
 test("getViewModel, parent and previous sibling have vms", function() {
 	
 	// arrange
-	$("#qunit-fixture").html('<wo.content-control xxx="555">\
+	$("#qunit-fixture").html('<wo.content xxx="555">\
 	<set-template>\
 		<wo.view></wo.view>\
 		<div id="theItem"></div>\
 	</set-template>\
-</wo.content-control>');
+</wo.content>');
 	
 	wo($("#qunit-fixture")[0]);
 	

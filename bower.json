@@ -1,7 +1,7 @@
 {
   "name": "Wipeout",
   "version": "0.1.0",
-  "homepage": "https://github.com/wipeout/wipeout-1",
+  "homepage": "https://github.com/wipeoutjs/wipeout",
   "authors": [
     "Shane Connon <shane.connon@gmail.com>"
   ],
@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "busybody": "ShaneGH/busybody#0.2.0-alpha"
+    "busybody": "ShaneGH/busybody#0.2.1"
   }
 }

@@ -3,7 +3,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 (function () {
 
-// busybody v0.1.0
+// busybody v0.2.1
 // (c) Shane Connon 2015
 // http://www.opensource.org/licenses/mit-license.php
 (function () {
@@ -268,7 +268,7 @@ Class("busybody.utils.obj", function () {
     var splitPropertyName = function(propertyName) {
 		///<summary>Split a path into strings and numbers</summary>
 		///<param name="propertyName" type="String">The name</param>
-		///<returns type="[String|Number]">The path</param>
+		///<returns type="[String|Number]">The path</returns>
 		
         propertyName = propertyName.split(".");
         
@@ -295,7 +295,7 @@ Class("busybody.utils.obj", function () {
     var joinPropertyName = function (propertyName) {
 		///<summary>Join a path</summary>
 		///<param name="propertyName" type="[String|Number]">The path</param>
-		///<returns type="String">The name</param>
+		///<returns type="String">The name</returns>
 		
         var output = [];
         enumerateArr(propertyName, function (item) {
@@ -367,9 +367,9 @@ Class("busybody.utils.obj", function () {
 
     function addWithDispose(callbackArray, item) {
 		///<summary>Add an item to an array and return a disposable which will remove it</summary>
-		///<param name="callbackArray" type="[]">The array</param>
+		///<param name="callbackArray" type="Array">The array</param>
 		///<param name="item" type="Any">The item</param>
-		///<returns type="busybody.disposable">The disposable</param>
+		///<returns type="busybody.disposable">The disposable</returns>
 
         callbackArray.push(item);
         var dispose = new busybody.disposable(function () {
@@ -407,9 +407,12 @@ Class("busybody.disposable", function () {
 	
     var disposable = orienteer.extend(function disposable(disposableOrDisposeFunction) {
         ///<summary>An object which can be disposed</summary>
-		///<param name="disposeableOrDisposeFunction" type="Object|Function">An initial dispose function</param>
+		///<param name="disposableOrDisposeFunction" type="Object|Function">An initial dispose function</param>
         
         this._super();
+		
+		///<summary type="[Function]">A list of functions to call when this is disposed of</summary>
+		this.$disposables = undefined;
         
         if (!disposableOrDisposeFunction)
             ;
@@ -502,7 +505,7 @@ Class("busybody.utils.executeCallbacks", function () {
 		///<summary>Add a callback</summary>
 		///<param name="callback" type="Function">The callback</param>
 		///<param name="property" type="String">The property</param>
-		///<returns type="busybody.disposable">A dispose object</param>
+		///<returns type="busybody.disposable">A dispose object</returns>
 		
 		var op = busybody.utils.obj.addWithDispose(this.callbacks, callback);
 		this.registerDisposable(op);
@@ -512,7 +515,7 @@ Class("busybody.utils.executeCallbacks", function () {
         
     executeCallbacks.prototype._execute = function() {
 		///<summary>Abstract. Execute and return argumets for the callbacks</summary>
-		///<returns type="Object">Arguments for the callbacks in the form of { cancel: true | false, arguments: [] }</param>
+		///<returns type="Object">Arguments for the callbacks in the form of { cancel: true | false, arguments: [] }</returns>
 		
 		throw "Abstract methods must be implemented";
 	};
@@ -588,6 +591,9 @@ Class("busybody.observableBase", function () {
 		
         ///<summary type="Object">Dictionary of change callbacks</summary>
         this.$callbacks = {};
+        
+        ///<summary type="Number">Simple count of number of times any property on this object has been subscribed to.</summary>
+        this.$observes = 0;
     });
     
 	// this function is also used by arrayBase
@@ -628,6 +634,7 @@ Class("busybody.observableBase", function () {
     observableBase.processChanges = function (callbacks, changes) {
 		///<summary>Process changes</summary>
 		///<param name="callbacks" type="[busybody.callbacks.chageCallback]">The callbacks</param>
+		///<param name="changes" type="[Object]">The changes</param>
 		///<returns type="[Function]">A list of items to execute after this funciton returns</returns>
 		
         var dispose = [];
@@ -701,20 +708,19 @@ Class("busybody.observableBase", function () {
         throw "Abstract methods must be overridden";
 	};
     
-    observableBase.prototype.bind = function (property, otherObject, otherPropoerty) {
+    observableBase.prototype.bind = function (property, otherObject, otherProperty) {
 		///<summary>Bind a property to another objects property</summary>
 		///<param name="property" type="String">The property</param>
 		///<param name="otherObject" type="Object">The other object</param>
 		///<param name="otherProperty" type="String">The other property</param>
 		
-		return busybody.bind(this, property, otherObject, otherPropoerty);
+		return busybody.bind(this, property, otherObject, otherProperty);
     };
 
-    observableBase.prototype.observeArray = function (property, callback, context, options) {
+    observableBase.prototype.observeArray = function (property, callback, options) {
 		///<summary>Observe an array property for changes</summary>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback</param>
-		///<param name="context" type="Any">The "this" value in the callback</param>
 		///<param name="options" type="Object" optional="true">See busybody.array.observe for options</param>
 		///<returns type="busybody.disposable">A disposable</returns>
 		
@@ -735,19 +741,19 @@ Class("busybody.observableBase", function () {
             
             //TODO: duplication of logic
             if (options && options.evaluateOnEachChange) {
-                callback.call(context, change);
+                callback.call(options.context, change);
             } else {
                 var cec = new busybody.utils.compiledArrayChange([change], 0, 1);
-                callback.call(context, cec.getRemoved(), cec.getAdded(), cec.getIndexes());
+                callback.call(options ? options.context : null, cec.getRemoved(), cec.getAdded(), cec.getIndexes());
             }
             
             if (newValue instanceof busybody.array)
-                d2 = this.registerDisposable(newValue.observe(callback, context, options));
-        }, this);
+                d2 = this.registerDisposable(newValue.observe(callback, options));
+        }, {context: this});
         
         var tmp;
         if ((tmp = busybody.utils.obj.getObject(property, this.$forObject || this)) instanceof busybody.array)
-            d2 = this.registerDisposable(tmp.observe(callback, context, options));
+            d2 = this.registerDisposable(tmp.observe(callback, options));
         
         return new busybody.disposable(function () {
             if (d2) {
@@ -760,28 +766,52 @@ Class("busybody.observableBase", function () {
                 d1 = null;
             }
         });
-    }
+    };
 
-    observableBase.prototype.observe = function (property, callback, context, options) {
+    observableBase.prototype.isObserved = function () {
+		///<summary>Determine if any callbacks are currently monitoring this observable</summary>
+		///<returns type="Boolean"></returns>
+        
+        return !!this.$observes;
+    };
+    
+    observableBase.prototype.observe = function (property, callback, options) {
 		///<summary>Observe changes to a property </summary>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<param name="context" type="Any" optional="true">The "this" in the callback</param>
 		///<param name="options" type="Object" optional="true">Options for the callback</param>
+		///<param name="options.context" type="Any" optional="true">Default: null. The "this" in the callback</param>
 		///<param name="options.useRawChanges" type="Boolean">Default: false. Use the change objects from the Object.observe as arguments</param>
 		///<param name="options.evaluateOnEachChange" type="Boolean">Default: false. Evaluate once for each change rather than on an amalgamation of changes</param>
 		///<param name="options.evaluateIfValueHasNotChanged" type="Boolean">Default: false. Evaluate if the oldValue and the newValue are the same</param>
 		///<param name="options.activateImmediately" type="Boolean">Default: false. Activate the callback now, meaning it could get changes which were applied before the callback was created</param>
+		///<param name="options.trackPartialObservable" type="Boolean">Default: false. Path only. If set to true, will track observables at the end of a path, even if there are non observables before them.</param>
+		///<param name="options.forceObserve" type="Boolean">Default: false. Path only. If set to true, will make any un observables in the path into observables.</param>
+		///<returns type="Object">An object with a dispose function to cancel the subscription.</returns>
 		
+        this.$observes++;
+        
         if (/[\.\[]/.test(property)) {
-            var pw = new busybody.observeTypes.pathObserver(this.$forObject || this, property, callback, context);
+            if (options)
+                options = {
+                    context: options.context, 
+                    trackPartialObservable: options.trackPartialObservable, 
+                    forceObserve: options.forceObserve
+                };
+            
+            var pw = new busybody.observeTypes.pathObserver(this.$forObject || this, property, options);
+            pw.registerDisposeCallback((function () {
+                this.$observes--;
+            }).bind(this));
+            
+            pw.onValueChanged(callback.bind((options ? options.context : false) || pw.forObject), false);
             this.registerDisposable(pw);
             return pw;
         }
         
         this._init(property);
 
-        var cb = new busybody.callbacks.propertyCallback(callback, context, options);
+        var cb = new busybody.callbacks.propertyCallback(callback, options);
         if (!this.$callbacks[property]) this.$callbacks[property] = [];
         this.$callbacks[property].push(cb);
 
@@ -797,6 +827,8 @@ Class("busybody.observableBase", function () {
 
                 if (!dispose) return;
                 dispose = null;
+                
+                this.$observes--;
                 
                 if (allowPendingChanges)
                     this.onNextPropertyChange(property, function (change) {
@@ -830,13 +862,18 @@ Class("busybody.observableBase", function () {
     };
     
     observableBase.prototype.computed = function (property, callback, options) {
-		///<summary>Create a computed which bind's to a property. The context of the callback will be this observable.</summary>
+		///<summary>Create a computed which bind's to a property. The context of the callback will be this observable unless there is a context option.</summary>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The computed logic.</param>
 		///<param name="options" type="Object" optional="true">See busybody.observeTypes.computed for options</param>
-		///<returns type="busybody.observeTypes.computed">The computed</param>
+		///<returns type="busybody.observeTypes.computed">The computed</returns>
         
-        var computed = new busybody.observeTypes.computed(callback, this.$forObject || this, options);
+        if (!options)
+            options = {context: this.$forObject || this};
+        else if (!options.hasOwnProperty("context"))
+            options.context = this.$forObject || this;
+        
+        var computed = new busybody.observeTypes.computed(callback, options);
         computed.bind(this.$forObject || this, property);
         this.registerDisposable(computed);
         return computed;        
@@ -852,7 +889,7 @@ Class("busybody.observableBase", function () {
     observableBase.afterObserveCycle = function(callback) {
 		///<summary>Execute a callback after each observe cycle.</summary>
 		///<param name="callback" type="Function">The callback.</param>
-		///<returns type="busybody.disposable">A dispose callback</param>
+		///<returns type="busybody.disposable">A dispose callback</returns>
 		
         return busybody.utils.observeCycleHandler.instance.afterObserveCycle(callback);
     };
@@ -860,7 +897,7 @@ Class("busybody.observableBase", function () {
     observableBase.beforeObserveCycle = function(callback) {
 		///<summary>Execute a callback before each observe cycle.</summary>
 		///<param name="callback" type="Function">The callback.</param>
-		///<returns type="busybody.disposable">A dispose callback</param>
+		///<returns type="busybody.disposable">A dispose callback</returns>
 		
         return busybody.utils.observeCycleHandler.instance.beforeObserveCycle(callback);
     };
@@ -869,7 +906,7 @@ Class("busybody.observableBase", function () {
 		///<summary>Execute a callback after the next observe cycle.</summary>
 		///<param name="callback" type="Function">The callback.</param>
 		///<param name="waitForNextCycleToStart" type="Boolean" options="true">If false and there is no observe cycle running, will execute the callback immediately.</param>
-		///<returns type="busybody.disposable">A dispose callback</param>
+		///<returns type="busybody.disposable">A dispose callback</returns>
 
         if (!waitForNextCycleToStart && busybody.utils.observeCycleHandler.instance.length === 0) {
             callback();
@@ -887,7 +924,7 @@ Class("busybody.observableBase", function () {
     observableBase.beforeNextObserveCycle = function (callback) {
 		///<summary>Execute a callback before the next observe cycle.</summary>
 		///<param name="callback" type="Function">The callback.</param>
-		///<returns type="busybody.disposable">A dispose callback</param>
+		///<returns type="busybody.disposable">A dispose callback</returns>
 
         var dispose = busybody.utils.observeCycleHandler.instance.beforeObserveCycle(function () {
             dispose.dispose();
@@ -949,8 +986,8 @@ Class("busybody.callbacks.changeCallback", function () {
     changeCallback.prototype.evaluateSingle = function (changes, changeIndex) {
 		///<summary>Evaluate a single change</summary>
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
-		///<param name="index" type="Number">The index of the change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<param name="changeIndex" type="Number">The index of the change to execute</param>
+		///<returns type="Any">The return value of the callback</returns>
         
         if (!this.evaluateOnEachChange) return;
 
@@ -973,8 +1010,8 @@ Class("busybody.callbacks.changeCallback", function () {
     changeCallback.prototype._evaluateSingle = function (changes, changeIndex) {
 		///<summary>Abstract. Evaluate a single change</summary>
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
-		///<param name="index" type="Number">The index of the change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<param name="changeIndex" type="Number">The index of the change to execute</param>
+		///<returns type="Any">The return value of the callback</returns>
 		
         throw "Abstract methods must be implemented";
     };
@@ -982,7 +1019,7 @@ Class("busybody.callbacks.changeCallback", function () {
     changeCallback.prototype.evaluateMultiple = function (changes) {
 		///<summary>Evaluate on batch of changes</summary>
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 		
         if (this.evaluateOnEachChange || !changes.length) return;
 
@@ -1022,7 +1059,7 @@ Class("busybody.callbacks.changeCallback", function () {
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="beginAt" type="Number">The index of the first change to execute</param>
 		///<param name="endAt" type="Number">The index of the change after the last change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 		
         throw "Abstract methods must be implemented";
     };
@@ -1042,10 +1079,19 @@ Class("busybody.arrayBase", function () {
             if (!(arguments[0] instanceof Array))
                 throw "The initial values must be an array";
         
+		///<summary type="[busybody.disposable]">Items to despose of with this</summary>
         this.$disposables = [];
+		
+		///<summary type="[Array]">Arrays which are obund to this</summary>
         this.$boundArrays = [];
+		
+		///<summary type="[busybody.callbacks.arrayCallback]">On change callbacks</summary>
         this.$callbacks = [];
+		
+		///<summary type="[Object]">The current change batch</summary>
         this.$changeBatch = [];
+		
+		///<summary type="Number">The length property of an array base is dynamic. $length is the cached value. You can use this value, but do not write to it</summary>
         this.$length = initialValues ? initialValues.length : 0;    
         
         if (initialValues)
@@ -1140,11 +1186,11 @@ Class("busybody.arrayBase", function () {
         throw "Abstract methods must be implemented";
     };
     
-    arrayBase.prototype.observe = function (callback, context, options) {
+    arrayBase.prototype.observe = function (callback, options) {
 		///<summary>Observe for array changes</summary>
 		///<param name="callback" type="Function">The callback</param>
-		///<param name="context" type="Any">The "this" value in the callback</param>
 		///<param name="options" type="Object" optional="true">Options on when the callback is executed and what it's args will be</param>
+		///<param name="options.context" type="Any">Default: null. The "this" value in the callback</param>
 		///<param name="options.useRawChanges" type="Boolean">Default: false. Use the change objects from the Array.observe as arguments</param>
 		///<param name="options.evaluateOnEachChange" type="Boolean">Default: false. Evaluate once for each change rather than on an amalgamation of changes</param>
 		///<returns type="busybody.disposable">A disposable</returns>
@@ -1155,7 +1201,7 @@ Class("busybody.arrayBase", function () {
             return busybody.observe.apply(null, args);
         }
 		
-		return this.addCallback(new busybody.callbacks.arrayCallback(callback, context, options));
+		return this.addCallback(new busybody.callbacks.arrayCallback(callback, options));
     };
 	
 	arrayBase.prototype.disposableFor = function (changeCallback) {
@@ -1185,7 +1231,7 @@ Class("busybody.arrayBase", function () {
     arrayBase.prototype.alteringArray = function(method, args) {
 		///<summary>Execute logic which will alter this array. Apply changes to any bound arrays.</summary>
 		///<param name="method" type="String">A method pointer which will alter the array</param>
-		///<param name="args" type="[]">The arguments to the method</param>
+		///<param name="args" type="Array">The arguments to the method</param>
 				
         if (this.__alteringArray)
             throw "Calls to alteringArray must be synchronus and not nested.";
@@ -1214,8 +1260,8 @@ Class("busybody.arrayBase", function () {
 
     arrayBase.copyAll = function (from, to, convert) {
 		///<summary>Copy the contents of one array to another</summary>
-		///<param name="from" type="[]">The from array</param>
-		///<param name="to" type="[]">The to array</param>
+		///<param name="from" type="Array">The from array</param>
+		///<param name="to" type="Array">The to array</param>
 		///<param name="convert" type="Function">A function to convert values before copy</param>
         
         var args;
@@ -1234,7 +1280,7 @@ Class("busybody.arrayBase", function () {
     
     arrayBase.prototype.bind = function(anotherArray) {
 		///<summary>Bind arrays</summary>
-		///<param name="anotherArray" type="[]">The other array</param>
+		///<param name="anotherArray" type="Array">The other array</param>
 		///<returns type="busybody.disposable">A disposable</returns>
         
         if (!anotherArray || this.$boundArrays.indexOf(anotherArray) !== -1) return;
@@ -1296,7 +1342,7 @@ Class("busybody.array", function () {
 		///<summary>An observable array</summary>
 		///<param name="initialValues" type="[Any]">Initial values for the array</param>
 		
-		if (this === busybody)
+		if (!(this instanceof array))
 			return new array(initialValues);
 		
         this._super.apply(this, arguments);
@@ -1371,12 +1417,15 @@ Class("busybody.array", function () {
 		///<summary>An observable array</summary>
 		///<param name="initialValues" type="[Any]">Initial values for the array</param>
 		
-		if (this === busybody)
+		if (!(this instanceof array))
 			return new array(initialValues);
         
         this._super.apply(this, arguments);
         
+		///<summary type="[Function]">Callbacks to fire the next time the array changes</summary>
         this.$onNextArrayChanges = [];
+		
+		///<summary type="[Function]">Callbacks which capture changes to the array</summary>
         this.$captureCallbacks = [];
     }); 
     
@@ -1550,7 +1599,7 @@ Class("busybody.array", function () {
     array.prototype.sort = function(sortFunction) {
 		///<summary>Sort the elements in the array</summary>
 		///<param name="sortFunction" type="Function">A function to compare items</param>
-		///<returns type="[]">this</returns>
+		///<returns type="Array">this</returns>
 		
         if (!useObjectObserve) {
                 
@@ -1606,11 +1655,11 @@ Class("busybody.array", function () {
 
 Class("busybody.callbacks.arrayCallback", function () {
         
-    var arrayCallback = busybody.callbacks.changeCallback.extend(function arrayCallback(callback, context, options) {
+    var arrayCallback = busybody.callbacks.changeCallback.extend(function arrayCallback(callback, options) {
 		///<summary>Evaluate array changes</summary>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<param name="context" type="Any" optional="true">The "this" in the callback</param>
 		///<param name="options" type="Object" optional="true">Options for the callback</param>
+		///<param name="options.context" type="Any">Default: null. The "this" value in the callback</param>
 		///<param name="options.useRawChanges" type="Boolean">Default: false. Use the change objects from the Array.observe as arguments</param>
 		///<param name="options.evaluateOnEachChange" type="Boolean">Default: false. Evaluate once for each change rather than on an amalgamation of changes</param>
 		
@@ -1623,14 +1672,14 @@ Class("busybody.callbacks.arrayCallback", function () {
         this.callback = callback;
 		
 		///<summary type="Any" optional="true">The "this" in the callback</summary>
-        this.context = context;
+        this.context = options ? options.context : null;
     });
 
     arrayCallback.prototype._evaluateSingle = function (changes, index) {
 		///<summary>Evaluate a single change</summary>
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="index" type="Number">The index of the change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 
         this.callback.call(this.context, changes[index]);
     };
@@ -1640,7 +1689,7 @@ Class("busybody.callbacks.arrayCallback", function () {
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="beginAt" type="Number">The index of the first change to execute</param>
 		///<param name="endAt" type="Number">The index of the change after the last change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 		
 		if (this.useRawChanges) {
 			this.callback.call(this.context, changes.slice(beginAt, endAt));
@@ -1667,7 +1716,7 @@ Class("busybody.callbacks.arrayCallback", function () {
     arrayCallback.prototype._evaluateArrayMultiple = function (result) {
 		///<summary>Evalue the callback</summary>
 		///<param name="result" type="busybody.utils.compiledArrayChange">Inputs for the callback</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
         
         this.callback.call(this.context, result.getRemoved(), result.getAdded(), result.getIndexes());
     };
@@ -1678,11 +1727,11 @@ Class("busybody.callbacks.arrayCallback", function () {
 
 Class("busybody.callbacks.propertyCallback", function () {
         
-    var propertyCallback = busybody.callbacks.changeCallback.extend(function propertyCallback(callback, context, options) {
+    var propertyCallback = busybody.callbacks.changeCallback.extend(function propertyCallback(callback, options) {
 		///<summary>Evaluate property changes</summary>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<param name="context" type="Any" optional="true">The "this" in the callback</param>
 		///<param name="options" type="Object" optional="true">Options for the callback</param>
+		///<param name="options.context" type="Any" optional="true">Default: null. The "this" in the callback</param>
 		///<param name="options.useRawChanges" type="Boolean">Default: false. Use the change objects from the Array.observe as arguments</param>
 		///<param name="options.evaluateOnEachChange" type="Boolean">Default: false. Evaluate once for each change rather than on an amalgamation of changes</param>
 		///<param name="options.evaluateIfValueHasNotChanged" type="Boolean">Default: false. Evaluate if the oldValue and the newValue are the same</param>
@@ -1692,8 +1741,10 @@ Class("busybody.callbacks.propertyCallback", function () {
 		///<summary type="Function">The callback to execute</summary>
         this.callback = callback;
 		
-		///<summary type="Any" optional="true">The "this" in the callback</summary>
-        this.context = context;
+		///<summary type="Any">The "this" in the callback</summary>
+        this.context = options ? options.context : null;
+		
+		///<summary type="Boolean">Default: false. Evaluate if the oldValue and the newValue are the same</summary>
         this.evaluateIfValueHasNotChanged = options && options.evaluateIfValueHasNotChanged;
 		
 		///<summary type="Boolean">Default: false. Evaluate if the oldValue and the newValue are the same</summary>
@@ -1704,7 +1755,7 @@ Class("busybody.callbacks.propertyCallback", function () {
 		///<summary>Evaluate a single change</summary>
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="index" type="Number">The index of the change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 
         var change = changes[index], 
             nextChange = changes[index + 1], 
@@ -1721,7 +1772,7 @@ Class("busybody.callbacks.propertyCallback", function () {
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="beginAt" type="Number">The index of the first change to execute</param>
 		///<param name="endAt" type="Number">The index of the change after the last change to execute</param>
-		///<returns type="Any">The return value of the callback</param>
+		///<returns type="Any">The return value of the callback</returns>
 		
 		var newVal = changes[endAt] ? changes[endAt].oldValue : changes[0].object[changes[0].name];
         
@@ -1838,9 +1889,7 @@ var observable = useObjectObserve ?
 
             if (this.$observed.hasOwnProperty(forProperty)) return;
 
-            if ((this.$forObject || this).hasOwnProperty(forProperty))
-                this.$observed[forProperty] = (this.$forObject || this)[forProperty];
-
+            this.$observed[forProperty] = (this.$forObject || this)[forProperty];
             Object.defineProperty(this.$forObject || this, forProperty, {
                 get: function() {
                     return getObserver(this).$observed[forProperty];
@@ -1903,7 +1952,16 @@ var observable = useObjectObserve ?
         observable.prototype.dispose = function () {
 			///<summary>Dispose.</summary>
 			
+            var _this = this.$forObject || this;
+            for (var i in this.$observed) {
+                // delete setter
+                delete _this[i];
+                _this[i] = this.$observed[i];
+                delete this.$observed[i];
+            }
+            
             this._super();
+                
             for (var i in this.$onNextPropertyChanges)
                 delete this.$onNextPropertyChanges[i];
         };
@@ -1922,19 +1980,27 @@ Class("busybody.observeTypes.computed", function () {
     var GET_ITEMS = "((\\s*\\.\\s*([\\w\\$]*))|(\\s*\\[\\s*\\d\\s*\\]))+"; // ".propertyName" -or- "[2]"
     var completeArg = {};
 	
-    var computed = busybody.observeTypes.observeTypesBase.extend(function computed(callback, context, options) {
+    var computed = busybody.observeTypes.observeTypesBase.extend(function computed(callback, options) {
 		///<summary>A value defined by the return value of a function. If configured correctly, a change in a value within the function will trigger a re-execution of the function</summary>
 		///<param name="callback" type="Function">The logic which returns the computed value</param>
-		///<param name="context" type="Any">The "this" value in the callback</param>
 		///<param name="options" type="Object" optional="true">Options on how the computed is composed</param>
+		///<param name="options.context" type="Any">Default: null. The "this" value in the callback</param>
 		///<param name="options.watchVariables" type="Object">Default: null. A dictionary of variables in the callback which are to be watched</param>
 		///<param name="options.observeArrayElements" type="Boolean">Default: false. If set to true, the computed will attempt to watch values within any array watch variables. This is useful if the computed is an aggregate function. The default is false because it is expensive computationally</param>
 		///<param name="options.allowWith" type="Boolean">Default: false. If set to true, "with (...)" statements are allowed in the computed function. Although variables accessed within the with statement cannot be observed</param>
 		///<param name="options.delayExecution" type="Boolean">Default: false. If set to true, the computed will not be activated until it's execute function is called or a value within the computed changes</param>
+		///<param name="options.trackPartialObservable" type="Boolean">Default: false. If set to true, will track observables at the end of a path, even if there are non observables before them.</param>
+		///<param name="options.forceObserve" type="Boolean">Default: false. If set to true, will make any un observables in the path into observables.</param>
         
         this._super();
         
         options = options || {};
+        
+		///<summary type="Object">Describes how paths within this computed will be watched.</summary>
+        this.pathObserverOptions = {
+            trackPartialObservable: options.trackPartialObservable,
+            forceObserve: options.forceObserve
+        };
 		
 		///<summary type="[Any]">A list of arguments to be applied to the callback function</summary>
         this.arguments = []; 
@@ -1951,7 +2017,7 @@ Class("busybody.observeTypes.computed", function () {
         this.callbackFunction = callback;
 		
 		///<summary type="Any">The "this" in the computed logic</summary>
-        this.context = context;
+        this.context = options.context;
         
         if (!options.allowWith && computed.testForWith(this.callbackString))
                 throw "You cannot use the \"with\" keyword in computed functions by default. To allow \"with\", use the allowWith flag on the options argument of the constructor, however, properties of the variable within the \"with\" statement cannot be monitored for change.";
@@ -1978,8 +2044,11 @@ Class("busybody.observeTypes.computed", function () {
                 throw "Argument \"" + arg + "\" must be added as a watch variable.";
         });
         
+        // watch this
+        if (this.context)
+            this.watchVariable("this", this.context, options.observeArrayElements);
+        
         // watch each watch variable
-        this.watchVariable("this", context, options.observeArrayElements);
         if (options.watchVariables) {
             for (var i in options.watchVariables) {                
                 this.watchVariable(i, options.watchVariables[i], options.observeArrayElements);
@@ -1993,7 +2062,7 @@ Class("busybody.observeTypes.computed", function () {
     computed.testForWith = function (input) {
 		///<summary>Determine if a function string contains a "with (...)" call</summary>
 		///<param name="input" type="String">The input</param>
-		///<returns type="Boolean">The result</param>
+		///<returns type="Boolean">The result</returns>
 		
         WITH.lastIndex = 0;
         
@@ -2033,7 +2102,7 @@ Class("busybody.observeTypes.computed", function () {
 	// abstract
     computed.prototype.getValue = function() {
 		///<summary>Execute the computed function</summary>
-		///<returns type="Any">The result</param>
+		///<returns type="Any">The result</returns>
 		
 		if (this.possibleArrays)
 			this.rebuildArrays();
@@ -2045,7 +2114,7 @@ Class("busybody.observeTypes.computed", function () {
 		///<summary>Bind the value of this computed to the property of an object</summary>
 		///<param name="object" type="Object">The object</param>
 		///<param name="property" type="String">The property</param>
-		///<returns type="busybody.disposable">A dispose object</param>
+		///<returns type="busybody.disposable">A dispose object</returns>
 		
         var callback = computed.createBindFunction(object, property);
 		var output = this.onValueChanged(callback, true);
@@ -2058,7 +2127,7 @@ Class("busybody.observeTypes.computed", function () {
 		///<summary>Execute a callback when the value of the computed changes</summary>
 		///<param name="callback" type="Function">The callback: function (oldValue, newValue) { }</param>
 		///<param name="executeImmediately" type="Boolean">If set to true the callback will be executed immediately with undefined as the oldValue</param>
-		///<returns type="busybody.disposable">A dispose object to remove the callback</param>
+		///<returns type="busybody.disposable">A dispose object to remove the callback</returns>
               
 		var output = this.addCallback(callback);		
         if (executeImmediately)
@@ -2069,6 +2138,10 @@ Class("busybody.observeTypes.computed", function () {
         
 	//TODO: somehow retain "this.prop['val']"
     computed.stripFunction = function(input) {
+		///<summary>Strip strings and comments from a function</summary>
+		///<param name="input" type="Function">The functin</param>
+		///<returns type="String">The striped function</returns>
+		
         input = input
             .toString()
             .replace(STRIP_INLINE_COMMENTS, "")
@@ -2103,7 +2176,7 @@ Class("busybody.observeTypes.computed", function () {
 		///<summary>Find all property paths of a given variable</summary>
 		///<param name="variableName" type="String">The variable name</param>
 		///<param name="complexExamination" type="Boolean">If set to true, the result will include the indexes of the property path as well as the actual text of the property paths</param>
-		///<returns type="[Object]">The results</param>
+		///<returns type="[Object]">The results</returns>
 		
 		variableName = trim(variableName);
 		if (!/^[\$\w]+$/.test(variableName))
@@ -2222,9 +2295,10 @@ Class("busybody.observeTypes.computed", function () {
 		///<summary>Add a path watch object, triggering an execute(...) when something chages</summary>
 		///<param name="variable" type="Object">The path root</param>
 		///<param name="path" type="String">The path</param>
-		///<returns type="String">A disposable key. The path can be disposed by calling this.disposeOf(key)</param>
+		///<returns type="String">A disposable key. The path can be disposed by calling this.disposeOf(key)</returns>
 		
-		var path = new busybody.observeTypes.pathObserver(variable, path, this.execute, this);
+		var path = new busybody.observeTypes.pathObserver(variable, path, this.pathObserverOptions);
+        path.onValueChanged(this.execute.bind(this), false);
 		
 		var dispose;
 		var te = this.execute.bind(this);
@@ -2242,10 +2316,10 @@ Class("busybody.observeTypes.computed", function () {
 	};
 	
 	computed.createBindFunction = function (bindToObject, bindToProperty) {
-		///<summary>Create a functino which will bind the result of the computed to either an object property or an array</summary>
+		///<summary>Create a function which will bind the result of the computed to either an object property or an array</summary>
 		///<param name="bindToObject" type="Object">The object root</param>
 		///<param name="bindToProperty" type="String">The path</param>
-		///<returns type="Function">The bind function (function (oldValue, newValue) { }). The function has a dispose property which needs to be called to disposse of any array subscriptions</param>
+		///<returns type="Function">The bind function (function (oldValue, newValue) { }). The function has a dispose property which needs to be called to disposse of any array subscriptions</returns>
 		
         var arrayDisposeCallback;
         var output = function (oldValue, newValue) {
@@ -2279,14 +2353,18 @@ Class("busybody.observeTypes.computed", function () {
 
 Class("busybody.observeTypes.pathObserver", function () {
         
-    var pathObserver = busybody.observeTypes.observeTypesBase.extend(function pathObserver (forObject, property, callback, context) {
-        ///<summary>Observe a property for change. Should be "call()"ed with this being a "watched"</summary>
+    var pathObserver = busybody.observeTypes.observeTypesBase.extend(function pathObserver (forObject, property, options) {
+        ///<summary>Observe a property path for change.</summary>
         ///<param name="forObject" type="busybody.observable" optional="false">The object to watch</param>
         ///<param name="property" type="String" optional="false">The property</param>
-        ///<param name="callback" type="Function" optional="true">A callback for property change</param>
-        ///<param name="context" type="Any" optional="true">The context of the callback</param>
-		
+		///<param name="options" type="Object" optional="true">Options on how the path observer is composed</param>
+		///<param name="options.trackPartialObservable" type="Boolean">Default: false. If set to true, will track observables at the end of a path, even if there are non observables before them.</param>
+		///<param name="options.forceObserve" type="Boolean">Default: false. If set to true, will make any un observables in the path into observables.</param>
+        
         this._super();
+        
+		///<summary type="Boolean">If set to true, will track observables at the end of a path, even if there are non observables before them.</summary>
+        this.trackPartialObservable = options && options.trackPartialObservable;
         
 		///<summary type="busybody.observable">The object to observe</summary>
         this.forObject = forObject;
@@ -2297,21 +2375,21 @@ Class("busybody.observeTypes.pathObserver", function () {
 		///<summary type="[String]">The path split into parts</summary>
         this.path = busybody.utils.obj.splitPropertyName(property);
         
+		///<summary type="Boolean">If an object in the path is not an observable, make it an observable.</summary>
+        this.forceObserve = options && options.forceObserve;
+        
 		///<summary type="[busybody.observable]">The subscriptions</summary>
         this.__pathDisposables = new Array(this.path.length);
         this.execute();
         
         this.buildObservableChain();
-		
-		if (callback)
-			this.onValueChanged(callback.bind(context || forObject), false);
     });
     
     pathObserver.prototype.onValueChanged = function (callback, evaluateImmediately) {
 		///<summary>Add a new callback</summary>
 		///<param name="callback" type="Function">The callback</param>
 		///<param name="evaluateImmediately" type="Boolean" optional="true">If true, execute the callback now</param>
-		///<returns type="busybody.disposable">A disposable to remove the callback</param>
+		///<returns type="busybody.disposable">A disposable to remove the callback</returns>
               
 		var output = this.addCallback(callback);		
         if (evaluateImmediately)
@@ -2330,6 +2408,7 @@ Class("busybody.observeTypes.pathObserver", function () {
         for (var i = begin; i < this.path.length; i++) {
             if (this.__pathDisposables[i]) {
                 this.__pathDisposables[i].dispose();
+                if (this.__pathDisposables[i].unmakeObservable) this.__pathDisposables[i].unmakeObservable();
                 this.__pathDisposables[i] = null;
             }
         }
@@ -2342,36 +2421,45 @@ Class("busybody.observeTypes.pathObserver", function () {
         }
         
         // get the last item in the path subscribing to changes along the way
-        for (; current && i < this.path.length - 1; i++) {
-            if ((busybody.canObserve(current) || current instanceof busybody.array)) {
+        for (; current && i < this.path.length; i++) {
+            
+            if (this.forceObserve && !busybody.canObserve(current) && 
+                (busybody.makeObservable(current), busybody.canObserve(current))) {
+                
+                var unmakeObservable = (function (current) {
+                    return function () {
+                        if (!busybody.isObserved(current))
+                            busybody.tryRemoveObserver(current);
+                    };
+                }(current));
+            }
+            
+            if (busybody.canObserve(current) || current instanceof busybody.array) {
                 
                 var args = [current, (function (i) {
                     return function(oldVal, newVal) {
-                        _this.buildObservableChain(i);
+                        if (i < _this.path.length - 1)
+                            _this.buildObservableChain(i);
 						_this.execute();
                     };
                 }(i))];
                 
-                if (isNaN(this.path[i])) {
+                if (isNaN(this.path[i]))
                     args.splice(1, 0, this.path[i]);
-                }
                 
                 this.__pathDisposables[i] = busybody.tryObserve.apply(null, args);
+                this.__pathDisposables[i].unmakeObservable = unmakeObservable;
+            } else if (!this.trackPartialObservable) {
+                return;
             }
 
             current = current[this.path[i]];
         }
-        
-        // observe last item in path
-        if (busybody.canObserve(current))
-            this.__pathDisposables[i] = busybody.tryObserve(current, this.path[i], function (oldVal, newVal) {
-                this.execute();
-            }, this);
     };
         
     pathObserver.prototype.getValue = function() {
 		///<summary>Evaluate the path observer</summary>
-		///<returns type="Any">The value. Returns null rather than a TypeError</param>
+		///<returns type="Any">The value. Returns null rather than a TypeError</returns>
 		
         var current = this.forObject;
         
@@ -2389,8 +2477,10 @@ Class("busybody.observeTypes.pathObserver", function () {
         this._super();
         
         for (var i = 0, ii = this.__pathDisposables.length; i < ii && this.__pathDisposables[i]; i++)
-            if (this.__pathDisposables[i])
+            if (this.__pathDisposables[i]) {
                 this.__pathDisposables[i].dispose();
+                if (this.__pathDisposables[i].unmakeObservable) this.__pathDisposables[i].unmakeObservable();
+            }
 
         this.__pathDisposables.length = 0;
     };
@@ -2558,28 +2648,28 @@ Class("busybody.utils.compiledArrayChange", function () {
 		///<param name="changes" type="[Object]">A list of all changes in the batch</param>
 		///<param name="beginAt" type="Number">The index of the first change to execute</param>
 		///<param name="endAt" type="Number">The index of the change after the last change to execute</param>
-		///<returns type="Boolean">The result</param>
+		///<returns type="Boolean">The result</returns>
 		
         return this.beginAt === beginAt && this.endAt === endAt;
     };
     
     compiledArrayChange.prototype.getRemoved = function () {
 		///<summary>Get items removed in this batch</summary>
-		///<returns type="[Any]">The items</param>
+		///<returns type="[Any]">The items</returns>
 		
         return this.removed.slice();
     };
     
     compiledArrayChange.prototype.getAdded = function () {
 		///<summary>Get items added in this batch</summary>
-		///<returns type="[Any]">The items</param>
+		///<returns type="[Any]">The items</returns>
 		
         return this.added.slice();
     };
     
     compiledArrayChange.prototype.getIndexes = function () {
 		///<summary>Get detailed batch info</summary>
-		///<returns type="Object">The items</param>
+		///<returns type="Object">The items</returns>
 		
         if (!this.indexes)
             this.buildIndexes();        
@@ -2615,7 +2705,8 @@ Class("busybody.utils.observeCycleHandler", function () {
         this.observe("length", function (oldVal, newVal) {
             if (newVal === 0)
                 enumerateArr(this.$afterObserveCycles.slice(), ex);
-        }, this, {
+        }, {
+            context: this,
 			evaluateOnEachChange: false, 
 			evaluateIfValueHasNotChanged: true
 		});
@@ -2665,7 +2756,7 @@ Class("busybody.utils.observeCycleHandler", function () {
     observeCycleHandler.prototype.afterObserveCycle = function (callback) {
 		///<summary>Execute after each observe cycle</summary>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<returns type="busybody.disposable">The dispose callback</param>
+		///<returns type="busybody.disposable">The dispose callback</returns>
 
         return busybody.utils.obj.addWithDispose(this.$afterObserveCycles, callback);
     };
@@ -2673,7 +2764,7 @@ Class("busybody.utils.observeCycleHandler", function () {
     observeCycleHandler.prototype.beforeObserveCycle = function (callback) {
 		///<summary>Execute before each observe cycle</summary>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<returns type="busybody.disposable">The dispose callback</param>
+		///<returns type="busybody.disposable">The dispose callback</returns>
 
         return busybody.utils.obj.addWithDispose(this.$beforeObserveCycles, callback);
     };
@@ -2701,6 +2792,17 @@ Class("busybody.utils.observeCycleHandler", function () {
         return object == null || object instanceof busybody.observableBase ?
             object :
             (object.$observer instanceof busybody.observableBase ? object.$observer : null);
+    };
+
+    busybody.tryRemoveObserver = function (object) {
+		///<summary>Remove the observer from an object, if possible. If there is no observer, or the object is it's own observer, do nothing</summary>
+		///<param name="object" type="Object">The object</param>
+		///<returns type="Boolean">Whether an observer was removed or not</returns>
+        
+        return object && 
+            !(object instanceof busybody.observableBase) &&
+            object.$observer instanceof busybody.observableBase &&
+            (object.$observer.dispose(), delete object.$observer);
     };
     
     busybody.captureArrayChanges = function (forObject, logic, callback) {
@@ -2737,6 +2839,8 @@ Class("busybody.utils.observeCycleHandler", function () {
 		
         if (!arguments.length)
             object = {};
+        else if (!object)
+            return object;
         
 		if (object instanceof busybody.array) {
 			if (busybody.getObserver(object)) 
@@ -2749,7 +2853,7 @@ Class("busybody.utils.observeCycleHandler", function () {
 
         Object.defineProperty(object, "$observer", {
             enumerable: false,
-            configurable: false,
+            configurable: true,
             value: new busybody.observable(object),
             writable: false
         });
@@ -2757,25 +2861,29 @@ Class("busybody.utils.observeCycleHandler", function () {
         return object;
     };
 
-    busybody.observe = function (object, property, callback, context, options) {
+    busybody.observe = function (object, property, callback, options) {
 		///<summary>Observe changes to a property </summary>
 		///<param name="object" type="Object">The object</param>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<param name="context" type="Any" optional="true">The "this" in the callback</param>
 		///<param name="options" type="Object" optional="true">See busybody.observable.observe for options</param>
 		
-        busybody.makeObservable(object);
-        return busybody.tryObserve(object, property, callback, context, options);
+        if (options)
+            options.forceObserve = true;
+        else
+            options = { forceObserve: true };
+        
+        return busybody.tryObserve(object, property, callback, options);
     };
 
-    busybody.tryObserve = function (object, property, callback, context, options) {
+    busybody.tryObserve = function (object, property, callback, options) {
 		///<summary>Observe changes to a property if possible. If "object" is not observable, return</summary>
 		///<param name="object" type="Object">The object</param>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback to execute</param>
-		///<param name="context" type="Any" optional="true">The "this" in the callback</param>
 		///<param name="options" type="Object" optional="true">See busybody.observable.observe for options</param>
+        
+        if (!object) return false;
         
         if (object instanceof busybody.array) {
 			if (property instanceof Function)
@@ -2786,10 +2894,10 @@ Class("busybody.utils.observeCycleHandler", function () {
 			busybody.makeObservable(object);	//TODO: test
 		}
         
-        var target = busybody.getObserver(object);
-        
-        if (target)
-            return target.observe(property, callback, context, options);
+        var target;
+        if ((target = busybody.getObserver(object)) ||
+           (options && options.forceObserve && (target = busybody.getObserver(busybody.makeObservable(object)))))
+            return target.observe(property, callback, options);
         
         return false;
     };
@@ -2800,37 +2908,35 @@ Class("busybody.utils.observeCycleHandler", function () {
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The computed logic.</param>
 		///<param name="options" type="Object" optional="true">See busybody.observeTypes.computed for options</param>
-		///<returns type="busybody.observeTypes.computed">The computed</param>
+		///<returns type="busybody.observeTypes.computed">The computed</returns>
         
 		return busybody.getObserver(busybody.makeObservable(object)).computed(property, callback, options);
     };
 
-    busybody.observeArray = function (object, property, callback, context, options) {
+    busybody.observeArray = function (object, property, callback, options) {
 		///<summary>Observe an array property of an object for changes</summary>
 		///<param name="object" type="Object">The object</param>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback</param>
-		///<param name="context" type="Any">The "this" value in the callback</param>
 		///<param name="options" type="Object" optional="true">See busybody.array.observe for options</param>
 		///<returns type="busybody.disposable">A disposable</returns>
 		
         busybody.makeObservable(object);
-        return busybody.tryObserveArray(object, property, callback, context, options);
+        return busybody.tryObserveArray(object, property, callback, options);
     };
     
-    busybody.tryObserveArray = function (object, property, callback, context, options) {
+    busybody.tryObserveArray = function (object, property, callback, options) {
 		///<summary>Observe an array property of an object for changes if possible. If "object" is not observable, return</summary>
 		///<param name="object" type="Object">The object</param>
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback</param>
-		///<param name="context" type="Any">The "this" value in the callback</param>
 		///<param name="options" type="Object" optional="true">See busybody.array.observe for options</param>
 		///<returns type="busybody.disposable">A disposable</returns>
                 
         var target = busybody.getObserver(object);
         
         if (target)
-            return target.observeArray(property, callback, context, options);
+            return target.observeArray(property, callback, options);
         
         return false;
     };
@@ -2951,7 +3057,7 @@ Class("busybody.utils.observeCycleHandler", function () {
 			}
 		}
 		
-		disposable.registerDisposable(busybody.tryObserve(object1, property1, ev, null, {useRawChanges: true}));
+		disposable.registerDisposable(busybody.tryObserve(object1, property1, ev, {useRawChanges: true}));
 		
 		ev();
 		
@@ -2975,6 +3081,15 @@ Class("busybody.utils.observeCycleHandler", function () {
 		
 		return busybody.tryBind(object1, property1, object2, property2, twoWay);
     };
+
+    busybody.isObserved = function (object) {
+		///<summary>Determine if any callbacks are currently monitoring this observable</summary>
+		///<param name="object" type="Object">The object</param>
+		///<returns type="Boolean">The result</returns>
+        
+        var observer;
+        return !!((observer = busybody.getObserver(object)) && observer.isObserved());
+    }; 
 
     busybody.canObserve = function (object) {
 		///<summary>Determine if an object can be observed. You can use busybody.makeObservable(...) to make objects observable</summary>
@@ -3002,10 +3117,8 @@ Class("busybody.utils.observeCycleHandler", function () {
 		///<summary>Dispose of an object which is observable</summary>
 		///<param name="object" type="Object">The object</param>
 		
-        var target = busybody.getObserver(object);
-        
-        if (target)
-            return target.dispose();
+        if (!busybody.tryRemoveObserver(object) && object instanceof busybody.disposable)
+            object.dispose();
     };
 
     window.busybody = busybody;
@@ -3303,7 +3416,7 @@ Class("wipeout.utils.obj", function () {
         ///<summary>The same as jQuery.extend</summary>
         ///<param name="extend" type="Object">The object to extend</param>
         ///<param name="extendWith" type="Object">The object to extend it with</param>
-        ///<returns type="Object">The object to extend</param>
+        ///<returns type="Object">The object to extend</returns>
 		
         if(extendWith && extend)
             for(var i in extendWith)
@@ -3336,19 +3449,59 @@ Class("wipeout.settings", function() {
         ///<param name="settings" type="Object">A dictionary of new settings</param>
 		
         enumerateObj(wipeout.settings, function(a,i) {
+            if (i === "bindingStrategies") return;
             delete wipeout.settings[i];
         });
         
         enumerateObj(settings, function(setting, i) {
+            if (i === "bindingStrategies") return;
             wipeout.settings[i] = setting;
-        });        
+        });
     }
 
     settings.asynchronousTemplates = true;
     settings.displayWarnings = true;
     settings.useElementClassName = false;
+    
+    settings.bindingStrategies = {
+        onlyBindObservables: 0,
+        bindNonObservables: 1,
+        createObservables: 2
+    };
+    
+    settings.bindingStrategy = settings.bindingStrategies.createObservables;
 	
     return settings;
+});
+
+Class("wipeout.htmlBindingTypes.bindingStrategy", function () {  
+    
+    var cache;
+    return function bindingStrategy(viewModel, setter, renderContext) {
+		///<summary>Set the $bindingStrategy of an object</summary>
+        ///<param name="viewModel" type="Any">The current view model</param>
+        ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        
+        if (!cache) {
+            cache = [];
+            for (var i in wipeout.settings.bindingStrategies)
+                cache.push({
+                    test: new RegExp("^(" + i + ")|" + wipeout.settings.bindingStrategies[i] + "$", "i"),
+                    val: wipeout.settings.bindingStrategies[i]
+                });
+        }
+        
+        var val = setter.value(true).replace(/\s/g, ""), bs;
+        for (var i = 0, ii = cache.length; i < ii; i++) {
+            if (cache[i].test.test(val)) {
+                viewModel.$bindingStrategy =  cache[i].val;
+                return;
+            }
+        }
+        
+        throw "Invalid property value. Valid values are: onlyBindObservables (or 0), bindNonObservables (or 1) and createObservables (or 2)";
+    }
 });
 
 Class("wipeout.htmlBindingTypes.viewModelId", function () {  
@@ -3633,13 +3786,17 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		if (property) {
 			disposal = this.applyToViewModel(property, viewModel, renderContext);
 		} else {
+			// set bindingStrategy as it affects other properties
+			disposal = this.setters.bindingStrategy ?
+				this.applyToViewModel("bindingStrategy", viewModel, renderContext) :
+                [];
+            
 			// only auto set model if model wasn't already set
-			disposal = this.setters.model === compiledInitializer.modelSetter && viewModel.model != null ?
-				[] :
-				this.applyToViewModel("model", viewModel, renderContext);
+            if (this.setters.model !== compiledInitializer.modelSetter || viewModel.model == null)
+				disposal.push.apply(disposal, this.applyToViewModel("model", viewModel, renderContext));
 
 			for (var name in this.setters)
-				if (name !== "model")
+				if (name !== "bindingStrategy" && name !== "model")
 					disposal.push.apply(disposal, this.applyToViewModel(name, viewModel, renderContext));
 		}
 		
@@ -3666,7 +3823,7 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 		if (!wipeout.htmlBindingTypes[bindingType]) throw "Invalid binding type :\"" + bindingType + "\" for property: \"" + name + "\".";
 		
 		var op = [];
-		op.push.apply(op, this.setters[name].prime(viewModel, (function () {
+		op.push.apply(op, this.setters[name].prime(viewModel, renderContext, (function () {
 			var o = wipeout.htmlBindingTypes[bindingType](viewModel, this.setters[name], renderContext)
 			if (o && o.dispose instanceof Function)
 				op.push(o);
@@ -3736,6 +3893,20 @@ Class("wipeout.utils.dictionary", function () {
         return this.__keyArray;
     };
     
+    dictionary.prototype.values = function () {
+        ///<summary>Get all of the values in the dictionary</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.values_unsafe().slice();
+    };
+    
+    dictionary.prototype.values_unsafe = function () {
+        ///<summary>Get all of the values in the dictionary. DO NOT MODIFY THIS ARRAY</summary>
+        ///<returns type="Array">The values</returns>
+		
+        return this.__valueArray;
+    };
+    
     dictionary.prototype.remove = function (key) {
         ///<summary>Remove a value from the dictionary</summary>
         ///<param name="key" type="Any">The key</param>
@@ -3758,6 +3929,13 @@ Class("wipeout.utils.dictionary", function () {
         ///<returns type="Any">The value</returns>
 		
         return this.__valueArray[this.__keyArray.indexOf(key)];
+    };
+    
+    dictionary.prototype.clear = function () {
+        ///<summary>Empty the dictionary</summary>
+        
+        this.__valueArray.length = 0;
+        this.__keyArray.length = 0;
     };
     
     return dictionary;
@@ -3810,9 +3988,9 @@ Class("wipeout.base.bindable", function () {
     
     // assuming this static function will be passed on via inheritance
     bindable.addGlobalBindingType = function (forProperty, bindingType) {
-		///<summary>Add a global parser for this property</summary>
+		///<summary>Add a global binding type for this property</summary>
         ///<param name="forProperty" type="String">The property to add a parser for</param>
-        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param>
 		
         if (typeof bindingType !== "string" || !wipeout.htmlBindingTypes[bindingType])
             //TODE
@@ -3830,9 +4008,9 @@ Class("wipeout.base.bindable", function () {
     };
 	
 	bindable.prototype.addGlobalBindingType = function (forProperty, bindingType) {
-		///<summary>Add a global parser for this property</summary>
+		///<summary>Add a global binding type for this property</summary>
         ///<param name="forProperty" type="String">The property to add a parser for</param>
-        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param> wo.bindings</param>
+        ///<param name="bindingType" type="String">The binding type. A pointer to a wipeout binding (wo.bindings)</param>
 		
 		return bindable.addGlobalBindingType.apply(this.constructor, arguments);
 	};
@@ -3930,18 +4108,16 @@ Class("wipeout.viewModels.view", function () {
         ///<Summary type="String">The id of the template of the view, giving it an appearance</Summary>
         this.templateId = templateId;
         
-        this.observe("model", this._onModelChanged, this, {activateImmediately: true});
+        this.observe("model", this._onModelChanged, {context: this, activateImmediately: true});
 		
         ///<Summary type="ko.observable" generic0="Any">The model of view. If not set, it will default to the model of its parent view</Summary>
         this.model = model == null ? null : model;
-
-        ///<Summary type="Object">A bag to put objects needed for the lifecycle of this object and its properties</Summary>
-        this.$routedEventSubscriptions = [];
-		
-        ///<Summary type="wipeout.events.event">Trigger to tell the overlying renderedContent the the template has changed</Summary>
-		this.$synchronusTemplateChange = new wipeout.events.event();
     });
+    
+    view.$synchronusTemplateChangeEvent = "$synchronusTemplateChange";
 	
+    view.addGlobalBindingType("bindingStrategy", "bindingStrategy");
+    
     view.addGlobalBindingType("shareParentScope", "shareParentScope");
 	
     view.addGlobalParser("id", "string");
@@ -3984,7 +4160,7 @@ Class("wipeout.viewModels.view", function () {
         ///<param name="oldValue" type="Any" optional="false">The old model</param>
         ///<param name="newValue" type="Any" optional="false">The new mode</param>
         
-        if(oldValue !== newValue)
+        if (oldValue !== newValue)
 			this.onModelChanged(newValue);
 	};
 	
@@ -3995,17 +4171,18 @@ Class("wipeout.viewModels.view", function () {
 		this.disposeOf(this.$modelRoutedEventKey);
 		this.$modelRoutedEventKey = null;
 
-		if(newValue instanceof wipeout.events.routedEventModel) {
-			var d1 = newValue.__triggerRoutedEventOnVM.register(this._onModelRoutedEvent, this);
+		if (newValue instanceof wipeout.events.routedEventModel) {
+            var d1 = wipeout.events.event.instance.register(newValue, 
+                                                     wipeout.events.routedEventModel.triggerRoutedEvent, 
+                                                     this._onModelRoutedEvent, 
+                                                     this);
 			this.$modelRoutedEventKey = this.registerDisposable(d1);
 		}
     };
     
     view.prototype._onModelRoutedEvent = function (eventArgs) {
         ///<summary>When the model of this class fires a routed event, catch it and continue the traversal upwards</summary>
-        ///<param name="eventArgs" type="wo.routedEventArgs" optional="false">The routed event args</param>
-        
-        if(!(eventArgs.routedEvent instanceof wipeout.events.routedEvent)) throw "Invaid routed event";
+        ///<param name="eventArgs" type="ObjectArgs" optional="false">The routed event args</param>
         
         this.triggerRoutedEvent(eventArgs.routedEvent, eventArgs.eventArgs);
     };
@@ -4016,9 +4193,8 @@ Class("wipeout.viewModels.view", function () {
 		this._super();
 		
 		// dispose of routed event subscriptions
-		enumerateArr(this.$routedEventSubscriptions.splice(0, this.$routedEventSubscriptions.length), function(event) {
-			event.dispose();
-		});
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.dispose();
 	};
 	
 	view.prototype.synchronusTemplateChange = function (templateId) {
@@ -4028,7 +4204,7 @@ Class("wipeout.viewModels.view", function () {
 		if (arguments.length)
 			this.templateId = templateId;
 		
-		this.$synchronusTemplateChange.trigger();
+        wipeout.events.event.instance.trigger(this, view.$synchronusTemplateChangeEvent);
 	};
 	
     view.visualGraph = function (rootElement, displayFunction) {
@@ -4098,89 +4274,6 @@ Class("wipeout.viewModels.view", function () {
 
 
 
-Class("wipeout.events.routedEvent", function () {
-    
-    var routedEvent = function routedEvent() {
-        ///<summary>A routed event is triggered on a view and travels up to ancestor views all the way to the root of the application</summary>
-        
-        // allow for non use of the new key word
-        if(!(this instanceof routedEvent))
-           return new routedEvent();
-    };
-
-    routedEvent.prototype.trigger = function(triggerOnView, eventArgs) {
-        ///<summary>Trigger a routed event on a view</summary>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view where the routed event starts</param>
-        ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
-        
-        triggerOnView.triggerRoutedEvent(this, new wipeout.events.routedEventArgs(eventArgs, triggerOnView));
-    };
-    
-    routedEvent.prototype.unRegister = function (callback, triggerOnView, context /* optional */) {
-        ///<summary>Unregister a routed event on a view</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view passed into the register function</param>
-        ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-        return triggerOnView.unRegisterRoutedEvent(this, callback, context);
-    };
-    
-    routedEvent.prototype.register = function(callback, triggerOnView, context /* optional */) {
-        ///<summary>Register a routed event on a view</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="triggerOnView" type="wo.view" optional="false">The view registered to the routed event</param>
-        ///<param name="context" type="Any" optional="true">The context "this" to use within the callback</param>
-        ///<returns type="wo.eventRegistration">A dispose function</returns>         
-        
-        return triggerOnView.registerRoutedEvent(this, callback, context);
-    };
-    
-    return routedEvent;
-});
-
-Class("wipeout.events.routedEventArgs", function () {
-    
-    var routedEventArgs = function routedEventArgs(eventArgs, originator) { 
-        ///<summary>Arguments passed to routed event handlers. Set handled to true to stop routed event propogation</summary>
-        ///<param name="eventArgs" type="Any" optional="true">The inner event args</param>
-        ///<param name="originator" type="Any" optional="false">A pointer to event raise object</param>
-        
-        ///<Summary type="Boolean">Signals whether the routed event has been handled and should not propagate any further</Summary>
-        this.handled = false;
-        
-        ///<Summary type="Any">The original event args used when the routedEvent has been triggered</Summary>
-        this.data = eventArgs;
-        
-        ///<Summary type="Any">The object which triggered the event</Summary>
-        this.originator = originator;
-    };
-    
-    return routedEventArgs;
-});
-    
-
-Class("wipeout.events.routedEventRegistration", function () {
-    
-    var routedEventRegistration = function routedEventRegistration(routedEvent) {  
-        ///<summary>Holds routed event registration details</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
-        
-        ///<Summary type="wo.routedEvent">The routed event</Summary>
-        this.routedEvent = routedEvent;
-        
-        ///<Summary type="wo.event">An inner event to handler triggering callbacks</Summary>
-        this.event = new wipeout.events.event();        
-    };
-    
-    routedEventRegistration.prototype.dispose = function() {
-        ///<summary>Dispose of the callbacks associated with this registration</summary>
-        this.event.dispose();
-    };
-    
-    return routedEventRegistration;
-});
-
-
 Class("wipeout.template.rendering.renderedContent", function () {
     
     var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext) {
@@ -4237,7 +4330,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.disposeOfBindings = ra.dispose.bind(ra);
 		
         if (array instanceof busybody.array)
-            ra.registerDisposable(array.observe(ra.render, ra, {useRawChanges: true}));
+            ra.registerDisposable(array.observe(ra.render, {context: ra, useRawChanges: true}));
 		
 		ra.render([{
 			type: "splice",
@@ -4270,10 +4363,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
         
         if (this.viewModel instanceof wipeout.viewModels.view) {
 			this.templateChangeKey = this.registerDisposable(
-				this.viewModel.$synchronusTemplateChange.register(this.templateHasChanged, this));
+                wipeout.events.event.instance.register(this.viewModel, wipeout.viewModels.view.$synchronusTemplateChangeEvent, this.templateHasChanged, this));
 			
             this.viewModel.$domRoot = this;
-            this.templateObserved = this.viewModel.observe("templateId", this._template, this, {activateImmediately: true});
+            this.templateObserved = this.viewModel.observe("templateId", this._template, {context: this, activateImmediately: true});
 			
             if (this.viewModel.templateId)
                 this.template(this.viewModel.templateId);
@@ -4526,6 +4619,7 @@ Class("wipeout.template.propertyValue", function () {
 		return this._value;
 	};
 	
+    //TODO: rename. Too close to getter(...)
 	propertyValue.prototype.buildGetter = function () {
 		///<summary>Build a getter for this._value</summary>
         ///<returns type="Function">A function to get the value from render context parts</returns>
@@ -4556,13 +4650,13 @@ Class("wipeout.template.propertyValue", function () {
 	};
 	
     //TODO: test
-	propertyValue.prototype.buildPermanentGetter = function (renderContext, propertyOwner) {
-		///<summary>Return a function which will return the value of this property whether the property is primed or not</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
+	propertyValue.prototype.getter = function () {
+		///<summary>Return a function which will return the value of this property</summary>
         ///<returns type="Function">A function with no arguments which returns the value</returns>
 		
-		var parser = this.getParser(propertyOwner);
+        this.primed();
+        
+		var parser = this.getParser(), renderContext = this.renderContext;
 		
 		if (parser) 
             return (function () {
@@ -4575,19 +4669,7 @@ Class("wipeout.template.propertyValue", function () {
         };
 	};
 	
-	propertyValue.prototype.get = function (renderContext, propertyOwner) {
-		///<summary>Return the value of this setter when applied to a renderContext</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
-        ///<returns type="Any">The returned value</returns>
-		
-		var parser = this.getParser(propertyOwner);
-		
-		return parser ? 
-			(parser(parser.useRawXmlValue ? this._value : this.value(true), this.name, renderContext)) : 
-			this.buildGetter().apply(null, renderContext.asGetterArgs());
-	};
-	
+    //TODO: rename: too close to setter(...)
 	propertyValue.prototype.buildSetter = function () {
 		///<summary>Build a setter for this._value</summary>
         ///<returns type="Function">A function to get the value from render context parts</returns>
@@ -4642,40 +4724,38 @@ Class("wipeout.template.propertyValue", function () {
 		return this._setter;
 	};
 	
-	propertyValue.prototype.canSet = function (propertyOwner) {
+	propertyValue.prototype.canSet = function () {
 		///<summary>Return whether this setter can set a value</summary>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Boolean">Whether the value could be set or not</returns>
 		
-		return !this.getParser(propertyOwner) && !!this.buildSetter();
+		return !this.getParser() && !!this.buildSetter();
 	};
 	
-	propertyValue.prototype.getParser = function (propertyOwner) {
+	propertyValue.prototype.getParser = function () {
 		///<summary>Return the parser for the </summary>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the propery. If null, the setter must be primed</param>
         ///<returns type="Function">The parser</returns>
         
-		propertyOwner || (this.primed(), propertyOwner = this.propertyOwner);
+        this.primed();
 		
-		return this.parser || (propertyOwner instanceof wipeout.base.bindable && propertyOwner.getGlobalParser(this.name));
+		return this.parser || (this.propertyOwner instanceof wipeout.base.bindable && this.propertyOwner.getGlobalParser(this.name));
 	};
 	
-	propertyValue.prototype.set = function (renderContext, value, propertyOwner) {
-		///<summary>Return the value of this setter when applied to a renderContext</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
-        ///<param name="value" type="Any">The value to set</param>
-        ///<param name="propertyOwner" type="Any" optional="true">The owner of the property. If null, the propertyValue must be primed</param>
-        ///<returns type="Boolean">Whether the value could be set or not</returns>
+	propertyValue.prototype.setter = function () {
+		///<summary>Build a function to set the value of the property</summary>
+        ///<returns type="Function">the setter. The setter has one argument: the value</returns>
 		
-		if (!this.canSet(propertyOwner))
-			throw "You cannot set the value of: " + this.value() + ".";	//TODE
+		if (!this.canSet())
+			throw "You cannot set the value of: " + this.value(true) + ".";	//TODE
 		
-		return this.buildSetter()(renderContext, value);
+        var renderContext = this.renderContext;
+		return (function (value) {
+            return this.buildSetter()(renderContext, value);
+        }).bind(this);
 	};
 	
-	propertyValue.prototype.watch = function (renderContext, callback, evaluateImmediately) {
+    var fakeDispose = {dispose: function (){}};
+	propertyValue.prototype.watch = function (callback, evaluateImmediately) {
 		///<summary>When called within a wipeout binding function, will watch for a change in the value of the setter. Also handles all disposal in this case</summary>
-        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<param name="callback" type="Function">The callback to invoke when the value changes</param>
         ///<param name="evaluateImmediately" type="Boolean">Invoke the callback now</param>
         ///<returns type="busybody.diposable">A dispose function to dispose prematurely</returns>
@@ -4684,33 +4764,61 @@ Class("wipeout.template.propertyValue", function () {
 		
 		if (this.getParser() || /^\s*((true)|(false)|(\d+(\.\d+)?)|(\/(?!\/)))\s*$/.test(this.value())) {
 			if (evaluateImmediately)
-				callback(undefined, this.get(renderContext));
+				callback(undefined, this.getter()());
 			
 			return;
 		}
 		
-        var watched;
+        // root.prop1.prop2 etc....
         if (/^([\$\w\s\.]|(\[\d+\]))+$/.test(this.value())) {
             // the renderContext will not be observable, so will not work with
             // a path observer
             
-            //TODO: this is not complete. It doesn't take into account window. or $parents[2].
+            // you cannot watch a value like $this. It must be $this.something
             var split = wipeout.utils.obj.splitPropertyName(this.value());
+            if (split.length === 1)
+                return fakeDispose;
             
-			watched = new busybody.observeTypes.pathObserver(
-                renderContext[split.splice(0, 1)[0]], 
-                wipeout.utils.obj.joinPropertyName(split));
-        } else {
-            watched = renderContext.getComputed(this.buildGetter());
+            var tmp = busybody.observe(
+                this.renderContext[split.splice(0, 1)[0]], 
+                wipeout.utils.obj.joinPropertyName(split),
+                callback,
+                this.getBindingStrategyOptions());
+            
+            if (tmp)
+		      this._caching.push(tmp);
+            
+            if (evaluateImmediately)
+                callback(undefined, this.getter()());
+		      
+            return tmp || fakeDispose;
         }
-		
-		this._caching.push(watched);
-		return watched.onValueChanged(callback, evaluateImmediately);
+        
+        var tmp = this.renderContext.getComputed(this.buildGetter(), this.getBindingStrategyOptions());
+		this._caching.push(tmp);
+		return tmp.onValueChanged(callback, evaluateImmediately);
 	};
 
-	propertyValue.prototype.prime = function (propertyOwner, logic) {
+	propertyValue.prototype.getBindingStrategyOptions = function () {
+		///<summary>Get the binding strtegy for this view model</summary>
+        ///<returns type="Number">The binding strategy</returns>
+        
+        this.primed();
+        
+        var strategy = this.renderContext.$this.hasOwnProperty("$bindingStrategy") ?
+            this.renderContext.$this.$bindingStrategy :
+            wipeout.settings.bindingStrategy;
+        
+        if (strategy === wipeout.settings.bindingStrategies.bindNonObservables)
+            return {trackPartialObservable: true};
+        if (strategy === wipeout.settings.bindingStrategies.createObservables)
+            return {forceObserve: true};
+    };
+
+	propertyValue.prototype.prime = function (propertyOwner, renderContext, logic) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current render context</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
 		
@@ -4720,11 +4828,13 @@ Class("wipeout.template.propertyValue", function () {
 		try {
 			this._caching = [];
 			this.propertyOwner = propertyOwner;
+			this.renderContext = renderContext;
 			logic();
 			return this._caching;
 		} finally {
-			delete this._caching;
-			delete this.propertyOwner;
+			this._caching = null;
+			this.propertyOwner = null;
+			this.renderContext = null;
 		}
 	};
 	
@@ -4769,192 +4879,171 @@ Class("wipeout.debug", function () {
     }
 });
 
-
-Class("wipeout.events.eventRegistration", function () {
+Class("wipeout.events.event", function() {
     
-    return busybody.disposable.extend(function eventRegistration(callback, context, dispose) {
-        ///<summary>On object containing event registration details</summary>
-        ///<param name="callback" type="Any" optional="false">The event logic</param>
-        ///<param name="context" type="Any" optional="true">The context of the event logic</param>
-        ///<param name="dispose" type="Function" optional="false">A dispose function</param>
-        ///<param name="priority" type="Number">The event priorty. The lower the priority number the sooner the callback will be triggered.</param>
-        this._super();    
-               
-        ///<Summary type="Function">The callback to use when the event is triggered</Summary>
-        this.callback = callback;
-        
-        ///<Summary type="Any">The context to usse with the callback when the event is triggered</Summary>
-        this.context = context;                
-        
-        this.registerDisposeCallback(dispose);
-    });
-});
-
-Class("wipeout.events.event", function () {
-    
-    var event = function event() {
-        ///<summary>Defines a new event with register and trigger functinality</summary>
-        
-        // allow for non use of the new key word
-        if(!(this instanceof event))
-           return new event();
-        
-        ///<Summary type="Array" generic0="wipeout.events.eventRegistration">Array of callbacks to fire when event is triggered</Summary>
-        this._registrations = [];
-    };
-
-    event.prototype.trigger = function(eventArgs) {
-        ///<summary>Trigger the event, passing the eventArgs to each subscriber</summary>
-        ///<param name="eventArgs" type="Any" optional="true">The arguments to pass to event handlers</param>
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(eventArgs instanceof wipeout.events.routedEventArgs && eventArgs.handled) return;
-            
-            this._registrations[i].callback.call(this._registrations[i].context, eventArgs);
-        }
-    };
-    
-    event.prototype.unRegister = function (callback, context /* optional */) {
-        ///<summary>Un subscribe to an event. The callback and context must be the same as those passed in the original registration</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="context" type="Any" optional="true">The original context passed into the register function</param>
-        
-        context = context == null ? window : context;
-        for(var i = 0; i < this._registrations.length; i++) {
-            if(this._registrations[i].callback === callback && this._registrations[i].context === context) {
-                this._registrations.splice(i, 1);
-                i--;
-            }
-        }
+    function eventDictionary () {
+        this.objects = new wipeout.utils.dictionary();
     }
     
-    event.prototype.dispose = function() {
-        ///<summary>Dispose of the event</summary>
-        this._registrations.length = 0;
+    eventDictionary.prototype.add = function (forObject, event, callback) {
+        
+        var objectCallbacks;
+        if (!(objectCallbacks = this.objects.value(forObject)))
+            this.objects.add(forObject, objectCallbacks = {});
+        
+        if (!objectCallbacks[event])
+            objectCallbacks[event] = [callback];
+        else
+            objectCallbacks[event].push(callback);
+        
+        return new busybody.disposable((function () {
+            var tmp, objectCallbacks = this.objects.value(forObject);
+
+            if (objectCallbacks && objectCallbacks[event] && (tmp = objectCallbacks[event].indexOf(callback)) !== -1) {
+                objectCallbacks[event].splice(tmp, 1);
+                if (!objectCallbacks[event].length) {
+                    delete objectCallbacks[event];
+                    for (var i in objectCallbacks)
+                        return;
+                    
+                    this.objects.remove(forObject);
+                }
+            }
+        }).bind(this));
+    };
+    
+    eventDictionary.prototype.callbacks = function (forObject, event) {
+        var tmp;
+        return (tmp = this.objects.value(forObject)) && tmp[event];
+    };
+    
+    function event () {
+        ///<summary>Handles events for wipeout objects</summary>
+        
+        this.dictionary = new eventDictionary();
     }
     
-    event.prototype.register = function(callback, context, priority) {
-        ///<summary>Subscribe to an event</summary>
-        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="context" type="Any" optional="true">The context "this" to use within the calback</param>
-        ///<param name="priority" type="Number" optional="true">The event priorty. The lower the priority number the sooner the callback will be triggered. The default is 0</param>
-        ///<returns type="wo.eventRegistration">An object with the details of the registration, including a dispose() function</returns>
+    var registerForAll = {};
+    event.prototype.registerForAll = function (event, callback, context, priority) {
+        ///<summary>Register an event triggered on all objects.</summary>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
         
-        if(!(callback instanceof Function))
-            throw "Invalid event callback";
-        
-        if(priority && !(priority instanceof Number))
-            throw "Invalid event priority";
-        
-        var reg = this._registrations;
-        var evnt = { 
-            priority: priority || 0,
-            callback: callback, 
-            context: context == null ? window : context,
-            dispose: function() {
-                if (!evnt) return;
-                
-                var index = reg.indexOf(evnt);
-                if(index >= 0)
-                    reg.splice(index, 1);
-                
-                evnt = null;
-            }
-        };
-        
-        for(var i = 0, ii = this._registrations.length; i < ii; i++) {
-            if(evnt.priority < this._registrations[i].priority) {
-                this._registrations.splice(i, 0, evnt);
-                break;
-            }
-        }
-        
-        if(i === ii)
-            this._registrations.push(evnt);
-        
-        return new wipeout.events.eventRegistration(evnt.callback, evnt.context, evnt.dispose, evnt.priority);
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(registerForAll, event, callback);
     };
+    
+    event.prototype.register = function (forObject, event, callback, context, priority) {
+        ///<summary>Register an event.</summary>
+        ///<param name="forObject" type="Object">The object which will fire the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="callback" type="Function">The callback. The first argument will be the event args, the second is the object which triggered the event</param>
+        ///<param name="context" type="Object" optional="true">The "this" in the callback</param>
+        ///<param name="priority" type="Number" optional="true">Alters the order which callbacks will be called, higher values are executed first. 0 is the default</param>
+        
+        callback = callback.bind(context);
+        callback.priority = priority || 0;
+        return this.dictionary.add(forObject, event, callback);
+    };
+    
+    event.prototype.trigger = function (forObject, event, eventArgs) {
+        ///<summary>Trigger an event.</summary>
+        ///<param name="forObject" type="Object">The object triggering the event</param>
+        ///<param name="event" type="String">The event name</param>
+        ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+        
+        var callbacks = this.dictionary.callbacks(forObject, event) || [];
+        callbacks.push.apply(callbacks, this.dictionary.callbacks(registerForAll, event));
+        
+        callbacks.sort(function (a, b) {
+            return a.priority < b.priority;
+        });
+
+        enumerateArr(callbacks, function (callback) {
+            callback(eventArgs, forObject);
+        }, this);
+    };
+    
+    event.prototype.dispose = function () {
+        ///<summary>Dispose of all event handlers.</summary>
+        
+        this.dictionary.objects.clear();
+    };
+    
+    event.instance = new event();
     
     return event;
+});
+
+Class("wipeout.events.routedEventArgs", function () {
+    
+    var routedEventArgs = function routedEventArgs(eventArgs, originator) { 
+        ///<summary>Arguments passed to routed event handlers. Set handled to true to stop routed event propogation</summary>
+        ///<param name="eventArgs" type="Any" optional="true">The inner event args</param>
+        ///<param name="originator" type="Any" optional="false">A pointer to event raise object</param>
+        
+        ///<Summary type="Boolean">Signals whether the routed event has been handled and should not propagate any further</Summary>
+        this.handled = false;
+        
+        ///<Summary type="Any">The original event args used when the routedEvent has been triggered</Summary>
+        this.data = eventArgs;
+        
+        ///<Summary type="Any">The object which triggered the event</Summary>
+        this.originator = originator;
+    };
+    
+    return routedEventArgs;
 });
 
 
 Class("wipeout.events.routedEventModel", function () {
     
+    //TODO: disposal
     
+    var routedEventName = "routed-event";
     var routedEventModel = orienteer.extend(function routedEventModel() {
         ///<summary>The base class for models if they wish to invoke routed events on their viewModel</summary>
         
 		this._super();
-		
-        ///<Summary type="wo.event">The event which will trigger a routed event on the owning view</Summary>
-        this.__triggerRoutedEventOnVM = new wipeout.events.event();
-        
-        ///<Summary type="Array" generic0="wo.routedEventRegistration">A placeholder for event subscriptions on this model</Summary>
-        this.__routedEventSubscriptions = [];
     });
+    
+    routedEventModel.triggerRoutedEvent = "__triggerRoutedEventOnVM";
         
     routedEventModel.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event which will propogate to any view models where this object is it's model and continue to bubble from there</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
         
         // Used by wo.model to acertain when a routed event should be fired
-        this.__triggerRoutedEventOnVM.trigger({routedEvent: routedEvent, eventArgs: eventArgs});
+        wipeout.events.event.instance.trigger(this, routedEventModel.triggerRoutedEvent, {routedEvent: routedEvent, eventArgs: eventArgs});
     };        
         
     routedEventModel.prototype.routedEventTriggered = function(routedEvent, eventArgs) {
         ///<summary>Called by the owning view model when a routed event is fired</summary>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to trigger</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event to trigger</param>
         ///<param name="eventArgs" type="Any" optional="true">The routed event args</param>
                 
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
-        }
+        if (!this.__routedEventSubscriptions || eventArgs.handled)
+            return;
+        
+        this.__routedEventSubscriptions.trigger(routedEvent, routedEventName, routedEvent);
     };        
     
     routedEventModel.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.__routedEventSubscriptions[i];
-                break;
-            }
-        }
-
-        if(!rev) {
-            rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.__routedEventSubscriptions.push(rev);
-        }
-
-        return rev.event.register(callback, callbackContext, priority);
-    };
-    
-    routedEventModel.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>  
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
-        ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-
-        for(var i = 0, ii = this.__routedEventSubscriptions.length; i < ii; i++) {
-            if(this.__routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.__routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
-            }
-        }  
-
-        return false;
+        if (!this.__routedEventSubscriptions)
+            this.__routedEventSubscriptions = new wipeout.events.event();
+        
+        return this.__routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext || this, priority);
     };
     
     return routedEventModel;
@@ -4985,7 +5074,7 @@ Class("wipeout.htmlBindingTypes.nb", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-        viewModel[setter.name] = setter.get(renderContext);
+        viewModel[setter.name] = setter.getter()();
     }
 });
 
@@ -4997,7 +5086,7 @@ Class("wipeout.htmlBindingTypes.ow", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		setter.watch(renderContext, function (oldVal, newVal) {
+		setter.watch(function (oldVal, newVal) {
 			viewModel[setter.name] = newVal;
 		}, true);
     };
@@ -5005,18 +5094,17 @@ Class("wipeout.htmlBindingTypes.ow", function () {
 
 Class("wipeout.htmlBindingTypes.owts", function () {  
     
-    return function owts (viewModel, setter, renderContext) {
+    return function owts (viewModel, property, renderContext) {
 		///<summary>Bind from child property to parent property</summary>
         ///<param name="viewModel" type="Any">The current view model</param>
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
-		if (!setter.canSet())
-            throw "Setter \"" + setter.value() + "\" cannot be set.";	//TODE
+        var setter = property.setter();
 		
-		setter.onPropertyChanged(function (oldVal, newVal) {
-			setter.set(renderContext, newVal, viewModel);
+		property.onPropertyChanged(function (oldVal, newVal) {
+			setter(newVal);
 		}, true);
     };
 });
@@ -5030,7 +5118,7 @@ Class("wipeout.htmlBindingTypes.setTemplateToTemplateId", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		viewModel.templateId = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
+		viewModel.templateId = wipeout.viewModels.content.createAnonymousTemplate(setter._value);
     }
 });
 
@@ -5065,7 +5153,7 @@ Class("wipeout.htmlBindingTypes.templateProperty", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		viewModel[setter.name + "Id"] = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
+		viewModel[setter.name + "Id"] = wipeout.viewModels.content.createAnonymousTemplate(setter._value);
     }
 });
 
@@ -5079,7 +5167,7 @@ Class("wipeout.htmlBindingTypes.tw", function () {
         ///<returns type="busybody.disposable">Dispose of the binding</returns>
 		
 		var val;
-        if (setter.getParser(viewModel) ||
+        if (setter.getParser() ||
 			!/^([\$\w\s\.]|(\[\d+\]))+$/.test(val = setter.value()))
             throw "Setter \"" + val + "\" must reference only one value when binding back to the source.";
 		
@@ -5537,12 +5625,16 @@ Class("wipeout.template.context", function () {
 		return args;
 	};
 	
-	context.prototype.getComputed = function (forFunction) {
+	context.prototype.getComputed = function (forFunction, options) {
 		///<summary>Get a computed from this and a given function</summary>
         ///<param name="forFunction" type="Function">The function</param>
+        ///<param name="options" type="Object" optional="True">The computed options</param>
         ///<returns type="busybody.observeTypes.computed">The computed</returns>
 		
-		return new busybody.observeTypes.computed(forFunction, null, {watchVariables: this.asWatchVariables()});
+        options = options || {};
+        options.watchVariables = this.asWatchVariables();
+        
+		return new busybody.observeTypes.computed(forFunction, options);
 	}
 	
 	context.buildGetter = function (logic) {
@@ -5625,7 +5717,7 @@ Class("wipeout.template.engine", function () {
 		return function (templateId) {
 			return templateId ||
 				blankTemplateId || 
-				(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
+				(blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate(""));
 		};
 	}());
 	
@@ -5844,7 +5936,7 @@ Class("wipeout.template.rendering.builder", function () {
         ///<param name="allSetters" type="[wipeout.template.rendering.htmlAttributeSetter]">All of the setters on the current element</param>
         ///<returns type="Array">An array of disposables</returns>
 		var op = [];
-		op.push.apply(op, setter.prime(element, function () {
+		op.push.apply(op, setter.prime(element, renderContext, function () {
 			var o = wipeout.template.rendering.htmlAttributes[setter.action || setter.name](element, setter, renderContext);
 			if (o && o.dispose instanceof Function)
 				op.push(o);
@@ -6129,7 +6221,7 @@ HtmlAttr("attr", function () {
 		
 		var attributeName = attribute.name.substr(attribute.name.indexOf("attr-") + 5);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             if (element.getAttribute(attributeName) !== newVal)
                 element.setAttribute(attributeName, newVal)
 		}, true);
@@ -6177,32 +6269,33 @@ HtmlAttr("checked-value", function () {
         
         var valueGetter;
         attribute.otherAttribute("value", function (value) {
-            valueGetter = value.buildPermanentGetter(renderContext);
+            valueGetter = value.getter();
         });
         
-        function set() {
+        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.getter()())
+            element.setAttribute("checked", "checked");
+        
+        var setter = attribute.setter();
+        function set(first) {
             if (element.checked)
-                attribute.set(renderContext, onChecked(element, attribute, valueGetter), element);
+                setter(onChecked(element, attribute, valueGetter));
             else if (element.type !== "radio")
-                attribute.set(renderContext, onUnChecked(element, attribute, valueGetter), element);
-            else if (noRadiosAreSelected(element.name))
-                attribute.set(renderContext, null, element);
+                setter(onUnChecked(element, attribute, valueGetter));
+            else if (!first && noRadiosAreSelected(element.name))
+                setter(null);
         }
         
-        set();
-        if (!element.checked && onChecked(element, attribute, valueGetter) === attribute.get(renderContext))
-            element.addAttribute("checked", "checked");
+        set(true);
         
 		attribute.onElementEvent(
-            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", 
-            renderContext, 
+            element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change",
             set);
         
         // if value changes, update checked value
         attribute.otherAttribute("value", function (value) {
-            value.watch(renderContext, function (oldVal, newVal) {
+            value.watch(function (oldVal, newVal) {
                 if (element.hasAttribute("checked"))
-                    attribute.set(renderContext, newVal, element);
+                    setter(newVal);
             });
         });
     };
@@ -6245,12 +6338,13 @@ HtmlAttr("class", function () {
 	function old_class(element, attribute, renderContext) {
 		var attr, has;
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (!(has = hasClass(element, className)) && attribute.get(renderContext))
+        var getter = attribute.getter();
+		if (!(has = hasClass(element, className)) && getter())
 			addClass(element, className);
-		else if (has && !attribute.get(renderContext))
+		else if (has && !getter())
 			removeClass(element, className);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (!oldVal && newVal)
 				addClass(element, className);
 			else if (oldVal && !newVal)
@@ -6272,12 +6366,12 @@ HtmlAttr("class", function () {
 			return old_class(element, attribute, renderContext);
 		
 		var className = attribute.name.substr(attribute.name.indexOf("class-") + 6);
-		if (attribute.get(renderContext))
+		if (attribute.getter()())
 			element.classList.add(className);
 		else
 			element.classList.remove(className);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (newVal)
 				element.classList.add(className);
 			else
@@ -6298,7 +6392,7 @@ HtmlAttr("content", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             element.innerHTML = newVal == null ? "" : newVal;
         }, true);
     }
@@ -6340,7 +6434,7 @@ HtmlAttr("event", function () {
 		
 		if (!test(attribute.name)) return;
 		
-		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6), renderContext);
+		attribute.onElementEvent(attribute.name.substr(attribute.name.indexOf("event-") + 6));
     };
 	
 	return event;
@@ -6359,7 +6453,7 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 			///<param name="renderContext" type="wipeout.template.context">The current context</param>
 			///<returns type="Function">A dispose function</returns>
 			
-			attribute.onElementEvent(event, renderContext);
+			attribute.onElementEvent(event);
 		};
 	});
 });
@@ -6406,7 +6500,7 @@ HtmlAttr("render", function () {
 		
         var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             htmlContent.render(newVal);
         }, true);
         
@@ -6436,7 +6530,7 @@ HtmlAttr("style", function () {
 		if (!test(attribute.name)) return;
 		
 		var styleName = attribute.name.substr(attribute.name.indexOf("style-") + 6);
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (element.style[styleName] != newVal)
 				element.style[styleName] = newVal;
 		}, true);
@@ -6448,75 +6542,60 @@ HtmlAttr("style", function () {
 
 HtmlAttr("value", function () {
 	
-	function radio (radio, attribute, renderContext) { 
+    // ensure setByEvent is not used the first time
+    var sbe = {};
+    
+	//TODE
+    function select (select, attribute, renderContext) {
 		
-		var val = attribute.value();
         if (!attribute.canSet())
-            throw "Cannot bind to the property \"" + val + "\".";
-		
-		var tmpData;		
-		attribute.watch(renderContext, function (oldVal, newVal) {
-			if (newVal === getRadioButtonVal(radio, attribute, renderContext))
-				radio.setAttribute("checked", "checked");
-			else
-				radio.removeAttribute("checked");
-        }, true);
-		
-		attribute.onElementEvent("change", renderContext, function () {
-			attribute.set(renderContext, getRadioButtonVal(radio, attribute, renderContext), radio);
+            throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
+        
+        var getter = attribute.getter();
+        select.value = getter();
+        wipeout.utils.domData.set(select, "wo-value-getter", getter);
+        
+        var setByEvent = sbe;
+        attribute.watch(function (oldValue, newValue) {
+            if (setByEvent === newValue)
+                return;
+            
+            var optionValue;
+            for (var i = 0, ii = select.options.length; i < ii; i++) {
+                if (optionValue = wipeout.utils.domData.get(select.options[i], "wo-value-getter")) {
+                    if (optionValue() === newValue) {
+                        select.selectedIndex = i;
+                        return;
+                    }
+                } else if (select.options[i].hasAttribute("value")) {
+                    if (select.options[i].value == newValue) {
+                        select.selectedIndex = i;
+                        return;
+                    }
+                } else if (select.options[i].innerHTML == newValue) {
+                    select.selectedIndex = i;
+                    return;
+                }
+            }
         });
-	}
-	
-	var noVal = {};
-	function getCheckboxVal(element, attribute, renderContext) {
-		var tmpData;
-		if (tmpData = attribute.getData(element, "wo-data"))
-			return tmpData.get(renderContext, element);
-		if ((tmpData = element.getAttribute("value")) != null)
-			return tmpData;
-		
-		return noVal;		
-	}
-	
-	function getRadioButtonVal(element, attribute, renderContext) {
-		var tmpData = getCheckboxVal(element, attribute, renderContext);
-		if (tmpData === noVal)
-            throw "Radio buttons with the \"wo-value\" attribute must have a \"value\" or \"wo-data\" attribute.";
-		
-		return tmpData;
-	}
-	
-	function checkbox (checkbox, attribute, renderContext) { 
-		
-		var val = attribute.value();
-        if (!attribute.canSet())
-            throw "Cannot bind to the property \"" + val + "\".";
-		
-		// set default
-		var tmpData;
-		if ((tmpData = getCheckboxVal(checkbox, attribute, renderContext)) !== noVal)
-			attribute.set(renderContext, tmpData, checkbox);
-		
-		attribute.watch(renderContext, function (oldVal, newVal) {
-			if (newVal || newVal === "")
-				checkbox.setAttribute("checked", "checked");
-			else
-				checkbox.removeAttribute("checked");
-        }, true);
-		
-		attribute.onElementEvent("change", renderContext, function () {
-			tmpData = getCheckboxVal(checkbox, attribute, renderContext);
-			if (checkbox.getAttribute("checked") != null) {
-				if (tmpData === noVal)
-					tmpData = true;
-			} else {
-				tmpData = tmpData === noVal ? false : null;
-			}
-			
-			attribute.set(renderContext, tmpData, checkbox);
-        });
-	}
-	
+        
+        var setter = attribute.setter();
+		attribute.onElementEvent(
+            select.getAttribute("wo-on-event") || select.getAttribute("data-wo-on-event") || "change",
+            function () {
+                var selected = select.options[select.selectedIndex], optionValue;
+                
+                if (!selected)
+                    setter(setByEvent = null);
+                else if (optionValue = wipeout.utils.domData.get(selected, "wo-value-getter"))
+                    setter(setByEvent = optionValue());
+                else if (selected.hasAttribute("value"))
+                    setter(setByEvent = selected.getAttribute("value"));
+                else
+                    setter(setByEvent = selected.innerHTML);
+            });
+    };
+    
 	//TODE
 	return function value (element, attribute, renderContext) {
         ///<summary>Bind to the value of a html element</summary>
@@ -6526,14 +6605,42 @@ HtmlAttr("value", function () {
         ///<returns type="Function">A dispose function</returns>
 		
         // for checkboxes, radios and options "value" works in conjunction with "checked-value"
-		if (element.type === "checkbox" || element.type === "radio" || trimToLower(element.tagName) === "option")
+		if (element.type === "checkbox" || element.type === "radio")
 			return;
+        
+        if (trimToLower(element.tagName) === "select")
+            return select(element, attribute, renderContext);
+        
+        // TODO: not terribly efficient. Getters should be lazy created
+        if (trimToLower(element.tagName) === "option") {
+            var getter = attribute.getter(), parentGetter;
+            wipeout.utils.domData.set(element, "wo-value-getter", getter);
+                   
+            if (parentGetter = wipeout.utils.domData.get(element.parentElement, "wo-value-getter")) {
+                element.selected = getter() === parentGetter();
+            } else if (element.parentElement) {
+                element.selected = getter() === element.parentElement.value;
+            }
+            
+            // TODO: is this needed? (If so, needs tests)
+            /*attribute.watch(function (oldValue, newValue) {
+                if (element.selected && element.parentElement) {
+                    var event = document.createEvent("UIEvents");
+                    event.initUIEvent(
+                        element.parentElement.getAttribute("wo-on-event") || element.parentElement.getAttribute("data-wo-on-event") || "change", 
+                        true, true, null, 1);
+                    element.parentElement.dispatchEvent(event)
+                }
+            });*/
+            
+            return;
+        }
 		
         if (!attribute.canSet())
             throw "Cannot bind to the property \"" + attribute.value(true) + "\".";
 		
 		var textarea = trimToLower(element.tagName) === "textarea";
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
             if (newVal == null) 
                 newVal = "";
             
@@ -6543,8 +6650,9 @@ HtmlAttr("value", function () {
                 element.value = newVal;
         }, true);
 		
-		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", renderContext, function () {
-			attribute.set(renderContext, textarea ? element.innerHTML : element.value, element);
+        var setter = attribute.setter();
+		attribute.onElementEvent(element.getAttribute("wo-on-event") || element.getAttribute("data-wo-on-event") || "change", function () {
+			setter(textarea ? element.innerHTML : element.value);
         });
     }
 });
@@ -6559,9 +6667,9 @@ HtmlAttr("visible", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		element.style.display = attribute.get(renderContext) ? "" : "none";
+		element.style.display = attribute.getter()() ? "" : "none";
 		
-		attribute.watch(renderContext, function (oldVal, newVal) {
+		attribute.watch(function (oldVal, newVal) {
 			if (newVal && !oldVal)
                 element.style.display = "";
 			else if (!newVal && oldVal)
@@ -6614,20 +6722,19 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 	};
 	
 	 //TODE
-	htmlPropertyValue.prototype.onElementEvent = function (event, renderContext, callback, capture) {
+	htmlPropertyValue.prototype.onElementEvent = function (event, callback, capture) {
 		///<summary>When called within a wipeout binding function, will watch for a an element event. Also handles all disposal in this case</summary>
         ///<param name="event" type="String">The event</param>
-        ///<param name="renderContext" type="wipeout.template.context">The context of the callback</param>
-        ///<param name="callback" type="Function">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback</param>
+        ///<param name="callback" type="Function" optional="true">A callback for the event. To use the render context, generate the callback using wipeout.template.context.buildEventCallback. If null, will use the callback set in the property</param>
         ///<param name="capture" type="Boolean">Capture the event within this element</param>
         ///<returns type="Function">A dispose function to dispose prematurely</returns>
 		
 		this.primed();
 		
-		var element = this.propertyOwner;
+		var element = this.propertyOwner, rc = this.renderContext;
 		callback = callback || (function (e) {
 			e.preventDefault();
-			this.eventBuild().apply(null, renderContext.asEventArgs(e, element));
+			this.eventBuild().apply(null, rc.asEventArgs(e, element));
 		}).bind(this);
 						
         element.addEventListener(event, callback, capture || false);
@@ -6678,16 +6785,17 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
 		return wipeout.utils.domData.exists(element, name);
 	};
 
-	htmlPropertyValue.prototype.prime = function (propertyOwner, logic, allPropertyValues) {
+	htmlPropertyValue.prototype.prime = function (propertyOwner, renderContext, logic, allPropertyValues) {
 		///<summary>Set up the setter to cache dispose functions and invoke logic which might create dispose functions</summary>
         ///<param name="propertyOwner" type="Any">The object which the propertyValue will be applied to</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current render context</param>
         ///<param name="logic" type="Function">The logic to invoke</param>
         ///<param name="allSetters" type="Function">A list of all other setters on the element</param>
         ///<returns type="Array" generic0="busybody.disposable">Dispose functions</returns>
         
         try {
             this.otherAttributes = allPropertyValues;
-            return this._super(propertyOwner, logic);
+            return this._super(propertyOwner, renderContext, logic);
         } finally {        
             this.otherAttributes = null;
         }
@@ -6714,7 +6822,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
             // remove wo- and data-wo-
             if (this.otherAttributes[i].name.replace(/^(data\-)?wo\-/, "") === name) {
                 Array.prototype.push.apply(this._caching, 
-                    this.otherAttributes[i].prime(this.propertyOwner, (function () {
+                    this.otherAttributes[i].prime(this.propertyOwner, this.renderContext, (function () {
                         var op;
                         if (op = logic(this.otherAttributes[i]))
                             this._caching.push(op);
@@ -6745,17 +6853,17 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		
 		///<summary type="Array">The array</summary>
 		this.array = array;
-		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
-			///<summary type="wo.itemsControl">The items control if the array belongs to one</summary>
-			this.itemsControl = this.parent.parentRenderContext.$this;
+		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.list && array === this.parent.parentRenderContext.$this.items)
+			///<summary type="wo.list">The items control if the array belongs to one</summary>
+			this.list = this.parent.parentRenderContext.$this;
 		
 		///<summary type="Array">Cache the child renderedContents </summary>
 		this.children = [];
         
-        if (this.itemsControl) {
-			if (this.itemsControl.$getChild) throw "These items are being rendered already.";
+        if (this.list) {
+			if (this.list.$getChild) throw "These items are being rendered already.";
 			
-            this.itemsControl.$getChild = (function (i) {
+            this.list.$getChild = (function (i) {
 				if (arguments.length === 0) {
 					var op = this.children.slice();
 					for (var i = 0, ii = op.length; i < ii; i++)
@@ -6773,8 +6881,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		///<summary>Clean up item before removal</summary>
         ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
 		
-		if (this.itemsControl)
-			this.itemsControl.onItemRemoved(item.renderedChild);
+		if (this.list)
+			this.list.removedItem(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;
@@ -6841,12 +6949,12 @@ Class("wipeout.template.rendering.renderedArray", function () {
 				this.children[i - 1].insertAfter(placeholder);
 
 			this.children[i] = new wipeout.template.rendering.renderedContent(placeholder, "item: " + i, this.parent.parentRenderContext);
-			var vm = this.itemsControl ? this.itemsControl._createItem(this.array[i]) : this.array[i];
+			var vm = this.list ? this.list._createItem(this.array[i]) : this.array[i];
 			this.children[i].render(vm, i);
 			this.children[i].forItem = this.array[i];
-			if (this.itemsControl) {
+			if (this.list) {
 				this.children[i].renderedChild = vm;
-				this.itemsControl.onItemRendered(vm);
+				this.list.onItemRendered(vm);
 			}
 		};
 
@@ -6861,9 +6969,9 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		enumerateArr(this.children, this.remove, this);
 		this.children.length = 0;
 
-		if (this.itemsControl) {
-			delete this.itemsControl.$getChild;
-			delete this.itemsControl;
+		if (this.list) {
+			delete this.list.$getChild;
+			delete this.list;
 		}
 		
 		delete this.array;
@@ -6938,7 +7046,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
     
     renderedContent.prototype.detatch = function() {
 		///<summary>This renderedContent and all of it's html from the DOM</summary>
-        ///<returns type="Array" generic0="Element">The html</retruns>
+        ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (!this.detatched) {		
 			var current = this.openingTag;
@@ -6955,7 +7063,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
     
     renderedContent.prototype.allHtml = function() {
 		///<summary>Get all of the html for this</summary>
-        ///<returns type="Array" generic0="Element">The html</retruns>
+        ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (this.detatched) return this.detatch();
 		
@@ -7058,7 +7166,7 @@ Class("wipeout.utils.domData", function () {
         ///<param name="key" type="String" optional="true">The data key</param>
         ///<returns type="Boolean"></returns>
         
-        return element[domDataKey] && element[domDataKey].hasOwnProperty(key)
+        return element && element[domDataKey] && element[domDataKey].hasOwnProperty(key)
     };
     
     domData.get = function(element, key) {
@@ -7066,6 +7174,9 @@ Class("wipeout.utils.domData", function () {
         ///<param name="element" type="HTMLNode" optional="false">The element to get a store from</param>
         ///<param name="key" type="String" optional="true">The data to get</param>
         ///<returns type="Object">The value of this key</returns>
+        
+        if (!element)
+            return undefined;
         
 		if (arguments.length < 2)
 			return element[domDataKey];
@@ -7080,6 +7191,8 @@ Class("wipeout.utils.domData", function () {
         ///<param name="value" type="Any" optional="false">The data to set</param>
         ///<returns type="Any">The value</returns>
         
+        if (!element) return;
+        
         return (element[domDataKey] || (element[domDataKey] = {}))[key] = value;
     };
     
@@ -7087,6 +7200,8 @@ Class("wipeout.utils.domData", function () {
         ///<summary>Clear an elements data</summary>
         ///<param name="element" type="HTMLNode" optional="false">The element to get a store from</param>
         ///<param name="key" type="String" optional="true">The key of data to clear</param>
+        
+        if (!element) return;
         
 		if (key && element[domDataKey])
 			for (var i in element[domDataKey])
@@ -7515,8 +7630,8 @@ Class("wipeout.utils.viewModels", function () {
         ///<returns type="String">The name</returns>
 
 		name = wmlElement instanceof Element ?
-			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(trimToLower( wmlElement.localName))) :
-			camelCase(trimToLower(wmlElement.name));
+			(wmlElement.getAttribute(realName1) || wmlElement.getAttribute(realName2) || camelCase(wmlElement.localName)) :
+			camelCase(trim(wmlElement.name));
 		
 		return /^js[A-Z]/.test(name) ? name.substr(2) : name;
 	};
@@ -7898,7 +8013,7 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.content, wo.list etc...";
 
 			parsers[propertyName] = parser;
 			return output;
@@ -7916,13 +8031,24 @@ function viewModel (name, extend, doNotWarn) {
 
 			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
-				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.contentControl, wo.itemsControl etc...";
+				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.content, wo.list etc...";
 
 			bindingTypes[propertyName] = bindingType;
 			return output;
 		},
+        
+        // binding strategies
+        onlyBindObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.onlyBindObservables);
+        },
+        bindNonObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.bindNonObservables);
+        },
+        createObservables: function () {
+            return this.value("$bindingStrategy", wipeout.settings.bindingStrategies.createObservables);
+        },
 
-		// convenience functions
+		// lifecycle functions
 		templateId: function (templateId, eagerLoad) {
 			///<summary>Add a default template id</summary>
 			///<param name="templateId" type="String">The template id</param>
@@ -8000,9 +8126,9 @@ function viewModel (name, extend, doNotWarn) {
 }
 
 
-Class("wipeout.viewModels.contentControl", function () {    
+Class("wipeout.viewModels.content", function () {    
 
-    var contentControl = wipeout.viewModels.view.extend(function contentControl(templateId, model) {
+    var content = wipeout.viewModels.view.extend(function content(templateId, model) {
         ///<summary>Expands on view and view functionality to allow the setting of anonymous templates</summary>
         ///<param name="templateId" type="string" optional="true">The template id. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
@@ -8011,13 +8137,13 @@ Class("wipeout.viewModels.contentControl", function () {
         ///<summary type="String">The template which corresponds to the templateId for this item</summary>
         //this.setTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "templateId", "setTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "templateId", "setTemplate");
     });  
     
-    contentControl.addGlobalParser("setTemplate", "template");
-    contentControl.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
+    content.addGlobalParser("setTemplate", "template");
+    content.addGlobalBindingType("setTemplate", "setTemplateToTemplateId");
     
-    contentControl.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
+    content.createTemplatePropertyFor = function(owner, templateIdProperty, templateProperty) {
         ///<summary>Binds the template property to the templateId property so that a changee in one reflects a change in the other</summary>
         ///<param name="owner" type="wipeout.base.observable" optional="false">The owner of the template and template id properties</param>
         ///<param name="templateIdProperty" type="String" optional="false">The name of the templateId property</param>
@@ -8026,7 +8152,7 @@ Class("wipeout.viewModels.contentControl", function () {
         return new boundTemplate(owner, templateIdProperty, templateProperty);
     };
     
-    contentControl.createAnonymousTemplate = (function () {
+    content.createAnonymousTemplate = (function () {
         
         var i = Math.floor(Math.random() * 1000000000), 
             anonymousTemplateId = "WipeoutAnonymousTemplate",
@@ -8079,8 +8205,8 @@ Class("wipeout.viewModels.contentControl", function () {
         // bind template to template id for the first time
         this.refreshTemplate(this.currentTemplateId);
         
-        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, this);        
-        this.d2 = owner.observe(templateProperty, this.onTemplateChange, this);
+        this.d1 = owner.observe(templateIdProperty, this.onTemplateIdChange, {context: this});
+        this.d2 = owner.observe(templateProperty, this.onTemplateChange, {context: this});
     };
         
     boundTemplate.prototype.dispose = function() {
@@ -8119,10 +8245,10 @@ Class("wipeout.viewModels.contentControl", function () {
         }
 
         this.currentTemplate = null;
-        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.contentControl.createAnonymousTemplate(newVal);
+        this.currentTemplateId = this.owner[this.templateIdProperty] = wipeout.viewModels.content.createAnonymousTemplate(newVal);
     }
     
-    return contentControl;
+    return content;
 });
 
 
@@ -8133,11 +8259,11 @@ Class("wipeout.viewModels.if", function () {
         if (!sc) return;
         sc = false;
         
-        _if.blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("", true);
+        _if.blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate("", true);
     };
     
     var _if = wipeout.viewModels.view.extend(function _if(ifTrueId, model) {
-        ///<summary>The if class is a content control which provides the functionality of the knockout if binding</summary> 
+        ///<summary>Provides if/else functionality in a template</summary> 
         ///<param name="ifTrueId" type="String" optional="true">The template id if condition is true. If not set, defaults to a blank template</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
@@ -8157,17 +8283,17 @@ Class("wipeout.viewModels.if", function () {
         ///<Summary type="String">the template to render if the condition is false. Defaults to a blank template</Summary>
         this.ifFalseId = _if.blankTemplateId;
         
-        this.observe("ifTrueId", this.reEvaluate, this);
-        this.observe("ifFalseId", this.reEvaluate, this);
-        this.observe("condition", this.reEvaluate, this);
+        this.observe("ifTrueId", this.reEvaluate, {context: this});
+        this.observe("ifFalseId", this.reEvaluate, {context: this});
+        this.observe("condition", this.reEvaluate, {context: this});
         
         ///<Summary type="String">Anonymous version of ifTrueId</Summary>
         this.ifTrue = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifTrueId", "ifTrue");
         
         ///<Summary type="String">Anonymous version of ifFalseId</Summary>
         this.ifFalse = "";
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "ifFalseId", "ifFalse");
     });
 	
     _if.addGlobalParser("ifFalse", "template");
@@ -8188,19 +8314,19 @@ Class("wipeout.viewModels.if", function () {
 });
 
  
-Class("wipeout.viewModels.itemsControl", function () {
+Class("wipeout.viewModels.list", function () {
     
 	var deafaultTemplateId;
 	var defaultItemTemplateId;
-    var itemsControl = wipeout.viewModels.contentControl.extend(function itemsControl(templateId, itemTemplateId, model) {
-        ///<summary>Bind a list of models (items) to a list of view models (items) and render accordingly</summary>
+    var list = wipeout.viewModels.content.extend(function list(templateId, itemTemplateId, model) {
+        ///<summary>Bind a list of models (items) to a list of view models and render accordingly</summary>
         ///<param name="templateId" type="String" optional="true">The template id. If not set, defaults to a div to render items</param>
         ///<param name="itemTemplateId" type="String" optional="true">The initial template id for each item</param>
         ///<param name="model" type="Any" optional="true">The initial model to use</param>
         
         this._super(templateId || 
 					deafaultTemplateId ||
-					(deafaultTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate('{{$this.items}}')), model);
+					(deafaultTemplateId = wipeout.viewModels.content.createAnonymousTemplate('{{$this.items}}')), model);
 
         ///<Summary type="ko.observable" generic0="String">The id of the template to render for each item</Summary>
         this.itemTemplateId = itemTemplateId;
@@ -8208,30 +8334,30 @@ Class("wipeout.viewModels.itemsControl", function () {
         ///<Summary type="ko.observable" generic0="String">The template which corresponds to the itemTemplateId for this object</Summary>
         this.itemTemplate = "";
         
-        wipeout.viewModels.contentControl.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
+        wipeout.viewModels.content.createTemplatePropertyFor(this, "itemTemplateId", "itemTemplate");
         
         ///<Summary type="busybody.array">An array of models to render</Summary>
         this.items = new busybody.array();
         this.registerDisposable(this.items);
         
-        this.registerRoutedEvent(itemsControl.removeItem, this._removeItem, this);
+        this.registerRoutedEvent(list.removeItem, this._removeItem, this);
         
         this.observe("itemTemplateId", function (oldVal, newVal) {
 			enumerateArr(this.getItemViewModels(), function (vm) {
-				if (vm.__createdByItemsControl)
+				if (vm.__createdBylist)
 					vm.templateId = newVal;
 			});
-        }, this);
+        }, {context: this});
     });
     
-    itemsControl.addGlobalParser("itemTemplate", "template");
-    itemsControl.addGlobalBindingType("itemTemplate", "templateProperty");
+    list.addGlobalParser("itemTemplate", "template");
+    list.addGlobalBindingType("itemTemplate", "templateProperty");
         
-    itemsControl.removeItem = wipeout.events.routedEvent();
+    list.removeItem = {};
 	
-    itemsControl.prototype._removeItem = function(e) {
+    list.prototype._removeItem = function(e) {
         ///<summary>Remove an item from the item source</summary>
-        ///<param name="e" type="wo.routedEventArgs" optional="false">The item to remove</param>
+        ///<param name="e" type="ObjectArgs" optional="false">The item to remove</param>
     
         if(this.items.indexOf(e.data) !== -1) {
             this.removeItem(e.data);
@@ -8239,7 +8365,7 @@ Class("wipeout.viewModels.itemsControl", function () {
         }
     };
     
-    itemsControl.prototype.getItemViewModels = function() {
+    list.prototype.getItemViewModels = function() {
         ///<summary>Get the child view models if any</summary>
         ///<returns type="Array">The items</returns>
     
@@ -8248,7 +8374,7 @@ Class("wipeout.viewModels.itemsControl", function () {
 			[];
 	};
     
-    itemsControl.prototype.getItemViewModel = function(index) {
+    list.prototype.getItemViewModel = function(index) {
         ///<summary>Get the child view model at a given index</summary>
         ///<param name="index" type="Number" optional="false">The index of the view model to get</param>
         ///<returns type="Any">The view model</returns>
@@ -8258,28 +8384,36 @@ Class("wipeout.viewModels.itemsControl", function () {
             undefined;
     };
     
-    itemsControl.prototype.removeItem = function(item) {
+    list.prototype.removeItem = function(item) {
         ///<summary>Remove an item from the item source</summary>
         ///<param name="item" type="Any" optional="false">The item to remove</param>
     
         this.items.remove(item);
     };
     
-    //virtual
-    itemsControl.prototype.onItemRendered = function (item) {
-        ///<summary>Called after a new item items control is rendered</summary>
-        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
-    };
-    
-    //virtual
-    itemsControl.prototype.onItemRemoved = function (item) {
+    list.prototype.removedItem = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="Any" optional="false">The item deleted</param>  
         
-        item.dispose();
+        this.onItemRemoved(item);
+        
+        if (item instanceof busybody.disposable)
+            item.dispose();
+    };
+    
+    //virtual
+    list.prototype.onItemRemoved = function (item) {
+        ///<summary>Disposes of deleted items</summary> 
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
+    };
+    
+    //virtual
+    list.prototype.onItemRendered = function (item) {
+        ///<summary>Called after a new item items control is rendered</summary>
+        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
 
-    itemsControl.prototype._createItem = function (model) {
+    list.prototype._createItem = function (model) {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
@@ -8289,93 +8423,93 @@ Class("wipeout.viewModels.itemsControl", function () {
     };
 
     // virtual
-    itemsControl.prototype.createItem = function (model) {
+    list.prototype.createItem = function (model) {
         ///<summary>Defines how a view model should be created given a model. The default is to create a view and give it the itemTemplateId</summary>
         ///<param name="model" type="Any" optional="false">The model for the view to create</param>
         ///<returns type="wo.view">The newly created item</returns>
 		
-        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate("{{$this.model}}")), model);
-		vm.__createdByItemsControl = true;
+        var vm = new wipeout.viewModels.view(this.itemTemplateId || defaultItemTemplateId || (defaultItemTemplateId = wipeout.viewModels.content.createAnonymousTemplate("{{$this.model}}")), model);
+		vm.__createdBylist = true;
 		return vm;
     };
 
-    return itemsControl;
+    return list;
 });
-
 
 (function () {
  
+    function blank(){}
 	var view = wipeout.viewModels.view;
-    
-    view.prototype.unRegisterRoutedEvent = function(routedEvent, callback, callbackContext /* optional */) {  
-        ///<summary>Unregister from a routed event. The callback and callback context must be the same as those passed in during registration</summary>  
-        ///<param name="callback" type="Function" optional="false">The callback to un-register</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event to un register from</param>
-        ///<param name="callbackContext" type="Any" optional="true">The original context passed into the register function</param>
-        ///<returns type="Boolean">Whether the event registration was found or not</returns>         
-
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.unRegister(callback, callbackContext);
-                return true;
+    view.prototype.registerEvent = function(forPath, event, callback, callbackContext, priority) {
+        ///<summary>Register for a event</summary>
+        ///<param name="forPath" type="String" optional="false">The path to the object to subscribe to</param>
+        ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
+        ///<param name="event" type="String" optional="false">The event name</param>
+        ///<param name="callbackContext" type="Any" optional="true">The "this" to use within the callback</param>
+        ///<param name="priority" type="Number" optional="true">The event priorty.</param>
+        ///<returns type="wo.eventRegistration">A dispose function</returns>
+        
+        if (!forPath)
+            return {dispose:blank};
+        
+        forPath = wipeout.utils.obj.splitPropertyName(forPath);
+        var length = forPath.length;
+        
+        var _this = this;
+        var disp = wipeout.events.event.instance.registerForAll(event, function (args, owner) {
+            if (owner) {
+                var current = _this;
+                for (var i = 0; current && i < length; i++)
+                    current = current[forPath[i]];
+                
+                if (current === owner)
+                    return callback.apply(this, arguments);
             }
-        }  
-
-        return false;
+        }, callbackContext, priority);
+        
+        this.registerDisposable(disp);
+        return disp;
     };
     
+    var routedEventName = "routed-event";
     view.prototype.registerRoutedEvent = function(routedEvent, callback, callbackContext, priority) {
         ///<summary>Register for a routed event</summary>   
         ///<param name="callback" type="Function" optional="false">The callback to fire when the event is raised</param>
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="callbackContext" type="Any" optional="true">The context "this" to use within the callback</param>
         ///<param name="priority" type="Number" optional="true">The event priorty. Event priority does not affect event bubbling order</param>
         ///<returns type="wo.eventRegistration">A dispose function</returns>         
 
-        var rev;
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                rev = this.$routedEventSubscriptions[i];
-                break;
-            }
-        }
-
-        if(!rev) {
-            rev = new wipeout.events.routedEventRegistration(routedEvent);
-            this.$routedEventSubscriptions.push(rev);
-        }
-
-        return rev.event.register(callback, callbackContext, priority);
+        if (!this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions = new wipeout.events.event();
+        
+        return this.$routedEventSubscriptions.register(routedEvent, routedEventName, callback, callbackContext, priority);
     };
     
     view.prototype.triggerRoutedEvent = function(routedEvent, eventArgs) {
         ///<summary>Trigger a routed event. The event will bubble upwards to all ancestors of this view. Overrides wo.object.triggerRoutedEvent</summary>        
-        ///<param name="routedEvent" type="wo.routedEvent" optional="false">The routed event</param>
+        ///<param name="routedEvent" type="Object" optional="false">The routed event</param>
         ///<param name="eventArgs" type="Any" optional="true">The event args to bubble up with the routed event</param>
         
         // create routed event args if neccessary
         if(!(eventArgs instanceof wipeout.events.routedEventArgs)) {
             eventArgs = new wipeout.events.routedEventArgs(eventArgs, this);
         }
-
-        // trigger event on this
-        for(var i = 0, ii = this.$routedEventSubscriptions.length; i < ii; i++) {
-            if(eventArgs.handled) return;
-            if(this.$routedEventSubscriptions[i].routedEvent === routedEvent) {
-                this.$routedEventSubscriptions[i].event.trigger(eventArgs);
-            }
-        }
+        
+        if (eventArgs.handled) return;
+        if (this.$routedEventSubscriptions)
+            this.$routedEventSubscriptions.trigger(routedEvent, routedEventName, eventArgs);
         
         // trigger event on model
-        if(eventArgs.handled) return;
-        if(this.model instanceof wipeout.events.routedEventModel) {
+        if (eventArgs.handled) return;
+        if (this.model instanceof wipeout.events.routedEventModel) {
             this.model.routedEventTriggered(routedEvent, eventArgs);
         }
 
         // trigger event on parent
-        if(eventArgs.handled) return;
+        if (eventArgs.handled) return;
         var nextTarget = this.getParent();
-        if(nextTarget) {
+        if (nextTarget) {
             nextTarget.triggerRoutedEvent(routedEvent, eventArgs);
         }
     };
@@ -9139,7 +9273,6 @@ function expose (name, value) {
 
 expose("viewModel", viewModel);
 
-expose("routedEvent", wipeout.events.routedEvent);
 expose("array", busybody.array);
 expose("observable", busybody.observable);
 
@@ -9150,6 +9283,18 @@ expose("filters", wipeout.template.filters);
 expose("definitelyNotAViewModel", wipeout.utils.viewModels.definitelyNotAViewModel);
 
 expose("addHtmlAttribute", SimpleHtmlAttr);
+
+expose("findFilters", wipeout.utils.find);
+
+// passing in a function from "bind" will break docs
+expose("triggerEvent", function triggerEvent (forObject, event, eventArgs) {
+    ///<summary>Trigger an event.</summary>
+    ///<param name="forObject" type="Object">The object triggering the event</param>
+    ///<param name="event" type="String">The event name</param>
+    ///<param name="eventArgs" type="Object">The arguments for the event callbacks</param>
+    
+    return wipeout.events.event.instance.trigger.apply(wipeout.events.event.instance, arguments)
+});
 
 enumerateObj(wipeout.viewModels, function(vm, name) {
 	expose(name, vm);

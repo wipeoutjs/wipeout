@@ -10,7 +10,7 @@ window.asyncAssert = function(callback, context) {
 
 window.enumerateArr = wipeout.utils.obj.enumerateArr;
 
-window.testApp = wo.contentControl.extend(function testApp() {this._super.apply(this, arguments); });
+window.testApp = wo.content.extend(function testApp() {this._super.apply(this, arguments); });
 window.integrationTestSetup = function () {
 	window.$fixture = $("#qunit-fixture");
 	$fixture.html("<div data-wo-el='testApp' model='busybody.makeObservable()' application='true'></div>");

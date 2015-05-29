@@ -1,5 +1,5 @@
 
-module("integration: wipeout.viewModels.itemsControl", {
+module("integration: wipeout.viewModels.list", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
@@ -9,7 +9,7 @@ test("removeItem routed event", function() {
     // arrange    
     var item = {};
     application.items = new busybody.array([{}, item]);
-    application.setTemplate = '<wo.items-control id="cc" items--tw="$this.items"></wo.items-control>';
+    application.setTemplate = '<wo.list id="cc" items--tw="$this.items"></wo.list>';
     
     // act
 	application.onRendered = function () {		
@@ -19,7 +19,7 @@ test("removeItem routed event", function() {
 			start();
 		});
 		
-    	application.templateItems.cc.triggerRoutedEvent(wo.itemsControl.removeItem, item);
+    	application.templateItems.cc.triggerRoutedEvent(wo.list.removeItem, item);
 	};
     
     // assert
@@ -31,7 +31,7 @@ test("getViewModel/getViewModels", function() {
     // arrange    
     var item = {};
     application.items = [{}, {}, {}];
-    application.setTemplate = '<wo.items-control id="cc" items="$this.items"></wo.items-control>';
+    application.setTemplate = '<wo.list id="cc" items="$this.items"></wo.list>';
     
     // act
 	application.onRendered = function () {
@@ -64,11 +64,11 @@ test("basic items control with filters", function() {
 	};
 	application.items = new busybody.array([1,2,3,4,5]);
 	application.filter = 1;
-	application.setTemplate = '<wo.items-control id="myItems" items="$this.items, $this.filter => divisibleBy">\
+	application.setTemplate = '<wo.list id="myItems" items="$this.items, $this.filter => divisibleBy">\
 	<item-template>\
 		<div wo-attr-id="\'theId\' + $this.model" wo-content="$this.model"></div>\
 	</item-template>\
-</wo.items-control>';
+</wo.list>';
 	
 	// act
 	application.onRendered = function () {
@@ -141,11 +141,11 @@ test("basic items control. initial, add, remove, re-arrange", function() {
     
     // act
     application.setTemplate =
-"<wo.items-control items='$this.model.items' id='" + id1 + "'>\
+"<wo.list items='$this.model.items' id='" + id1 + "'>\
     <item-template>\
         <div class='" + id2 + "' wo-content='$this.model'></div>\
     </item-template>\
-</wo.items-control>";
+</wo.list>";
 	
 	application.onRendered = function () {
 		// assert
@@ -193,15 +193,15 @@ test("basic items control. initial, add, remove, re-arrange", function() {
 test("advanced items control, creating/destroying", function() {
 	
     // arrange
-    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model"></div>');
+    var itemTemplateId = wo.content.createAnonymousTemplate('<div wo-attr-id="$this.model"></div>');
     
-    var itemsControl1 = new wo.itemsControl();
-    itemsControl1.itemTemplateId = itemTemplateId;
-    itemsControl1.items = ["a", "b", "c"];
+    var list1 = new wo.list();
+    list1.itemTemplateId = itemTemplateId;
+    list1.items = ["a", "b", "c"];
     
-    var itemsControl2 = new wo.itemsControl();
-    itemsControl2.itemTemplateId = itemTemplateId;
-    itemsControl2.items = ["d", "e", "f"];
+    var list2 = new wo.list();
+    list2.itemTemplateId = itemTemplateId;
+    list2.items = ["d", "e", "f"];
     
     application.setTemplate = '{{$this.content}}';
     
@@ -227,11 +227,11 @@ test("advanced items control, creating/destroying", function() {
 				}, 50);
 			});
 			
-			application.content = itemsControl2;
+			application.content = list2;
 		}, 50);
 	});
 	
-    application.content = itemsControl1;
+    application.content = list1;
 	
 	stop();
 });
@@ -239,12 +239,12 @@ test("advanced items control, creating/destroying", function() {
 test("items control, $index", function() {
 	
     // arrange
-    var itemTemplateId = wo.contentControl.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$index.value" />');
+    var itemTemplateId = wo.content.createAnonymousTemplate('<div wo-attr-id="$this.model" wo-attr-data-index="$index.value"></div><wo.view id="item" index="$index.value" />');
     
-    var itemsControl = new wo.itemsControl();
-    itemsControl.itemTemplateId = itemTemplateId;
-    itemsControl.items = ["a", "b", "c"];
-    application.content = itemsControl;
+    var list = new wo.list();
+    list.itemTemplateId = itemTemplateId;
+    list.items = ["a", "b", "c"];
+    application.content = list;
     
     application.setTemplate = '{{$this.content}}';
     
@@ -252,11 +252,11 @@ test("items control, $index", function() {
     // assert
 	application.onRendered = function () {
 		strictEqual($("#a").attr("data-index"), "0");
-		strictEqual(itemsControl.getItemViewModel(0).templateItems.item.index, 0);
+		strictEqual(list.getItemViewModel(0).templateItems.item.index, 0);
 		strictEqual($("#b").attr("data-index"), "1");
-		strictEqual(itemsControl.getItemViewModel(1).templateItems.item.index, 1);
+		strictEqual(list.getItemViewModel(1).templateItems.item.index, 1);
 		strictEqual($("#c").attr("data-index"), "2");
-		strictEqual(itemsControl.getItemViewModel(2).templateItems.item.index, 2);
+		strictEqual(list.getItemViewModel(2).templateItems.item.index, 2);
 		
 		start();
 	};

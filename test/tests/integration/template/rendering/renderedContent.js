@@ -90,14 +90,14 @@ test("renderArray", function() {
 	stop();
 });
 	
-test("renderArray, itemsControl", function() {
+test("renderArray, list", function() {
 	
 	clearIntegrationStuff();
 	
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var rendered = [], removed = [];
-	var ic = new wo.itemsControl();
+	var ic = new wo.list();
 	ic.items.push(1);
 	ic.items.push(2);
 	ic.items.push(3);
@@ -164,7 +164,7 @@ test("render, is vm", function() {
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
-	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate("something");
+	var tid = wipeout.viewModels.content.createAnonymousTemplate("something");
 	var vm = new wo.view(tid);
 	
 	// act
@@ -187,8 +187,8 @@ test("render, template change", function() {
 	// arrange
 	$("#qunit-fixture").html("<div id='hello'></div>");
 	var rc = new wipeout.template.rendering.renderedContent(document.getElementById("hello"), "blabla");
-	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate("something");
-	var vm = new wo.view(wipeout.viewModels.contentControl.createAnonymousTemplate("not something"));
+	var tid = wipeout.viewModels.content.createAnonymousTemplate("something");
+	var vm = new wo.view(wipeout.viewModels.content.createAnonymousTemplate("not something"));
 	vm.onRendered = function () {
 		
 		if (vm.templateId !== tid) {
@@ -217,16 +217,16 @@ test("render, template change", function() {
 test("un render", function() {
 	
     // arrange
-	var vms = [application, new wo.contentControl(), new wo.contentControl()];
+	var vms = [application, new wo.content(), new wo.content()];
     
     application.hello = vms[1];
     application.hello.helloAgain = vms[2];
     application.hello.helloAgain.setTemplate = 
-"<wo.content-control id=\"cc1\">\
-	</wo.content-control>\
+"<wo.content id=\"cc1\">\
+	</wo.content>\
 		<div>Hi</div>\
-	<wo.content-control id=\"cc2\">\
-</wo.content-control>";
+	<wo.content id=\"cc2\">\
+</wo.content>";
     application.hello.setTemplate = "<div wo-render='$this.helloAgain'></div>";
     
     application.setTemplate = "<div wo-render='$this.hello'></div>";
@@ -257,7 +257,7 @@ function disposeTest (act) {
     function disposeFunc() { this.isDisposed = true; this.constructor.prototype.dispose.call(this); };
     application.setTemplate = '<wo.view id="i0"></wo.view>\
 <div id="a" something something1=\'aaa\' something2=wer345>\
-    <wo.content-control id="i1">\
+    <wo.content id="i1">\
         <set-template>\
             <div id="b">\
                 <div id="c">\
@@ -265,16 +265,16 @@ function disposeTest (act) {
                 </div>\
             </div>\
         </set-template>\
-    </wo.content-control>\
+    </wo.content>\
     <div id="d">\
         <div id="e">\
-            <wo.items-control id="i3" items="[{},{}]">\
+            <wo.list id="i3" items="[{},{}]">\
                 <set-template>\
                     <div id="f">\
 						{{$this.items}}\
                     </div>\
                 </set-template>\
-            </wo.items-control>\
+            </wo.list>\
         </div\>\
     </div\>\
 </div>';
@@ -345,7 +345,7 @@ test("template and untemplate, with click attribute", function() {
 		onRendered: methods.method()
 	};
 	
-	var tid = wipeout.viewModels.contentControl.createAnonymousTemplate('<button id="theButton" wo-click="$this.doSomething()"></button>');
+	var tid = wipeout.viewModels.content.createAnonymousTemplate('<button id="theButton" wo-click="$this.doSomething()"></button>');
 	
 	// act
 	stop();

@@ -35,7 +35,7 @@ test("success", function() {
 "<!-- hello -->\
 hello\
 {{$this.hello}}\
-<wo.content-control hello--s='bellbo' set-template--s='not hello'></wo.content-control>\
+<wo.content hello--s='bellbo' set-template--s='not hello'></wo.content>\
 <div style='display: block' wo-content='$this.hello'></div>");
 	var subject = new wipeout.template.rendering.compiledTemplate(template).getBuilder();
 	
@@ -68,9 +68,9 @@ hello\
 	assert(2, 8, {textContent: " $this.hello "});
 	assert(3, 3, {textContent: "anotherHello"});
 	assert(4, 8, {textContent: " /$this.hello "});
-	assert(5, 8, {textContent: " wo.contentControl "});
+	assert(5, 8, {textContent: " wo.content "});
 	assert(6, 3, {textContent: "not hello"});
-	assert(7, 8, {textContent: " /wo.contentControl "});
+	assert(7, 8, {textContent: " /wo.content "});
 	assert(8, 1, {localName: "div", innerHTML: "anotherHello"});
 	ok(!html.childNodes[8].id);
 	

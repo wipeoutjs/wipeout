@@ -44,7 +44,7 @@ Class("wipeout.template.engine", function () {
 		return function (templateId) {
 			return templateId ||
 				blankTemplateId || 
-				(blankTemplateId = wipeout.viewModels.contentControl.createAnonymousTemplate(""));
+				(blankTemplateId = wipeout.viewModels.content.createAnonymousTemplate(""));
 		};
 	}());
 	

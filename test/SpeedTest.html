@@ -27,11 +27,11 @@
 	<div>\
 		<!-- a comment -->\
 		<div>\
-			<wo.content-control a-prop="$this.model.theVal">\
+			<wo.content a-prop="$this.model.theVal">\
 				<set-template>\
 					<span wo-content="$this.aProp"></span>', templateEnd = '\
 				</set-template>\
-			</wo.content-control>\
+			</wo.content>\
 		</div>\
 		<!-- a comment -->\
 	</div>\
@@ -52,7 +52,7 @@
 		rootModel.compileTime = new Date() - time;
 		
 		var measure;
-		rootVm = wipeout.viewModels.contentControl.extend(function rootVm() {
+		rootVm = wipeout.viewModels.content.extend(function rootVm() {
 			this._super();
 			
 			this.model = rootModel;
@@ -66,7 +66,7 @@
 			rootModel.render = new Date() - this.time;
 		}
 			
-		counts = wipeout.viewModels.contentControl.extend(function counts () {
+		counts = wipeout.viewModels.content.extend(function counts () {
 			this._super();
 						
 			this.templateId = "theCounts";

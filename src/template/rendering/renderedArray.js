@@ -13,17 +13,17 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		
 		///<summary type="Array">The array</summary>
 		this.array = array;
-		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.itemsControl && array === this.parent.parentRenderContext.$this.items)
-			///<summary type="wo.itemsControl">The items control if the array belongs to one</summary>
-			this.itemsControl = this.parent.parentRenderContext.$this;
+		if (this.parent.parentRenderContext && this.parent.parentRenderContext.$this instanceof wipeout.viewModels.list && array === this.parent.parentRenderContext.$this.items)
+			///<summary type="wo.list">The items control if the array belongs to one</summary>
+			this.list = this.parent.parentRenderContext.$this;
 		
 		///<summary type="Array">Cache the child renderedContents </summary>
 		this.children = [];
         
-        if (this.itemsControl) {
-			if (this.itemsControl.$getChild) throw "These items are being rendered already.";
+        if (this.list) {
+			if (this.list.$getChild) throw "These items are being rendered already.";
 			
-            this.itemsControl.$getChild = (function (i) {
+            this.list.$getChild = (function (i) {
 				if (arguments.length === 0) {
 					var op = this.children.slice();
 					for (var i = 0, ii = op.length; i < ii; i++)
@@ -41,8 +41,8 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		///<summary>Clean up item before removal</summary>
         ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
 		
-		if (this.itemsControl)
-			this.itemsControl.onItemRemoved(item.renderedChild);
+		if (this.list)
+			this.list.removedItem(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;
@@ -109,12 +109,12 @@ Class("wipeout.template.rendering.renderedArray", function () {
 				this.children[i - 1].insertAfter(placeholder);
 
 			this.children[i] = new wipeout.template.rendering.renderedContent(placeholder, "item: " + i, this.parent.parentRenderContext);
-			var vm = this.itemsControl ? this.itemsControl._createItem(this.array[i]) : this.array[i];
+			var vm = this.list ? this.list._createItem(this.array[i]) : this.array[i];
 			this.children[i].render(vm, i);
 			this.children[i].forItem = this.array[i];
-			if (this.itemsControl) {
+			if (this.list) {
 				this.children[i].renderedChild = vm;
-				this.itemsControl.onItemRendered(vm);
+				this.list.onItemRendered(vm);
 			}
 		};
 
@@ -129,9 +129,9 @@ Class("wipeout.template.rendering.renderedArray", function () {
 		enumerateArr(this.children, this.remove, this);
 		this.children.length = 0;
 
-		if (this.itemsControl) {
-			delete this.itemsControl.$getChild;
-			delete this.itemsControl;
+		if (this.list) {
+			delete this.list.$getChild;
+			delete this.list;
 		}
 		
 		delete this.array;

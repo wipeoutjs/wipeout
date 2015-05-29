@@ -7,6 +7,6 @@ Class("wipeout.htmlBindingTypes.setTemplateToTemplateId", function () {
         ///<param name="setter" type="wipeout.template.initialization.viewModelPropertyValue">The setter object</param>
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
 		
-		viewModel.templateId = wipeout.viewModels.contentControl.createAnonymousTemplate(setter._value);
+		viewModel.templateId = wipeout.viewModels.content.createAnonymousTemplate(setter._value);
     }
 });

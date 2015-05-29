@@ -7,7 +7,7 @@ module("integration: wipeout.events.routedEvent", {
 test("routed event", function() {
     // arrange
     var aRoutedEvent = {};
-    var open = "<wo.content-control id='item'><set-template>", close = "</set-template></wo.content-control>";
+    var open = "<wo.content id='item'><set-template>", close = "</set-template></wo.content>";
     application.setTemplate = open + open + open + "<div>hi</div>" + close + close + close;
     
 	application.onRendered = function () {
@@ -31,7 +31,7 @@ test("routed event", function() {
 test("routed event, handled", function() {
     // arrange
     var aRoutedEvent = {};
-    var open = "<wo.content-control id='item'><set-template>", close = "</set-template></wo.content-control>";
+    var open = "<wo.content id='item'><set-template>", close = "</set-template></wo.content>";
     application.setTemplate = open + open + open + "<div>hi</div>" + close + close + close;
 	
 	application.onRendered = function () {

@@ -1,18 +1,18 @@
-module("wipeout.viewModels.contentControl", {
+module("wipeout.viewModels.content", {
     setup: function() {
     },
     teardown: function() {
     }
 });
 
-var contentControl = wipeout.viewModels.contentControl;
+var content = wipeout.viewModels.content;
 
 testUtils.testWithUtils("constructor", "and all functionality", false, function(methods, classes, subject, invoker) {
     // arrange
     var template = {}, templateId = {}, model = {};
     subject._super = methods.method([templateId, model]);
     subject.templateId = {};
-    classes.mock("wipeout.viewModels.contentControl.createTemplatePropertyFor", function() {
+    classes.mock("wipeout.viewModels.content.createTemplatePropertyFor", function() {
         methods.method([subject, "templateId", "template"])(arguments[0], arguments[1]);
         return template;
     }, 1);
@@ -26,10 +26,10 @@ testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods,
     // arrange
     var templateValue = "Hi";
     var owner = new wipeout.viewModels.view();
-    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate");
+    content.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate");
     
     // act
-    var t1 = owner.testTemplateId = contentControl.createAnonymousTemplate(templateValue);
+    var t1 = owner.testTemplateId = content.createAnonymousTemplate(templateValue);
 	    
     // assert
 	var xx = owner.observe("testTemplate", function () {
@@ -58,10 +58,10 @@ testUtils.testWithUtils("createTemplatePropertyFor", "", true, function(methods,
 testUtils.testWithUtils("createTemplatePropertyFor", "disposal, dependant on \"createTemplatePropertyFor\" passing", true, function(methods, classes, subject, invoker) {
     // arrange
     var owner = new wipeout.viewModels.view();
-    contentControl.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
+    content.createTemplatePropertyFor(owner, "testTemplateId", "testTemplate").dispose();
     
     // act
-    owner.testTemplateId = contentControl.createAnonymousTemplate("Hello");
+    owner.testTemplateId = content.createAnonymousTemplate("Hello");
     
     // assert
 	owner.observe("testTemplate", function () {

@@ -154,20 +154,20 @@ test("parent child views", function() {
     var parent3 = "p3", child5 = "c5", child6 = "c6";
     
     // act
-    application.setTemplate = '<wo.content-control share-parent-scope="true" id="' + parent1 + '">\
+    application.setTemplate = '<wo.content share-parent-scope="true" id="' + parent1 + '">\
         <set-template>\
             <wo.view share-parent-scope="true" id="' + child1 + '"></wo.view>\
             <wo.view id="' + child2 + '"></wo.view>\
         </set-template>\
-    </wo.content-control>\
-    <wo.content-control id="' + parent2 + '">\
+    </wo.content>\
+    <wo.content id="' + parent2 + '">\
         <set-template>\
             <wo.view share-parent-scope="true" id="' + child3 + '"></wo.view>\
             <wo.view id="' + child4 + '"></wo.view>\
         </set-template>\
-    </wo.content-control>\
-    <wo.items-control items="[{},{}]" id="' + parent3 + '">\
-    </wo.items-control>';
+    </wo.content>\
+    <wo.list items="[{},{}]" id="' + parent3 + '">\
+    </wo.list>';
 	
 	application.onRendered = function () {
     
@@ -201,14 +201,14 @@ test("camel casing and synchronus rendering of <set-template>", function() {
     
     // arrange
     // act
-    application.setTemplate = '<wo.content-control a-property-1="true" id="item" >\
+    application.setTemplate = '<wo.content a-property-1="true" id="item" >\
         <a-property-2>true</a-property-2>\
 		<set-template>\
-			<wo.content-control a-property-1="true" id="item" >\
+			<wo.content a-property-1="true" id="item" >\
 				<a-property-2>true</a-property-2>\
-			</wo.content-control>\
+			</wo.content>\
 		</set-template>\
-    </wo.content-control>';
+    </wo.content>';
     
     // assert
 	application.onRendered = function () {
@@ -298,7 +298,7 @@ test("multi-dimentional binding", function() {
     var val;
     var model = busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ inner: busybody.makeObservable({ val: "" }) }) }) });
     var id1 = "asdhasjdkjbasd", id2 = "asdhasjdkjbasdasdwetsdf";
-    var open = "<wo.content-control id='" + id1 + "' model='$this.model.inner'><set-template>", close = "</set-template></wo.content-control>";
+    var open = "<wo.content id='" + id1 + "' model='$this.model.inner'><set-template>", close = "</set-template></wo.content>";
     application.model = model;
     application.setTemplate = open + open + open + "<div id='" + id2 + "' wo-content='$this.model.val'></div>" + close + close + close;
     
@@ -366,16 +366,16 @@ test("shareParentScope", function() {
     var container = "LKHLHKLH", val = "LKJGB*(PYGUBOPY", child = "LKGKJHFF", childNode = "ghgfhfg";
     
     // act
-    application.setTemplate = '<wo.content-control id="' + container + '" an-item--s="' + val + '" depth="1">\
+    application.setTemplate = '<wo.content id="' + container + '" an-item--s="' + val + '" depth="1">\
     <set-template>\
-        <wo.content-control share-parent-scope="true" depth="2">\
+        <wo.content share-parent-scope="true" depth="2">\
             <set-template>\
                 <wo.view id="' + child + '" an-item="$this.anItem" depth="3"></wo.view>\
 				<div id="' + childNode + '"></div>\
             </set-template>\
-        </wo.content-control>\
+        </wo.content>\
     </set-template>\
-</wo.content-control>';
+</wo.content>';
 	
 	application.onRendered = function () {
     
@@ -447,21 +447,21 @@ testUtils.testWithUtils("registerEvent", "dispose of view", false, function(meth
 
 /*test("move view model", function() {
     // arrange
-    application.template('<wo.content-control id="toMove">\
+    application.template('<wo.content id="toMove">\
     <set-template>\
         <span></span>\
     </set-template>\
-</wo.content-control>\
-<wo.content-control id="moveToParent1" share-parent-scope="true">\
+</wo.content>\
+<wo.content id="moveToParent1" share-parent-scope="true">\
     <set-template>\
         <div id="moveToPosition1"></div>\
     </set-template>\
-</wo.content-control>\
-<wo.content-control id="moveToParent2">\
+</wo.content>\
+<wo.content id="moveToParent2">\
     <set-template>\
         <div id="moveToPosition2"></div>\
     </set-template>\
-</wo.content-control>');
+</wo.content>');
     
     var toMove = application.templateItems.toMove;
     var moveToParent2 = application.templateItems.moveToParent2;

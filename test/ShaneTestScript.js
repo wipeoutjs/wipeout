@@ -3,32 +3,32 @@
     //wipeout.profile.profile();
     aRoutedEvent = {};
     
-    initializeView = wipeout.viewModels.contentControl.extend(function initializeView() {
+    initializeView = wipeout.viewModels.content.extend(function initializeView() {
         this._super();
         
         this.setTemplate = "<div id='theDiv'>If this text is still here something went wrong</div>\
-<wo.content-control id='theContentControl' template='If this text is still here something went wrong'></wo.content-control>";
+<wo.content id='thecontent' template='If this text is still here something went wrong'></wo.content>";
     });
     
     initializeView.prototype.onRendered = function() {
         this._super();
         this.templateItems.theDiv.innerHTML = this.item1 + " " + this.item2;
-        this.templateItems.theContentControl.setTemplate = this.item1 + " " + this.item2;
+        this.templateItems.thecontent.setTemplate = this.item1 + " " + this.item2;
     };
     
-    childView = wipeout.viewModels.contentControl.extend(function childView() {
+    childView = wipeout.viewModels.content.extend(function childView() {
         this._super();
         this.value = "initial";
     });
     
-    rootView = wipeout.viewModels.contentControl.extend(function rootView() {
+    rootView = wipeout.viewModels.content.extend(function rootView() {
         this._super("STPTemplates/rootView.html");
         
         this.justDone = "";
         
         this.registerRoutedEvent(aRoutedEvent, function() { this.templateItems.routedEvent.innerHTML = "routed event caught"; }, this);
         
-        this.childView = new wo.contentControl();
+        this.childView = new wo.content();
         this.childView.setTemplate = "<div>Child view</div>";
     });
     
@@ -69,7 +69,7 @@
 
 var actions = [
     /**/function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
+        view.templateItems.listTest.templateItems.theInnerlist1.getItemViewModel(0).triggerRoutedEvent(aRoutedEvent, {});
         return "Triggered routed event";
     }, function(view) {
         view.templateItems.NestedDiv.innerHTML = "this is the nested div";
@@ -81,11 +81,11 @@ var actions = [
         theModel.items.push(busybody.makeObservable({itemId: 66, itemName: "Mycroft"}));
         return "Added person (Mycroft)";
     }, function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.items.splice(0, 1);
+        view.templateItems.listTest.templateItems.theInnerlist1.items.splice(0, 1);
         return "Removed from one item source \"items\" (John). Expect the other to follow suit.";
     }, function(view) {
-        view.templateItems.listTest.templateItems.theInnerItemsControl1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
-        view.templateItems.listTest.templateItems.theInnerItemsControl2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerlist1.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
+        view.templateItems.listTest.templateItems.theInnerlist2.getItemViewModel(0).templateItems.stampMe.innerHTML = "stamped template";
         return "Stamp a person view template.";
     },/**/ function(view) {
         view.model.items.reverse()
