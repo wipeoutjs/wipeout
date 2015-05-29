@@ -3,7 +3,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 (function () {
 
-// busybody v0.2.0
+// busybody v0.2.1
 // (c) Shane Connon 2015
 // http://www.opensource.org/licenses/mit-license.php
 (function () {
@@ -1342,7 +1342,7 @@ Class("busybody.array", function () {
 		///<summary>An observable array</summary>
 		///<param name="initialValues" type="[Any]">Initial values for the array</param>
 		
-		if (this === busybody)
+		if (!(this instanceof array))
 			return new array(initialValues);
 		
         this._super.apply(this, arguments);
@@ -1417,7 +1417,7 @@ Class("busybody.array", function () {
 		///<summary>An observable array</summary>
 		///<param name="initialValues" type="[Any]">Initial values for the array</param>
 		
-		if (this === busybody)
+		if (!(this instanceof array))
 			return new array(initialValues);
         
         this._super.apply(this, arguments);
@@ -2839,6 +2839,8 @@ Class("busybody.utils.observeCycleHandler", function () {
 		
         if (!arguments.length)
             object = {};
+        else if (!object)
+            return object;
         
 		if (object instanceof busybody.array) {
 			if (busybody.getObserver(object)) 
@@ -2880,6 +2882,8 @@ Class("busybody.utils.observeCycleHandler", function () {
 		///<param name="property" type="String">The property</param>
 		///<param name="callback" type="Function">The callback to execute</param>
 		///<param name="options" type="Object" optional="true">See busybody.observable.observe for options</param>
+        
+        if (!object) return false;
         
         if (object instanceof busybody.array) {
 			if (property instanceof Function)
@@ -6878,7 +6882,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
         ///<param name="item" type="wipeout.template.rendering.renderedContent">The item</param>
 		
 		if (this.list)
-			this.list.onItemRemoved(item.renderedChild);
+			this.list.removedItem(item.renderedChild);
 
 		delete item.renderedChild;
 		delete item.forItem;
@@ -8387,18 +8391,26 @@ Class("wipeout.viewModels.list", function () {
         this.items.remove(item);
     };
     
-    //virtual
-    list.prototype.onItemRendered = function (item) {
-        ///<summary>Called after a new item items control is rendered</summary>
-        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
+    list.prototype.removedItem = function (item) {
+        ///<summary>Disposes of deleted items</summary> 
+        ///<param name="item" type="Any" optional="false">The item deleted</param>  
+        
+        this.onItemRemoved(item);
+        
+        if (item instanceof busybody.disposable)
+            item.dispose();
     };
     
     //virtual
     list.prototype.onItemRemoved = function (item) {
         ///<summary>Disposes of deleted items</summary> 
         ///<param name="item" type="Any" optional="false">The item deleted</param>  
-        
-        item.dispose();
+    };
+    
+    //virtual
+    list.prototype.onItemRendered = function (item) {
+        ///<summary>Called after a new item items control is rendered</summary>
+        ///<param name="item" type="wo.view" optional="false">The item rendered</param>
     };
 
     list.prototype._createItem = function (model) {

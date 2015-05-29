@@ -15,7 +15,7 @@ compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.
         
         this._super("wipeoutDocs.viewModels.howDoIApplication");
         
-        this.contentTemplate = wo.content.createAnonymousTemplate("");
+        this.contentTemplate = 'wipeoutDocs.viewModels.welcome-template';
         
         this.apiPlaceholder = null;
         this.apiPlaceholderName = null;
