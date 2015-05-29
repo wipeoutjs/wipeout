@@ -1,0 +1,15 @@
+<h1>Observing Array Changes</h1>
+<p>Unlike regular objects, wipeout cannot modify Arrays behind the scenes so that they are observable. Instead you must create any arrays you need as <a href="https://github.com/ShaneGH/busybody#observable-arrays" target="_blank">observable arrays</a>.</p>
+<wipeout-docs.view-models.components.code-block highlight="wo.array">
+    <code parser="s">// this is incorrect
+var model = {
+    innerArray: [1, 2, 3]
+};
+
+// this is correct
+var model = {
+    innerArray: wo.array([1, 2, 3])
+};</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In the first case, wipeout can bind to the array, but it will not be notified if the array changes.
+    <br />In the second case wipeout can subscribe to array changes and update the DOM/view models accordingly.</p>

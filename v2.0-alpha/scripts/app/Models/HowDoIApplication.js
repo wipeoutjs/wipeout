@@ -60,13 +60,16 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Add a static value", "add-a-static-value"),
                 new articleLink("Add a static function", "add-a-static-function"),
                 new articleLink("Alter the viewModel lifecycle", "view-model-lifecycle"),
+                new articleLink("Add Computed Values", "add-compued-values"),
                 new articleLink("Add a property binding", "add-a-property-binding"),
                 new articleLink("Add a property parser", "add-a-parser"),
                 new articleLink("Inherit from another viewModel", "inherit-from-another-view-model")
             ]
         }, {        
             header: new articleLink("Use the model layer", "models"),
-            items: []
+            items: [
+                new articleLink("Observing array changes", "observable-arrays")
+            ]
         }, {        
             header: new articleLink("Bind or set properties", "bind-or-set-propertes"),
             items: [

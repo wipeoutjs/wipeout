@@ -1,0 +1,18 @@
+<h1>Add Computed Values</h1>
+<p>Computeds are a part of busybody, inspired by <a href="www.google.com/#q=knockout+computed">knockout computeds</a>. There is full documentation on how they work <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">here</a>.</p>
+<p>Computeds are baked into wipeout view models, and can be used like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .initialize(function () {
+        
+        // define computeds in the initialize function
+        this.computed("fullName", function () {
+            if (this.model)
+                return this.model.firstName + " " + this.model.lastName;
+            else
+                return "";
+        });
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>Now you can bind to the <code>fullName</code> property in the template of the view model</p>

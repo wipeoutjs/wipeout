@@ -197,6 +197,28 @@ myViewModel.function2 = function () {
 <br />
 </script>
 
+<script id="Articles.add-compued-values" type="text/template">
+<h1>Add Computed Values</h1>
+<p>Computeds are a part of busybody, inspired by <a href="www.google.com/#q=knockout+computed">knockout computeds</a>. There is full documentation on how they work <a href="https://github.com/ShaneGH/busybody#computed-observables" target="_blank">here</a>.</p>
+<p>Computeds are baked into wipeout view models, and can be used like so:</p>
+<wipeout-docs.view-models.components.code-block>
+    <code parser="s">wo.viewModel("myViewModel")
+    .initialize(function () {
+        
+        // define computeds in the initialize function
+        this.computed("fullName", function () {
+            if (this.model)
+                return this.model.firstName + " " + this.model.lastName;
+            else
+                return "";
+        });
+    })
+    .build();</code>
+</wipeout-docs.view-models.components.code-block>
+<p>Now you can bind to the <code>fullName</code> property in the template of the view model</p>
+
+</script>
+
 <script id="Articles.add-property-parser" type="text/template">
 <h1>Add a custom parser</h1>
 
@@ -3190,6 +3212,24 @@ wo(model, document.body);</code>
 <p>Now every class which inherits from wo.view has a uniqueId function</p>
 </script>
 
+<script id="Articles.observable-arrays" type="text/template">
+<h1>Observing Array Changes</h1>
+<p>Unlike regular objects, wipeout cannot modify Arrays behind the scenes so that they are observable. Instead you must create any arrays you need as <a href="https://github.com/ShaneGH/busybody#observable-arrays" target="_blank">observable arrays</a>.</p>
+<wipeout-docs.view-models.components.code-block highlight="wo.array">
+    <code parser="s">// this is incorrect
+var model = {
+    innerArray: [1, 2, 3]
+};
+
+// this is correct
+var model = {
+    innerArray: wo.array([1, 2, 3])
+};</code>
+</wipeout-docs.view-models.components.code-block>
+<p>In the first case, wipeout can bind to the array, but it will not be notified if the array changes.
+    <br />In the second case wipeout can subscribe to array changes and update the DOM/view models accordingly.</p>
+</script>
+
 <script id="Articles.observe-the-value-of-the-property" type="text/template">
 <h1>Observe the value of the property</h1>
 <p>If you need to observe the property value for change, you can use the <code>onPropertyChanged</code> function.</p>
@@ -3453,7 +3493,7 @@ manipulation within a viewModel, as it is called after the viewModel has been fu
     {{$this.model}}
 &lt;/div></code>
 </wipeout-docs.view-models.components.code-block>
-<p>You can change the {<span>{</span>...}} parenthesis to anything else using</p>
+<p>You can change the {<span>{</span>...}} parenthesis to anything else using. Remember that this must be done before any view models are rendered in you application to remove inconsistencies.</p>
 <wipeout-docs.view-models.components.code-block>
     <code parser="s">wipeout.template.rendering.compiledTemplate.renderParenthesis("[[", "]]");</code>
 </wipeout-docs.view-models.components.code-block>
