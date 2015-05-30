@@ -16,7 +16,21 @@ test("if", function() {
     application.onRendered = function () {
         // assert
         ok(!document.getElementById("woIfTest"));
-        start();
+        
+        var disp = application.observe("model", function () {
+            disp.dispose();
+            ok(document.getElementById("woIfTest"));
+        
+            disp = application.observe("model", function () {
+                disp.dispose();
+                ok(!document.getElementById("woIfTest"));
+                start();
+            });
+            
+            application.model = false;
+        });
+            
+        application.model = true;
     }
     
     stop();

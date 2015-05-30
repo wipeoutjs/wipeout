@@ -143,15 +143,19 @@ Class("wipeout.wml.wmlElement", function () {
 
 Class("wipeout.wml.wmlAttribute", function () {
     
-    function wmlAttribute(value) {
+    function wmlAttribute(value, parent) {
         ///<summary>An attribute</summary>
         ///<param name="value" type="String">The attribute value</param>
+        ///<param name="parent" type="wipeout.wml.wmlElement" optional="true">The parent element</param>
 		
         ///<summary type="String">The value</summary>
         this.value = value;
 		
         ///<summary type="Number">2</summary>
         this.nodeType = 2;
+		
+        ///<summary type="wipeout.wml.wmlElement">The parent element</summary>
+        this._parentElement = parent;
     };
     
     wmlAttribute.prototype.serializeValue = function() {
@@ -166,6 +170,21 @@ Class("wipeout.wml.wmlAttribute", function () {
         ///<returns type="String">The value</returns>
                 
         return this.value;
+    }; 
+    
+    wmlAttribute.prototype.getParentElement = function() {
+        ///<summary>Get the parent element of this node</summary>
+        ///<returns type="wipeout.wml.wmlElement">The element</returns>
+        
+        if (this._parentElement && this._parentElement.attributes) {
+            for (var i in this._parentElement.attributes)
+                if (this._parentElement.attributes[i] === this)
+                    return this._parentElement;
+
+            delete this._parentElement;
+        }
+
+        return null;
     };
     
     return wmlAttribute;

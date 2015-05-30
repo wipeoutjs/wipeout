@@ -1,8 +1,8 @@
 
-HtmlAttr("if", function () {
+HtmlAttr("foreach", function () {
 	
 	//TODE
-	return function _if (element, attribute, renderContext) {
+	return function foreach (element, attribute, renderContext) {
         ///<summary>If the value is true, render the content, otherwise render nothing</summary>
         ///<param name="element" type="Element">The element</param>
         ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
@@ -15,13 +15,21 @@ HtmlAttr("if", function () {
             return;
         }
         
-        element.setAttribute("data-wo-el", "wo.if");
+        element.setAttribute("data-wo-el", "wo.list");
         var content = new wipeout.template.rendering.viewModelElement(element, null, renderContext, true);
         
-        content.createdViewModel.ifTrueId = wipeout.viewModels.content.createAnonymousTemplate(template);
-        attribute.watch(function (oldValue, newValue) {
-            content.createdViewModel.condition = newValue;
-            content.createdViewModel.reEvaluate();
+        content.createdViewModel.itemTemplateId = wipeout.viewModels.content.createAnonymousTemplate(template);
+        
+        var disp;
+        attribute.watch(function (oldVal, newVal) {
+            if (oldVal !== newVal) {
+                if (disp)
+                    content.disposeOf(disp);
+                
+                disp = busybody.tryBindArrays(newVal, content.createdViewModel.items, true);
+                if (disp)
+                    disp = content.registerDisposable(disp);
+            }
         }, true);
         
         return content;
