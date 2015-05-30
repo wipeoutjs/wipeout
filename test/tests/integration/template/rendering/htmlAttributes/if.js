@@ -2,7 +2,7 @@ module("integration: wipeout.template.initialization.htmlAttributes.wo-if", {
     setup: integrationTestSetup,
     teardown: integrationTestTeardown
 });
-/*
+
 test("if", function() {
     
     // arrange
@@ -20,4 +20,4 @@ test("if", function() {
     }
     
     stop();
-});*/
+});

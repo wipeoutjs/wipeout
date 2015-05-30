@@ -69,6 +69,10 @@ Class("wipeout.template.rendering.builder", function () {
         enumerateArr(this.elements, function(elementAction) {
             // get the element
             var element = document.getElementById(elementAction.id);
+            
+            // the element may have been removed by something which controls it's parent element
+            if (!element) return;
+            
             element.removeAttribute("id");
             
             // run all actions on it
