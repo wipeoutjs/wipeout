@@ -58,7 +58,7 @@ Class("wipeout.template.rendering.renderedContentHelperBase", function () {
     };
     
     helperBase.prototype.insertBefore = function (renderedContent, content) {
-		///<summary>Insert content before this</summary>
+		///<summary>Insert content before the renderedContent</summary>
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to insert the content before</param>
         ///<param name="content" type="[Element]">The content to insert</param>
 		
@@ -68,7 +68,7 @@ Class("wipeout.template.rendering.renderedContentHelperBase", function () {
     };
     
     helperBase.prototype.insertAfter = function (renderedContent, content) {
-		///<summary>Insert content after this</summary>
+		///<summary>Insert content the renderedContent</summary>
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to insert the content after</param>
         ///<param name="content" type="[Element]">The content to append</param>
 		

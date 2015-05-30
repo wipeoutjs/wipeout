@@ -14,7 +14,7 @@ Class("wipeout.template.rendering.renderedContentCommentHelper", function () {
         ///<returns type="Object">The opening and closing tags</returns>
         
         //issue-#38
-        //this.openingTag = document.createElement("script");
+        //var openingTag = document.createElement("script");
         
         // create opening and closing tags and link to renderedContent
         var openingTag = document.createComment(" " + name + " ");

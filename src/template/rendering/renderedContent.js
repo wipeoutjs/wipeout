@@ -15,8 +15,7 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.parentRenderContext = parentRenderContext;
 		
         if (useElement) {
-            throw "Not implemented";
-            this.helper = elementHelper || (elementHelper = new wipeout.template.rendering.renderedElementHelper());
+            this.helper = elementHelper || (elementHelper = new wipeout.template.rendering.renderedContentElementHelper());
         } else {
             this.helper = commentHelper || (commentHelper = new wipeout.template.rendering.renderedContentCommentHelper());
         }

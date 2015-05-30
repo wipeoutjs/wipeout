@@ -25,7 +25,7 @@ Class("wipeout.template.rendering.renderedContentElementHelper", function () {
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
         ///<param name="name" type="String">The new name of the view model</param>
         
-		this.openingTag.setAttribute("data-wo-view-model", name);
+		renderedContent.openingTag.setAttribute("data-wo-view-model", name);
     };
     
     elementHelper.prototype.empty = function (renderedContent) {
@@ -39,7 +39,7 @@ Class("wipeout.template.rendering.renderedContentElementHelper", function () {
 		///<summary>Dispose of the html for a renderedContent</summary>
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
         
-        renderedContent.openingTag.parentNode.removeChild(this.openingTag);
+        renderedContent.openingTag.removeAttribute("data-wo-view-model");
     };
     
     elementHelper.prototype.appendHtml = function (renderedContent, html) {

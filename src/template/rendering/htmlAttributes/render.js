@@ -9,12 +9,8 @@ HtmlAttr("render", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		if (element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script") {
-			element.innerHTML = '<script type="placeholder"></script>';
-			return render(element.firstChild, attribute, renderContext);
-		}
 		
-        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
+        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext, element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script");
 		
 		attribute.watch(function (oldVal, newVal) {
             htmlContent.render(newVal);

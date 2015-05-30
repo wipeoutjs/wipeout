@@ -17,12 +17,12 @@ test("success", function() {
 	div = document.getElementById("qunit-fixture");
 	
 	// assert
-	strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->234<!-- /$this.theVal --></div>");
+	strictEqual(div.innerHTML, "<div id=\"hello\" data-wo-view-model=\"$this.theVal\">234</div>");
 	
 	
 	busybody.observe(model, "theVal", function () {
 		setTimeout(function () {
-			strictEqual(div.innerHTML, "<div id=\"hello\"><!-- $this.theVal -->456<!-- /$this.theVal --></div>");
+			strictEqual(div.innerHTML, "<div id=\"hello\" data-wo-view-model=\"$this.theVal\">456</div>");
 			enumerateArr(disp, function(disp) {
 				disp.dispose();
 			});
