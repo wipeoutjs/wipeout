@@ -66,10 +66,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = compiledInitializer.createPropertyValue(name, {
-						xml: element[i],
-						constructor: vm.constructor
-                    }, ["templateElementSetter"]);
+                    element[i].$cachedVmContructor = vm.constructor;
+                    this.setters[name] = compiledInitializer.createPropertyValue(name, element[i], ["templateElementSetter"]);
 
                     return;
                 }

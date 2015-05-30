@@ -10,11 +10,9 @@ test("binding", function () {
 	
 	var name = "daasdasd";
 	var xml = wipeout.wml.wmlParser('<val><views.set-view val1="$this.val"><val2>3</val2></views.set-view></val>');
+    xml.$cachedVmContructor = Object;
 	var viewModel = new busybody.observable(),
-		setter = new wipeout.template.initialization.viewModelPropertyValue(name, {
-			xml: xml,
-			constructor: Object
-		}),
+		setter = new wipeout.template.initialization.viewModelPropertyValue(name, xml),
 		renderContext = new wipeout.template.context(new busybody.observable()).contextFor(viewModel);
 	
 	var val1 = renderContext.$this.val = {}, val2 = {};

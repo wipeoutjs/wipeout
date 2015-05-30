@@ -20,17 +20,16 @@ testUtils.testWithUtils("binding", null, false, function(methods, classes, subje
 		vm = {}, 
 		set = {
 			_value: {
-				constructor: function () {
+				$cachedVmContructor: function () {
 					if (tmp) ok(false, "constructor invoked twice");
 					tmp = this;
-				},
-				xml: {}
+				}
 			},
 			name: "kjbkjbkjbkjb"
 		},
 		rc = {};
 	classes.mock("wipeout.template.engine.instance.getVmInitializer", function () {
-		strictEqual(arguments[0], set._value.xml);
+		strictEqual(arguments[0], set._value);
 		return {
 			initialize: methods.method([tmp, rc], methods.method())	// will be called by dispose
 		};
