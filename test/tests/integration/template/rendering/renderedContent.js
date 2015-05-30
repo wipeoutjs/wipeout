@@ -362,6 +362,7 @@ test("appendHtml", function() {
 	
 	// act
 	wipeout.template.rendering.renderedContent.prototype.appendHtml.call({
+        helper: new wipeout.template.rendering.renderedContentCommentHelper(),
 		closingTag: document.getElementById("goodbye")
 	}, "asdsadsadsadasd<span></span>");
 	

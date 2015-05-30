@@ -1,42 +1,39 @@
 
 Class("wipeout.template.rendering.renderedContent", function () {
     
-    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext) {
+    var commentHelper, elementHelper;
+    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext, useElement) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>
+        ///<param name="useElement" type="Boolean" optional="true">Default: false. If true, will use the element as wipeout opening and closing tags</param>
         ///<param name="parentRenderContext" type="wipeout.template.context" optional="true">The render context of the parent view model</param>
                         
 		this._super();
 		
         name = wipeout.utils.obj.trim(name);
-        
         this.parentRenderContext = parentRenderContext;
-        
-        //issue-#38
-        //this.openingTag = document.createElement("script");
 		
-        // create opening and closing tags and link to this
-		///<summary type="Comment">The opening tag</summary>
-        this.openingTag = document.createComment(" " + name + " ");
+        if (useElement) {
+            throw "Not implemented";
+            this.helper = elementHelper || (elementHelper = new wipeout.template.rendering.renderedElementHelper());
+        } else {
+            this.helper = commentHelper || (commentHelper = new wipeout.template.rendering.renderedContentCommentHelper());
+        }
+        
+        var init = this.helper.init(this, element, name);
+        
+        this.openingTag = init.opening;
         this.openingTag.wipeoutOpening = this;
-		
-		///<summary type="Comment">The closing tag</summary>
-        this.closingTag = document.createComment(" /" + name + " ");
+        this.closingTag = init.closing;
         this.closingTag.wipeoutClosing = this;
-        
-        // add this to DOM and remove placeholder
-        element.parentNode.insertBefore(this.openingTag, element);
-        element.parentNode.insertBefore(this.closingTag, element);
-        element.parentNode.removeChild(element);
     });
-	
+    	
 	renderedContent.prototype.rename = function (name) {
 		///<summary>Rename the opeining and closing tags</summary>
         ///<param name="name" type="String">The new name</param>
 		
-		this.openingTag.nodeValue = " " + name + " ";
-		this.closingTag.nodeValue = " /" + name + " ";
+        this.helper.rename(this, name);
 	};
 	    
     renderedContent.prototype.renderArray = function (array) {
@@ -151,16 +148,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
 		//issue-#39
         // remove all children
-        if(!leaveDeadChildNodes) {
-			var ns;
-            while ((ns = this.openingTag.nextSibling) && ns !== this.closingTag) {
-				//issue-#40
-				if (ns.elementType === 1)
-					ns.innerHTML = "";
-				
-                ns.parentNode.removeChild(this.openingTag.nextSibling);
-			}
-		}
+        if(!leaveDeadChildNodes)
+            this.helper.empty(this);
     };
     
     renderedContent.prototype.template = function(templateId) {
@@ -214,32 +203,23 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.unRender(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes && !this.detatched) {
-			this.closingTag.parentNode.removeChild(this.closingTag);
-			this.openingTag.parentNode.removeChild(this.openingTag);
+            this.helper.disposeOf(this);
 		}
 		
-		delete this.detatched;
+		this.detatched = null;
 		
-		delete this.closingTag.wipeoutClosing;
-		delete this.openingTag.wipeoutOpening;
+		this.closingTag.wipeoutClosing = null;
+		this.openingTag.wipeoutOpening = null;
 		
-		delete this.closingTag;
-		delete this.openingTag;
+		this.closingTag = null;
+		this.openingTag = null;
     };
 	
     renderedContent.prototype.appendHtml = function (html) {
 		///<summary>Append a html string to this renderContext</summary>
         ///<param name="html" type="String">The current html</param>
 		
-		if (this.openingTag && this.openingTag.nodeType === 1) {
-			this.openingTag.insertAdjacentHTML('afterend', html);
-		} else {
-        	//issue-#38
-			var scr = document.createElement("script");
-			this.closingTag.parentNode.insertBefore(scr, this.closingTag);
-			scr.insertAdjacentHTML('afterend', html);
-			scr.parentNode.removeChild(scr);
-		}
+        this.helper.appendHtml(this, html);
     };
     
     renderedContent.getParentElement = function(forHtmlElement) {
@@ -249,10 +229,10 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
         var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
         while (current = current.previousSibling) {
-            if (current.wipeoutClosing)
-                current = current.wipeoutClosing.openingTag;
-            else if (current.wipeoutOpening)
+            if (current.wipeoutOpening)
                 return current;
+            else if (current.wipeoutClosing)
+                current = current.wipeoutClosing.openingTag;
         }
         
         return forHtmlElement.parentNode;

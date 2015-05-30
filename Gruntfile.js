@@ -77,6 +77,7 @@ module.exports = function(grunt) {
         "src/viewModels/view.js",
         "src/events/routedEvent.js",
         "src/template/rendering/renderedContent.js",
+        "src/template/rendering/renderedContentHelperBase.js",
         "src/template/propertyValue.js"
     ];
 	
