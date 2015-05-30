@@ -2891,8 +2891,10 @@ Class("busybody.utils.observeCycleHandler", function () {
 			if (property === "length")
 				property = "$length";
 			
-			busybody.makeObservable(object);	//TODO: test
-		}
+			busybody.makeObservable(object);
+		} else if (object instanceof Array && property === "length") {
+            return false;
+        }
         
         var target;
         if ((target = busybody.getObserver(object)) ||
