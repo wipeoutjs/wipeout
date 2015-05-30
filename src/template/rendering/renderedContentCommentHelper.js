@@ -14,7 +14,7 @@ Class("wipeout.template.rendering.renderedContentCommentHelper", function () {
         ///<returns type="Object">The opening and closing tags</returns>
         
         //issue-#38
-        //var openingTag = document.createElement("script");
+        //var closingTag = document.createElement("script");
         
         // create opening and closing tags and link to renderedContent
         var openingTag = document.createComment(" " + name + " ");
@@ -58,6 +58,7 @@ Class("wipeout.template.rendering.renderedContentCommentHelper", function () {
 		///<summary>Dispose of the html for a renderedContent</summary>
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
         
+        this.empty(renderedContent);
         renderedContent.closingTag.parentNode.removeChild(renderedContent.closingTag);
         renderedContent.openingTag.parentNode.removeChild(renderedContent.openingTag);
     };

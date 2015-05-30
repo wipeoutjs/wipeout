@@ -39,6 +39,7 @@ Class("wipeout.template.rendering.renderedContentElementHelper", function () {
 		///<summary>Dispose of the html for a renderedContent</summary>
         ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
         
+        this.empty(renderedContent);
         renderedContent.openingTag.removeAttribute("data-wo-view-model");
     };
     
