@@ -8,7 +8,11 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
         ///<returns type="Function">A dispose function</returns>
 		
         if (!setter._value.$cachedVmContructor) {
-            setter._value.$cachedVmContructor = wipeout.utils.viewModels.getViewModelConstructor(setter._value).constructor;
+            var vm = wipeout.utils.viewModels.getViewModelConstructor(setter._value);
+            if (!vm)
+                throw "Invalid view model name \"" + wipeout.utils.viewModels.getElementName(setter._value) + "\".";
+            
+            setter._value.$cachedVmContructor = vm.constructor;
         }
         
 		viewModel[setter.name] = new setter._value.$cachedVmContructor();
