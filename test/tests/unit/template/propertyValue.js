@@ -11,7 +11,7 @@ testUtils.testWithUtils("constructor", "parser", false, function(methods, classe
 	subject._super = methods.method();
     
 	// act
-	invoker(name, val, "i");
+	invoker(name, new wipeout.wml.wmlAttribute(val), "i");
 	
     // assert
     strictEqual(subject.parser("234"), 234);
@@ -26,8 +26,10 @@ testUtils.testWithUtils("value", "has cached", false, function(methods, classes,
 
 testUtils.testWithUtils("value", "no cached", false, function(methods, classes, subject, invoker) {
 	// arrange
-    subject.getValue = function () {
-        return "XYZ";
+    subject._value = {
+        serializeContent: function () {
+            return "XYZ";
+        }
     };
     
 	// act
@@ -45,21 +47,16 @@ testUtils.testWithUtils("value", "raw, has cached", false, function(methods, cla
 
 testUtils.testWithUtils("value", "raw, no cached", false, function(methods, classes, subject, invoker) {
 	// arrange
-    subject.getValue = function () {
-        return "XYZ";
+    subject._value = {
+        serializeContent: function () {
+            return "XYZ";
+        }
     };
     
 	// act
 	// assert
 	strictEqual("XYZ", invoker(true));
 	strictEqual(subject._unAlteredCachedValue, "XYZ");
-});
-
-testUtils.testWithUtils("getValue", null, false, function(methods, classes, subject, invoker) {
-	// arrange
-	// act
-	// assert
-	strictEqual(subject._value = {}, invoker());
 });
 
 testUtils.testWithUtils("getBindingStrategyOptions", "has strategy 0", false, function(methods, classes, subject, invoker) {

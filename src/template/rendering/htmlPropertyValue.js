@@ -8,7 +8,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
         ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
         ///<param name="action" type="String" optional="true">The wipoeut html attribute to use. If null, use "name"</param>
 		
-		this._super(name, value, parser);
+		this._super(name, typeof value === "string" ? new wipeout.wml.wmlAttribute(value) : value, parser);
 		
 		///<summary type="String">The wipoeut html attribute to use. If null, use "name"</summary>
 		this.action = action;

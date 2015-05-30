@@ -27,13 +27,5 @@ Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 		return !!op;
 	};
 	
-	// override
-	viewModelPropertyValue.prototype.getValue = function() {
-        ///<summary>Get the value</summary>
-        ///<returns type="String">The value</returns>
-		
-        return this._super().serializeContent();
-    };
-	
 	return viewModelPropertyValue;
 });
