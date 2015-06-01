@@ -7,10 +7,18 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		viewModel[setter.name] = new setter._value.constructor();
+        if (!setter._value.$cachedVmContructor) {
+            var vm = wipeout.utils.viewModels.getViewModelConstructor(setter._value);
+            if (!vm)
+                throw "Invalid view model name \"" + wipeout.utils.viewModels.getElementName(setter._value) + "\".";
+            
+            setter._value.$cachedVmContructor = vm.constructor;
+        }
+        
+		viewModel[setter.name] = new setter._value.$cachedVmContructor();
 
 		var output = new busybody.disposable(wipeout.template.engine.instance
-			.getVmInitializer(setter._value.xml)
+			.getVmInitializer(setter._value)
 			.initialize(viewModel[setter.name], renderContext));
 		
 		if (viewModel[setter.name].dispose instanceof Function)

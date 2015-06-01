@@ -30,7 +30,7 @@ Class("wipeout.viewModels.list", function () {
         this.observe("itemTemplateId", function (oldVal, newVal) {
 			enumerateArr(this.getItemViewModels(), function (vm) {
 				if (vm.__createdBylist)
-					vm.templateId = newVal;
+					vm.synchronusTemplateChange(newVal);
 			});
         }, {context: this});
     });

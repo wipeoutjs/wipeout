@@ -7,7 +7,7 @@ module("integration: wipeout.template.propertyValue", {
 
 test("prime and watch: computed", function() {
 	// arrange
-	var subject = new wipeout.template.propertyValue("hello", "$this.value || 555");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$this.value || 555"));
 	var model = busybody.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
@@ -47,7 +47,7 @@ test("prime and watch: computed", function() {
 
 test("prime and watch: pathObserver", function() {
 	// arrange
-	var subject = new wipeout.template.propertyValue("hello", "$this.value");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$this.value"));
 	var model = busybody.makeObservable({value: 666});
 	var assert = {
 		assert: function (oldVal, newVal) {
@@ -88,7 +88,7 @@ test("prime and watch: pathObserver", function() {
 test("execute, $context", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$context");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$context"));
 	
 	// act
 	// assert
@@ -100,7 +100,7 @@ test("execute, $context", function() {
 test("execute, $this", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$this");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$this"));
 	
 	// act
 	// assert
@@ -113,7 +113,7 @@ test("execute, $this", function() {
 test("execute, $this", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$this");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$this"));
 	
 	// act
 	// assert
@@ -126,7 +126,7 @@ test("execute, $this", function() {
 test("execute, $parents", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$parents");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$parents"));
 	
 	// act
 	// assert
@@ -139,7 +139,7 @@ test("execute, $parents", function() {
 test("execute, $index", function() {
 	// arrange
 	var context = new wipeout.template.context({}).contextFor({}, 333);
-	var subject = new wipeout.template.propertyValue("hello", "$index");
+	var subject = new wipeout.template.propertyValue("hello", new wipeout.wml.wmlAttribute("$index"));
 	
 	// act
 	// assert

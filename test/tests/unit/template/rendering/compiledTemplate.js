@@ -64,7 +64,7 @@ testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, s
     strictEqual(subject.html[2].length, 1);
     strictEqual(subject.html[2][0].constructor, wipeout.template.rendering.htmlPropertyValue);
     strictEqual(subject.html[2][0].name, "wo-render");
-    strictEqual(subject.html[2][0]._value, inner);
+    strictEqual(subject.html[2][0]._value.serializeContent(), inner);
     strictEqual(subject.html[3], ' type="placeholder"></script>');
     strictEqual(subject.html[4], after);
 });
@@ -72,7 +72,7 @@ testUtils.testWithUtils("addTextNode", null, false, function(methods, classes, s
 testUtils.testWithUtils("addViewModel", null, false, function(methods, classes, subject, invoker) {
     // arrange
     subject.html = [];
-    var input = {};
+    var input = new wipeout.wml.wmlAttribute("asd");
     
     // act
     invoker(input);
@@ -101,7 +101,7 @@ testUtils.testWithUtils("addAttributes", "regular attribute", false, function(me
 
 testUtils.testWithUtils("addAttributes", "special attribute", false, function(methods, classes, subject, invoker) {
     // arrange
-    var name = "KJBKJB", val = {value:{}};
+    var name = "KJBKJB", val = new wipeout.wml.wmlAttribute({});
     subject.html = [];
     
     classes.mock("wipeout.template.rendering.htmlAttributes." + name, {});
@@ -113,7 +113,7 @@ testUtils.testWithUtils("addAttributes", "special attribute", false, function(me
     strictEqual(subject.html.length, 1);
     strictEqual(subject.html[0][0].constructor, wipeout.template.rendering.htmlPropertyValue);
     strictEqual(subject.html[0][0].name, name);
-    strictEqual(subject.html[0][0]._value, val.value);
+    strictEqual(subject.html[0][0]._value.serializeContent(), val.value);
 });
 
 testUtils.testWithUtils("addElement", "inline", false, function(methods, classes, subject, invoker) {

@@ -125,8 +125,8 @@ testUtils.testWithUtils("addElement", "no parser, element setter", false, functi
 	
 	classes.mock("wipeout.template.initialization.compiledInitializer.createPropertyValue", function () {
 		strictEqual(arguments[0], element.name);
-		strictEqual(arguments[1].xml, element[0]);
-		strictEqual(arguments[1].constructor, Array);
+		strictEqual(arguments[1], element[0]);
+		strictEqual(arguments[1].$cachedVmContructor, Array);
 		strictEqual(arguments[2][0], "templateElementSetter");
 		
 		return setter = {};

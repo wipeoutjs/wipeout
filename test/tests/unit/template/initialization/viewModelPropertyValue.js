@@ -6,20 +6,6 @@ module("wipeout.template.initialization.viewModelPropertyValue", {
     }
 });
 
-testUtils.testWithUtils("getValue", "no val", false, function(methods, classes, subject, invoker) {
-    // arrange
-	var val = "KJBKJBKJBKJBJ";
-	subject._super = function () {
-		return {
-			serializeContent: methods.method([], val)
-		};
-	};
-    
-	// act
-    // assert
-    strictEqual(invoker(), val);
-});
-
 testUtils.testWithUtils("onPropertyChanged", "no val", false, function(methods, classes, subject, invoker) {
     // arrange
 	subject.propertyOwner = {aaa:{}};

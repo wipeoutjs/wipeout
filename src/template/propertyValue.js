@@ -6,7 +6,7 @@ Class("wipeout.template.propertyValue", function () {
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
         ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
-		
+        
 		this._super();
 	
 		///<summary type="String">The name of the property</summary>
@@ -36,10 +36,10 @@ Class("wipeout.template.propertyValue", function () {
         return useUnAltered ?
             (this.hasOwnProperty("_unAlteredCachedValue") ?
                 this._unAlteredCachedValue : 
-                (this._unAlteredCachedValue = this.getValue())) :
+                (this._unAlteredCachedValue = this._value.serializeContent())) :
             (this.hasOwnProperty("_cachedValue") ?
                 this._cachedValue : 
-                (this._cachedValue = propertyValue.replace$model(this.getValue())));
+                (this._cachedValue = propertyValue.replace$model(this._value.serializeContent())));
 	};
     
     propertyValue.replace$model = function (input) {
@@ -72,14 +72,6 @@ Class("wipeout.template.propertyValue", function () {
         
         return input.addTokens(input.output);
     };
-	
-	// virtual
-	propertyValue.prototype.getValue = function () {
-		///<summary>Get the value</summary>
-        ///<returns type="String">The value</returns>
-		
-		return this._value;
-	};
 	
     //TODO: rename. Too close to getter(...)
 	propertyValue.prototype.buildGetter = function () {

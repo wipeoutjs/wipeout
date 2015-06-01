@@ -146,12 +146,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 				}
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser, attr));
+					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser)) :
-						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser)) :
+						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser));
 				}
             } else {
                 // add non special attribute

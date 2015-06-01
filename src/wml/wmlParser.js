@@ -139,7 +139,7 @@ Class("wipeout.wml.wmlParser", function () {
 
 		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
 			if (!/^(data\-)?wo\-el$/.test(htmlElement.attributes[i].name))
-				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
+				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value, output);
 
 		return output;
 	};

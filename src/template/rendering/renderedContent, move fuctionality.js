@@ -1,6 +1,7 @@
 
 (function () {
     
+    //TODO: Document fragments
 	var renderedContent = wipeout.template.rendering.renderedContent;
 	
 	function getNodesAndRemoveDetatched(renderedContentOrHtml) {
@@ -11,86 +12,50 @@
 				(renderedContentOrHtml instanceof Array ? renderedContentOrHtml : [renderedContentOrHtml]);
 		} finally {
 			if (renderedContentOrHtml instanceof renderedContent)
-				delete renderedContentOrHtml.detatched;
+				renderedContentOrHtml.detatched = null;
 		}
 	}
     
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.prepend = function (content) {
 		///<summary>Prepend content to the renderedContent</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
-              
-		content = getNodesAndRemoveDetatched(content);
-		
-		content.push(this.openingTag.nextSibling || this.closingTag);
-		
-		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+        
+        this.helper.prepend(this, getNodesAndRemoveDetatched(content));
     };
     
-	/* this is not needed or tested
-    renderedContent.prototype.append = function (content) {
-              
-		var nodes = getNodesAndRemoveDetatched(content);
-		
-		var closing = this.closingTag;
-		enumerateArr(nodes, function (node) {
-			closing.parentNode.insertBefore(node, closing);
-		});
-    };*/
-    
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.insertBefore = function (content) {
 		///<summary>Insert content before this</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
 		
-		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
-			this.parentNode.insertBefore(node, this);
-		}, this.openingTag);
+        this.helper.insertBefore(this, getNodesAndRemoveDetatched(content));
     };
     
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.insertAfter = function (content) {
 		///<summary>Insert content after this</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
-              
-		content = getNodesAndRemoveDetatched(content);
-		
-		if (this.closingTag.nextSibling)
-			this.closingTag.parentNode.insertBefore(content[content.length - 1], this.closingTag.nextSibling);
-		else
-			this.closingTag.parentNode.appendChild(content[content.length - 1]);
-		
-		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+        
+        this.helper.insertAfter(this, getNodesAndRemoveDetatched(content));
     };
     
     renderedContent.prototype.detatch = function() {
 		///<summary>This renderedContent and all of it's html from the DOM</summary>
         ///<returns type="Array" generic0="Element">The html</returns>
 		
-		if (!this.detatched) {		
-			var current = this.openingTag;
-			this.detatched = [this.openingTag];
-
-			for (var i = 0; current && current !== this.closingTag; i++) {
-				this.detatched.push(current = current.nextSibling); 
-				this.detatched[i].parentNode.removeChild(this.detatched[i]);
-			}
-		}
+		if (!this.detatched)
+            this.detatched = this.helper.detatch(this);
         
         return this.detatched.slice();
     };
-    
+        
     renderedContent.prototype.allHtml = function() {
 		///<summary>Get all of the html for this</summary>
         ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (this.detatched) return this.detatch();
 		
-        var output = [this.openingTag], current = this.openingTag;
-        
-        while (current && current !== this.closingTag) {
-            output.push(current = current.nextSibling); 
-        }
-        
-        return output;
+        return this.helper.allHtml(this);
     };
 }());
