@@ -1,4 +1,4 @@
-// wipeout v2.0.0
+// wipeout v2.1.0
 // (c) Shane Connon 2015
 // http://www.opensource.org/licenses/mit-license.php
 (function () {
@@ -3714,10 +3714,8 @@ Class("wipeout.template.initialization.compiledInitializer", function () {
 					if (!vm)
 						throw "Cannot create an instance of element: \"" + element[i].name + "\"";
 					
-                    this.setters[name] = compiledInitializer.createPropertyValue(name, {
-						xml: element[i],
-						constructor: vm.constructor
-                    }, ["templateElementSetter"]);
+                    element[i].$cachedVmContructor = vm.constructor;
+                    this.setters[name] = compiledInitializer.createPropertyValue(name, element[i], ["templateElementSetter"]);
 
                     return;
                 }
@@ -4278,42 +4276,38 @@ Class("wipeout.viewModels.view", function () {
 
 Class("wipeout.template.rendering.renderedContent", function () {
     
-    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext) {
+    var commentHelper, elementHelper;
+    var renderedContent = busybody.disposable.extend(function renderedContent (element, name, parentRenderContext, useElement) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="name" type="String">The content of the rendered comment tags</param>
+        ///<param name="useElement" type="Boolean" optional="true">Default: false. If true, will use the element as wipeout opening and closing tags</param>
         ///<param name="parentRenderContext" type="wipeout.template.context" optional="true">The render context of the parent view model</param>
                         
 		this._super();
 		
         name = wipeout.utils.obj.trim(name);
-        
         this.parentRenderContext = parentRenderContext;
-        
-        //issue-#38
-        //this.openingTag = document.createElement("script");
 		
-        // create opening and closing tags and link to this
-		///<summary type="Comment">The opening tag</summary>
-        this.openingTag = document.createComment(" " + name + " ");
+        if (useElement) {
+            this.helper = elementHelper || (elementHelper = new wipeout.template.rendering.renderedContentElementHelper());
+        } else {
+            this.helper = commentHelper || (commentHelper = new wipeout.template.rendering.renderedContentCommentHelper());
+        }
+        
+        var init = this.helper.init(this, element, name);
+        
+        this.openingTag = init.opening;
         this.openingTag.wipeoutOpening = this;
-		
-		///<summary type="Comment">The closing tag</summary>
-        this.closingTag = document.createComment(" /" + name + " ");
+        this.closingTag = init.closing;
         this.closingTag.wipeoutClosing = this;
-        
-        // add this to DOM and remove placeholder
-        element.parentNode.insertBefore(this.openingTag, element);
-        element.parentNode.insertBefore(this.closingTag, element);
-        element.parentNode.removeChild(element);
     });
-	
+    	
 	renderedContent.prototype.rename = function (name) {
 		///<summary>Rename the opeining and closing tags</summary>
         ///<param name="name" type="String">The new name</param>
 		
-		this.openingTag.nodeValue = " " + name + " ";
-		this.closingTag.nodeValue = " /" + name + " ";
+        this.helper.rename(this, name);
 	};
 	    
     renderedContent.prototype.renderArray = function (array) {
@@ -4428,16 +4422,8 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
 		//issue-#39
         // remove all children
-        if(!leaveDeadChildNodes) {
-			var ns;
-            while ((ns = this.openingTag.nextSibling) && ns !== this.closingTag) {
-				//issue-#40
-				if (ns.elementType === 1)
-					ns.innerHTML = "";
-				
-                ns.parentNode.removeChild(this.openingTag.nextSibling);
-			}
-		}
+        if(!leaveDeadChildNodes)
+            this.helper.empty(this);
     };
     
     renderedContent.prototype.template = function(templateId) {
@@ -4491,32 +4477,23 @@ Class("wipeout.template.rendering.renderedContent", function () {
         this.unRender(leaveDeadChildNodes);
         
         if (!leaveDeadChildNodes && !this.detatched) {
-			this.closingTag.parentNode.removeChild(this.closingTag);
-			this.openingTag.parentNode.removeChild(this.openingTag);
+            this.helper.disposeOf(this);
 		}
 		
-		delete this.detatched;
+		this.detatched = null;
 		
-		delete this.closingTag.wipeoutClosing;
-		delete this.openingTag.wipeoutOpening;
+		this.closingTag.wipeoutClosing = null;
+		this.openingTag.wipeoutOpening = null;
 		
-		delete this.closingTag;
-		delete this.openingTag;
+		this.closingTag = null;
+		this.openingTag = null;
     };
 	
     renderedContent.prototype.appendHtml = function (html) {
 		///<summary>Append a html string to this renderContext</summary>
         ///<param name="html" type="String">The current html</param>
 		
-		if (this.openingTag && this.openingTag.nodeType === 1) {
-			this.openingTag.insertAdjacentHTML('afterend', html);
-		} else {
-        	//issue-#38
-			var scr = document.createElement("script");
-			this.closingTag.parentNode.insertBefore(scr, this.closingTag);
-			scr.insertAdjacentHTML('afterend', html);
-			scr.parentNode.removeChild(scr);
-		}
+        this.helper.appendHtml(this, html);
     };
     
     renderedContent.getParentElement = function(forHtmlElement) {
@@ -4526,16 +4503,118 @@ Class("wipeout.template.rendering.renderedContent", function () {
 		
         var current = forHtmlElement.wipeoutClosing ? forHtmlElement.wipeoutClosing.openingTag : forHtmlElement;
         while (current = current.previousSibling) {
-            if (current.wipeoutClosing)
-                current = current.wipeoutClosing.openingTag;
-            else if (current.wipeoutOpening)
+            if (current.wipeoutOpening)
                 return current;
+            else if (current.wipeoutClosing)
+                current = current.wipeoutClosing.openingTag;
         }
         
         return forHtmlElement.parentNode;
     };
     
     return renderedContent;    
+});
+
+Class("wipeout.template.rendering.renderedContentHelperBase", function () {
+    
+    var helperBase = orienteer.extend(function renderedContentHelperBase() {
+		///<summary>Base object which alters the html of a renderedContent</summary>
+        
+        this._super();
+        
+        if (this.constructor === helperBase)
+            throw "Abstract classes must be overridden.";
+    });
+    
+    helperBase.prototype.init = function (renderedContent, element, name) {
+		///<summary>Create html tags fot a rendered content and append them to the DOM</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="element" type="Element">The initial tag</param>
+        ///<param name="name" type="String">The name of the view model</param>
+        ///<returns type="Object">The opening and closing tags</returns>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.rename = function (renderedContent, name) {
+		///<summary>Rename a rendered content's tags</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="name" type="String">The new name of the view model</param>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.empty = function (renderedContent) {
+		///<summary>Empty the contents of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.disposeOf = function (renderedContent) {
+		///<summary>Dispose of the html for a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.appendHtml = function (renderedContent, html) {
+		///<summary>Append html to a rendered content</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="html" type="String">The html</param>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.prepend = function (renderedContent, content) {
+		///<summary>Prepend content to a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to prepend the content to</param>
+        ///<param name="content" type="[Element]">The content to insert</param>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.insertBefore = function (renderedContent, content) {
+		///<summary>Insert content before the renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to insert the content before</param>
+        ///<param name="content" type="[Element]">The content to insert</param>
+		
+		enumerateArr(content, function (node) {
+			this.parentNode.insertBefore(node, this);
+		}, renderedContent.openingTag);
+    };
+    
+    helperBase.prototype.insertAfter = function (renderedContent, content) {
+		///<summary>Insert content the renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to insert the content after</param>
+        ///<param name="content" type="[Element]">The content to append</param>
+		
+		if (renderedContent.closingTag.nextSibling)
+			renderedContent.closingTag.parentNode.insertBefore(content[content.length - 1], renderedContent.closingTag.nextSibling);
+		else
+			renderedContent.closingTag.parentNode.appendChild(content[content.length - 1]);
+		
+		for (var i = content.length - 2; i >= 0; i--)
+			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+    };
+    
+    helperBase.prototype.detatch = function (renderedContent) {
+		///<summary>Detatch all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    helperBase.prototype.allHtml = function (renderedContent) {
+		///<summary>Return all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        throw "Abstract methods must be overridden";
+    };
+    
+    return helperBase;
 });
 
 
@@ -4546,7 +4625,7 @@ Class("wipeout.template.propertyValue", function () {
         ///<param name="name" type="String">The name of the item to set</param>
         ///<param name="value" type="String">The value to set it at (before parsing and renderContext are applied)</param>
         ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
-		
+        
 		this._super();
 	
 		///<summary type="String">The name of the property</summary>
@@ -4576,10 +4655,10 @@ Class("wipeout.template.propertyValue", function () {
         return useUnAltered ?
             (this.hasOwnProperty("_unAlteredCachedValue") ?
                 this._unAlteredCachedValue : 
-                (this._unAlteredCachedValue = this.getValue())) :
+                (this._unAlteredCachedValue = this._value.serializeContent())) :
             (this.hasOwnProperty("_cachedValue") ?
                 this._cachedValue : 
-                (this._cachedValue = propertyValue.replace$model(this.getValue())));
+                (this._cachedValue = propertyValue.replace$model(this._value.serializeContent())));
 	};
     
     propertyValue.replace$model = function (input) {
@@ -4612,14 +4691,6 @@ Class("wipeout.template.propertyValue", function () {
         
         return input.addTokens(input.output);
     };
-	
-	// virtual
-	propertyValue.prototype.getValue = function () {
-		///<summary>Get the value</summary>
-        ///<returns type="String">The value</returns>
-		
-		return this._value;
-	};
 	
     //TODO: rename. Too close to getter(...)
 	propertyValue.prototype.buildGetter = function () {
@@ -5133,10 +5204,18 @@ Class("wipeout.htmlBindingTypes.templateElementSetter", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		viewModel[setter.name] = new setter._value.constructor();
+        if (!setter._value.$cachedVmContructor) {
+            var vm = wipeout.utils.viewModels.getViewModelConstructor(setter._value);
+            if (!vm)
+                throw "Invalid view model name \"" + wipeout.utils.viewModels.getElementName(setter._value) + "\".";
+            
+            setter._value.$cachedVmContructor = vm.constructor;
+        }
+        
+		viewModel[setter.name] = new setter._value.$cachedVmContructor();
 
 		var output = new busybody.disposable(wipeout.template.engine.instance
-			.getVmInitializer(setter._value.xml)
+			.getVmInitializer(setter._value)
 			.initialize(viewModel[setter.name], renderContext));
 		
 		if (viewModel[setter.name].dispose instanceof Function)
@@ -5815,14 +5894,6 @@ Class("wipeout.template.initialization.viewModelPropertyValue", function () {
 		return !!op;
 	};
 	
-	// override
-	viewModelPropertyValue.prototype.getValue = function() {
-        ///<summary>Get the value</summary>
-        ///<returns type="String">The value</returns>
-		
-        return this._super().serializeContent();
-    };
-	
 	return viewModelPropertyValue;
 });
 
@@ -5958,6 +6029,10 @@ Class("wipeout.template.rendering.builder", function () {
         enumerateArr(this.elements, function(elementAction) {
             // get the element
             var element = document.getElementById(elementAction.id);
+            
+            // the element may have been removed by something which controls it's parent element
+            if (!element) return;
+            
             element.removeAttribute("id");
             
             // run all actions on it
@@ -6124,12 +6199,12 @@ Class("wipeout.template.rendering.compiledTemplate", function () {
 				}
 				
 				if (attr !== name) {
-					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser, attr));
+					modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser, attr));
 				} else {
 					// ensure the "id" modification is the first to be done
 					name === "id" ?
-						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser)) :
-						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute.value, parser));
+						modifications.splice(0, 0, new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser)) :
+						modifications.push(new wipeout.template.rendering.htmlPropertyValue(name, attribute, parser));
 				}
             } else {
                 // add non special attribute
@@ -6461,6 +6536,44 @@ enumerateArr(["blur", "change", "click", "focus", "keydown", "keypress", "keyup"
 });
 
 
+HtmlAttr("foreach", function () {
+	
+	//TODE
+	return function foreach (element, attribute, renderContext) {
+        ///<summary>If the value is true, render the content, otherwise render nothing</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
+        
+        var template = attribute._value.getParentElement();
+        if (!template) {
+            element.innerHTML = "";
+            return;
+        }
+        
+        element.setAttribute("data-wo-el", "wo.list");
+        var content = new wipeout.template.rendering.viewModelElement(element, null, renderContext, true);
+        
+        content.createdViewModel.itemTemplateId = wipeout.viewModels.content.createAnonymousTemplate(template);
+        
+        var disp;
+        attribute.watch(function (oldVal, newVal) {
+            if (oldVal !== newVal) {
+                if (disp)
+                    content.disposeOf(disp);
+                
+                disp = busybody.tryBindArrays(newVal, content.createdViewModel.items, true);
+                if (disp)
+                    disp = content.registerDisposable(disp);
+            }
+        }, true);
+        
+        return content;
+    }
+});
+
+
 Class("wipeout.template.rendering.htmlAttributes.id", function () {
 	
 	//TODE
@@ -6485,6 +6598,36 @@ Class("wipeout.template.rendering.htmlAttributes.id", function () {
 });
 
 
+HtmlAttr("if", function () {
+	
+	//TODE
+	return function _if (element, attribute, renderContext) {
+        ///<summary>If the value is true, render the content, otherwise render nothing</summary>
+        ///<param name="element" type="Element">The element</param>
+        ///<param name="attribute" type="wipeout.template.rendering.htmlPropertyValue">The setter object</param>
+        ///<param name="renderContext" type="wipeout.template.context">The current context</param>
+        ///<returns type="Function">A dispose function</returns>
+        
+        var template = attribute._value.getParentElement();
+        if (!template) {
+            element.innerHTML = "";
+            return;
+        }
+        
+        element.setAttribute("data-wo-el", "wo.if");
+        var content = new wipeout.template.rendering.viewModelElement(element, null, renderContext, true);
+        
+        content.createdViewModel.ifTrueId = wipeout.viewModels.content.createAnonymousTemplate(template);
+        attribute.watch(function (oldValue, newValue) {
+            content.createdViewModel.condition = newValue;
+            content.createdViewModel.reEvaluate();
+        }, true);
+        
+        return content;
+    }
+});
+
+
 HtmlAttr("render", function () {
 	
 	//TODE
@@ -6495,12 +6638,8 @@ HtmlAttr("render", function () {
         ///<param name="renderContext" type="wipeout.template.context">The current context</param>
         ///<returns type="Function">A dispose function</returns>
 		
-		if (element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script") {
-			element.innerHTML = '<script type="placeholder"></script>';
-			return render(element.firstChild, attribute, renderContext);
-		}
 		
-        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext);
+        var htmlContent = new wipeout.template.rendering.renderedContent(element, attribute.value(), renderContext, element.nodeType === 1 && wipeout.utils.viewModels.getElementName(element) !== "script");
 		
 		attribute.watch(function (oldVal, newVal) {
             htmlContent.render(newVal);
@@ -6710,7 +6849,7 @@ Class("wipeout.template.rendering.htmlPropertyValue", function () {
         ///<param name="parser" type="String|Function" optional="true">The parser or a pointer to it</param>
         ///<param name="action" type="String" optional="true">The wipoeut html attribute to use. If null, use "name"</param>
 		
-		this._super(name, value, parser);
+		this._super(name, typeof value === "string" ? new wipeout.wml.wmlAttribute(value) : value, parser);
 		
 		///<summary type="String">The wipoeut html attribute to use. If null, use "name"</summary>
 		this.action = action;
@@ -6985,6 +7124,7 @@ Class("wipeout.template.rendering.renderedArray", function () {
 
 (function () {
     
+    //TODO: Document fragments
 	var renderedContent = wipeout.template.rendering.renderedContent;
 	
 	function getNodesAndRemoveDetatched(renderedContentOrHtml) {
@@ -6995,94 +7135,273 @@ Class("wipeout.template.rendering.renderedArray", function () {
 				(renderedContentOrHtml instanceof Array ? renderedContentOrHtml : [renderedContentOrHtml]);
 		} finally {
 			if (renderedContentOrHtml instanceof renderedContent)
-				delete renderedContentOrHtml.detatched;
+				renderedContentOrHtml.detatched = null;
 		}
 	}
     
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.prepend = function (content) {
 		///<summary>Prepend content to the renderedContent</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
-              
-		content = getNodesAndRemoveDetatched(content);
-		
-		content.push(this.openingTag.nextSibling || this.closingTag);
-		
-		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+        
+        this.helper.prepend(this, getNodesAndRemoveDetatched(content));
     };
     
-	/* this is not needed or tested
-    renderedContent.prototype.append = function (content) {
-              
-		var nodes = getNodesAndRemoveDetatched(content);
-		
-		var closing = this.closingTag;
-		enumerateArr(nodes, function (node) {
-			closing.parentNode.insertBefore(node, closing);
-		});
-    };*/
-    
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.insertBefore = function (content) {
 		///<summary>Insert content before this</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
 		
-		enumerateArr(getNodesAndRemoveDetatched(content), function (node) {
-			this.parentNode.insertBefore(node, this);
-		}, this.openingTag);
+        this.helper.insertBefore(this, getNodesAndRemoveDetatched(content));
     };
     
+    //TODO: move rendered content also, so that disposing of this also disposes of that
     renderedContent.prototype.insertAfter = function (content) {
 		///<summary>Insert content after this</summary>
         ///<param name="content" type="wipeout.template.rendering.renderedContent|Element|[Element]">The content to append</param>
-              
-		content = getNodesAndRemoveDetatched(content);
-		
-		if (this.closingTag.nextSibling)
-			this.closingTag.parentNode.insertBefore(content[content.length - 1], this.closingTag.nextSibling);
-		else
-			this.closingTag.parentNode.appendChild(content[content.length - 1]);
-		
-		for (var i = content.length - 2; i >= 0; i--)
-			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+        
+        this.helper.insertAfter(this, getNodesAndRemoveDetatched(content));
     };
     
     renderedContent.prototype.detatch = function() {
 		///<summary>This renderedContent and all of it's html from the DOM</summary>
         ///<returns type="Array" generic0="Element">The html</returns>
 		
-		if (!this.detatched) {		
-			var current = this.openingTag;
-			this.detatched = [this.openingTag];
-
-			for (var i = 0; current && current !== this.closingTag; i++) {
-				this.detatched.push(current = current.nextSibling); 
-				this.detatched[i].parentNode.removeChild(this.detatched[i]);
-			}
-		}
+		if (!this.detatched)
+            this.detatched = this.helper.detatch(this);
         
         return this.detatched.slice();
     };
-    
+        
     renderedContent.prototype.allHtml = function() {
 		///<summary>Get all of the html for this</summary>
         ///<returns type="Array" generic0="Element">The html</returns>
 		
 		if (this.detatched) return this.detatch();
 		
-        var output = [this.openingTag], current = this.openingTag;
-        
-        while (current && current !== this.closingTag) {
-            output.push(current = current.nextSibling); 
-        }
-        
-        return output;
+        return this.helper.allHtml(this);
     };
 }());
+
+Class("wipeout.template.rendering.renderedContentCommentHelper", function () {
+    
+    var commentHelper = wipeout.template.rendering.renderedContentHelperBase.extend(function renderedContentCommentHelper() {
+		///<summary>Alter the html of a renderedContent who's root elements are comments</summary>
+        
+        this._super();
+    });
+    
+    commentHelper.prototype.init = function (renderedContent, element, name) {
+		///<summary>Create html tags fot a rendered content and append them to the DOM</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="element" type="Element">The initial tag</param>
+        ///<param name="name" type="String">The name of the view model</param>
+        ///<returns type="Object">The opening and closing tags</returns>
+        
+        //issue-#38
+        //var closingTag = document.createElement("script");
+        
+        // create opening and closing tags and link to renderedContent
+        var openingTag = document.createComment(" " + name + " ");
+        var closingTag = document.createComment(" /" + name + " ");
+
+        // add renderedContent to DOM and remove placeholder
+        element.parentNode.insertBefore(openingTag, element);
+        element.parentNode.insertBefore(closingTag, element);
+        element.parentNode.removeChild(element);
+        
+        return {
+            opening: openingTag,
+            closing: closingTag
+        };
+    };
+    
+    commentHelper.prototype.rename = function (renderedContent, name) {
+		///<summary>Rename a rendered content's tags</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="name" type="String">The new name of the view model</param>
+        
+		renderedContent.openingTag.nodeValue = " " + name + " ";
+		renderedContent.closingTag.nodeValue = " /" + name + " ";
+    };
+    
+    commentHelper.prototype.empty = function (renderedContent) {
+		///<summary>Empty the contents of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        var ns;
+        while ((ns = renderedContent.openingTag.nextSibling) && ns !== renderedContent.closingTag) {
+            //issue-#40
+            if (ns.elementType === 1)
+                ns.innerHTML = "";
+
+            ns.parentNode.removeChild(renderedContent.openingTag.nextSibling);
+        }
+    };
+    
+    commentHelper.prototype.disposeOf = function (renderedContent) {
+		///<summary>Dispose of the html for a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        this.empty(renderedContent);
+        renderedContent.closingTag.parentNode.removeChild(renderedContent.closingTag);
+        renderedContent.openingTag.parentNode.removeChild(renderedContent.openingTag);
+    };
+    
+    commentHelper.prototype.appendHtml = function (renderedContent, html) {
+		///<summary>Append html to a rendered content</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="html" type="String">The html</param>
+        
+		if (renderedContent.openingTag && renderedContent.openingTag.nodeType === 1) {
+			renderedContent.openingTag.insertAdjacentHTML('afterend', html);
+		} else {
+        	//issue-#38
+			var scr = document.createElement("script");
+			renderedContent.closingTag.parentNode.insertBefore(scr, renderedContent.closingTag);
+			scr.insertAdjacentHTML('afterend', html);
+			scr.parentNode.removeChild(scr);
+		}
+    };
+    
+    commentHelper.prototype.prepend = function (renderedContent, content) {
+		///<summary>Prepend content to a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to prepend the content to</param>
+        ///<param name="content" type="[Element]">The content to insert</param>
+        
+		content.push(renderedContent.openingTag.nextSibling || renderedContent.closingTag);
+		
+		for (var i = content.length - 2; i >= 0; i--)
+			content[i + 1].parentNode.insertBefore(content[i], content[i + 1]);
+    };
+    
+    commentHelper.prototype.detatch = function (renderedContent) {
+		///<summary>Detatch all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        var current = renderedContent.openingTag;
+        var detatched = [renderedContent.openingTag];
+
+        for (var i = 0; current && current !== renderedContent.closingTag; i++) {
+            detatched.push(current = current.nextSibling); 
+            detatched[i].parentNode.removeChild(detatched[i]);
+        }
+        
+        detatched[i].parentNode.removeChild(detatched[i]);
+        return detatched;
+    };
+    
+    commentHelper.prototype.allHtml = function (renderedContent) {
+		///<summary>Return all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        var output = [renderedContent.openingTag], current = renderedContent.openingTag;
+
+        while (current && current !== renderedContent.closingTag) {
+            output.push(current = current.nextSibling); 
+        }
+
+        return output;
+    };
+    
+    return commentHelper;
+});
+
+Class("wipeout.template.rendering.renderedContentElementHelper", function () {
+    
+    var elementHelper = wipeout.template.rendering.renderedContentHelperBase.extend(function renderedContentElementHelper() {
+		///<summary>Base object which alters the html of a renderedContent</summary>
+        
+        this._super();
+    });
+    
+    elementHelper.prototype.init = function (renderedContent, element, name) {
+		///<summary>Create html tags fot a rendered content and append them to the DOM</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="element" type="Element">The initial tag</param>
+        ///<param name="name" type="String">The name of the view model</param>
+        ///<returns type="Object">The opening and closing tags</returns>
+        
+        element.setAttribute("data-wo-view-model", name);
+        return {
+            opening: element,
+            closing: element
+        };
+    };
+    
+    elementHelper.prototype.rename = function (renderedContent, name) {
+		///<summary>Rename a rendered content's tags</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="name" type="String">The new name of the view model</param>
+        
+		renderedContent.openingTag.setAttribute("data-wo-view-model", name);
+    };
+    
+    elementHelper.prototype.empty = function (renderedContent) {
+		///<summary>Empty the contents of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        renderedContent.openingTag.innerHTML = "";
+    };
+    
+    elementHelper.prototype.disposeOf = function (renderedContent) {
+		///<summary>Dispose of the html for a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        
+        this.empty(renderedContent);
+        renderedContent.openingTag.removeAttribute("data-wo-view-model");
+    };
+    
+    elementHelper.prototype.appendHtml = function (renderedContent, html) {
+		///<summary>Append html to a rendered content</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<param name="html" type="String">The html</param>
+        
+        renderedContent.openingTag.insertAdjacentHTML("beforeend", html);
+    };
+    
+    elementHelper.prototype.prepend = function (renderedContent, content) {
+		///<summary>Prepend content to a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content to prepend the content to</param>
+        ///<param name="content" type="[Element]">The content to insert</param>
+        
+        var firstChild;
+        if (firstChild = renderedContent.openingTag.firstChild)
+            enumerateArr(content, function (node) {
+                renderedContent.openingTag.insertBefore(node, firstChild);
+            });
+        else
+            enumerateArr(content, function (node) {
+                renderedContent.openingTag.appendChild(node);
+            });
+    };
+    
+    elementHelper.prototype.detatch = function (renderedContent) {
+		///<summary>Detatch all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        renderedContent.openingTag.parentNode.removeChild(renderedContent.openingTag);
+        return [renderedContent.openingTag];
+    };
+    
+    elementHelper.prototype.allHtml = function (renderedContent) {
+		///<summary>Return all of the content of a renderedContent</summary>
+        ///<param name="renderedContent" type="wipeout.template.rendering.renderedContent">The render content</param>
+        ///<returns type="[Element]">The content</returns>
+        
+        return [renderedContent.openingTag];
+    };
+    
+    return elementHelper;
+});
 
 
 Class("wipeout.template.rendering.viewModelElement", function () {
     
-    var viewModelElement = wipeout.template.rendering.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext) {
+    var viewModelElement = wipeout.template.rendering.renderedContent.extend(function viewModelElement (element, xmlOverride, parentRenderContext, useElement) {
         ///<summary>The begin and end comment tags which surround and render a view model</summary>
         ///<param name="element" type="Element">The html element to replace with the view model</param>
         ///<param name="xmlOverride" type="wipeout.wml.wmlElement" optional="true">If set, will use this xml to initialize the view model. If not will parse and use the element property</param>
@@ -7093,7 +7412,7 @@ Class("wipeout.template.rendering.viewModelElement", function () {
         if(!vm)
             throw "Invalid view model";
         
-        this._super(element, wipeout.utils.obj.trim(vm.name), parentRenderContext);
+        this._super(element, wipeout.utils.obj.trim(vm.name), parentRenderContext, useElement);
         
         // create actual view model
         this.createdViewModel = new vm.constructor();
@@ -8013,7 +8332,7 @@ function viewModel (name, extend, doNotWarn) {
 			if (parsers[propertyName])
 				throw "A parser has already been set for this object";
 
-			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain.apply(extend);
+			inheritanceTree = inheritanceTree || orienteer.getInheritanceChain(extend);
 			if (inheritanceTree.indexOf(wipeout.base.bindable) === -1)
 				throw "You must inherit from wipeout.base.bindable to use global parsers. Alternatively you can inherit from any view model, such as wo.view, wo.content, wo.list etc...";
 
@@ -8347,7 +8666,7 @@ Class("wipeout.viewModels.list", function () {
         this.observe("itemTemplateId", function (oldVal, newVal) {
 			enumerateArr(this.getItemViewModels(), function (vm) {
 				if (vm.__createdBylist)
-					vm.templateId = newVal;
+					vm.synchronusTemplateChange(newVal);
 			});
         }, {context: this});
     });
@@ -8662,15 +8981,19 @@ Class("wipeout.wml.wmlElement", function () {
 
 Class("wipeout.wml.wmlAttribute", function () {
     
-    function wmlAttribute(value) {
+    function wmlAttribute(value, parent) {
         ///<summary>An attribute</summary>
         ///<param name="value" type="String">The attribute value</param>
+        ///<param name="parent" type="wipeout.wml.wmlElement" optional="true">The parent element</param>
 		
         ///<summary type="String">The value</summary>
         this.value = value;
 		
         ///<summary type="Number">2</summary>
         this.nodeType = 2;
+		
+        ///<summary type="wipeout.wml.wmlElement">The parent element</summary>
+        this._parentElement = parent;
     };
     
     wmlAttribute.prototype.serializeValue = function() {
@@ -8685,6 +9008,21 @@ Class("wipeout.wml.wmlAttribute", function () {
         ///<returns type="String">The value</returns>
                 
         return this.value;
+    }; 
+    
+    wmlAttribute.prototype.getParentElement = function() {
+        ///<summary>Get the parent element of this node</summary>
+        ///<returns type="wipeout.wml.wmlElement">The element</returns>
+        
+        if (this._parentElement && this._parentElement.attributes) {
+            for (var i in this._parentElement.attributes)
+                if (this._parentElement.attributes[i] === this)
+                    return this._parentElement;
+
+            delete this._parentElement;
+        }
+
+        return null;
     };
     
     return wmlAttribute;
@@ -8881,7 +9219,7 @@ Class("wipeout.wml.wmlParser", function () {
 
 		for (var i = 0, ii = htmlElement.attributes.length; i < ii; i++)
 			if (!/^(data\-)?wo\-el$/.test(htmlElement.attributes[i].name))
-				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value);
+				output.attributes[htmlElement.attributes[i].name] = new wipeout.wml.wmlAttribute(htmlElement.attributes[i].value, output);
 
 		return output;
 	};

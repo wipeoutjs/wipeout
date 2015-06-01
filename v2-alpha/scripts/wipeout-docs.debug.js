@@ -1691,6 +1691,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Content", "wo-content"),
                 new articleLink("Event", "wo-event"),
                 new articleLink("Focus", "wo-focus"),
+             //   new articleLink("If", "wo-if"),
                 new articleLink("Keydown", "wo-keydown"),
                 new articleLink("Keypress", "wo-keypress"),
                 new articleLink("Keyup", "wo-keyup"),
@@ -2147,6 +2148,19 @@ compiler.registerClass("wipeoutDocs.viewModels.components.usageCodeBlock", "wipe
     
     return usageCodeBlock;
 });
+
+wo.viewModel("wipeoutDocs.viewModels.components.versioned")
+/*.templateId(wo.content.createAnonymousTemplate('<fieldset>\
+    <legend>version {{$this.version}}</legend>\
+    <wo.view template-id="$this.contentTemplateId" share-parent-scope="true"></wo.view>\
+</fieldset>'))*/
+.initialize(function () {
+    wipeout.viewModels.content.createTemplatePropertyFor(this, "contentTemplateId", "contentTemplate");
+})
+.parser("version", "float")
+.parser("contentTemplate", "template")
+.binding("contentTemplate", "templateProperty")
+.build();
 
 
 compiler.registerClass("wipeoutDocs.viewModels.howDoIApplication", "wipeoutDocs.viewModels.application", function() {
