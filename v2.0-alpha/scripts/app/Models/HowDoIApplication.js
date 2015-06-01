@@ -112,6 +112,7 @@ compiler.registerClass("wipeoutDocs.models.howDoIApplication", "orienteer", func
                 new articleLink("Content", "wo-content"),
                 new articleLink("Event", "wo-event"),
                 new articleLink("Focus", "wo-focus"),
+                new articleLink("If", "wo-if"),
                 new articleLink("Keydown", "wo-keydown"),
                 new articleLink("Keypress", "wo-keypress"),
                 new articleLink("Keyup", "wo-keyup"),

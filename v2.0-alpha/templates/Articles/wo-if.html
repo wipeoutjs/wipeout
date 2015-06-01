@@ -1,0 +1,21 @@
+<wipeout-docs.view-models.components.versioned version="2.1">
+    <content-template>
+        <h1>The If attribute</h1>
+        <h3><code>wo-if="value"</code></h3>
+        <h3><code>data-wo-if="value"</code></h3>
+        <p>The if attribute renders the content of an element only if the content of the attribue evaluates to true.</p>
+        <p>The <code>if</code> attribute wraps an <wipeout-docs.rl href="'/wipeout/## insert: site-directory ##/how-do-i.html?article=if-control'" text="'if view model'"></wipeout-docs.rl>, which can be used if you also need to define an <code>else</code> template.</p>
+        <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-if-attr'" highlight--s="wo-if">
+            <code parser="s">&lt;wo.content model="true">
+    &lt;set-template>
+        &lt;span wo-if="$model">This will be rendered&lt;/span> 
+        &lt;span wo-if="!$model">This will not be rendered&lt;/span> 
+    &lt;/set-template>
+&lt;/wo.content></code>
+        </wipeout-docs.view-models.components.new-template-code-block>
+
+        <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+            <code parser="s">&lt;wo.view template-id="'wo-if-attr'">&lt;/wo.view></code>
+        </wipeout-docs.view-models.components.usage-code-block> 
+    </content-template>
+</wipeout-docs.view-models.components.versioned>

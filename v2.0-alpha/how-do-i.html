@@ -2670,6 +2670,12 @@ Attribute:
     One thing to note, is that <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=share-parent-scope'" text="'shareParentScope'"></wipeout-docs.rl> defaults to true for an if control. This means that the if control cannot be seen by other viewModels.
     You can explicitly set this property to false in the template definition if this is not required.
 </p>
+
+<wipeout-docs.view-models.components.versioned version="2.1">
+    <content-template>
+        You can use the <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=wo-if'" text="'if attribute'"></wipeout-docs.rl> for a less verbose syntax.
+    </content-template>
+</wipeout-docs.view-models.components.versioned>
 </script>
 
 <script id="Articles.illegal-html-tags" type="text/template">
@@ -4589,6 +4595,30 @@ without breaking anything you wouldn't expect to break in javascript.</p>
 </wipeout-docs.view-models.components.usage-code-block> 
 </script>
 
+<script id="Articles.wo-if" type="text/template">
+<wipeout-docs.view-models.components.versioned version="2.1">
+    <content-template>
+        <h1>The If attribute</h1>
+        <h3><code>wo-if="value"</code></h3>
+        <h3><code>data-wo-if="value"</code></h3>
+        <p>The if attribute renders the content of an element only if the content of the attribue evaluates to true.</p>
+        <p>The <code>if</code> attribute wraps an <wipeout-docs.rl href="'/wipeout/v2.0-alpha/how-do-i.html?article=if-control'" text="'if view model'"></wipeout-docs.rl>, which can be used if you also need to define an <code>else</code> template.</p>
+        <wipeout-docs.view-models.components.new-template-code-block new-script-id="'wo-if-attr'" highlight--s="wo-if">
+            <code parser="s">&lt;wo.content model="true">
+    &lt;set-template>
+        &lt;span wo-if="$model">This will be rendered&lt;/span> 
+        &lt;span wo-if="!$model">This will not be rendered&lt;/span> 
+    &lt;/set-template>
+&lt;/wo.content></code>
+        </wipeout-docs.view-models.components.new-template-code-block>
+
+        <wipeout-docs.view-models.components.usage-code-block show-definition-code="false">
+            <code parser="s">&lt;wo.view template-id="'wo-if-attr'">&lt;/wo.view></code>
+        </wipeout-docs.view-models.components.usage-code-block> 
+    </content-template>
+</wipeout-docs.view-models.components.versioned>
+</script>
+
 <script id="Articles.wo-keydown" type="text/template">
 <h1>The Keydown attribute</h1>
 <h3><code>wo-keydown="eventHandler"</code></h3>
@@ -5174,7 +5204,7 @@ Welcome to wipeout. Browse the API on the left hand side
         <script type="text/javascript" src="scripts/lib/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="scripts/lib/signals-1.0.0.min.js"></script>
         <script type="text/javascript" src="scripts/lib/crossroads-0.12.0.min.js"></script>
-        <script type="text/javascript" src="scripts/lib/wipeout-2.0.0.debug.js"></script>
+        <script type="text/javascript" src="scripts/lib/wipeout-2.1.0.debug.js"></script>
 		<!--<script type="text/javascript" src="http://localhost:3000/orienteer/build/orienteer-0.1.0.debug.js"></script>
 		<script type="text/javascript" src="http://localhost:3000/busybody/build/busybody.raw.debug.js"></script>
 		<script type="text/javascript" src="http://localhost:3000/wipeoutDev/build/wipeout.raw.debug.js"></script>-->
