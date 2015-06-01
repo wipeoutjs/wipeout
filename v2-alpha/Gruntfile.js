@@ -60,7 +60,7 @@ module.exports = function(grunt) {
 					} else if (dir.directive === "templates") {
 						page = dir(templates);
 					} else if (dir.directive === "site-directory") {
-						page = dir("v2.0-alpha");
+						page = dir("v2.0");
 					} else
 						throw "Invalid directive: " + dir.directive;
 				}
